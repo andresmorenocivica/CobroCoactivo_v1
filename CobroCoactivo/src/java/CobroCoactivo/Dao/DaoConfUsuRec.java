@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -37,11 +38,9 @@ public class DaoConfUsuRec implements ITConfUsuRec {
     @Override
 
     public List<CivConfUsuRec> listPerfilRecursoByIDUsuario(Session session, long idusuario) throws Exception {
-
         String hql = "from CivConfUsuRec where civUsuarios.usuId =:id_usuario";
-        SQLQuery query = session.createSQLQuery(hql);
-        query.addEntity(CivConfUsuRec.class);
-        query.setInteger("id_usuario", (int) idusuario);
+        Query query = session.createQuery(hql);
+        query.setParameter("id_usuario", new BigDecimal(idusuario));
         if (query.list().size() > 0) {
             return query.list();
         }

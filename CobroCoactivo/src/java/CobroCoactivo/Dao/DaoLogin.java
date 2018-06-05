@@ -7,6 +7,7 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import java.io.Serializable;
 import java.util.List;
 import static jdk.nashorn.internal.runtime.Debug.id;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -60,9 +61,15 @@ public class DaoLogin extends ImpGeneryHibernateDao<Object, Serializable> implem
      * @throws Exception
      */
     @Override
-    public CivUsuarios getUsuario(Session session, String nombre_usu) throws Exception {
-        return (CivUsuarios) session.createCriteria(CivUsuarios.class)
-                .add(Restrictions.eq("usuNombre", nombre_usu))
-                .uniqueResult();
+    public CivUsuarios getUsuario(Session session, String usuNombre) throws Exception {
+        
+        String  hql = "from CivUsuarios where usuNombre = :usuNombre";
+        Query query = session.createQuery(hql);
+        query.setParameter("usuNombre", usuNombre);
+        CivUsuarios civUsuarios =(CivUsuarios) query.uniqueResult();
+        return civUsuarios;
+//        return (CivUsuarios) session.createCriteria(CivUsuarios.class)
+//                .add(Restrictions.eq("usuNombre", usuNombre))
+//                .uniqueResult();
     }
 }

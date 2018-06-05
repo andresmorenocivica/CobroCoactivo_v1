@@ -21,4 +21,23 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/SesionExpirada.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.view.facelets.TagAttributeException</exception-type>
+        <location>/CerrarSesion.jsp</location>
+    </error-page>
+    <error-page>
+        <!-- Missing resource -->
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+    <!--Para Cllustering-->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500.jsp</location>
+    </error-page>  
 </web-app>

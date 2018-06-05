@@ -25,7 +25,7 @@ public class DaoPersonas implements ITPersonas {
     @Override
     public CivPersonas consultarPersonasById(Session session, int per_id) throws Exception {
         return (CivPersonas) session.createCriteria(CivPersonas.class)
-                .add(Restrictions.eq("perId", per_id))
+                .add(Restrictions.eq("perId", new BigDecimal(per_id)))
                 .uniqueResult();
     }
 

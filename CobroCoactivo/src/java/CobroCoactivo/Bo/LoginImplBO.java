@@ -119,12 +119,12 @@ public class LoginImplBO implements LoginBO {
             obj.setID_Usuario(login.getUsuId() + "");
             obj.setNombre(login.getUsuNombre());
             obj.setUserEstado(login.getCivEstadoUsuarios().getEstusuId().intValue());
-            //obj.setModIdPersonaUsuario(login.getCivPersonas().getPerId().intValue());
+            obj.setIdPersonaUsuario(login.getCivPersonas().getPerId().intValue());
         } else {
             session.close();
             throw new LoginException("Usuario y/o contraseña inválidos");
         }
-        session.close();
+      //  session.close();
     }
 
     //Registrar Intento

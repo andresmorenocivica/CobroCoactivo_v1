@@ -17,7 +17,7 @@
                 <comment>Campo que almacena el perfil al cual pertence el recurso, hace refencia a la tabla CIV_PERFILES</comment>
             </column>
         </many-to-one>
-        <many-to-one name="civModulos" class="CobroCoactivo.Persistencia.CivModulos" fetch="select">
+        <many-to-one name="civModulos" class="CobroCoactivo.Persistencia.CivModulos" fetch="select" lazy="false">
             <column name="REC_MODULOS_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guarda el modulo al cual pertenece el recurso, hace refencia a la tabla CIV_MODULOS.</comment>
             </column>

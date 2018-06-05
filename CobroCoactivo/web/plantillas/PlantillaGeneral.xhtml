@@ -214,14 +214,6 @@
                                             </li>/.row -->
                                             <!-- Menu Footer-->
                                             <li class="user-footer">
-                                                <h:form>
-                                                    <div class="pull-left">
-                                                        <h:commandLink action="#{loginBean.redireccion(!loginBean.ad?2:1)}" rendered="#{loginBean.aut_RUNT}" class="btn btn-default btn-flat">
-                                                            #{!loginBean.ad?'Administrativo':'Operativo'}
-                                                            <f:setPropertyActionListener target="#{loginBean.ad}" value="#{!loginBean.ad}" />
-                                                        </h:commandLink>
-                                                    </div>    
-                                                </h:form>
                                                 <div class="pull-right">
                                                     <h:link outcome="/CerrarSesion.jsp" class="btn btn-default btn-flat">Cerrar Sesión</h:link>
                                                 </div>
@@ -259,21 +251,21 @@
                                 <ul class="sidebar-menu" data-widget="tree">
                                     <li class="header">Navegacion Principal</li>
                                     <c:set value="0" var="valor"></c:set>
-                                    <c:forEach items="#{loginBean.listPerfilRecursos}" var="modu">
-                                        <c:if test="${modu.civRecursos.civModulos.modId.intValue()!=valor}">
+                                    <c:forEach items="#{loginBean.listUsuarioRecursos}" var="modu">
+                                        <c:if test="${modu.civRecursos.civModulos.modId != valor}">
                                             <c:set value="${modu.civRecursos.civModulos.modId.intValue()}" var="valor"></c:set>
                                             <li class="treeview">
                                                 <a href="#">
-                                                    <i class="fa #{modu.civRecursos.civModulos.icon}"></i> <span>#{modu.civRecursos.civModulos.modNombre}</span>
+                                                    <i class="fa #{modu.civRecursos.civModulos.modIcono}"></i> <span>#{modu.civRecursos.civModulos.modNombre}</span>
                                                     <span class="pull-right-container">
                                                         <i class="fa fa-angle-left pull-right"></i>
                                                     </span>
                                                 </a>
 
                                                 <ul class="treeview-menu">
-                                                    <c:forEach items="${loginBean.listPerfilRecursos}" var="val">
+                                                    <c:forEach items="${loginBean.listUsuarioRecursos}" var="val">
                                                         <c:if test="${valor == val.civRecursos.civModulos.modId.intValue()}">
-                                                            <li><h:link outcome="${val.civRecursos.recCarpeta}${val.civRecursos.recDescripcion}"><i class="fa fa-circle-o"></i> ${val.civRecursos.recNombre} </h:link></li>
+                                                            <li><h:link outcome="${val.civRecursos.recCarperta}${val.civRecursos.recDescripcion}"><i class="fa fa-circle-o"></i> ${val.civRecursos.recNombre} </h:link></li>
                                                         </c:if>
                                                     </c:forEach>
                                                 </ul>

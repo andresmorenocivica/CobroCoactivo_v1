@@ -13,19 +13,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author Roymer Camacho
  */
-@ManagedBean(name = "loginBean",eager = true)
+@ManagedBean(name = "loginBean")
 @SessionScoped
-public class BeanLogin implements Serializable{
+public class BeanLogin implements Serializable {
 
     private static final String REGEX = "^[a-zA-Z0-9/-@ ]*$";
     private static final String REGEXNUMERO = "^[0-9]*$";
@@ -66,17 +67,13 @@ public class BeanLogin implements Serializable{
     private List<CivConfUsuRec> listUsuarioRecursos;
     private List<CivConfUsuRec> listRedireccion;
 
-    @PostConstruct
-    public void init() {
-        setLoginBO(new LoginImplBO());
-    }
-
     /**
      *
      * @return
      */
     public String autenticarUsuario() {
         try {
+            setLoginBO(new LoginImplBO());
 //            Log_Handler.registrarEvento("Tiempo fuera de lugar del reloj: " + NTPClient.retrasoReloj(), null, Log_Handler.INFO, getClass(),Integer.parseInt(loginBean.getID_Usuario()));
             setNotificationMap(new LinkedHashMap<>());
             getLoginBO().iniciarSesion(this); //Se cargan datos y ejecutan validaciones de usuario.
