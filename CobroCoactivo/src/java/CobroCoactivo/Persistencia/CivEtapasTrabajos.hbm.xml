@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEtapasTrabajos" table="CIV_ETAPAS_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="etatraId" type="big_decimal">
+            <column name="ETATRA_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civPlanTrabajos" class="CobroCoactivo.Persistencia.CivPlanTrabajos" fetch="select">
+            <column name="ETATRA_PLATRA_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoEtapaTrabajos" class="CobroCoactivo.Persistencia.CivEstadoEtapaTrabajos" fetch="select">
+            <column name="ETATRA_ESTETATRA_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="etatraDescricion" type="string">
+            <column name="ETATRA_DESCRICION" length="100" not-null="true" />
+        </property>
+        <property name="etatraFechaproceso" type="date">
+            <column name="ETATRA_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civFasesTrabajoses" table="CIV_FASES_TRABAJOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FASTRA_ETATRA_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivFasesTrabajos" />
+        </set>
+    </class>
+</hibernate-mapping>

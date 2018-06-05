@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoFasesGenerales" table="CIV_ESTADO_FASES_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estfasgenId" type="big_decimal">
+            <column name="ESTFASGEN_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estfasgenDescripcion" type="string">
+            <column name="ESTFASGEN_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estfasgenFechainicial" type="date">
+            <column name="ESTFASGEN_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estfasgenFechafinal" type="date">
+            <column name="ESTFASGEN_FECHAFINAL" length="7" />
+        </property>
+        <property name="estfasgenFechaproceso" type="date">
+            <column name="ESTFASGEN_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civFasesGeneraleses" table="CIV_FASES_GENERALES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FASGEN_ESTFASGEN_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivFasesGenerales" />
+        </set>
+    </class>
+</hibernate-mapping>

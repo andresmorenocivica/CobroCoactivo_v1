@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivPerfiles" table="CIV_PERFILES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que almacenara los registro de los perfiles que habra en el sistema.</comment>
+        <id name="perfId" type="big_decimal">
+            <column name="PERF_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civEstadoPerfiles" class="CobroCoactivo.Persistencia.CivEstadoPerfiles" fetch="select">
+            <column name="PERF_ESTADO_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guardara el estado del perfil, que es un FOREIGN KEY a la tabla CIV_ESTADO_PERFILES.</comment>
+            </column>
+        </many-to-one>
+        <property name="perfNombre" type="string">
+            <column name="PERF_NOMBRE" length="10" not-null="true">
+                <comment>Campo que guardara el nombre de los perfiles que habran en el sisteam.</comment>
+            </column>
+        </property>
+        <property name="perfFechaproceso" type="date">
+            <column name="PERF_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha en la que se hizo ese registro.</comment>
+            </column>
+        </property>
+        <set name="civRecursoses" table="CIV_RECURSOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REC_PERFIL_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que almacena el perfil al cual pertence el recurso, hace refencia a la tabla CIV_PERFILES</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivRecursos" />
+        </set>
+    </class>
+</hibernate-mapping>

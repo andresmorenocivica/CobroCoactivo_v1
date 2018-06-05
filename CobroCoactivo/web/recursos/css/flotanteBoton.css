@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21/04/2018, 11:16:33 AM
+    Author     : Admin
+*/
+
+ .action-btn-wrapper {
+		position: relative;
+	}
+
+	.fixed-action-btn.my-custom-btn {
+	    position: absolute;
+	    right: 0px;
+	    top: 23px;
+	    padding-top: 15px;
+	    margin-bottom: 0;
+	}

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoDocumengenerales" table="CIV_ESTADO_DOCUMENGENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estdocgenId" type="big_decimal">
+            <column name="ESTDOCGEN_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estdocgenDescripcion" type="string">
+            <column name="ESTDOCGEN_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estdocgenFechainicial" type="date">
+            <column name="ESTDOCGEN_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estdocgenFechafinal" type="date">
+            <column name="ESTDOCGEN_FECHAFINAL" length="7" />
+        </property>
+        <property name="estdocgenFechaproceso" type="date">
+            <column name="ESTDOCGEN_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civDocumenGeneraleses" table="CIV_DOCUMEN_GENERALES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DOCGEN_ESTDOCGEN_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDocumenGenerales" />
+        </set>
+    </class>
+</hibernate-mapping>

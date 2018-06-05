@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivRecursos" table="CIV_RECURSOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que guardara los recurso que existan en el sistema.</comment>
+        <id name="recId" type="big_decimal">
+            <column name="REC_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoRecursos" class="CobroCoactivo.Persistencia.CivTipoRecursos" fetch="select">
+            <column name="REC_TIPREC_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civPerfiles" class="CobroCoactivo.Persistencia.CivPerfiles" fetch="select">
+            <column name="REC_PERFIL_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que almacena el perfil al cual pertence el recurso, hace refencia a la tabla CIV_PERFILES</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civModulos" class="CobroCoactivo.Persistencia.CivModulos" fetch="select">
+            <column name="REC_MODULOS_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guarda el modulo al cual pertenece el recurso, hace refencia a la tabla CIV_MODULOS.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEstadoRecursos" class="CobroCoactivo.Persistencia.CivEstadoRecursos" fetch="select">
+            <column name="REC_ESTADO_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guardara el estado del recurso, que hace refencia a la tabla CIV_ESTADO_RECURSO.</comment>
+            </column>
+        </many-to-one>
+        <property name="recNombre" type="string">
+            <column name="REC_NOMBRE" length="100" not-null="true">
+                <comment>Campo que almacena el monbre del recurso.</comment>
+            </column>
+        </property>
+        <property name="recDescripcion" type="string">
+            <column name="REC_DESCRIPCION" length="100">
+                <comment>Campo que guardara la descripcion del recurso, es decir, algo con el cual se pueda definir el recurso.</comment>
+            </column>
+        </property>
+        <property name="recFechaproceso" type="date">
+            <column name="REC_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha de ejecucion del registro.</comment>
+            </column>
+        </property>
+        <property name="recCarperta" type="string">
+            <column name="REC_CARPERTA" length="100">
+                <comment>Campo que guardara la ruta en la cual esta el recurso.</comment>
+            </column>
+        </property>
+        <set name="civConfUsuRecs" table="CIV_CONF_USU_REC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONFUSUREC_RECURSO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guardara el Recurso al cual se le hizo la configuracion, que hace refencia a la tabla CIV_RECURSO</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivConfUsuRec" />
+        </set>
+    </class>
+</hibernate-mapping>

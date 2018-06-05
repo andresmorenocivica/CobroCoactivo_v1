@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoConfusurec" table="CIV_ESTADO_CONFUSUREC" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que guardara los estados que existen en el sistema para la tabla CIV_CONF_USU_REC</comment>
+        <id name="estconfusurecId" type="big_decimal">
+            <column name="ESTCONFUSUREC_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estconfusurecDescripcion" type="string">
+            <column name="ESTCONFUSUREC_DESCRIPCION" length="100">
+                <comment>Campo que guardara la descripcion del estado, Ej: Activo, inactico etc.</comment>
+            </column>
+        </property>
+        <property name="estconfusurecFechainicial" type="date">
+            <column name="ESTCONFUSUREC_FECHAINICIAL" length="7">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
+        </property>
+        <property name="estconfusurecFechafinal" type="date">
+            <column name="ESTCONFUSUREC_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado</comment>
+            </column>
+        </property>
+        <property name="estconfusurecFechaproceso" type="date">
+            <column name="ESTCONFUSUREC_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
+        </property>
+        <set name="civConfUsuRecs" table="CIV_CONF_USU_REC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONFUSUREC_ESTADO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guardara el ESTADO de la configuracion, que hace refencia a la Tabla CIV_ESTADO_CONFUSUREC</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivConfUsuRec" />
+        </set>
+    </class>
+</hibernate-mapping>

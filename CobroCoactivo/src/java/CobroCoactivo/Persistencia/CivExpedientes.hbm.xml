@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivExpedientes" table="CIV_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="expId" type="big_decimal">
+            <column name="EXP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoExpedientes" class="CobroCoactivo.Persistencia.CivTipoExpedientes" fetch="select">
+            <column name="EXP_TIPEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoExpedientes" class="CobroCoactivo.Persistencia.CivEstadoExpedientes" fetch="select">
+            <column name="EXP_ESTEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
+            <column name="EXP_DEUDA_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="expRefencia" type="string">
+            <column name="EXP_REFENCIA" length="100" not-null="true" />
+        </property>
+        <property name="expFechaproceso" type="date">
+            <column name="EXP_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civDetalleExpedienteses" table="CIV_DETALLE_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETEXP_EXPEDIENTE_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetalleExpedientes" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivAbogados" table="CIV_ABOGADOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="aboId" type="big_decimal">
+            <column name="ABO_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
+            <column name="ABO_PERSONA_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que almacena el registro de abogado a la persona, que hace refencia a la tabla CIV_PERSONAS</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEstadoAbogados" class="CobroCoactivo.Persistencia.CivEstadoAbogados" fetch="select">
+            <column name="ABO_ESTABO_FK" precision="22" scale="0" not-null="true">
+                <comment>Se guardara el estado del abogado, que hace refecnia a la tabla CIV_ESTADO_ABOGADOS</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEntidades" class="CobroCoactivo.Persistencia.CivEntidades" fetch="select">
+            <column name="ABO_ENTIDAD_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guarda la entidad a la que pertence el abogado.</comment>
+            </column>
+        </many-to-one>
+        <property name="aboNumlicencia" type="big_decimal">
+            <column name="ABO_NUMLICENCIA" precision="22" scale="0" not-null="true">
+                <comment>Campo qeu almacena el numero de Licencia del abogado.</comment>
+            </column>
+        </property>
+        <property name="aboFechainicial" type="date">
+            <column name="ABO_FECHAINICIAL" length="7" not-null="true">
+                <comment>Se almacenara la fecha de inicio del abogado.</comment>
+            </column>
+        </property>
+        <property name="aboFechafinal" type="date">
+            <column name="ABO_FECHAFINAL" length="7">
+                <comment>Se almacenara la fecha final del abogado.</comment>
+            </column>
+        </property>
+        <property name="aboFirma" type="string">
+            <column name="ABO_FIRMA" length="0">
+                <comment>Se guardara la firma del abogado</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

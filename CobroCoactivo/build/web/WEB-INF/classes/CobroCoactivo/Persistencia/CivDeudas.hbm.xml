@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDeudas" table="CIV_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="deuId" type="big_decimal">
+            <column name="DEU_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoDeudas" class="CobroCoactivo.Persistencia.CivTipoDeudas" fetch="select">
+            <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
+            <column name="DEU_PER_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoDeudas" class="CobroCoactivo.Persistencia.CivEstadoDeudas" fetch="select">
+            <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="deuFechadeuda" type="date">
+            <column name="DEU_FECHADEUDA" length="7" />
+        </property>
+        <property name="deuValor" type="big_decimal">
+            <column name="DEU_VALOR" precision="22" scale="0" />
+        </property>
+        <property name="deuSaldo" type="big_decimal">
+            <column name="DEU_SALDO" precision="22" scale="0" />
+        </property>
+        <property name="deuFechaproceso" type="date">
+            <column name="DEU_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civDetalleIngresoDeudases" table="CIV_DETALLE_INGRESO_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETINGDEU_DEU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetalleIngresoDeudas" />
+        </set>
+        <set name="civDetalleDeudases" table="CIV_DETALLE_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETDEU_DEU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetalleDeudas" />
+        </set>
+        <set name="civExpedienteses" table="CIV_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_DEUDA_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivExpedientes" />
+        </set>
+    </class>
+</hibernate-mapping>

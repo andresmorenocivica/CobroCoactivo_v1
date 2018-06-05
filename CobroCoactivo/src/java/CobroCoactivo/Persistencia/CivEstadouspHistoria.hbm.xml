@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadouspHistoria" table="CIV_ESTADOUSP_HISTORIA" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estuspId" type="big_decimal">
+            <column name="ESTUSP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estuspDescripcion" type="string">
+            <column name="ESTUSP_DESCRIPCION" length="100" />
+        </property>
+        <property name="estuspFechainicial" type="date">
+            <column name="ESTUSP_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estuspFechafianl" type="date">
+            <column name="ESTUSP_FECHAFIANL" length="7" />
+        </property>
+        <set name="civUspHistorias" table="CIV_USP_HISTORIA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ESTUSP_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivUspHistoria" />
+        </set>
+    </class>
+</hibernate-mapping>

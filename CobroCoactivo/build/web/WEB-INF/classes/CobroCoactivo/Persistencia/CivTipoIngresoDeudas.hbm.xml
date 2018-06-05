@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivTipoIngresoDeudas" table="CIV_TIPO_INGRESO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="tipingId" type="big_decimal">
+            <column name="TIPING_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="tipingDescripcion" type="string">
+            <column name="TIPING_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara la descripcion o el nombre del tipo de ingreso</comment>
+            </column>
+        </property>
+        <property name="tipingNombrecorto" type="string">
+            <column name="TIPING_NOMBRECORTO" length="100">
+                <comment>Campo que almacena el nombre corto del tipo de ingreso</comment>
+            </column>
+        </property>
+        <property name="tipingFechainicial" type="date">
+            <column name="TIPING_FECHAINICIAL" length="7" />
+        </property>
+        <property name="tipingFechafinal" type="date">
+            <column name="TIPING_FECHAFINAL" length="7" />
+        </property>
+        <property name="tipingCodigo" type="big_decimal">
+            <column name="TIPING_CODIGO" precision="22" scale="0" />
+        </property>
+        <set name="civIngresoDeudases" table="CIV_INGRESO_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INGDEU_TIPOING_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivIngresoDeudas" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivPersonas" table="CIV_PERSONAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que almacenara los datos de las distintas personas que se registren en el sistema.,</comment>
+        <id name="perId" type="big_decimal">
+            <column name="PER_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoDocumentos" class="CobroCoactivo.Persistencia.CivTipoDocumentos" fetch="select">
+            <column name="PER_TIPODOC_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que almacena el tipo de documento de la persona.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEstadoPersonas" class="CobroCoactivo.Persistencia.CivEstadoPersonas" fetch="select">
+            <column name="PER_ESTADO_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guardara el estado de la persona, que hace refencia a la tabla CIV_ESTADO_PERSONA.</comment>
+            </column>
+        </many-to-one>
+        <property name="perDocumento" type="string">
+            <column name="PER_DOCUMENTO" length="100" not-null="true">
+                <comment>Campo que guardara el N de documento de la persona.</comment>
+            </column>
+        </property>
+        <property name="perNombre1" type="string">
+            <column name="PER_NOMBRE1" length="100" not-null="true">
+                <comment>Campo que guardara el primer nombre de la persona.</comment>
+            </column>
+        </property>
+        <property name="perNombre2" type="string">
+            <column name="PER_NOMBRE2" length="100">
+                <comment>Campo que guardara el segundo nombre de la persona.</comment>
+            </column>
+        </property>
+        <property name="perApellido1" type="string">
+            <column name="PER_APELLIDO1" length="100" not-null="true">
+                <comment>Campo que guardara el primer apellido.</comment>
+            </column>
+        </property>
+        <property name="perApellido2" type="string">
+            <column name="PER_APELLIDO2" length="100">
+                <comment>Campo que guardara el segundo nombre de la persona.</comment>
+            </column>
+        </property>
+        <property name="perSexo" type="string">
+            <column name="PER_SEXO" length="100">
+                <comment>Campo que guardara de que sexo es la persona.</comment>
+            </column>
+        </property>
+        <property name="perFechaproceso" type="date">
+            <column name="PER_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civEntidadeses" table="CIV_ENTIDADES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ENT_PERSONA_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que almacena la persona a la que esta relacionada la entidad, hace referencia a CIV_PERSONA.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivEntidades" />
+        </set>
+        <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DEU_PER_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDeudas" />
+        </set>
+        <set name="civUsuarioses" table="CIV_USUARIOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USU_PERSONA_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guarda la persona a la que pertenece el usuario, hace referencia a la tabla CIV_PERSONA.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivUsuarios" />
+        </set>
+        <set name="civAbogadoses" table="CIV_ABOGADOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ABO_PERSONA_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que almacena el registro de abogado a la persona, que hace refencia a la tabla CIV_PERSONAS</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivAbogados" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivModulos" table="CIV_MODULOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="modId" type="big_decimal">
+            <column name="MOD_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civEstadoModulos" class="CobroCoactivo.Persistencia.CivEstadoModulos" fetch="select">
+            <column name="MOD_ESTADO_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guardara el estado del modulo, que es un FOREIGN KEY a la tabla CIV_ESTADO_MODULOS.</comment>
+            </column>
+        </many-to-one>
+        <property name="modNombre" type="string">
+            <column name="MOD_NOMBRE" length="20" not-null="true">
+                <comment>Campo que guardar el nombre del Modulo</comment>
+            </column>
+        </property>
+        <property name="modIcono" type="string">
+            <column name="MOD_ICONO" length="20">
+                <comment>Campo que guaradara el icono que se mostrara el la vista.</comment>
+            </column>
+        </property>
+        <property name="modFechaproceso" type="date">
+            <column name="MOD_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o la fecha del sistemas.</comment>
+            </column>
+        </property>
+        <set name="civRecursoses" table="CIV_RECURSOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REC_MODULOS_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guarda el modulo al cual pertenece el recurso, hace refencia a la tabla CIV_MODULOS.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivRecursos" />
+        </set>
+    </class>
+</hibernate-mapping>

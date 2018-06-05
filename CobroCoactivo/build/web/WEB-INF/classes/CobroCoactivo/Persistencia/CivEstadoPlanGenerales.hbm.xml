@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoPlanGenerales" table="CIV_ESTADO_PLAN_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estplagenId" type="big_decimal">
+            <column name="ESTPLAGEN_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estplagenDescripcion" type="string">
+            <column name="ESTPLAGEN_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estplagenFechainicial" type="date">
+            <column name="ESTPLAGEN_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estplagenFechafinal" type="date">
+            <column name="ESTPLAGEN_FECHAFINAL" length="7" />
+        </property>
+        <property name="estplagenFechaproceso" type="date">
+            <column name="ESTPLAGEN_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civPlanGeneraleses" table="CIV_PLAN_GENERALES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLAGEN_ESTPLAGEN_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivPlanGenerales" />
+        </set>
+    </class>
+</hibernate-mapping>

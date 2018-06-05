@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoAbogados" table="CIV_ESTADO_ABOGADOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estaboId" type="big_decimal">
+            <column name="ESTABO_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estaboDescripcion" type="string">
+            <column name="ESTABO_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara el nombre del estado.</comment>
+            </column>
+        </property>
+        <property name="estaboFechainicial" type="date">
+            <column name="ESTABO_FECHAINICIAL" length="7">
+                <comment>Campo que guarada la fecha inicial del estado.</comment>
+            </column>
+        </property>
+        <property name="estaboFechafinal" type="date">
+            <column name="ESTABO_FECHAFINAL" length="7">
+                <comment>Campo que almacena lafecha final del estado.</comment>
+            </column>
+        </property>
+        <property name="estaboFechaproceso" type="date">
+            <column name="ESTABO_FECHAPROCESO" length="7">
+                <comment>Campo que almecena la fecha del registro.</comment>
+            </column>
+        </property>
+        <set name="civAbogadoses" table="CIV_ABOGADOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ABO_ESTABO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Se guardara el estado del abogado, que hace refecnia a la tabla CIV_ESTADO_ABOGADOS</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivAbogados" />
+        </set>
+    </class>
+</hibernate-mapping>

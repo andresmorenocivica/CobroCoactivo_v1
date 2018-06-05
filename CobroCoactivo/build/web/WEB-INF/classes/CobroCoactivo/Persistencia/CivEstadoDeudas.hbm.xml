@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoDeudas" table="CIV_ESTADO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estdeuId" type="big_decimal">
+            <column name="ESTDEU_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estdeuDescripcion" type="string">
+            <column name="ESTDEU_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estdeuFechainicial" type="date">
+            <column name="ESTDEU_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estdeuFechafinal" type="date">
+            <column name="ESTDEU_FECHAFINAL" length="7" />
+        </property>
+        <property name="estdeuFechaproceso" type="date">
+            <column name="ESTDEU_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDeudas" />
+        </set>
+    </class>
+</hibernate-mapping>

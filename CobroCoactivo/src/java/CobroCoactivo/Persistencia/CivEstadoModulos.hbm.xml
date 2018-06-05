@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoModulos" table="CIV_ESTADO_MODULOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que guardara los estados existentes en el sistema para la tabla de CIV_MODULOS.</comment>
+        <id name="estmodId" type="big_decimal">
+            <column name="ESTMOD_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estmodDescripcion" type="string">
+            <column name="ESTMOD_DESCRIPCION" length="10" not-null="true">
+                <comment>Campo que guardara la descripcion del registro.</comment>
+            </column>
+        </property>
+        <property name="estmodFechainicial" type="date">
+            <column name="ESTMOD_FECHAINICIAL" length="7">
+                <comment>Campo que guardara la fecha incial del estado.</comment>
+            </column>
+        </property>
+        <property name="estmodFechafinal" type="date">
+            <column name="ESTMOD_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado.</comment>
+            </column>
+        </property>
+        <property name="estmodFechaproceso" type="date">
+            <column name="ESTMOD_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha que se hizo el registro o la fecha del sistema</comment>
+            </column>
+        </property>
+        <set name="civModuloses" table="CIV_MODULOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MOD_ESTADO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guardara el estado del modulo, que es un FOREIGN KEY a la tabla CIV_ESTADO_MODULOS.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivModulos" />
+        </set>
+    </class>
+</hibernate-mapping>

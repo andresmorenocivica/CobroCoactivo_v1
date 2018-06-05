@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@192.168.0.203:1521:orclciv</property>
+    <property name="hibernate.connection.username">cobrocoactivo_v1</property>
+    <property name="hibernate.connection.password">desarrollo</property>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDetalleExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivPerfiles.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDocumenGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoConfusurec.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoPersonas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivFasesTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDetalleDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDetalleExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoConceptos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivModulos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoEtapaTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoRecursos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEntidades.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDocumengenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivUsuarios.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoAbogados.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoPlanTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoUsuarios.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivRecursos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivErrores.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoPlanGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoFasesTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivAbogados.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivIngresoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivConfUsuRec.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivAttempts.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoReporteTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivConceptos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDetalleDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoConceptos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoDetalleExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivFasesGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDetalleIngresoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/LogEventos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoIngresoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDetalleIngresodeu.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoIngresoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoModulos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivPlanGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoDocumentos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadouspHistoria.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoPerfiles.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEtapasTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEtapasGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivPersonas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoFasesGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivPlanTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivUspHistoria.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoEtapasGenerales.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoEntidades.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivReporteTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoRecursos.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

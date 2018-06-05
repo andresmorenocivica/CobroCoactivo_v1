@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivIngresoDeudas" table="CIV_INGRESO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="ingdeuId" type="big_decimal">
+            <column name="INGDEU_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoIngresoDeudas" class="CobroCoactivo.Persistencia.CivTipoIngresoDeudas" fetch="select">
+            <column name="INGDEU_TIPOING_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoIngresoDeudas" class="CobroCoactivo.Persistencia.CivEstadoIngresoDeudas" fetch="select">
+            <column name="INGDEU_ESTING_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="ingdeuReferencia" type="string">
+            <column name="INGDEU_REFERENCIA" length="100" />
+        </property>
+        <property name="ingdeuFechaproceso" type="date">
+            <column name="INGDEU_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civDetalleIngresoDeudases" table="CIV_DETALLE_INGRESO_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETINGDEU_INGDEU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetalleIngresoDeudas" />
+        </set>
+    </class>
+</hibernate-mapping>

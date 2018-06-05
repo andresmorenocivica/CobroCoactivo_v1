@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivTipoExpedientes" table="CIV_TIPO_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="tipexpId" type="big_decimal">
+            <column name="TIPEXP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="tipexpDescripcion" type="string">
+            <column name="TIPEXP_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="tipexpNombrecorto" type="string">
+            <column name="TIPEXP_NOMBRECORTO" length="100" />
+        </property>
+        <property name="tipexpCodigo" type="big_decimal">
+            <column name="TIPEXP_CODIGO" precision="22" scale="0" />
+        </property>
+        <property name="tipexpFechainicial" type="date">
+            <column name="TIPEXP_FECHAINICIAL" length="7" />
+        </property>
+        <property name="tipexpFechafinal" type="date">
+            <column name="TIPEXP_FECHAFINAL" length="7" />
+        </property>
+        <set name="civExpedienteses" table="CIV_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_TIPEXP_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivExpedientes" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoPerfiles" table="CIV_ESTADO_PERFILES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que guardara los estados que existen en el sistema referente a la tabla CIV_PERFILES</comment>
+        <id name="estperfId" type="big_decimal">
+            <column name="ESTPERF_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estperfDescripcion" type="string">
+            <column name="ESTPERF_DESCRIPCION" length="10" not-null="true">
+                <comment>Campo que guardara la descripcion o nombre del estado. EJ: Activo, Inactivo etc</comment>
+            </column>
+        </property>
+        <property name="estperfFechainicial" type="date">
+            <column name="ESTPERF_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
+        </property>
+        <property name="estperfFechafinal" type="date">
+            <column name="ESTPERF_FECHAFINAL" length="7">
+                <comment>Campo queguaradara la fecha final del estado.</comment>
+            </column>
+        </property>
+        <property name="estperfFechaproceso" type="date">
+            <column name="ESTPERF_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha en que se hizo el registro.</comment>
+            </column>
+        </property>
+        <set name="civPerfileses" table="CIV_PERFILES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PERF_ESTADO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guardara el estado del perfil, que es un FOREIGN KEY a la tabla CIV_ESTADO_PERFILES.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivPerfiles" />
+        </set>
+    </class>
+</hibernate-mapping>

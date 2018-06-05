@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEntidades" table="CIV_ENTIDADES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="entId" type="big_decimal">
+            <column name="ENT_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
+            <column name="ENT_PERSONA_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que almacena la persona a la que esta relacionada la entidad, hace referencia a CIV_PERSONA.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEstadoEntidades" class="CobroCoactivo.Persistencia.CivEstadoEntidades" fetch="select">
+            <column name="ENT_ESTENT_FK" precision="22" scale="0" not-null="true">
+                <comment>Se almacena el estado de la entidad, que hace refencia la tabla CIV_ESTADO_ENIDADES</comment>
+            </column>
+        </many-to-one>
+        <property name="entFechaproceso" type="date">
+            <column name="ENT_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha deel sistema</comment>
+            </column>
+        </property>
+        <set name="civAbogadoses" table="CIV_ABOGADOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ABO_ENTIDAD_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guarda la entidad a la que pertence el abogado.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivAbogados" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDetalleExpedientes" table="CIV_DETALLE_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="detexpId" type="big_decimal">
+            <column name="DETEXP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civTipoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivTipoDetalleExpedientes" fetch="select">
+            <column name="DETEXP_TIPDETEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civExpedientes" class="CobroCoactivo.Persistencia.CivExpedientes" fetch="select">
+            <column name="DETEXP_EXPEDIENTE_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes" fetch="select">
+            <column name="DETEXP_ESTDETEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="detexpDescripcion" type="string">
+            <column name="DETEXP_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="detexpFechaproceso" type="date">
+            <column name="DETEXP_FECHAPROCESO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

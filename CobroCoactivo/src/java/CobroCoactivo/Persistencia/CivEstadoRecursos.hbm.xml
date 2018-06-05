@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoRecursos" table="CIV_ESTADO_RECURSOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <comment>Tabla que guardara los registro de estado referente al tabla CIV_RECURSO.</comment>
+        <id name="estrecId" type="big_decimal">
+            <column name="ESTREC_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estrecDescripcion" type="string">
+            <column name="ESTREC_DESCRIPCION" length="10" not-null="true">
+                <comment>Campo que guardara la descripcion de cada registro.</comment>
+            </column>
+        </property>
+        <property name="estrecFechainicial" type="date">
+            <column name="ESTREC_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del Estado.</comment>
+            </column>
+        </property>
+        <property name="estrecFechafinal" type="date">
+            <column name="ESTREC_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del Estado.</comment>
+            </column>
+        </property>
+        <property name="estrecFechaproceso" type="date">
+            <column name="ESTREC_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso del Estado, es decir la fecha del sistema.</comment>
+            </column>
+        </property>
+        <set name="civRecursoses" table="CIV_RECURSOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REC_ESTADO_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que guardara el estado del recurso, que hace refencia a la tabla CIV_ESTADO_RECURSO.</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivRecursos" />
+        </set>
+    </class>
+</hibernate-mapping>

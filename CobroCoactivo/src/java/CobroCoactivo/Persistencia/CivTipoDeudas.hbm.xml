@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivTipoDeudas" table="CIV_TIPO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="tipdeuId" type="big_decimal">
+            <column name="TIPDEU_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="tipdeuDescripcion" type="string">
+            <column name="TIPDEU_DESCRIPCION" length="100" not-null="true">
+                <comment>Se almacena el nombre o la descripcion del tipo de deuda</comment>
+            </column>
+        </property>
+        <property name="tipdeuNombrecorto" type="string">
+            <column name="TIPDEU_NOMBRECORTO" length="100">
+                <comment>Se almacena el nombre cporto del tipo de deuda</comment>
+            </column>
+        </property>
+        <property name="tipdeuCodigo" type="big_decimal">
+            <column name="TIPDEU_CODIGO" precision="22" scale="0" />
+        </property>
+        <property name="tipdeuFechainicial" type="date">
+            <column name="TIPDEU_FECHAINICIAL" length="7" />
+        </property>
+        <property name="tipdeuFechafinal" type="date">
+            <column name="TIPDEU_FECHAFINAL" length="7" />
+        </property>
+        <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDeudas" />
+        </set>
+    </class>
+</hibernate-mapping>

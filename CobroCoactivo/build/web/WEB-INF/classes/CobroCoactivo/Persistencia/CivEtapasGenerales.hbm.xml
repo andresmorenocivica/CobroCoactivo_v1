@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEtapasGenerales" table="CIV_ETAPAS_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="etagenId" type="big_decimal">
+            <column name="ETAGEN_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civPlanGenerales" class="CobroCoactivo.Persistencia.CivPlanGenerales" fetch="select">
+            <column name="ETAGEN_PLAGEN_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoEtapasGenerales" class="CobroCoactivo.Persistencia.CivEstadoEtapasGenerales" fetch="select">
+            <column name="ETAGEN_ESTETAGEN_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="etagenDescripcion" type="string">
+            <column name="ETAGEN_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="etagenFechaproceso" type="date">
+            <column name="ETAGEN_FECHAPROCESO" length="7" />
+        </property>
+        <property name="etagenObligatorio" type="string">
+            <column name="ETAGEN_OBLIGATORIO" length="100" not-null="true" />
+        </property>
+        <set name="civFasesGeneraleses" table="CIV_FASES_GENERALES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FASGEN_ETAGEN_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivFasesGenerales" />
+        </set>
+    </class>
+</hibernate-mapping>

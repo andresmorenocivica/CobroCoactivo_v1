@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<hibernate-reverse-engineering>
+    <schema-selection match-schema="COBROCOACTIVO_V1"/>
+    <table-filter match-name="CIV_ABOGADOS"/>
+    <table-filter match-name="CIV_ATTEMPTS"/>
+    <table-filter match-name="CIV_CONCEPTOS"/>
+    <table-filter match-name="CIV_CONF_USU_REC"/>
+    <table-filter match-name="CIV_DETALLE_DEUDAS"/>
+    <table-filter match-name="CIV_DETALLE_EXPEDIENTES"/>
+    <table-filter match-name="CIV_DETALLE_INGRESO_DEUDAS"/>
+    <table-filter match-name="CIV_DEUDAS"/>
+    <table-filter match-name="CIV_DOCUMEN_GENERALES"/>
+    <table-filter match-name="CIV_ENTIDADES"/>
+    <table-filter match-name="CIV_ERRORES"/>
+    <table-filter match-name="CIV_ESTADO_ABOGADOS"/>
+    <table-filter match-name="CIV_ESTADO_CONCEPTOS"/>
+    <table-filter match-name="CIV_ESTADO_CONFUSUREC"/>
+    <table-filter match-name="CIV_ESTADO_DETALLE_DEUDAS"/>
+    <table-filter match-name="CIV_ESTADO_DETALLE_EXPEDIENTES"/>
+    <table-filter match-name="CIV_ESTADO_DETALLE_INGRESODEU"/>
+    <table-filter match-name="CIV_ESTADO_DEUDAS"/>
+    <table-filter match-name="CIV_ESTADO_DOCUMENGENERALES"/>
+    <table-filter match-name="CIV_ESTADO_ENTIDADES"/>
+    <table-filter match-name="CIV_ESTADO_ETAPAS_GENERALES"/>
+    <table-filter match-name="CIV_ESTADO_ETAPA_TRABAJOS"/>
+    <table-filter match-name="CIV_ESTADO_EXPEDIENTES"/>
+    <table-filter match-name="CIV_ESTADO_FASES_GENERALES"/>
+    <table-filter match-name="CIV_ESTADO_FASES_TRABAJOS"/>
+    <table-filter match-name="CIV_ESTADO_INGRESO_DEUDAS"/>
+    <table-filter match-name="CIV_ESTADO_MODULOS"/>
+    <table-filter match-name="CIV_ESTADO_PERFILES"/>
+    <table-filter match-name="CIV_ESTADO_PERSONAS"/>
+    <table-filter match-name="CIV_ESTADO_PLAN_GENERALES"/>
+    <table-filter match-name="CIV_ESTADO_PLAN_TRABAJOS"/>
+    <table-filter match-name="CIV_ESTADO_RECURSOS"/>
+    <table-filter match-name="CIV_ESTADO_REPORTE_TRABAJOS"/>
+    <table-filter match-name="CIV_ESTADOUSP_HISTORIA"/>
+    <table-filter match-name="CIV_ESTADO_USUARIOS"/>
+    <table-filter match-name="CIV_ETAPAS_GENERALES"/>
+    <table-filter match-name="CIV_ETAPAS_TRABAJOS"/>
+    <table-filter match-name="CIV_EXPEDIENTES"/>
+    <table-filter match-name="CIV_FASES_GENERALES"/>
+    <table-filter match-name="CIV_FASES_TRABAJOS"/>
+    <table-filter match-name="CIV_INGRESO_DEUDAS"/>
+    <table-filter match-name="CIV_MODULOS"/>
+    <table-filter match-name="CIV_PERFILES"/>
+    <table-filter match-name="CIV_PERSONAS"/>
+    <table-filter match-name="CIV_PLAN_GENERALES"/>
+    <table-filter match-name="CIV_PLAN_TRABAJOS"/>
+    <table-filter match-name="CIV_RECURSOS"/>
+    <table-filter match-name="CIV_REPORTE_TRABAJOS"/>
+    <table-filter match-name="CIV_TIPO_CONCEPTOS"/>
+    <table-filter match-name="CIV_TIPO_DETALLE_EXPEDIENTES"/>
+    <table-filter match-name="CIV_TIPO_DEUDAS"/>
+    <table-filter match-name="CIV_TIPO_DOCUMENTOS"/>
+    <table-filter match-name="CIV_TIPO_EXPEDIENTES"/>
+    <table-filter match-name="CIV_TIPO_INGRESO_DEUDAS"/>
+    <table-filter match-name="CIV_TIPO_RECURSOS"/>
+    <table-filter match-name="CIV_USP_HISTORIA"/>
+    <table-filter match-name="CIV_USUARIOS"/>
+    <table-filter match-name="LOG_EVENTOS"/>
+
+    <table name="CIV_ABOGADOS" class="CobroCoactivo.Modelo.Abogados" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ATTEMPTS" class="CobroCoactivo.Modelo.Attempts" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_CONCEPTOS" class="CobroCoactivo.Modelo.Conceptos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_CONF_USU_REC" class="CobroCoactivo.Modelo.ConfUsuRec" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_DETALLE_DEUDAS" class="CobroCoactivo.Modelo.DetalleDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_DETALLE_EXPEDIENTES" class="CobroCoactivo.Modelo.DetalleExpedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_DETALLE_INGRESO_DEUDAS" class="CobroCoactivo.Modelo.DetalleIngresoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_DEUDAS" class="CobroCoactivo.Modelo.Deudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_DOCUMEN_GENERALES" class="CobroCoactivo.Modelo.DocumenGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ENTIDADES" class="CobroCoactivo.Modelo.Entidades" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ERRORES" class="CobroCoactivo.Modelo.Errores" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_ABOGADOS" class="CobroCoactivo.Modelo.EstadoAbogados" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_CONCEPTOS" class="CobroCoactivo.Modelo.EstadoConceptos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_CONFUSUREC" class="CobroCoactivo.Modelo.EstadoConfusurec" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_DETALLE_DEUDAS" class="CobroCoactivo.Modelo.EstadoDetalleDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_DETALLE_EXPEDIENTES" class="CobroCoactivo.Modelo.EstadoDetalleExpedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_DETALLE_INGRESODEU" class="CobroCoactivo.Modelo.EstadoDetalleIngresodeu" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_DEUDAS" class="CobroCoactivo.Modelo.EstadoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_DOCUMENGENERALES" class="CobroCoactivo.Modelo.EstadoDocumengenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_ENTIDADES" class="CobroCoactivo.Modelo.EstadoEntidades" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_ETAPAS_GENERALES" class="CobroCoactivo.Modelo.EstadoEtapasGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_ETAPA_TRABAJOS" class="CobroCoactivo.Modelo.EstadoEtapaTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_EXPEDIENTES" class="CobroCoactivo.Modelo.EstadoExpedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_FASES_GENERALES" class="CobroCoactivo.Modelo.EstadoFasesGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_FASES_TRABAJOS" class="CobroCoactivo.Modelo.EstadoFasesTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_INGRESO_DEUDAS" class="CobroCoactivo.Modelo.EstadoIngresoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_MODULOS" class="CobroCoactivo.Modelo.EstadoModulos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_PERFILES" class="CobroCoactivo.Modelo.EstadoPerfiles" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_PERSONAS" class="CobroCoactivo.Modelo.EstadoPersonas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_PLAN_GENERALES" class="CobroCoactivo.Modelo.EstadoPlanGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_PLAN_TRABAJOS" class="CobroCoactivo.Modelo.EstadoPlanTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_RECURSOS" class="CobroCoactivo.Modelo.EstadoRecursos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_REPORTE_TRABAJOS" class="CobroCoactivo.Modelo.EstadoReporteTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADOUSP_HISTORIA" class="CobroCoactivo.Modelo.EstadouspHistoria" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ESTADO_USUARIOS" class="CobroCoactivo.Modelo.EstadoUsuarios" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ETAPAS_GENERALES" class="CobroCoactivo.Modelo.EtapasGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_ETAPAS_TRABAJOS" class="CobroCoactivo.Modelo.EtapasTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_EXPEDIENTES" class="CobroCoactivo.Modelo.Expedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_FASES_GENERALES" class="CobroCoactivo.Modelo.FasesGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_FASES_TRABAJOS" class="CobroCoactivo.Modelo.FasesTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_INGRESO_DEUDAS" class="CobroCoactivo.Modelo.IngresoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_MODULOS" class="CobroCoactivo.Modelo.Modulos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_PERFILES" class="CobroCoactivo.Modelo.Perfiles" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_PERSONAS" class="CobroCoactivo.Modelo.Personas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_PLAN_GENERALES" class="CobroCoactivo.Modelo.PlanGenerales" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_PLAN_TRABAJOS" class="CobroCoactivo.Modelo.PlanTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_RECURSOS" class="CobroCoactivo.Modelo.Recursos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_REPORTE_TRABAJOS" class="CobroCoactivo.Modelo.ReporteTrabajos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_CONCEPTOS" class="CobroCoactivo.Modelo.TipoConceptos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_DETALLE_EXPEDIENTES" class="CobroCoactivo.Modelo.TipoDetalleExpedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_DEUDAS" class="CobroCoactivo.Modelo.TipoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_DOCUMENTOS" class="CobroCoactivo.Modelo.TipoDocumentos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_EXPEDIENTES" class="CobroCoactivo.Modelo.TipoExpedientes" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_INGRESO_DEUDAS" class="CobroCoactivo.Modelo.TipoIngresoDeudas" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_TIPO_RECURSOS" class="CobroCoactivo.Modelo.TipoRecursos" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_USP_HISTORIA" class="CobroCoactivo.Modelo.UspHistoria" schema="COBROCOACTIVO_V1"></table>
+    <table name="CIV_USUARIOS" class="CobroCoactivo.Modelo.Usuarios" schema="COBROCOACTIVO_V1"></table>
+    <table name="LOG_EVENTOS" class="CobroCoactivo.Modelo.LogEventos" schema="COBROCOACTIVO_V1"></table>
+</hibernate-reverse-engineering>
