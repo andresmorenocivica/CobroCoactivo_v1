@@ -25,7 +25,8 @@ public class Personas implements java.io.Serializable {
     private String Apellido2;
     private String Sexo;
     private Date Fechaproceso;
-    private List Listdeuda = new ArrayList<>();
+    private List<Deudas> Listdeuda = new ArrayList<>();
+    private boolean editable =false;
 
     public Personas() {
     }
@@ -62,7 +63,7 @@ public class Personas implements java.io.Serializable {
         this.Apellido2 = civPersonas.getPerApellido2();
         this.Sexo = civPersonas.getPerSexo();
         this.Fechaproceso = civPersonas.getPerFechaproceso();
-        //this.estadoPersonas = new EstadoPersonas(civEstadoPersonas);
+        this.estadoPersonas = new EstadoPersonas(civEstadoPersonas);
         this.tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
     }
 
@@ -226,15 +227,29 @@ public class Personas implements java.io.Serializable {
     /**
      * @return the Listdeuda
      */
-    public List getListdeuda() {
+    public List<Deudas> getListdeuda() {
         return Listdeuda;
     }
 
     /**
      * @param Listdeuda the Listdeuda to set
      */
-    public void setListdeuda(List Listdeuda) {
+    public void setListdeuda(List<Deudas> Listdeuda) {
         this.Listdeuda = Listdeuda;
+    }
+
+    /**
+     * @return the editable
+     */
+    public boolean isEditable() {
+        return editable;
+    }
+
+    /**
+     * @param editable the editable to set
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
 }

@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmPersonas">
+                    <div class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Consultas
+                                <small>guia formulario para consultas</small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                             <h:messages id="msggeneral2" showDetail="false" />
+                            <!-- Default box -->
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Busquedas</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- Custom Tabs -->
+                                            <div class="nav-tabs-custom" >
+                                                <ul class="nav nav-tabs" >
+                                                    <li class="active" ><a href="#documento" data-toggle="tab">Documento</a></li>
+                                                    <li><a href="#nombrePersona" data-toggle="tab">Nombre Persona</a></li>
+                                                    <li><a href="#fechas" data-toggle="tab">Fechas</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="documento">
+                                                        <br></br>
+                                                        <div class="row">
+                                                            <div class="col-md-3"></div>
+                                                            <div class="col-xs-12 visible-xs visible-sm">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Numero</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-5 visible-lg visible-md" style="width: 18%">
+                                                                <div class="input-group margin-2">
+                                                                    <h:selectOneMenu  id="sltDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}">
+                                                                        <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="tipoDocumento" itemValue="#{tipoDocumento.codigo}" itemLabel="#{tipoDocumento.descripcion}"></f:selectItems>
+                                                                    </h:selectOneMenu>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
+                                                                <div class="input-group margin-5">
+                                                                    <input type="text" placeholder="Numero Del documento" class="form-control text-uppercase" maxlength="20" jsf:id="txtNumero" value="#{gestionPersonaBean.documentoPersona}"></input>
+                                                                    <span class="input-group-btn">
+                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
+                                                                            <f:ajax event="click" execute="frmPersonas:txtNumero frmPersonas:sltDocumentos" listener="#{gestionPersonaBean.buscarPersona(1)}" render="frmPersonas:tblPersona" ></f:ajax>
+                                                                        </h:commandLink>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br></br>
+                                                    </div>
+                                                    <!-- /.tab-pane -->
+                                                    <div class="tab-pane" id="nombrePersona">
+                                                        <br></br>
+                                                        <div class="row">
+                                                            <div class="col-md-3"></div>
+                                                            <div class="col-xs-12 visible-xs visible-sm">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Dato Persona</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Dato Persona</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                <div class="input-group margin-5">
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" id="txtPersona"></h:inputText>
+                                                                    <span class="input-group-btn">
+                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                        </h:commandLink>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br></br> 
+                                                    </div>
+                                                    <!-- /.tab-pane -->
+                                                    <div class="tab-pane" id="fechas">
+                                                        <br></br>
+                                                        <div class="row">
+                                                            <div class="col-md-3"></div>
+                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Fecha</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <div class="form-group">
+                                                                    <div class="input-group margin-5">
+                                                                        <h:inputText id="buscarFechaIngreso" class="date datepicker form-control"  maxlength="10">
+                                                                            <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                                                        </h:inputText><!--VALUE OK-->
+                                                                        <span class="input-group-btn">
+                                                                            <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                            </h:commandLink>
+                                                                        </span>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr></hr>
+                                                    </div>
+                                                    <!-- /.tab-pane -->
+                                                </div>
+                                                <!-- /.tab-content -->
+                                            </div>
+                                            <!-- nav-tabs-custom -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+
+
+
+                                </div>
+                                <table jsf:id="tblPersona" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nombre</th>
+                                            <th>Apellido</th>
+                                            <th>Sexo</th>
+                                            <th>Mostrar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
+                                            <tr>
+                                                <td>#{persona.id}</td>
+                                                <td>#{persona.nombre1}</td>
+                                                <td>#{persona.apellido1}</td>
+                                                <td>#{persona.sexo}</td>
+                                                <td>
+                                                    <h:commandLink class="fa fa-eye col-sm-4" action="detallePersona">
+                                                        <f:setPropertyActionListener value="#{persona}" target="#{requestBean.personas}"/>
+                                                        <c:set value="&lt;section class=&quot;content-header&quot;&gt;&lt;ol class=&quot;breadcrumb&quot;&gt;&lt;li&gt;&lt;a href=&quot;inicio.htm&quot;&gt;&lt;i class=&quot;fa fa-home&quot;&gt;&lt;/i&gt; Inicio&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;i class=&quot;fa fa-user&quot;&gt;&lt;/i&gt; Personas&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;gestionPersona.htm&quot;&gt;&lt;i class=&quot;fa fa-cogs&quot;&gt;&lt;/i&gt;Administra Persona&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;active&quot;&gt;&lt;i class=&quot;fa fa-address-card&quot;&gt;&lt;/i&gt; Detalle Persona&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;/section&gt;" var="valor"/>
+                                                        <f:setPropertyActionListener value="#{valor}" target="#{requestBean.ruta}"/>
+                                                    </h:commandLink>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

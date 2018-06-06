@@ -6,6 +6,7 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +31,18 @@ public class DaoPersonas implements ITPersonas {
     }
 
     @Override
-    public CivPersonas consultarPersonasByDocumento(Session session, int tipo, String nro_documento) throws Exception {
-        String hql = "from CivPersonas where civTipodocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
+    public CivPersonas consultarPersonasByDocumento(int tipo, String nro_documento) throws Exception {
+        
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
-        query.setParameter("tipo", tipo);
+        query.setParameter("tipo",new BigDecimal(tipo));
         query.setParameter("nro_documento", nro_documento);
-        return (CivPersonas) query.uniqueResult();
+        if (query.list().size() > 0) {
+            return (CivPersonas) query.list().get(0);
+        }
+        session.close();
+        return null;
     }
 
     @Override

@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../plantillas/PlantillaGeneral.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+        <h:form id="frmDetallePersona">
+            <div class="content-wrapper">
+                <h:outputText value="#{gestionPersonaBean.encabezadoDetallePersona}" escape="false"></h:outputText>
+                <section class="content">
+                    <div class="box box-danger">
+                        <div class="box-body box-danger">
+                            <div class="box-header with-border">
+                                <div class="row">
+                                    <div class="col-lg-11">
+                                        <h3 class="box-title">Información Personas</h3>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <h:panelGroup id="pnlEditarUsuario" >
+                                            <h:commandLink class="fa fa-pencil-square-o col-sm-4" id="editarUsuario" rendered="#{!gestionPersonaBean.detallePersona.editable}">
+                                                <f:ajax event="click" listener="#{gestionPersonaBean.detallePersona.setEditable(true)}" render="frmDetallePersona:editableControladores frmDetallePersona:pnlEditarUsuario frmDetallePersona:pnlGuardarUsuario"></f:ajax>
+
+                                            </h:commandLink>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pnlGuardarUsuario" >
+                                            <h:commandLink class="fa fa-save col-sm-4" id="guardarUsuario" rendered="#{gestionPersonaBean.detallePersona.editable}"> 
+                                                <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:txtNombre1"  render="frmDetallePersona:editableControladores frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
+                                            </h:commandLink>
+                                        </h:panelGroup>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <h:panelGroup id="editableControladores" >
+                                <div class="box-body">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Tipo Documento</label>
+                                            <h:selectOneMenu value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
+                                                <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
+
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Documento</label>
+                                            <h:inputText  value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div class="form-group">
+                                            <label>Sexo</label>
+                                            <h:inputText id="textSexo"  value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Primer Nombre</label>
+                                            <h:inputText id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Segundo Nombre</label>
+                                            <h:inputText id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Primer Apellido</label>
+                                            <h:inputText id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Segundo Apellido</label>
+                                            <h:inputText id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Fecha De Expedición</label>
+                                            <h:inputText id="dateFechaDeExpidicion" value="#{gestionPersonaBean.detallePersona.fechaproceso}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"> </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            <h:inputText id="txtEstado" value="#{gestionPersonaBean.detallePersona.estadoPersonas.id}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -52,7 +52,7 @@ public interface ITPersonas {
      * encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivPersonas consultarPersonasByDocumento(Session session,int tipo, String Documento) throws Exception;
+    public CivPersonas consultarPersonasByDocumento(int tipo, String Documento) throws Exception;
     
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un
