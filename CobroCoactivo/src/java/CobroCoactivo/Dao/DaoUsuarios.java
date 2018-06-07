@@ -62,14 +62,15 @@ public class DaoUsuarios implements ITUsuarios {
 
     @Override
 
-    public List<CivUsuarios> listarUsuarios(Session session, String nombre_usuario) throws Exception {
-        String hql = "from CivUsuarios where usuNombre like :nombre_usuario ORDER BY 1 asc";
-        SQLQuery query = session.createSQLQuery(hql);
+    public List<CivUsuarios> listarUsuarios(String nombre_usuario) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_USUARIOS WHERE USU_NOMBRE LIKE '%"+nombre_usuario+"%' ORDER BY 1 asc";
+        SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivUsuarios.class);
-        query.setString("nombre_usuario", nombre_usuario);
         if (query.list().size() > 0) {
             return query.list();
         }
+        session.close();
         return null;
     }
 

@@ -54,7 +54,7 @@ public interface ITUsuarios {
      * en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public List<CivUsuarios> listarUsuarios(Session session,String Usuario) throws Exception;
+    public List<CivUsuarios> listarUsuarios(String Usuario) throws Exception;
 
     /**
      * Método para insertar un Usuario de la base de datos.

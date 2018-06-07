@@ -52,9 +52,11 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoDeudas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoDetalleExpedientes.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivErrores.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoTipoDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivUspHistoria.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEtapasGenerales.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoReporteTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivIngresoDeudas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivModulos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoExpedientes.hbm.xml"/>
@@ -70,6 +72,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivConceptos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoPlanGenerales.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoEntidades.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEntidades.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoConceptos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoEtapaTrabajos.hbm.xml"/>
@@ -95,6 +98,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivEstadouspHistoria.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivExpedientes.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoIngresoDeudas.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivRecursos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/LogEventos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoIngresoDeudas.hbm.xml"/>

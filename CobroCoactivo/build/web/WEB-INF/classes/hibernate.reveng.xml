@@ -45,6 +45,7 @@ Contributor(s):
     <table-filter match-name="CIV_ATTEMPTS"/>
     <table-filter match-name="CIV_CONCEPTOS"/>
     <table-filter match-name="CIV_CONF_USU_REC"/>
+    <table-filter match-name="CIV_DATOS_PERSONAS"/>
     <table-filter match-name="CIV_DETALLE_DEUDAS"/>
     <table-filter match-name="CIV_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_DETALLE_INGRESO_DEUDAS"/>
@@ -55,6 +56,7 @@ Contributor(s):
     <table-filter match-name="CIV_ESTADO_ABOGADOS"/>
     <table-filter match-name="CIV_ESTADO_CONCEPTOS"/>
     <table-filter match-name="CIV_ESTADO_CONFUSUREC"/>
+    <table-filter match-name="CIV_ESTADO_DATOS_PERSONAS"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_DEUDAS"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_INGRESODEU"/>
@@ -74,6 +76,7 @@ Contributor(s):
     <table-filter match-name="CIV_ESTADO_PLAN_TRABAJOS"/>
     <table-filter match-name="CIV_ESTADO_RECURSOS"/>
     <table-filter match-name="CIV_ESTADO_REPORTE_TRABAJOS"/>
+    <table-filter match-name="CIV_ESTADO_TIPO_DATOS_PERSONAS"/>
     <table-filter match-name="CIV_ESTADOUSP_HISTORIA"/>
     <table-filter match-name="CIV_ESTADO_USUARIOS"/>
     <table-filter match-name="CIV_ETAPAS_GENERALES"/>
@@ -90,6 +93,7 @@ Contributor(s):
     <table-filter match-name="CIV_RECURSOS"/>
     <table-filter match-name="CIV_REPORTE_TRABAJOS"/>
     <table-filter match-name="CIV_TIPO_CONCEPTOS"/>
+    <table-filter match-name="CIV_TIPO_DATOS_PERSONAS"/>
     <table-filter match-name="CIV_TIPO_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_TIPO_DEUDAS"/>
     <table-filter match-name="CIV_TIPO_DOCUMENTOS"/>

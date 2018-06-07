@@ -40,7 +40,7 @@ public interface ITPersonas {
      * encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivPersonas consultarPersonasById(Session session,int per_id) throws Exception;
+    public CivPersonas consultarPersonasById(int per_id) throws Exception;
 
     /**
      * Retorna La Persona de la base de datos por medio del documento de

@@ -23,10 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class DaoPersonas implements ITPersonas {
 
     @Override
-    public CivPersonas consultarPersonasById(Session session, int per_id) throws Exception {
-        return (CivPersonas) session.createCriteria(CivPersonas.class)
-                .add(Restrictions.eq("perId", new BigDecimal(per_id)))
-                .uniqueResult();
+    public CivPersonas consultarPersonasById(int per_id) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "from CivPersonas where perId =:perId";
+        Query query = session.createQuery(hql);
+        query.setParameter("perId", new BigDecimal(per_id));
+        if (query.list().size() > 0) {
+            return (CivPersonas) query.list().get(0);
+        }
+        session.close();
+        return null;
     }
 
     @Override
@@ -35,7 +41,7 @@ public class DaoPersonas implements ITPersonas {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
-        query.setParameter("tipo",new BigDecimal(tipo));
+        query.setParameter("tipo", new BigDecimal(tipo));
         query.setParameter("nro_documento", nro_documento);
         if (query.list().size() > 0) {
             return (CivPersonas) query.list().get(0);
@@ -88,7 +94,7 @@ public class DaoPersonas implements ITPersonas {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public long insert(Session session, CivPersonas civPersonas) throws Exception {
-         return Integer.parseInt(session.save(civPersonas).toString());
+        return Integer.parseInt(session.save(civPersonas).toString());
     }
 
     /**

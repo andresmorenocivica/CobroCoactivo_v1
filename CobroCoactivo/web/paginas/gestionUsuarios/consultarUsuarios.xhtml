@@ -80,12 +80,12 @@
                                         <tbody>
                                             <c:forEach items="#{gestionUsuariosBean.listadoUsuarios}" var="usuario">
                                                 <tr>
-                                                    <td>#{usuario.usuId}</td>
-                                                    <td>#{usuario.usuNombre}</td>
-                                                    <td>#{usuario.estadoUsuarios}</td>
+                                                    <td>#{usuario.id}</td>
+                                                    <td>#{usuario.nombre}</td>
+                                                    <td>#{usuario.estadoUsuarios.descripcion}</td>
                                                     
                                                     <td class="row">
-                                                        <h:commandLink class="fa fa-eye col-sm-4" action="detalleUsuario.htm">
+                                                        <h:commandLink class="fa fa-eye col-sm-4" action="detalleUsuario.xhtml">
                                                             <f:setPropertyActionListener value="#{usuario}" target="#{requestBean.usuario}"/>
                                                             <c:set value="&lt;section class=&quot;content-header&quot;&gt;&lt;ol class=&quot;breadcrumb&quot;&gt;&lt;li&gt;&lt;a href=&quot;inicio.htm&quot;&gt;&lt;i class=&quot;fa fa-home&quot;&gt;&lt;/i&gt; Inicio&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;i class=&quot;fa fa-user&quot;&gt;&lt;/i&gt; Usuario&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;gestionUsuarios.htm&quot;&gt;&lt;i class=&quot;fa fa-cogs&quot;&gt;&lt;/i&gt;Administra Usuario&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;active&quot;&gt;&lt;i class=&quot;fa fa-address-card&quot;&gt;&lt;/i&gt; Detalle Usuario&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;/section&gt;" var="valor"/>
                                                             <f:setPropertyActionListener value="#{valor}" target="#{requestBean.ruta}"/>

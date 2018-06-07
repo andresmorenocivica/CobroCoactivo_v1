@@ -364,8 +364,7 @@ public class LoginImplBO implements LoginBO {
 
     @Override
     public void consultarDatosUsuario(BeanLogin obj) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        CivPersonas persona = getPersonasDAO().consultarPersonasById(session, obj.getIdPersonaUsuario());
+        CivPersonas persona = getPersonasDAO().consultarPersonasById(obj.getIdPersonaUsuario());
         if (persona == null) {
             throw new LoginException("No se encontró la persona correspondiente al usuario");
         }
@@ -373,7 +372,6 @@ public class LoginImplBO implements LoginBO {
         obj.setNombrePersonaUsuario(new ValidacionDatos().letraMayuscula(obj.getNombrePersonaUsuario()));
         obj.setCedulaPersonaUsuario(persona.getPerDocumento());
         obj.setFechaInicioPersonaUsuario(persona.getPerFechaproceso());
-        session.close();
     }
 
     public ITPersonas getPersonasDAO() {

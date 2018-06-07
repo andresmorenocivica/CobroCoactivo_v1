@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 7/06/2018 08:54:17 AM by Hibernate Tools 4.3.1
+// Generated 7/06/2018 03:45:05 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -23,6 +23,7 @@ public class CivPersonas  implements java.io.Serializable {
      private String perApellido2;
      private String perSexo;
      private Date perFechaproceso;
+     private Set civDatosPersonases = new HashSet(0);
      private Set civEntidadeses = new HashSet(0);
      private Set civDeudases = new HashSet(0);
      private Set civUsuarioses = new HashSet(0);
@@ -40,7 +41,7 @@ public class CivPersonas  implements java.io.Serializable {
         this.perNombre1 = perNombre1;
         this.perApellido1 = perApellido1;
     }
-    public CivPersonas(BigDecimal perId, CivTipoDocumentos civTipoDocumentos, CivEstadoPersonas civEstadoPersonas, String perDocumento, String perNombre1, String perNombre2, String perApellido1, String perApellido2, String perSexo, Date perFechaproceso, Set civEntidadeses, Set civDeudases, Set civUsuarioses, Set civAbogadoses) {
+    public CivPersonas(BigDecimal perId, CivTipoDocumentos civTipoDocumentos, CivEstadoPersonas civEstadoPersonas, String perDocumento, String perNombre1, String perNombre2, String perApellido1, String perApellido2, String perSexo, Date perFechaproceso, Set civDatosPersonases, Set civEntidadeses, Set civDeudases, Set civUsuarioses, Set civAbogadoses) {
        this.perId = perId;
        this.civTipoDocumentos = civTipoDocumentos;
        this.civEstadoPersonas = civEstadoPersonas;
@@ -51,6 +52,7 @@ public class CivPersonas  implements java.io.Serializable {
        this.perApellido2 = perApellido2;
        this.perSexo = perSexo;
        this.perFechaproceso = perFechaproceso;
+       this.civDatosPersonases = civDatosPersonases;
        this.civEntidadeses = civEntidadeses;
        this.civDeudases = civDeudases;
        this.civUsuarioses = civUsuarioses;
@@ -126,6 +128,13 @@ public class CivPersonas  implements java.io.Serializable {
     
     public void setPerFechaproceso(Date perFechaproceso) {
         this.perFechaproceso = perFechaproceso;
+    }
+    public Set getCivDatosPersonases() {
+        return this.civDatosPersonases;
+    }
+    
+    public void setCivDatosPersonases(Set civDatosPersonases) {
+        this.civDatosPersonases = civDatosPersonases;
     }
     public Set getCivEntidadeses() {
         return this.civEntidadeses;

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 7/06/2018 03:45:06 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoDatosPersonas" table="CIV_ESTADO_DATOS_PERSONAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estdatperId" type="big_decimal">
+            <column name="ESTDATPER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="estdatperDescripcion" type="string">
+            <column name="ESTDATPER_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara la descripcion del estado, Ej: Activo, inactico etc.</comment>
+            </column>
+        </property>
+        <property name="estdatperFechainicial" type="date">
+            <column name="ESTDATPER_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
+        </property>
+        <property name="estdatperFechafinal" type="date">
+            <column name="ESTDATPER_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado</comment>
+            </column>
+        </property>
+        <property name="estdatperFechaproceso" type="date">
+            <column name="ESTDATPER_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
+        </property>
+        <set name="civDatosPersonases" table="CIV_DATOS_PERSONAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DATPER_ESTDATPER_FK" precision="22" scale="0" not-null="true">
+                    <comment>Campo que almacena el ID del estado del registro, que es FOREIGN KEY hace refencia a la tabla CIV_ESTADO_DATO_PERSONAS</comment>
+                </column>
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDatosPersonas" />
+        </set>
+    </class>
+</hibernate-mapping>

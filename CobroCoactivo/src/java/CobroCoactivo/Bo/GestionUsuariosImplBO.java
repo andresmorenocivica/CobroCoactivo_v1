@@ -37,33 +37,20 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void consultarUsuario(BeanGestionUsuarios bean) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+      
         //List<CivUsuarios> listarCivUsuario = new ArrayList<CivUsuarios>();
         List<CivUsuarios> listaCivUsuario = new ArrayList<>();
         switch (bean.getTipoBusqueda()) {
             case 1:
-                listaCivUsuario = getUsuariosDAO().listarUsuarios(session, bean.getNombreUsuario().toUpperCase());
+                listaCivUsuario = getUsuariosDAO().listarUsuarios(bean.getNombreUsuario().toUpperCase());
                 break;
         }
         if (listaCivUsuario != null && listaCivUsuario.size() > 0) {
             for (CivUsuarios civUsuarios : listaCivUsuario) {
-                Usuarios usuarios = new Usuarios();
-                usuarios.setUsuId(civUsuarios.getUsuId());
-                usuarios.setUsuNombre(civUsuarios.getUsuNombre());
-                usuarios.setUsuPass(civUsuarios.getUsuPass());
-                
-                CivPersonas personaUsuarios = getPersonasDAO().consultarPersonasById(session, civUsuarios.getCivPersonas().getPerId().intValue());
-                Personas personas = new Personas();
-                personas.setId(personaUsuarios.getPerId().intValue());
-                personas.setNombre1(personaUsuarios.getPerNombre1());
-                personas.setNombre2(personaUsuarios.getPerNombre2());
-                personas.setApellido1(personaUsuarios.getPerApellido1());
-                personas.setApellido2(personaUsuarios.getPerApellido2());
-                personas.setDocumento(personaUsuarios.getPerDocumento());
+                Usuarios usuarios = new Usuarios(civUsuarios, civUsuarios.getCivEstadoUsuarios(), civUsuarios.getCivPersonas());
                 bean.getListadoUsuarios().add(usuarios);
             }
         }
-        session.close();
     }
 
     /**
