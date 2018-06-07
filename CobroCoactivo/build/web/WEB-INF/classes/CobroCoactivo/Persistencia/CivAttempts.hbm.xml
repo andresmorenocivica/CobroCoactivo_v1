@@ -1,21 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivAttempts" table="CIV_ATTEMPTS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="ttpId" type="big_decimal">
             <column name="TTP_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
-            <column name="USU_ID" precision="22" scale="0" not-null="true" />
+            <column name="USU_ID" precision="22" scale="0" not-null="true">
+                <comment>ID del usuario que hizo el intento</comment>
+            </column>
         </many-to-one>
         <property name="ttpIntentos" type="big_decimal">
-            <column name="TTP_INTENTOS" precision="22" scale="0" />
+            <column name="TTP_INTENTOS" precision="22" scale="0">
+                <comment>Numero de intento</comment>
+            </column>
         </property>
         <property name="tppUltimoIntento" type="date">
-            <column name="TPP_ULTIMO_INTENTO" length="7" />
+            <column name="TPP_ULTIMO_INTENTO" length="7">
+                <comment>fecha y hora del ultimo intento</comment>
+            </column>
         </property>
     </class>
 </hibernate-mapping>

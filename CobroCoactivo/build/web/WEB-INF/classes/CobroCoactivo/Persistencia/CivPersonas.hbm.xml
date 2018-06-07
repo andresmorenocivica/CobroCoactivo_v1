@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivPersonas" table="CIV_PERSONAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que almacenara los datos de las distintas personas que se registren en el sistema.,</comment>
         <id name="perId" type="big_decimal">
             <column name="PER_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civTipoDocumentos" class="CobroCoactivo.Persistencia.CivTipoDocumentos" fetch="select">
             <column name="PER_TIPODOC_FK" precision="22" scale="0" not-null="true">
@@ -50,7 +50,9 @@
             </column>
         </property>
         <property name="perFechaproceso" type="date">
-            <column name="PER_FECHAPROCESO" length="7" />
+            <column name="PER_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
         </property>
         <set name="civEntidadeses" table="CIV_ENTIDADES" inverse="true" lazy="true" fetch="select">
             <key>
@@ -62,7 +64,9 @@
         </set>
         <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="DEU_PER_FK" precision="22" scale="0" not-null="true" />
+                <column name="DEU_PER_FK" precision="22" scale="0" not-null="true">
+                    <comment>ID de la persona que pertenece la deuda.</comment>
+                </column>
             </key>
             <one-to-many class="CobroCoactivo.Persistencia.CivDeudas" />
         </set>

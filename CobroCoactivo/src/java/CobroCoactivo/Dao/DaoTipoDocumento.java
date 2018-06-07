@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,7 +38,7 @@ public class DaoTipoDocumento implements ITTipoDocumento {
     }
 
     @Override
-
+    @Transactional
     public List<CivTipoDocumentos> listAll() throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivTipoDocumentos";

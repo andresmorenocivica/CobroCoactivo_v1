@@ -1,24 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoEtapaTrabajos" table="CIV_ESTADO_ETAPA_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estetatraId" type="big_decimal">
             <column name="ESTETATRA_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="estetatraDescripcion" type="string">
-            <column name="ESTETATRA_DESCRIPCION" length="100" not-null="true" />
+            <column name="ESTETATRA_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara la descripcion del estado, Ej: Activo, inactico etc.</comment>
+            </column>
         </property>
         <property name="estetatraFechainicial" type="date">
-            <column name="ESTETATRA_FECHAINICIAL" length="7" />
+            <column name="ESTETATRA_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
         </property>
         <property name="estetatraFechafinal" type="date">
-            <column name="ESTETATRA_FECHAFINAL" length="7" />
+            <column name="ESTETATRA_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado</comment>
+            </column>
         </property>
         <property name="estetatraFechaproceso" type="date">
-            <column name="ESTETATRA_FECHAPROCESO" length="7" />
+            <column name="ESTETATRA_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
         </property>
         <set name="civEtapasTrabajoses" table="CIV_ETAPAS_TRABAJOS" inverse="true" lazy="true" fetch="select">
             <key>

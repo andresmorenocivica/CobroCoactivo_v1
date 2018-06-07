@@ -1,24 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivConceptos" table="CIV_CONCEPTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="conId" type="big_decimal">
             <column name="CON_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civTipoConceptos" class="CobroCoactivo.Persistencia.CivTipoConceptos" fetch="select">
-            <column name="CON_TIPOCON_FK" precision="22" scale="0" not-null="true" />
+            <column name="CON_TIPOCON_FK" precision="22" scale="0" not-null="true">
+                <comment>ID del tipo de concepto</comment>
+            </column>
         </many-to-one>
         <many-to-one name="civEstadoConceptos" class="CobroCoactivo.Persistencia.CivEstadoConceptos" fetch="select">
-            <column name="CON_ESTCON_FK" precision="22" scale="0" not-null="true" />
+            <column name="CON_ESTCON_FK" precision="22" scale="0" not-null="true">
+                <comment>ID del estado del concepto</comment>
+            </column>
         </many-to-one>
         <property name="conDescripcion" type="string">
-            <column name="CON_DESCRIPCION" length="100" not-null="true" />
+            <column name="CON_DESCRIPCION" length="100" not-null="true">
+                <comment>Descripcion o nombre del concepto</comment>
+            </column>
         </property>
         <property name="conFechaproceso" type="date">
-            <column name="CON_FECHAPROCESO" length="7" />
+            <column name="CON_FECHAPROCESO" length="7">
+                <comment>Fecha del registro</comment>
+            </column>
         </property>
         <set name="civDetalleDeudases" table="CIV_DETALLE_DEUDAS" inverse="true" lazy="true" fetch="select">
             <key>

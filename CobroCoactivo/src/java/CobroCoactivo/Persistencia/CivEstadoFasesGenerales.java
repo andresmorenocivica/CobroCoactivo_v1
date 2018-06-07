@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1
+// Generated 7/06/2018 08:54:17 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -24,9 +24,10 @@ public class CivEstadoFasesGenerales  implements java.io.Serializable {
     }
 
 	
-    public CivEstadoFasesGenerales(BigDecimal estfasgenId, String estfasgenDescripcion) {
+    public CivEstadoFasesGenerales(BigDecimal estfasgenId, String estfasgenDescripcion, Date estfasgenFechainicial) {
         this.estfasgenId = estfasgenId;
         this.estfasgenDescripcion = estfasgenDescripcion;
+        this.estfasgenFechainicial = estfasgenFechainicial;
     }
     public CivEstadoFasesGenerales(BigDecimal estfasgenId, String estfasgenDescripcion, Date estfasgenFechainicial, Date estfasgenFechafinal, Date estfasgenFechaproceso, Set civFasesGeneraleses) {
        this.estfasgenId = estfasgenId;

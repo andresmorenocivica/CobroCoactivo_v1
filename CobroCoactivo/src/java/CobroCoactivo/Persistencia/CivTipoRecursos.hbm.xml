@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivTipoRecursos" table="CIV_TIPO_RECURSOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tiprecId" type="big_decimal">
             <column name="TIPREC_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="tiprecDescripcion" type="string">
             <column name="TIPREC_DESCRIPCION" length="100" not-null="true">
@@ -14,15 +14,19 @@
             </column>
         </property>
         <property name="tiprecNombrecorto" type="string">
-            <column name="TIPREC_NOMBRECORTO" length="100">
+            <column name="TIPREC_NOMBRECORTO" length="50">
                 <comment>Campo que almacena el nombre corto del tipo.</comment>
             </column>
         </property>
         <property name="tiprecFechainicial" type="date">
-            <column name="TIPREC_FECHAINICIAL" length="7" />
+            <column name="TIPREC_FECHAINICIAL" length="7" not-null="true">
+                <comment>Fecha inicial del tipo de recurso.</comment>
+            </column>
         </property>
         <property name="tiprecFechafinal" type="date">
-            <column name="TIPREC_FECHAFINAL" length="7" />
+            <column name="TIPREC_FECHAFINAL" length="7">
+                <comment>Fecha final del tipo del recurso</comment>
+            </column>
         </property>
         <property name="tiprecCodigo" type="big_decimal">
             <column name="TIPREC_CODIGO" precision="22" scale="0" />

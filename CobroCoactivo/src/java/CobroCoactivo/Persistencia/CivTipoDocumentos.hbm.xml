@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivTipoDocumentos" table="CIV_TIPO_DOCUMENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tipdocId" type="big_decimal">
             <column name="TIPDOC_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="tipdocDescripcion" type="string">
             <column name="TIPDOC_DESCRIPCION" length="100" not-null="true">
@@ -19,10 +19,14 @@
             </column>
         </property>
         <property name="tipdocFechainicial" type="date">
-            <column name="TIPDOC_FECHAINICIAL" length="7" />
+            <column name="TIPDOC_FECHAINICIAL" length="7" not-null="true">
+                <comment>fecha inicial del tipo de documento</comment>
+            </column>
         </property>
         <property name="tipdocFechafinal" type="date">
-            <column name="TIPDOC_FECHAFINAL" length="7" />
+            <column name="TIPDOC_FECHAFINAL" length="7">
+                <comment>fecha final del tipo de documento.</comment>
+            </column>
         </property>
         <property name="tipdocCodigo" type="big_decimal">
             <column name="TIPDOC_CODIGO" precision="22" scale="0" />

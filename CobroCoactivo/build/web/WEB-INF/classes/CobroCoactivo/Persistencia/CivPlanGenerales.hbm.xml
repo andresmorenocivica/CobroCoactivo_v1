@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivPlanGenerales" table="CIV_PLAN_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="plagenId" type="big_decimal">
             <column name="PLAGEN_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civEstadoPlanGenerales" class="CobroCoactivo.Persistencia.CivEstadoPlanGenerales" fetch="select">
             <column name="PLAGEN_ESTPLAGEN_FK" precision="22" scale="0" not-null="true" />
@@ -14,8 +14,8 @@
         <property name="plagenDescripcion" type="string">
             <column name="PLAGEN_DESCRIPCION" length="100" not-null="true" />
         </property>
-        <property name="plagenFechaproceso" type="big_decimal">
-            <column name="PLAGEN_FECHAPROCESO" precision="22" scale="0" not-null="true" />
+        <property name="plagenFechaproceso" type="date">
+            <column name="PLAGEN_FECHAPROCESO" length="7" />
         </property>
         <set name="civEtapasGeneraleses" table="CIV_ETAPAS_GENERALES" inverse="true" lazy="true" fetch="select">
             <key>

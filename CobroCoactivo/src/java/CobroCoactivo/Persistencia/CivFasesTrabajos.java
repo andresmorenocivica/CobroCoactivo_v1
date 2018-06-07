@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1
+// Generated 7/06/2018 08:54:17 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -14,9 +14,9 @@ public class CivFasesTrabajos  implements java.io.Serializable {
      private BigDecimal fastraId;
      private CivReporteTrabajos civReporteTrabajos;
      private CivEtapasTrabajos civEtapasTrabajos;
-     private CivEstadoFasesTrabajos civEstadoFasesTrabajos;
+     private CivEstadoFasesTrabajos civEstadoFasesTrabajosByEstfastraId;
+     private CivEstadoFasesTrabajos civEstadoFasesTrabajosByFastraEstfastraFk;
      private String fastraDescripcion;
-     private BigDecimal fastraEstfastraFk;
      private Date fastraFechaproceso;
      private BigDecimal fastraDianim;
      private BigDecimal fastraDiamax;
@@ -25,18 +25,18 @@ public class CivFasesTrabajos  implements java.io.Serializable {
     }
 
 	
-    public CivFasesTrabajos(CivEtapasTrabajos civEtapasTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, String fastraDescripcion, BigDecimal fastraEstfastraFk) {
+    public CivFasesTrabajos(CivEtapasTrabajos civEtapasTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajosByEstfastraId, CivEstadoFasesTrabajos civEstadoFasesTrabajosByFastraEstfastraFk, String fastraDescripcion) {
         this.civEtapasTrabajos = civEtapasTrabajos;
-        this.civEstadoFasesTrabajos = civEstadoFasesTrabajos;
+        this.civEstadoFasesTrabajosByEstfastraId = civEstadoFasesTrabajosByEstfastraId;
+        this.civEstadoFasesTrabajosByFastraEstfastraFk = civEstadoFasesTrabajosByFastraEstfastraFk;
         this.fastraDescripcion = fastraDescripcion;
-        this.fastraEstfastraFk = fastraEstfastraFk;
     }
-    public CivFasesTrabajos(CivReporteTrabajos civReporteTrabajos, CivEtapasTrabajos civEtapasTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, String fastraDescripcion, BigDecimal fastraEstfastraFk, Date fastraFechaproceso, BigDecimal fastraDianim, BigDecimal fastraDiamax) {
+    public CivFasesTrabajos(CivReporteTrabajos civReporteTrabajos, CivEtapasTrabajos civEtapasTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajosByEstfastraId, CivEstadoFasesTrabajos civEstadoFasesTrabajosByFastraEstfastraFk, String fastraDescripcion, Date fastraFechaproceso, BigDecimal fastraDianim, BigDecimal fastraDiamax) {
        this.civReporteTrabajos = civReporteTrabajos;
        this.civEtapasTrabajos = civEtapasTrabajos;
-       this.civEstadoFasesTrabajos = civEstadoFasesTrabajos;
+       this.civEstadoFasesTrabajosByEstfastraId = civEstadoFasesTrabajosByEstfastraId;
+       this.civEstadoFasesTrabajosByFastraEstfastraFk = civEstadoFasesTrabajosByFastraEstfastraFk;
        this.fastraDescripcion = fastraDescripcion;
-       this.fastraEstfastraFk = fastraEstfastraFk;
        this.fastraFechaproceso = fastraFechaproceso;
        this.fastraDianim = fastraDianim;
        this.fastraDiamax = fastraDiamax;
@@ -63,12 +63,19 @@ public class CivFasesTrabajos  implements java.io.Serializable {
     public void setCivEtapasTrabajos(CivEtapasTrabajos civEtapasTrabajos) {
         this.civEtapasTrabajos = civEtapasTrabajos;
     }
-    public CivEstadoFasesTrabajos getCivEstadoFasesTrabajos() {
-        return this.civEstadoFasesTrabajos;
+    public CivEstadoFasesTrabajos getCivEstadoFasesTrabajosByEstfastraId() {
+        return this.civEstadoFasesTrabajosByEstfastraId;
     }
     
-    public void setCivEstadoFasesTrabajos(CivEstadoFasesTrabajos civEstadoFasesTrabajos) {
-        this.civEstadoFasesTrabajos = civEstadoFasesTrabajos;
+    public void setCivEstadoFasesTrabajosByEstfastraId(CivEstadoFasesTrabajos civEstadoFasesTrabajosByEstfastraId) {
+        this.civEstadoFasesTrabajosByEstfastraId = civEstadoFasesTrabajosByEstfastraId;
+    }
+    public CivEstadoFasesTrabajos getCivEstadoFasesTrabajosByFastraEstfastraFk() {
+        return this.civEstadoFasesTrabajosByFastraEstfastraFk;
+    }
+    
+    public void setCivEstadoFasesTrabajosByFastraEstfastraFk(CivEstadoFasesTrabajos civEstadoFasesTrabajosByFastraEstfastraFk) {
+        this.civEstadoFasesTrabajosByFastraEstfastraFk = civEstadoFasesTrabajosByFastraEstfastraFk;
     }
     public String getFastraDescripcion() {
         return this.fastraDescripcion;
@@ -76,13 +83,6 @@ public class CivFasesTrabajos  implements java.io.Serializable {
     
     public void setFastraDescripcion(String fastraDescripcion) {
         this.fastraDescripcion = fastraDescripcion;
-    }
-    public BigDecimal getFastraEstfastraFk() {
-        return this.fastraEstfastraFk;
-    }
-    
-    public void setFastraEstfastraFk(BigDecimal fastraEstfastraFk) {
-        this.fastraEstfastraFk = fastraEstfastraFk;
     }
     public Date getFastraFechaproceso() {
         return this.fastraFechaproceso;

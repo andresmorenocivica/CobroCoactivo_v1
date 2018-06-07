@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 /**
  *
@@ -42,7 +43,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         if (civPersonas == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"no se encontro la persona en el sistema", null));
         }
-        Personas persona = new Personas(civPersonas);
+        Personas persona = new Personas(civPersonas,civPersonas.getCivEstadoPersonas(),civPersonas.getCivTipoDocumentos());
         bean.getListPersonas().add(persona);
     }
 

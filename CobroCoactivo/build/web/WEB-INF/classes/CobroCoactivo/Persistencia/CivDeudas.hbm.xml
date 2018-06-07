@@ -1,24 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDeudas" table="CIV_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="deuId" type="big_decimal">
             <column name="DEU_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civTipoDeudas" class="CobroCoactivo.Persistencia.CivTipoDeudas" fetch="select">
-            <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true" />
+            <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true">
+                <comment>Tipo de deuda, que hace referencia ala tabla CIV_TIPO_DEUDAS Ej: Impuesto, Comparendos</comment>
+            </column>
         </many-to-one>
         <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
-            <column name="DEU_PER_FK" precision="22" scale="0" not-null="true" />
+            <column name="DEU_PER_FK" precision="22" scale="0" not-null="true">
+                <comment>ID de la persona que pertenece la deuda.</comment>
+            </column>
         </many-to-one>
         <many-to-one name="civEstadoDeudas" class="CobroCoactivo.Persistencia.CivEstadoDeudas" fetch="select">
-            <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true" />
+            <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true">
+                <comment>estado de la deuda, EJ:activo, inactico. Hace refencia a la tabla CIV_ESTADO_DEUDAS</comment>
+            </column>
         </many-to-one>
         <property name="deuFechadeuda" type="date">
-            <column name="DEU_FECHADEUDA" length="7" />
+            <column name="DEU_FECHADEUDA" length="7">
+                <comment>fecha de la deuda</comment>
+            </column>
         </property>
         <property name="deuValor" type="big_decimal">
             <column name="DEU_VALOR" precision="22" scale="0" />
@@ -27,7 +35,14 @@
             <column name="DEU_SALDO" precision="22" scale="0" />
         </property>
         <property name="deuFechaproceso" type="date">
-            <column name="DEU_FECHAPROCESO" length="7" />
+            <column name="DEU_FECHAPROCESO" length="7">
+                <comment>Fecha del registro.</comment>
+            </column>
+        </property>
+        <property name="deuRefencia" type="string">
+            <column name="DEU_REFENCIA" length="100">
+                <comment>Referencia de la deuda</comment>
+            </column>
         </property>
         <set name="civDetalleIngresoDeudases" table="CIV_DETALLE_INGRESO_DEUDAS" inverse="true" lazy="true" fetch="select">
             <key>

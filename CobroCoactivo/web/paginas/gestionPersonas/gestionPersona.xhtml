@@ -24,7 +24,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                             <h:messages id="msggeneral2" showDetail="false" />
+                            <h:messages id="msggeneral2" showDetail="false" />
                             <!-- Default box -->
                             <div class="box box-danger">
                                 <div class="box-header with-border">
@@ -141,18 +141,19 @@
                                         <tr>
                                             <th>Id</th>
                                             <th>Nombre</th>
-                                            <th>Apellido</th>
                                             <th>Sexo</th>
+                                            <th>Estado</th>
                                             <th>Mostrar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
                                             <tr>
+
                                                 <td>#{persona.id}</td>
-                                                <td>#{persona.nombre1}</td>
-                                                <td>#{persona.apellido1}</td>
+                                                <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.apellido1}</td>
                                                 <td>#{persona.sexo}</td>
+                                                <td>#{persona.estadoPersonas.descripcion}</td>
                                                 <td>
                                                     <h:commandLink class="fa fa-eye col-sm-4" action="detallePersona">
                                                         <f:setPropertyActionListener value="#{persona}" target="#{requestBean.personas}"/>

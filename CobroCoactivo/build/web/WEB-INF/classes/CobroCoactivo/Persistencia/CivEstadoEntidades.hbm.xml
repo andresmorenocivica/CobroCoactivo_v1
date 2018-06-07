@@ -1,24 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoEntidades" table="CIV_ESTADO_ENTIDADES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estentId" type="big_decimal">
             <column name="ESTENT_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="estentDescripcion" type="string">
-            <column name="ESTENT_DESCRIPCION" length="100" />
+            <column name="ESTENT_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara la descripcion del estado, Ej: Activo, inactico etc.</comment>
+            </column>
         </property>
         <property name="estentFechainicial" type="date">
-            <column name="ESTENT_FECHAINICIAL" length="7" />
+            <column name="ESTENT_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
         </property>
         <property name="estentFechafinal" type="date">
-            <column name="ESTENT_FECHAFINAL" length="7" />
+            <column name="ESTENT_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado</comment>
+            </column>
         </property>
         <property name="estentFechaproceso" type="date">
-            <column name="ESTENT_FECHAPROCESO" length="7" />
+            <column name="ESTENT_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
         </property>
         <set name="civEntidadeses" table="CIV_ENTIDADES" inverse="true" lazy="true" fetch="select">
             <key>

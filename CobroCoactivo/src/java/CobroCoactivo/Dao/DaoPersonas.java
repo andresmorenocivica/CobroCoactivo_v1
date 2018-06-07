@@ -14,7 +14,6 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -31,8 +30,8 @@ public class DaoPersonas implements ITPersonas {
     }
 
     @Override
+    @Transactional
     public CivPersonas consultarPersonasByDocumento(int tipo, String nro_documento) throws Exception {
-        
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);

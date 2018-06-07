@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivPerfiles" table="CIV_PERFILES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que almacenara los registro de los perfiles que habra en el sistema.</comment>
         <id name="perfId" type="big_decimal">
             <column name="PERF_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civEstadoPerfiles" class="CobroCoactivo.Persistencia.CivEstadoPerfiles" fetch="select">
             <column name="PERF_ESTADO_FK" precision="22" scale="0" not-null="true">
@@ -15,7 +15,7 @@
             </column>
         </many-to-one>
         <property name="perfNombre" type="string">
-            <column name="PERF_NOMBRE" length="10" not-null="true">
+            <column name="PERF_NOMBRE" length="50" not-null="true">
                 <comment>Campo que guardara el nombre de los perfiles que habran en el sisteam.</comment>
             </column>
         </property>

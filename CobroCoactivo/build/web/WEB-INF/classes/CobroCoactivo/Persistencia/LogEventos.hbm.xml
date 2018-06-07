@@ -1,39 +1,57 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.LogEventos" table="LOG_EVENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="eveId" type="big_decimal">
             <column name="EVE_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
-            <column name="EVE_USU_FK" precision="22" scale="0" not-null="true" />
+            <column name="EVE_USU_FK" precision="22" scale="0" not-null="true">
+                <comment>ID del usuario</comment>
+            </column>
         </many-to-one>
         <property name="eveIp" type="string">
-            <column name="EVE_IP" length="1000" />
+            <column name="EVE_IP" length="1000">
+                <comment>IP origen</comment>
+            </column>
         </property>
         <property name="eveNivel" type="big_decimal">
-            <column name="EVE_NIVEL" precision="22" scale="0" />
+            <column name="EVE_NIVEL" precision="22" scale="0">
+                <comment>Nivel de evento</comment>
+            </column>
         </property>
         <property name="eveFecha" type="date">
-            <column name="EVE_FECHA" length="7" />
+            <column name="EVE_FECHA" length="7">
+                <comment>Fecha y hora del evento</comment>
+            </column>
         </property>
         <property name="eveException" type="string">
-            <column name="EVE_EXCEPTION" length="1000" />
+            <column name="EVE_EXCEPTION" length="1000">
+                <comment>Tipo de Excepcion</comment>
+            </column>
         </property>
         <property name="eveMensaje" type="string">
-            <column name="EVE_MENSAJE" length="1000" />
+            <column name="EVE_MENSAJE" length="1000">
+                <comment>Mensaje de error</comment>
+            </column>
         </property>
         <property name="eveCausa" type="string">
-            <column name="EVE_CAUSA" length="1000" />
+            <column name="EVE_CAUSA" length="1000">
+                <comment>Causa de la Excepcion</comment>
+            </column>
         </property>
         <property name="eveClaseOrigen" type="string">
-            <column name="EVE_CLASE_ORIGEN" length="1000" />
+            <column name="EVE_CLASE_ORIGEN" length="1000">
+                <comment>Clase origen del error</comment>
+            </column>
         </property>
         <property name="eveStacktrace" type="string">
-            <column name="EVE_STACKTRACE" length="1000" />
+            <column name="EVE_STACKTRACE" length="1000">
+                <comment>Stack del error</comment>
+            </column>
         </property>
     </class>
 </hibernate-mapping>

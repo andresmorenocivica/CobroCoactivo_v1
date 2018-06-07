@@ -1,18 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 7/06/2018 08:54:19 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadouspHistoria" table="CIV_ESTADOUSP_HISTORIA" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estuspId" type="big_decimal">
             <column name="ESTUSP_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="estuspDescripcion" type="string">
-            <column name="ESTUSP_DESCRIPCION" length="100" />
+            <column name="ESTUSP_DESCRIPCION" length="100" not-null="true">
+                <comment>Campo que guardara la descripcion del estado, Ej: Activo, inactico etc.</comment>
+            </column>
         </property>
         <property name="estuspFechainicial" type="date">
-            <column name="ESTUSP_FECHAINICIAL" length="7" />
+            <column name="ESTUSP_FECHAINICIAL" length="7" not-null="true">
+                <comment>Campo que guardara la fecha inicial del estado.</comment>
+            </column>
+        </property>
+        <property name="estuspFechafinal" type="date">
+            <column name="ESTUSP_FECHAFINAL" length="7">
+                <comment>Campo que guardara la fecha final del estado</comment>
+            </column>
+        </property>
+        <property name="estuspFechaproceso" type="date">
+            <column name="ESTUSP_FECHAPROCESO" length="7">
+                <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
+            </column>
         </property>
         <property name="estuspFechafianl" type="date">
             <column name="ESTUSP_FECHAFIANL" length="7" />

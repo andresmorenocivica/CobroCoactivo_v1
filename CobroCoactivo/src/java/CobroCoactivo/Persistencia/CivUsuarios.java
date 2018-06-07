@@ -1,8 +1,9 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1
+// Generated 7/06/2018 08:54:17 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ public class CivUsuarios  implements java.io.Serializable {
      private CivEstadoUsuarios civEstadoUsuarios;
      private String usuNombre;
      private String usuPass;
+     private Date usuFechaproceso;
      private Set civConfUsuRecs = new HashSet(0);
      private Set civAttemptses = new HashSet(0);
      private Set civUspHistorias = new HashSet(0);
@@ -33,12 +35,13 @@ public class CivUsuarios  implements java.io.Serializable {
         this.usuNombre = usuNombre;
         this.usuPass = usuPass;
     }
-    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Set civConfUsuRecs, Set civAttemptses, Set civUspHistorias, Set logEventoses) {
+    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civUspHistorias, Set logEventoses) {
        this.usuId = usuId;
        this.civPersonas = civPersonas;
        this.civEstadoUsuarios = civEstadoUsuarios;
        this.usuNombre = usuNombre;
        this.usuPass = usuPass;
+       this.usuFechaproceso = usuFechaproceso;
        this.civConfUsuRecs = civConfUsuRecs;
        this.civAttemptses = civAttemptses;
        this.civUspHistorias = civUspHistorias;
@@ -79,6 +82,13 @@ public class CivUsuarios  implements java.io.Serializable {
     
     public void setUsuPass(String usuPass) {
         this.usuPass = usuPass;
+    }
+    public Date getUsuFechaproceso() {
+        return this.usuFechaproceso;
+    }
+    
+    public void setUsuFechaproceso(Date usuFechaproceso) {
+        this.usuFechaproceso = usuFechaproceso;
     }
     public Set getCivConfUsuRecs() {
         return this.civConfUsuRecs;

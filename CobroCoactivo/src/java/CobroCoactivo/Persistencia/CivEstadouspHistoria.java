@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/05/2018 02:43:14 PM by Hibernate Tools 4.3.1
+// Generated 7/06/2018 08:54:17 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -16,6 +16,8 @@ public class CivEstadouspHistoria  implements java.io.Serializable {
      private BigDecimal estuspId;
      private String estuspDescripcion;
      private Date estuspFechainicial;
+     private Date estuspFechafinal;
+     private Date estuspFechaproceso;
      private Date estuspFechafianl;
      private Set civUspHistorias = new HashSet(0);
 
@@ -23,13 +25,17 @@ public class CivEstadouspHistoria  implements java.io.Serializable {
     }
 
 	
-    public CivEstadouspHistoria(BigDecimal estuspId) {
+    public CivEstadouspHistoria(BigDecimal estuspId, String estuspDescripcion, Date estuspFechainicial) {
         this.estuspId = estuspId;
+        this.estuspDescripcion = estuspDescripcion;
+        this.estuspFechainicial = estuspFechainicial;
     }
-    public CivEstadouspHistoria(BigDecimal estuspId, String estuspDescripcion, Date estuspFechainicial, Date estuspFechafianl, Set civUspHistorias) {
+    public CivEstadouspHistoria(BigDecimal estuspId, String estuspDescripcion, Date estuspFechainicial, Date estuspFechafinal, Date estuspFechaproceso, Date estuspFechafianl, Set civUspHistorias) {
        this.estuspId = estuspId;
        this.estuspDescripcion = estuspDescripcion;
        this.estuspFechainicial = estuspFechainicial;
+       this.estuspFechafinal = estuspFechafinal;
+       this.estuspFechaproceso = estuspFechaproceso;
        this.estuspFechafianl = estuspFechafianl;
        this.civUspHistorias = civUspHistorias;
     }
@@ -54,6 +60,20 @@ public class CivEstadouspHistoria  implements java.io.Serializable {
     
     public void setEstuspFechainicial(Date estuspFechainicial) {
         this.estuspFechainicial = estuspFechainicial;
+    }
+    public Date getEstuspFechafinal() {
+        return this.estuspFechafinal;
+    }
+    
+    public void setEstuspFechafinal(Date estuspFechafinal) {
+        this.estuspFechafinal = estuspFechafinal;
+    }
+    public Date getEstuspFechaproceso() {
+        return this.estuspFechaproceso;
+    }
+    
+    public void setEstuspFechaproceso(Date estuspFechaproceso) {
+        this.estuspFechaproceso = estuspFechaproceso;
     }
     public Date getEstuspFechafianl() {
         return this.estuspFechafianl;
