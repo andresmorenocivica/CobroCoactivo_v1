@@ -42,60 +42,59 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Tipo Documento</label>
-                                            <h:selectOneMenu value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
-                                                <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
-
+                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
+                                                <f:selectItems  value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label>Documento</label>
-                                            <h:inputText  value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <label>N Documento</label>
+                                            <h:inputText style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
 
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
                                         <div class="form-group">
                                             <label>Sexo</label>
-                                            <h:inputText id="textSexo"  value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="textSexo"  value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Primer Nombre</label>
-                                            <h:inputText id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Segundo Nombre</label>
-                                            <h:inputText id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Primer Apellido</label>
-                                            <h:inputText id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Segundo Apellido</label>
-                                            <h:inputText id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Fecha De Expedición</label>
-                                            <h:inputText id="dateFechaDeExpidicion" value="#{gestionPersonaBean.detallePersona.fechaproceso}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"> </h:inputText>
+                                            <h:inputText style="border-color: black" id="dateFechaDeExpidicion" value="#{gestionPersonaBean.detallePersona.fechaproceso}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"> </h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Estado</label>
-                                            <h:inputText id="txtEstado" value="#{gestionPersonaBean.detallePersona.estadoPersonas.id}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText style="border-color: black" id="txtEstado" value="#{gestionPersonaBean.detallePersona.estadoPersonas.descripcion}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                 </div>

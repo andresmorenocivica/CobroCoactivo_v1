@@ -19,14 +19,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author amoreno
  */
-@ManagedBean(name = "gestionPersonaBean",eager = true)
+@ManagedBean(name = "gestionPersonaBean", eager = true)
 @ViewScoped
-public class BeanGestionPersonas  implements Serializable {
+public class BeanGestionPersonas implements Serializable {
     // filtros de Busqueda 
 
     private String documentoPersona;
@@ -38,19 +39,21 @@ public class BeanGestionPersonas  implements Serializable {
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     // lista que se utilizara para cargar la tabla de resultado de la busqueda
     private List<Personas> listPersonas = new ArrayList<>();
-    
+
     // objeto que se utilizara para mostrar el detalle de la persona
-     private Personas detallePersona;
-     private String encabezadoDetallePersona;
+    private Personas detallePersona;
+    private String encabezadoDetallePersona;
 
     private BeanLogin loginBO;
-    private BeanRequest requestBean;
+    private BeanRequest requestBean = new BeanRequest();
     private GestionPersonasBO gestionPersonasBO;
 
     @PostConstruct
     public void init() {
         try {
-            BeanRequest obj_ = (BeanRequest) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("requestBean");
+            FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+            BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             if (obj_ != null) {
                 setDetallePersona(obj_.getPersonas());
                 setEncabezadoDetallePersona(obj_.getRuta());
