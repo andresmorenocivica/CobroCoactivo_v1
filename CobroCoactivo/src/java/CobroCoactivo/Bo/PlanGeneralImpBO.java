@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import CobroCoactivo.Dao.ITEstadoPlanGeneral;
 import CobroCoactivo.Modelo.EstadoPlanGenerales;
+import java.util.Date;
 
 /**
  *
@@ -57,9 +58,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
         civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getIdEstadoGeneral()));
-        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getPlagenDescripcion());
+        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
-        civPlanGenerales.setPlagenFechaproceso(new BigDecimal(15));
+        civPlanGenerales.setPlagenFechaproceso(new Date());
         getiTPlanGeneral().create(civPlanGenerales);
 
     }

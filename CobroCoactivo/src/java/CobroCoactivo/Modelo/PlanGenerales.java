@@ -4,6 +4,7 @@ package CobroCoactivo.Modelo;
 
 import CobroCoactivo.Persistencia.CivEstadoPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class PlanGenerales  implements java.io.Serializable {
      private int Id;
      private EstadoPlanGenerales estadoPlanGenerales = new EstadoPlanGenerales();
      private String Descripcion;
-     private int Fechaproceso;
+     private Date Fechaproceso;
 
     public PlanGenerales() {
     }
@@ -24,46 +25,72 @@ public class PlanGenerales  implements java.io.Serializable {
     public PlanGenerales(CivPlanGenerales civPlanGenerales){
         this.Id = civPlanGenerales.getPlagenId().intValue();
        this.Descripcion = civPlanGenerales.getPlagenDescripcion();
-       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso().intValue();
+       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso();
     }
     public PlanGenerales(CivPlanGenerales civPlanGenerales,CivEstadoPlanGenerales civEstadoPlanGenerales){
        this.Id = civPlanGenerales.getPlagenId().intValue();
        this.Descripcion = civPlanGenerales.getPlagenDescripcion();
-       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso().intValue();
+       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso();
        this.estadoPlanGenerales = new EstadoPlanGenerales(civEstadoPlanGenerales);
     }
-            
-   
-    public int getPlagenId() {
-        return this.Id;
+
+    /**
+     * @return the Id
+     */
+    public int getId() {
+        return Id;
     }
-    
-    public void setPlagenId(int Id) {
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(int Id) {
         this.Id = Id;
     }
+
+    /**
+     * @return the estadoPlanGenerales
+     */
     public EstadoPlanGenerales getEstadoPlanGenerales() {
-        return this.estadoPlanGenerales;
+        return estadoPlanGenerales;
     }
-    
+
+    /**
+     * @param estadoPlanGenerales the estadoPlanGenerales to set
+     */
     public void setEstadoPlanGenerales(EstadoPlanGenerales estadoPlanGenerales) {
         this.estadoPlanGenerales = estadoPlanGenerales;
     }
-    public String getPlagenDescripcion() {
-        return this.Descripcion;
+
+    /**
+     * @return the Descripcion
+     */
+    public String getDescripcion() {
+        return Descripcion;
     }
-    
-    public void setPlagenDescripcion(String Descripcion) {
+
+    /**
+     * @param Descripcion the Descripcion to set
+     */
+    public void setDescripcion(String Descripcion) {
         this.Descripcion = Descripcion;
     }
-    public int getPlagenFechaproceso() {
-        return this.Fechaproceso;
+
+    /**
+     * @return the Fechaproceso
+     */
+    public Date getFechaproceso() {
+        return Fechaproceso;
     }
-    
-    public void setPlagenFechaproceso(int Fechaproceso) {
+
+    /**
+     * @param Fechaproceso the Fechaproceso to set
+     */
+    public void setFechaproceso(Date Fechaproceso) {
         this.Fechaproceso = Fechaproceso;
     }
-
-
+            
+   
 
 
 }
