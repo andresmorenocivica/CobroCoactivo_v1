@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivDocumenGenerales" table="CIV_DOCUMEN_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="docgenId" type="big_decimal">
             <column name="DOCGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoDocumengenerales" class="CobroCoactivo.Persistencia.CivEstadoDocumengenerales" fetch="select">
             <column name="DOCGEN_ESTDOCGEN_FK" precision="22" scale="0" not-null="true" />

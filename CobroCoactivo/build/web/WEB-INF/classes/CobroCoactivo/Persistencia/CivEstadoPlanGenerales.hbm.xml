@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoPlanGenerales" table="CIV_ESTADO_PLAN_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estplagenId" type="big_decimal">
             <column name="ESTPLAGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estplagenDescripcion" type="string">
             <column name="ESTPLAGEN_DESCRIPCION" length="100" not-null="true">

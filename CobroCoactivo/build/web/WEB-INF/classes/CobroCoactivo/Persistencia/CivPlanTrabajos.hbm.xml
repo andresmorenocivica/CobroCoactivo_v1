@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivPlanTrabajos" table="CIV_PLAN_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="platraId" type="big_decimal">
             <column name="PLATRA_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoPlanTrabajos" class="CobroCoactivo.Persistencia.CivEstadoPlanTrabajos" fetch="select">
             <column name="PLATRA_ESTPLATRA_FK" precision="22" scale="0" not-null="true" />

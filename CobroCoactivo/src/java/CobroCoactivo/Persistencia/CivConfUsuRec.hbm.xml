@@ -7,14 +7,14 @@
         <comment>Tabla que guardara las configuraciones que se hagan</comment>
         <id name="confusurecId" type="big_decimal">
             <column name="CONFUSUREC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
-        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
+        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select" lazy="false"> 
             <column name="CONFUSUREC_USUARIOS_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guardara el usuario que hizo la configurarion, que hace refencia a la tabla CIV_USUARIO</comment>
             </column>
         </many-to-one>
-        <many-to-one name="civRecursos" class="CobroCoactivo.Persistencia.CivRecursos" fetch="select">
+        <many-to-one name="civRecursos" class="CobroCoactivo.Persistencia.CivRecursos" fetch="select" lazy="false">
             <column name="CONFUSUREC_RECURSO_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guardara el Recurso al cual se le hizo la configuracion, que hace refencia a la tabla CIV_RECURSO</comment>
             </column>

@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivPlanGenerales" table="CIV_PLAN_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="plagenId" type="big_decimal">
             <column name="PLAGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoPlanGenerales" class="CobroCoactivo.Persistencia.CivEstadoPlanGenerales" fetch="select">
             <column name="PLAGEN_ESTPLAGEN_FK" precision="22" scale="0" not-null="true" />
