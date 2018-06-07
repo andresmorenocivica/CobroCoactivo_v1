@@ -2,7 +2,8 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 
-import java.math.BigDecimal;
+import CobroCoactivo.Persistencia.CivEstadoPlanGenerales;
+import CobroCoactivo.Persistencia.CivPlanGenerales;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,36 +13,33 @@ import java.util.Set;
 public class PlanGenerales  implements java.io.Serializable {
 
 
-     private BigDecimal plagenId;
-     private EstadoPlanGenerales estadoPlanGenerales;
-     private String plagenDescripcion;
-     private BigDecimal plagenFechaproceso;
-     private Set etapasGeneraleses = new HashSet(0);
+     private int Id;
+     private EstadoPlanGenerales estadoPlanGenerales = new EstadoPlanGenerales();
+     private String Descripcion;
+     private int Fechaproceso;
 
     public PlanGenerales() {
     }
-
-	
-    public PlanGenerales(BigDecimal plagenId, EstadoPlanGenerales estadoPlanGenerales, String plagenDescripcion, BigDecimal plagenFechaproceso) {
-        this.plagenId = plagenId;
-        this.estadoPlanGenerales = estadoPlanGenerales;
-        this.plagenDescripcion = plagenDescripcion;
-        this.plagenFechaproceso = plagenFechaproceso;
+    
+    public PlanGenerales(CivPlanGenerales civPlanGenerales){
+        this.Id = civPlanGenerales.getPlagenId().intValue();
+       this.Descripcion = civPlanGenerales.getPlagenDescripcion();
+       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso().intValue();
     }
-    public PlanGenerales(BigDecimal plagenId, EstadoPlanGenerales estadoPlanGenerales, String plagenDescripcion, BigDecimal plagenFechaproceso, Set etapasGeneraleses) {
-       this.plagenId = plagenId;
-       this.estadoPlanGenerales = estadoPlanGenerales;
-       this.plagenDescripcion = plagenDescripcion;
-       this.plagenFechaproceso = plagenFechaproceso;
-       this.etapasGeneraleses = etapasGeneraleses;
+    public PlanGenerales(CivPlanGenerales civPlanGenerales,CivEstadoPlanGenerales civEstadoPlanGenerales){
+       this.Id = civPlanGenerales.getPlagenId().intValue();
+       this.Descripcion = civPlanGenerales.getPlagenDescripcion();
+       this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso().intValue();
+       this.estadoPlanGenerales = new EstadoPlanGenerales(civEstadoPlanGenerales);
     }
+            
    
-    public BigDecimal getPlagenId() {
-        return this.plagenId;
+    public int getPlagenId() {
+        return this.Id;
     }
     
-    public void setPlagenId(BigDecimal plagenId) {
-        this.plagenId = plagenId;
+    public void setPlagenId(int Id) {
+        this.Id = Id;
     }
     public EstadoPlanGenerales getEstadoPlanGenerales() {
         return this.estadoPlanGenerales;
@@ -51,25 +49,18 @@ public class PlanGenerales  implements java.io.Serializable {
         this.estadoPlanGenerales = estadoPlanGenerales;
     }
     public String getPlagenDescripcion() {
-        return this.plagenDescripcion;
+        return this.Descripcion;
     }
     
-    public void setPlagenDescripcion(String plagenDescripcion) {
-        this.plagenDescripcion = plagenDescripcion;
+    public void setPlagenDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
     }
-    public BigDecimal getPlagenFechaproceso() {
-        return this.plagenFechaproceso;
-    }
-    
-    public void setPlagenFechaproceso(BigDecimal plagenFechaproceso) {
-        this.plagenFechaproceso = plagenFechaproceso;
-    }
-    public Set getEtapasGeneraleses() {
-        return this.etapasGeneraleses;
+    public int getPlagenFechaproceso() {
+        return this.Fechaproceso;
     }
     
-    public void setEtapasGeneraleses(Set etapasGeneraleses) {
-        this.etapasGeneraleses = etapasGeneraleses;
+    public void setPlagenFechaproceso(int Fechaproceso) {
+        this.Fechaproceso = Fechaproceso;
     }
 
 

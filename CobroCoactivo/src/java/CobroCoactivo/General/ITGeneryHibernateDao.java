@@ -13,18 +13,17 @@ import java.util.List;
  * @author root
  */
 public interface ITGeneryHibernateDao<T, ID extends Serializable> {
-    
-    
-     void create(T entity) throws Exception;
-     
-     void update(T entity) throws Exception;
-     
-     T find(ID id) throws Exception;
-     
-     void remove(ID id) throws Exception ;
-     
-     List<T> findAll() throws Exception;
-     
-     List<T> findByIdList() throws Exception;
-    
+
+    public void create(T entity) throws Exception;
+
+    public void update(T entity) throws Exception;
+
+    public T find(ID id) throws Exception;
+
+    public void remove(ID id) throws Exception;
+
+    public List<T> findAll() throws Exception;
+
+    public List<T> findByIdList() throws Exception;
+
 }

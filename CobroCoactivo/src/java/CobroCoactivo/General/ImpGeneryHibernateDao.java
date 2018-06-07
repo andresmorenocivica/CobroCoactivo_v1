@@ -35,6 +35,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
         session.beginTransaction();
         session.save(entity);
         session.getTransaction().commit();
+        session.close();
 
     }
 
@@ -45,6 +46,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
         session.beginTransaction();
         session.update(entity);
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -61,6 +63,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
         T entity = (T) session.get(getEntityClass(), id);
         session.delete(entity);
         session.getTransaction().commit();
+        session.close();
 
     }
 

@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <h1>
+                            Consultas
+                            <small>guia formulario para consultas</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                            <li><a href="#">Example</a></li>
+                            <li class="active">Consultas</li>
+                        </ol>
+                    </section>
+                    <section class="content">
+
+                        <h:form id="formPlanGeneral">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="box box-success">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Plan General</h3>
+                                            <div class="box-tools">
+                                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <ul class="nav nav-pills nav-stacked">
+                                                <ui:repeat value="#{PlanGeneralbean.listadoPlanGeneraleses}" var="listaPlangeneral">
+                                                    <li>
+                                                        <h:commandLink class="identificador"><i class="fa fa-inbox"></i> #{listaPlangeneral.plagenDescripcion}
+                                                        </h:commandLink>
+                                                    </li>
+                                                </ui:repeat> 
+                                            </ul> 
+                                            <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#planGeneral').modal('show');">
+                                                <f:ajax></f:ajax>
+                                            </h:commandLink>
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </div>
+                                    <!-- /. box -->
+                                    <div class="box box-success">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Etapas Generales</h3>
+
+                                            <div class="box-tools">
+                                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <ul class="nav nav-pills nav-stacked">
+                                                <c:if test="#{gestionMovimientosBean.procesosJuridicos != null}">
+                                                    <ui:repeat value="#{gestionMovimientosBean.procesosJuridicos.detalleProcesoJuridico}"  var="lista" varStatus="contador">
+                                                        <li>
+                                                            <h:commandLink>
+                                                                <i class="fa fa-inbox"></i> #{lista.nombre}
+                                                                <span title="Deudas" class="label label-primary pull-right">#{lista.listaDeudas.size()}</span>
+                                                                <span title="Periodo" class="label label-warning pull-right" style="margin-right:20px">#{lista.diaInicial} - #{lista.diaFinal}</span>
+                                                                <f:ajax event="click" render="formGestionMovimientos:deudas formGestionMovimientos:divBtnGuardar formGestionMovimientos:tituloDetalleProceso" listener="#{gestionMovimientosBean.establecerListaDeudas(contador.index,lista.listaDeudas)}" onevent="test"></f:ajax>
+                                                            </h:commandLink>
+                                                        </li>
+                                                    </ui:repeat>
+                                                </c:if>
+                                            </ul>
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </div>
+                                    <!-- /.box -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-9">
+                                    <div class="box box-success">
+                                        <div class="box-header with-border">
+                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales"></h:outputLabel>
+                                            <!-- /.box-tools -->
+                                        </div>
+                                        <!-- /.box-header -->
+                                        <div class="box-body no-padding">
+                                            <div class="mailbox-controls">
+                                            </div>
+                                            <!-- corte codigo fuente tabla  -->
+                                            <div class="table-responsive mailbox-messages">
+
+                                            </div>
+                                            <!-- /.mail-box-messages -->
+                                        </div>
+                                        <!-- /.box-body -->
+                                        <div class="box-footer no-padding">
+                                            <div class="mailbox-controls">
+                                                <h:commandButton value="Realizar Proceso" class="btn btn-success" rendered="#{gestionMovimientosBean.renderBtnGuardar}" id="btnGuardar">
+
+                                                    <f:ajax event="click" render="@form" listener="#{gestionMovimientosBean.movimientoDeudaCambiarFase()}" onevent="test"></f:ajax>
+                                                </h:commandButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /. box -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- row main -->
+
+
+
+                            <!-- start modal    -->
+                            <div class="modal fade" id="planGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog ">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">Crear Plan</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Descripción:</label>
+                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" value="#{PlanGeneralbean.planGenerales.plagenDescripcion}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Estado:</label>
+                                                        <h:selectOneMenu id="txtEstado" class="form-control" value="#{PlanGeneralbean.idEstadoGeneral}">
+                                                            <f:selectItems value="#{PlanGeneralbean.listadoEStadoPlanesGenerales}" var="listadoEstadoPlanesGenerales" itemValue="#{listadoEstadoPlanesGenerales.id}" itemLabel="#{listadoEstadoPlanesGenerales.descripcion}" ></f:selectItems>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <h:commandLink value="Guardar" id="btnGuardarRecurso" class="btn btn-success">
+                                                        <f:ajax event="click" listener="#{PlanGeneralbean.guardarPlanGeneral}" execute="formPlanGeneral:txtDescriptionRecurso formPlanGeneral:txtEstado" onevent="closeModal"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- end modal    -->
+                        </h:form>
+                    </section>
+                </div>
+            </ui:define>
+        </ui:composition>
+        
+        <script>
+            function close(){
+                alert("fine");
+            }
+        </script>
+            
+    </body>
+</html>
