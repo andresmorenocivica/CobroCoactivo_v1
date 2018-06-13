@@ -38,10 +38,10 @@
         </style>
     </h:head>
     <h:body>
-      <!-- <p:ajaxStatus onstart="PF('statusDialog').show()"  onsuccess="PF('statusDialog').hide()" />
-        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" >
-            <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px;"/> Iniciando Sesión...
-        </p:dialog> -->
+        <!-- <p:ajaxStatus onstart="PF('statusDialog').show()"  onsuccess="PF('statusDialog').hide()" />
+          <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" >
+              <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px;"/> Iniciando Sesión...
+          </p:dialog> -->
         <div class="container">
             <div class="row">
                 <center>
@@ -68,8 +68,8 @@
                     <h:form class="form-signin" id="loginFrm">
                         <div class="form-group">
                             <div class="form-group has-feedback left-inner-addon">
-                               <!-- <p:watermark for="txtuser" value="USUARIO" id="watermark1" />
-                            --> 
+                                <!-- <p:watermark for="txtuser" value="USUARIO" id="watermark1" />
+                                --> 
                                 <h:inputText  autocomplete="false" class="form-control" id="txtuser_" style="display: none"/>
                                 <h:inputText value="#{loginBean.user}" style="text-transform: uppercase" requiredMessage="Por favor ingrese su nombre de usuario." autocomplete="false" class="form-control" id="txtuser" required="true" maxlength="20">
 
@@ -79,7 +79,7 @@
                         </div>
                         <div class="form-group">
                             <div class="form-group has-feedback left-inner-addon">
-                              <!-- <p:watermark for="txtpass" value="PASSWORD" id="watermark2" />  -->
+                                <!-- <p:watermark for="txtpass" value="PASSWORD" id="watermark2" />  -->
                                 <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
                                 <h:inputSecret autocomplete="false" id="txtpass_" class="form-control" style="display: none"/>
                                 <h:inputSecret value="#{loginBean.password}" validatorMessage="Formato de contraseña inválida. No se permiten carácteres especiales." requiredMessage="Por favor ingrese su contraseña." autocomplete="false" id="txtpass" class="form-control" required="true" maxlength="20">
@@ -98,7 +98,7 @@
 
                         <div class="form-group">
                             <center>
-                              <!--  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  -->
+                                <!--  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  -->
                             </center>
                         </div>
                     </h:form><!-- /form -->
@@ -110,7 +110,7 @@
         <footer class="footer">
             <p align="center" class="text-muted"> &copy; La Civica Impresores SAS</p>
         </footer>
-      
+
         <!-- Bootstrap 3.3.5 -->
         <script src="#{request.contextPath}/recursos/js/bootstrap.min.js"></script>
         <script src="#{request.contextPath}/recursos/js/paste.js"></script>

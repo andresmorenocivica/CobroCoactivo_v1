@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGeneryHibernateDao<T, ID> {
 
-    SessionFactory sessionFactory;
+   private  SessionFactory sessionFactory;
 
     public ImpGeneryHibernateDao() {
         sessionFactory = HibernateUtil.getSessionFactory();
@@ -31,7 +31,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     @Override
     @Transactional(rollbackFor = Exception.class)
     public  void create(T entity) throws Exception {
-        Session session = sessionFactory.openSession();
+        Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.save(entity);
         session.getTransaction().commit();
@@ -42,7 +42,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(T entity) {
-        Session session = sessionFactory.openSession();
+        Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.update(entity);
         session.getTransaction().commit();
@@ -58,7 +58,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void remove(ID id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSessionFactory().getCurrentSession();
         session.beginTransaction();
         T entity = (T) session.get(getEntityClass(), id);
         session.delete(entity);
@@ -69,7 +69,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
 
     @Override
     public List<T> findAll() {
-        Session session = sessionFactory.openSession();
+        Session session = getSessionFactory().openSession();
         Query query = session.createQuery("select e from " + getEntityClass().getName() + " e");
         List<T> entities = query.list();
         return entities;
@@ -83,6 +83,20 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
 
     private Class<T> getEntityClass() {
         return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    /**
+     * @return the sessionFactory
+     */
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    /**
+     * @param sessionFactory the sessionFactory to set
+     */
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
 }

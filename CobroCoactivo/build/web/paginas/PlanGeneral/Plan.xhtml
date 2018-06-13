@@ -4,7 +4,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
@@ -22,9 +24,9 @@
                         </ol>
                     </section>
                     <section class="content">
-
                         <h:form id="formPlanGeneral">
-                            <div class="row">
+                            <p:messages closable="true" autoUpdate="true" id="msggeneral2" showDetail="false" />
+                            <div class="row" jsf:id="contenedor">
                                 <div class="col-md-3">
                                     <div class="box box-success">
                                         <div class="box-header with-border">
@@ -38,21 +40,30 @@
                                             <ul class="nav nav-pills nav-stacked">
                                                 <ui:repeat value="#{PlanGeneralbean.listadoPlanGeneraleses}" var="listaPlangeneral">
                                                     <li>
-                                                        <h:commandLink class="identificador"><i class="fa fa-inbox"></i> #{listaPlangeneral.plagenDescripcion}
+                                                        <h:commandLink title="Editar Proceso Juridico" value=" #{listaPlangeneral.descripcion}" class="col-sm-10">
+                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtadoGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
                                                         </h:commandLink>
-                                                    </li>
+                                                        <div jsf:id="test" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
+                                                            <i class="fa fa-pencil-square-o center-block"  onclick="$('#planGeneral').modal('show');">
+                                                                <f:ajax event="click" render="formPlanGeneral:modalContent" listener="#{PlanGeneralbean.eventoActualizar(listaPlangeneral)}"/>
+                                                            </i> 
+                                                        </div>
+
+                                                    </li>  
                                                 </ui:repeat> 
                                             </ul> 
                                             <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#planGeneral').modal('show');">
-                                                <f:ajax></f:ajax>
+                                                <f:ajax event="click" render="formPlanGeneral:modalContent" listener="#{PlanGeneralbean.eventoGuardar(1)}"/>
+
                                             </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
                                     </div>
                                     <!-- /. box -->
-                                    <div class="box box-success">
+                                    <div class="box box-success" jsf:id="etapaGenerales" jsf:rendered="#{PlanGeneralbean.renderEtapaGeneral}">
                                         <div class="box-header with-border">
-                                            <h3 class="box-title">Etapas Generales</h3>
+                                            <h5 class="box-title">Etapas Generales</h5>
+
 
                                             <div class="box-tools">
                                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -61,19 +72,21 @@
                                         </div>
                                         <div class="box-body no-padding">
                                             <ul class="nav nav-pills nav-stacked">
-                                                <c:if test="#{gestionMovimientosBean.procesosJuridicos != null}">
-                                                    <ui:repeat value="#{gestionMovimientosBean.procesosJuridicos.detalleProcesoJuridico}"  var="lista" varStatus="contador">
-                                                        <li>
-                                                            <h:commandLink>
-                                                                <i class="fa fa-inbox"></i> #{lista.nombre}
-                                                                <span title="Deudas" class="label label-primary pull-right">#{lista.listaDeudas.size()}</span>
-                                                                <span title="Periodo" class="label label-warning pull-right" style="margin-right:20px">#{lista.diaInicial} - #{lista.diaFinal}</span>
-                                                                <f:ajax event="click" render="formGestionMovimientos:deudas formGestionMovimientos:divBtnGuardar formGestionMovimientos:tituloDetalleProceso" listener="#{gestionMovimientosBean.establecerListaDeudas(contador.index,lista.listaDeudas)}" onevent="test"></f:ajax>
-                                                            </h:commandLink>
-                                                        </li>
-                                                    </ui:repeat>
-                                                </c:if>
+                                                <ui:repeat value="#{PlanGeneralbean.listadoEtapasGeneraleses}" var="etapaGeneral">
+                                                    <li>
+                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}">
+                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.setRenderEtapaGeneral(true)}"/>
+                                                            <i class="fa fa-pencil-square-o" style="float: right" onclick="$('#etapaGeneral').modal('show');">
+                                                                <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
+                                                            </i>
+                                                        </h:commandLink>
+                                                    </li>
+                                                </ui:repeat> 
                                             </ul>
+                                            <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#etapaGeneral').modal('show');">
+                                                <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoGuardar(2)}"/>
+
+                                            </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
                                     </div>
@@ -100,7 +113,6 @@
                                         <div class="box-footer no-padding">
                                             <div class="mailbox-controls">
                                                 <h:commandButton value="Realizar Proceso" class="btn btn-success" rendered="#{gestionMovimientosBean.renderBtnGuardar}" id="btnGuardar">
-
                                                     <f:ajax event="click" render="@form" listener="#{gestionMovimientosBean.movimientoDeudaCambiarFase()}" onevent="test"></f:ajax>
                                                 </h:commandButton>
                                             </div>
@@ -114,12 +126,12 @@
 
 
 
-                            <!-- start modal    -->
+                            <!-- start modal   plan general  -->
                             <div class="modal fade" id="planGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog ">
-                                    <div class="modal-content">
+                                    <div class="modal-content" jsf:id="modalContent">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Crear Plan</h4>
+                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.nombreModalTitulo}</h4>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -130,7 +142,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" value="#{PlanGeneralbean.planGenerales.plagenDescripcion}" />
+                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" value="#{PlanGeneralbean.planGenerales.descripcion}" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -151,8 +163,75 @@
                                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <h:commandLink value="Guardar" id="btnGuardarRecurso" class="btn btn-success">
-                                                        <f:ajax event="click" listener="#{PlanGeneralbean.guardarPlanGeneral}" execute="formPlanGeneral:txtDescriptionRecurso formPlanGeneral:txtEstado" onevent="closeModal"/>
+                                                    <h:commandLink value="Guardar" id="btnGuardarRecurso" class="btn btn-success" rendered="#{PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.guardarPlanGeneral}" execute="formPlanGeneral:txtDescriptionRecurso formPlanGeneral:txtEstado"/>
+                                                    </h:commandLink>
+                                                    <h:commandLink value="Actualizar" id="btnActualizar" class="btn btn-success" rendered="#{!PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.actualizarPlanGeneral()}" execute="formPlanGeneral:txtDescriptionRecurso formPlanGeneral:txtEstado"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- end modal    -->
+
+
+                            <!-- start modal estapa generales   -->
+                            <div class="modal fade" id="etapaGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog ">
+                                    <div class="modal-content" jsf:id="modalContentEtapageneral">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.nombreModalTitulo} etapa general en #{PlanGeneralbean.planGenerales.descripcion}</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Descripción:</label>
+                                                        <h:inputText class="form-control" id="txtEtapaGeneralDescriptionRecurso" value="#{PlanGeneralbean.etapasGenerales.etagenDescripcion}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Estado:</label>
+                                                        <h:selectOneMenu id="txtEstadoEtapaGeneral" class="form-control" value="#{PlanGeneralbean.idEstapaGeneral}">
+                                                            <f:selectItems value="#{PlanGeneralbean.estadoEtapasGenerales}" var="listadoEstadoEtapasGenerales" itemValue="#{listadoEstadoEtapasGenerales.id}" itemLabel="#{listadoEstadoEtapasGenerales.descripcion}" ></f:selectItems>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Obligatorio:</label>
+                                                        <h:selectOneMenu  class="form-control" value="#{PlanGeneralbean.obligatorio}" id="seletObligatorio">
+                                                            <f:selectItem  itemLabel="Si" itemValue="TRUE"></f:selectItem>
+                                                            <f:selectItem  itemLabel="No" itemValue="FALSE"></f:selectItem>
+                                                            
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <h:commandLink value="Guardar" id="btnGuardarEtapaGeneral" class="btn btn-success" rendered="#{PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.guardarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral"/>
+                                                    </h:commandLink>
+                                                    <h:commandLink value="Actualizar" id="btnActualizarEtapaGeneral" class="btn btn-success" rendered="#{!PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.actualizarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral"/>
                                                     </h:commandLink>
                                                 </div>
                                             </div>
@@ -168,12 +247,5 @@
                 </div>
             </ui:define>
         </ui:composition>
-        
-        <script>
-            function close(){
-                alert("fine");
-            }
-        </script>
-            
     </body>
 </html>

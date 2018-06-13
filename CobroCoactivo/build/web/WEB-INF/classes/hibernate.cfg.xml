@@ -43,7 +43,7 @@ Contributor(s):
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
     <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
-    <property name="hibernate.connection.url">jdbc:oracle:thin:@192.168.0.203:1521:orclciv</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@10.10.20.206:1521:orclciv</property>
     <property name="hibernate.connection.username">cobrocoactivo_v1</property>
     <property name="hibernate.connection.password">desarrollo</property>
     <mapping resource="CobroCoactivo/Persistencia/CivDetalleDeudas.hbm.xml"/>
