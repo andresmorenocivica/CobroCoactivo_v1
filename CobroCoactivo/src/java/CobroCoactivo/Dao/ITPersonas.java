@@ -5,8 +5,9 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPersonas;
-import java.util.Date;
+import java.io.Serializable;
 import java.util.List;
 import org.hibernate.Session;
 
@@ -14,32 +15,10 @@ import org.hibernate.Session;
  *
  * @author JefreySistemas
  */
-public interface ITPersonas {
+public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
 
-    /**
-     *
-     * @param per
-     * @return
-     * @throws Exception
-     */
-    public long insert(Session session,CivPersonas per) throws Exception;
 
-    /**
-     *
-     * @param per
-     * @return
-     * @throws Exception
-     */
-    public boolean update(Session session,CivPersonas per) throws Exception;
-
-    /**
-     * Retorna La Persona de la base de datos por medio del ID único.
-     *
-     * @param per_id ID único de la Persona a consultar.
-     * @return La Persona resultante de la consulta. Retorna NULL en caso de no
-     * encontrarse resultados.
-     * @throws Exception La Excepción lanzada en caso de error.
-     */
+  
     public CivPersonas consultarPersonasById(int per_id) throws Exception;
 
     /**

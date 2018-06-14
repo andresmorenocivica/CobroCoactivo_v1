@@ -16,42 +16,46 @@ public class Deudas implements java.io.Serializable {
     private TipoDeudas tipoDeudas;
     private Personas personas;
     private EstadoDeudas estadoDeudas;
-    private Date Fechada;
+    private Date FechaDeudas;
     private int Valor;
     private int Saldo;
     private Date Fechaproceso;
+    private String Referencia;
 
     public Deudas() {
     }
 
     public Deudas(CivDeudas civDeudas) {
         this.Id = civDeudas.getDeuId().intValue();
-        this.Fechada = civDeudas.getDeuFechadeuda();
+        this.FechaDeudas = civDeudas.getDeuFechadeuda();
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
+        this.Referencia = civDeudas.getDeuRefencia();
     }
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas) {
         this.Id = civDeudas.getDeuId().intValue();
-        this.Fechada = civDeudas.getDeuFechadeuda();
+        this.FechaDeudas = civDeudas.getDeuFechadeuda();
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        //this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
+        this.Referencia = civDeudas.getDeuRefencia();
+        this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
 
     }
 
-    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas,CivPersonas civPersonas) {
+    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas) {
         this.Id = civDeudas.getDeuId().intValue();
-        this.Fechada = civDeudas.getDeuFechadeuda();
+        this.FechaDeudas = civDeudas.getDeuFechadeuda();
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        //this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
+        this.Referencia = civDeudas.getDeuRefencia();
+        this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
-        this.personas = new Personas(civPersonas,civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+        this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
     }
 
     /**
@@ -111,20 +115,6 @@ public class Deudas implements java.io.Serializable {
     }
 
     /**
-     * @return the Fechada
-     */
-    public Date getFechada() {
-        return Fechada;
-    }
-
-    /**
-     * @param Fechada the Fechada to set
-     */
-    public void setFechada(Date Fechada) {
-        this.Fechada = Fechada;
-    }
-
-    /**
      * @return the Valor
      */
     public int getValor() {
@@ -164,6 +154,34 @@ public class Deudas implements java.io.Serializable {
      */
     public void setFechaproceso(Date Fechaproceso) {
         this.Fechaproceso = Fechaproceso;
+    }
+
+    /**
+     * @return the FechaDeudas
+     */
+    public Date getFechaDeudas() {
+        return FechaDeudas;
+    }
+
+    /**
+     * @param FechaDeudas the FechaDeudas to set
+     */
+    public void setFechaDeudas(Date FechaDeudas) {
+        this.FechaDeudas = FechaDeudas;
+    }
+
+    /**
+     * @return the Referencia
+     */
+    public String getReferencia() {
+        return Referencia;
+    }
+
+    /**
+     * @param Referencia the Referencia to set
+     */
+    public void setReferencia(String Referencia) {
+        this.Referencia = Referencia;
     }
 
 }

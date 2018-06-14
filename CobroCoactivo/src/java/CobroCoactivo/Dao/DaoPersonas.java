@@ -5,10 +5,9 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPersonas;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -20,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoPersonas implements ITPersonas {
+public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> implements  ITPersonas {
 
     @Override
     public CivPersonas consultarPersonasById(int per_id) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = getSessionFactory().openSession();
         String hql = "from CivPersonas where perId =:perId";
         Query query = session.createQuery(hql);
         query.setParameter("perId", new BigDecimal(per_id));
@@ -38,7 +37,7 @@ public class DaoPersonas implements ITPersonas {
     @Override
     @Transactional
     public CivPersonas consultarPersonasByDocumento(int tipo, String nro_documento) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session =getSessionFactory().openSession();
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
         query.setParameter("tipo", new BigDecimal(tipo));
@@ -85,29 +84,6 @@ public class DaoPersonas implements ITPersonas {
                 .uniqueResult();
     }
 
-    /**
-     *
-     * @param per
-     * @return
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public long insert(Session session, CivPersonas civPersonas) throws Exception {
-        return Integer.parseInt(session.save(civPersonas).toString());
-    }
-
-    /**
-     *
-     * @param per
-     * @return
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean update(Session session, CivPersonas civPersonas) throws Exception {
-        session.update(civPersonas);
-        return true;
-    }
+ 
 
 }

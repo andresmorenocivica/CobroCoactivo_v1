@@ -28,7 +28,7 @@
                                         </h:panelGroup>
                                         <h:panelGroup id="pnlGuardarUsuario" >
                                             <h:commandLink class="fa fa-save col-sm-4" id="guardarUsuario" rendered="#{gestionPersonaBean.detallePersona.editable}"> 
-                                                <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:txtNombre1"  render="frmDetallePersona:editableControladores frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
+                                                <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 "   render="frmDetallePersona:editableControladores frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
                                             </h:commandLink>
                                         </h:panelGroup>
 
@@ -43,64 +43,140 @@
                                         <div class="form-group">
                                             <label>Tipo Documento</label>
                                             <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
-                                                <f:selectItems  value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
+                                                <f:selectItems id="tipoDocumento" value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>N Documento</label>
-                                            <h:inputText style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtDocumento" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" ></h:inputText>
 
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
                                         <div class="form-group">
                                             <label>Sexo</label>
-                                            <h:inputText style="border-color: black" id="textSexo"  value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtSexo" style="border-color: black"   value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Primer Nombre</label>
-                                            <h:inputText style="border-color: black" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtNombre1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Segundo Nombre</label>
-                                            <h:inputText style="border-color: black" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtNombre2" style="border-color: black" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Primer Apellido</label>
-                                            <h:inputText style="border-color: black" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtApellido1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Segundo Apellido</label>
-                                            <h:inputText style="border-color: black" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtApellido2" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label>Fecha De Expedición</label>
-                                            <h:inputText style="border-color: black" id="dateFechaDeExpidicion" value="#{gestionPersonaBean.detallePersona.fechaproceso}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"> </h:inputText>
-                                        </div>
-                                    </div>
+                                   
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Estado</label>
-                                            <h:inputText style="border-color: black" id="txtEstado" value="#{gestionPersonaBean.detallePersona.estadoPersonas.descripcion}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:inputText id="txtEstado" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.estadoPersonas.descripcion}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </h:panelGroup>
                         </div>
                     </div>
+                    <div class="box box-danger">
+                        <div class="box-body box-danger">
+                            <div class="box-header with-border">
+                                <div class="row">
+                                    <div class="col-lg-11">
+                                        <h3 class="box-title">Personas Datos Adicionales</h3>
+                                    </div>
+                                    <div class="col-lg-1">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <table class="table table-bordered center">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>Descripcion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ui:repeat value="#{gestionPersonaBean.detallePersona.listDatosPersonas}" var="datoPersona">
+                                            <tr>
+                                                <td>
+                                                    #{datoPersona.tipoDatosPersonas.descripcion}
+                                                </td>
+                                                <td>
+                                                    #{datoPersona.descripcion}
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- termina datos adicionales -->
+                    <div class="box box-danger">
+                        <div class="box-body box-danger">
+                            <div class="box-header with-border">
+                                <div class="row">
+                                    <div class="col-lg-11">
+                                        <h3 class="box-title">Deudas de la Personas</h3>
+                                    </div>
+                                    <div class="col-lg-1">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <h:panelGroup id="tblDeudas">
+                                <table class="table table-bordered ">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de Deudas</th>
+                                            <th>Refencia</th>
+                                            <th>Estado</th>
+                                            <th>Saldo</th>
+                                            <th>Valor</th>
+                                            <th>Fecha Deuda</th>
+                                            <th>Nombre Persona</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="#{gestionPersonaBean.detallePersona.listdeuda}" var="deudas">
+                                            <tr>
+                                                <td>#{deudas.tipoDeudas.descripcion}</td>
+                                                <td>#{deudas.referencia}</td>
+                                                <td>#{deudas.estadoDeudas.descripcion}</td>
+                                                <td>#{deudas.saldo}</td>
+                                                <td>#{deudas.valor}</td>
+                                                <td>#{deudas.saldo}</td>
+                                                <td>#{deudas.personas.nombre1}</td>
+
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
                 </section>
             </div>
         </h:form>

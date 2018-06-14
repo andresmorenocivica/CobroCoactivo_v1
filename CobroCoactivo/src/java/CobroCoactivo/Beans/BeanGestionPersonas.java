@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionPersonasBO;
 import CobroCoactivo.Bo.GestionPersonasImpBO;
+import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Utility.Log_Handler;
@@ -20,6 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -40,8 +42,11 @@ public class BeanGestionPersonas implements Serializable {
     // lista que se utilizara para cargar la tabla de resultado de la busqueda
     private List<Personas> listPersonas = new ArrayList<>();
 
+    private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
+    private int estadoPersonas;
+
     // objeto que se utilizara para mostrar el detalle de la persona
-    private Personas detallePersona;
+    private Personas detallePersona = new Personas();
     private String encabezadoDetallePersona;
 
     private BeanLogin loginBO;
@@ -51,16 +56,21 @@ public class BeanGestionPersonas implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            setGestionPersonasBO(new GestionPersonasImpBO());
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             if (obj_ != null) {
                 setDetallePersona(obj_.getPersonas());
                 setEncabezadoDetallePersona(obj_.getRuta());
+                getGestionPersonasBO().cargarDatosPersonas(this);
+                getGestionPersonasBO().cargarDeudas(this);
             }
             setLoginBO(new BeanLogin());
-            setGestionPersonasBO(new GestionPersonasImpBO());
-            getGestionPersonasBO().cargarTipoDocumento(this);
+            if (getListTipoDocumento() != null && getListTipoDocumento().size() == 0) {
+                getGestionPersonasBO().cargarTipoDocumento(this);
+                getGestionPersonasBO().cargarEstadoPersonas(this);
+            }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -75,6 +85,7 @@ public class BeanGestionPersonas implements Serializable {
                 // busqueda por tipo documento y documento
                 case 1:
                     getGestionPersonasBO().consultarByDocumentoByTipoDocumento(this);
+
                     break;
                 case 2:
                     break;
@@ -86,6 +97,34 @@ public class BeanGestionPersonas implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
+    }
+
+    public void editarPersona() {
+        try {
+            getDetallePersona().setEditable(false);
+            getDetallePersona();
+            getGestionPersonasBO().updatePersona(this);
+        } catch (Exception e) {
+
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void savePersona() {
+        try {
+            getGestionPersonasBO().guardarPersona(this);
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalAgregarPersona').modal('hide')");
+
+        } catch (Exception e) {
+
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+
     }
 
     /**
@@ -254,6 +293,34 @@ public class BeanGestionPersonas implements Serializable {
      */
     public void setRequestBean(BeanRequest requestBean) {
         this.requestBean = requestBean;
+    }
+
+    /**
+     * @return the listEstadoPersonas
+     */
+    public List<EstadoPersonas> getListEstadoPersonas() {
+        return listEstadoPersonas;
+    }
+
+    /**
+     * @param listEstadoPersonas the listEstadoPersonas to set
+     */
+    public void setListEstadoPersonas(List<EstadoPersonas> listEstadoPersonas) {
+        this.listEstadoPersonas = listEstadoPersonas;
+    }
+
+    /**
+     * @return the estadoPersonas
+     */
+    public int getEstadoPersonas() {
+        return estadoPersonas;
+    }
+
+    /**
+     * @param estadoPersonas the estadoPersonas to set
+     */
+    public void setEstadoPersonas(int estadoPersonas) {
+        this.estadoPersonas = estadoPersonas;
     }
 
 }
