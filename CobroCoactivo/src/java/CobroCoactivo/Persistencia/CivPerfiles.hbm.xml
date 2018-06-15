@@ -7,7 +7,7 @@
         <comment>Tabla que almacenara los registro de los perfiles que habra en el sistema.</comment>
         <id name="perfId" type="big_decimal">
             <column name="PERF_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoPerfiles" class="CobroCoactivo.Persistencia.CivEstadoPerfiles" fetch="select">
             <column name="PERF_ESTADO_FK" precision="22" scale="0" not-null="true">

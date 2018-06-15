@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivModulos" table="CIV_MODULOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="modId" type="big_decimal">
             <column name="MOD_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoModulos" class="CobroCoactivo.Persistencia.CivEstadoModulos" fetch="select">
             <column name="MOD_ESTADO_FK" precision="22" scale="0" not-null="true">

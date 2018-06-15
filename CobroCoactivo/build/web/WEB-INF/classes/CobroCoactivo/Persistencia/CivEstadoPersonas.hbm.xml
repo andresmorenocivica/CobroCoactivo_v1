@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los diferentes estados de la persona.</comment>
         <id name="estperId" type="big_decimal">
             <column name="ESTPER_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estperDescripcion" type="string">
             <column name="ESTPER_DESCRIPCION" length="100" not-null="true">

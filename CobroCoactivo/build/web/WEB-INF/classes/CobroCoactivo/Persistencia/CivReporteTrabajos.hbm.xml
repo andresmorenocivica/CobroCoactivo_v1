@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivReporteTrabajos" table="CIV_REPORTE_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="reptraId" type="big_decimal">
             <column name="REPTRA_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEstadoReporteTrabajos" class="CobroCoactivo.Persistencia.CivEstadoReporteTrabajos" fetch="select">
             <column name="REPTRA_ESTREPTRA_FK" precision="22" scale="0" not-null="true" />

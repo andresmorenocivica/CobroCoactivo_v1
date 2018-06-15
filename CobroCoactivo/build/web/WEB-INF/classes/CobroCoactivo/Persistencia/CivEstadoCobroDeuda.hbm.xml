@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoCobroDeuda" table="CIV_ESTADO_COBRO_DEUDA" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estcobdeuId" type="big_decimal">
             <column name="ESTCOBDEU_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estcobdeuDescripcion" type="string">
             <column name="ESTCOBDEU_DESCRIPCION" length="100" not-null="true" />

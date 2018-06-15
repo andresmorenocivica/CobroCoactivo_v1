@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivFasesGenerales" table="CIV_FASES_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="fasgenId" type="big_decimal">
             <column name="FASGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civEtapasGenerales" class="CobroCoactivo.Persistencia.CivEtapasGenerales" fetch="select">
             <column name="FASGEN_ETAGEN_FK" precision="22" scale="0" not-null="true" />

@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoFasesGenerales" table="CIV_ESTADO_FASES_GENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estfasgenId" type="big_decimal">
             <column name="ESTFASGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estfasgenDescripcion" type="string">
             <column name="ESTFASGEN_DESCRIPCION" length="100" not-null="true">

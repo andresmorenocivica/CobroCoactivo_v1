@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivTipoExpedientes" table="CIV_TIPO_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tipexpId" type="big_decimal">
             <column name="TIPEXP_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="tipexpDescripcion" type="string">
             <column name="TIPEXP_DESCRIPCION" length="100" not-null="true" />
