@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoMovimientos" table="CIV_ESTADO_MOVIMIENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estmovId" type="big_decimal">
+            <column name="ESTMOV_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="estmovDescripcion" type="string">
+            <column name="ESTMOV_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estmovFechainicial" type="date">
+            <column name="ESTMOV_FECHAINICIAL" length="7" not-null="true" />
+        </property>
+        <property name="estmovFechafinal" type="date">
+            <column name="ESTMOV_FECHAFINAL" length="7" />
+        </property>
+        <property name="estmovFechaproceso" type="date">
+            <column name="ESTMOV_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civMovimientoses" table="CIV_MOVIMIENTOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MOV_ESTMOV_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivMovimientos" />
+        </set>
+    </class>
+</hibernate-mapping>

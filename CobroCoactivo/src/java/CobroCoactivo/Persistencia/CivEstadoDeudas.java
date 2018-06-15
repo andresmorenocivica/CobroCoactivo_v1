@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 7/06/2018 03:45:05 PM by Hibernate Tools 4.3.1
+// Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;

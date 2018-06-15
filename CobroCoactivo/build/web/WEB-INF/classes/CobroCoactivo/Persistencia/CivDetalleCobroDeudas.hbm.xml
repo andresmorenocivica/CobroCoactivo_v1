@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDetalleCobroDeudas" table="CIV_DETALLE_COBRO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="detcobdeuId" type="big_decimal">
+            <column name="DETCOBDEU_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="civValorTipoDetalleCobro" class="CobroCoactivo.Persistencia.CivValorTipoDetalleCobro" fetch="select">
+            <column name="DETCOBDEU_VALTIPDET_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoDetalleCobroDeuda" class="CobroCoactivo.Persistencia.CivEstadoDetalleCobroDeuda" fetch="select">
+            <column name="DETCOBDEU_ESTDETCOBDEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civCobroDeudas" class="CobroCoactivo.Persistencia.CivCobroDeudas" fetch="select">
+            <column name="DETCOBDEU_COBDEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="detcobdeuFechaproceso" type="date">
+            <column name="DETCOBDEU_FECHAPROCESO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

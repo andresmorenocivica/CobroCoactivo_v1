@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 7/06/2018 03:45:05 PM by Hibernate Tools 4.3.1
+// Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,6 +17,7 @@ public class CivDeudas  implements java.io.Serializable {
      private CivTipoDeudas civTipoDeudas;
      private CivPersonas civPersonas;
      private CivEstadoDeudas civEstadoDeudas;
+     private CivCobroDeudas civCobroDeudas;
      private Date deuFechadeuda;
      private BigDecimal deuValor;
      private BigDecimal deuSaldo;
@@ -24,6 +25,7 @@ public class CivDeudas  implements java.io.Serializable {
      private String deuRefencia;
      private Set civDetalleIngresoDeudases = new HashSet(0);
      private Set civDetalleDeudases = new HashSet(0);
+     private Set civMovimientoses = new HashSet(0);
      private Set civExpedienteses = new HashSet(0);
 
     public CivDeudas() {
@@ -36,11 +38,12 @@ public class CivDeudas  implements java.io.Serializable {
         this.civPersonas = civPersonas;
         this.civEstadoDeudas = civEstadoDeudas;
     }
-    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civExpedienteses) {
+    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civMovimientoses, Set civExpedienteses) {
        this.deuId = deuId;
        this.civTipoDeudas = civTipoDeudas;
        this.civPersonas = civPersonas;
        this.civEstadoDeudas = civEstadoDeudas;
+       this.civCobroDeudas = civCobroDeudas;
        this.deuFechadeuda = deuFechadeuda;
        this.deuValor = deuValor;
        this.deuSaldo = deuSaldo;
@@ -48,6 +51,7 @@ public class CivDeudas  implements java.io.Serializable {
        this.deuRefencia = deuRefencia;
        this.civDetalleIngresoDeudases = civDetalleIngresoDeudases;
        this.civDetalleDeudases = civDetalleDeudases;
+       this.civMovimientoses = civMovimientoses;
        this.civExpedienteses = civExpedienteses;
     }
    
@@ -78,6 +82,13 @@ public class CivDeudas  implements java.io.Serializable {
     
     public void setCivEstadoDeudas(CivEstadoDeudas civEstadoDeudas) {
         this.civEstadoDeudas = civEstadoDeudas;
+    }
+    public CivCobroDeudas getCivCobroDeudas() {
+        return this.civCobroDeudas;
+    }
+    
+    public void setCivCobroDeudas(CivCobroDeudas civCobroDeudas) {
+        this.civCobroDeudas = civCobroDeudas;
     }
     public Date getDeuFechadeuda() {
         return this.deuFechadeuda;
@@ -127,6 +138,13 @@ public class CivDeudas  implements java.io.Serializable {
     
     public void setCivDetalleDeudases(Set civDetalleDeudases) {
         this.civDetalleDeudases = civDetalleDeudases;
+    }
+    public Set getCivMovimientoses() {
+        return this.civMovimientoses;
+    }
+    
+    public void setCivMovimientoses(Set civMovimientoses) {
+        this.civMovimientoses = civMovimientoses;
     }
     public Set getCivExpedienteses() {
         return this.civExpedienteses;

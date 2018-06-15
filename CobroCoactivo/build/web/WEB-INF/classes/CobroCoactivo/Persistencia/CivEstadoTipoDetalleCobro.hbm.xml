@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoTipoDetalleCobro" table="CIV_ESTADO_TIPO_DETALLE_COBRO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="esttipdetcobId" type="big_decimal">
+            <column name="ESTTIPDETCOB_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="esttipdetcobDescripcion" type="string">
+            <column name="ESTTIPDETCOB_DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="esttipdetcobFechainicial" type="date">
+            <column name="ESTTIPDETCOB_FECHAINICIAL" length="7" />
+        </property>
+        <property name="esttipdetcobFechafinal" type="date">
+            <column name="ESTTIPDETCOB_FECHAFINAL" length="7" />
+        </property>
+        <property name="esttipdetcobFechaproceso" type="date">
+            <column name="ESTTIPDETCOB_FECHAPROCESO" length="7" />
+        </property>
+        <set name="civTipoDetalleCobros" table="CIV_TIPO_DETALLE_COBRO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TIPDETCOB_ESTTIPDET_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivTipoDetalleCobro" />
+        </set>
+    </class>
+</hibernate-mapping>

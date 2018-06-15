@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 7/06/2018 03:45:06 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivConfUsuRec" table="CIV_CONF_USU_REC" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara las configuraciones que se hagan</comment>
@@ -14,7 +14,7 @@
                 <comment>Campo que guardara el usuario que hizo la configurarion, que hace refencia a la tabla CIV_USUARIO</comment>
             </column>
         </many-to-one>
-        <many-to-one name="civRecursos" class="CobroCoactivo.Persistencia.CivRecursos" fetch="select" lazy="false"  >
+        <many-to-one name="civRecursos" class="CobroCoactivo.Persistencia.CivRecursos" fetch="select" lazy="false">
             <column name="CONFUSUREC_RECURSO_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guardara el Recurso al cual se le hizo la configuracion, que hace refencia a la tabla CIV_RECURSO</comment>
             </column>

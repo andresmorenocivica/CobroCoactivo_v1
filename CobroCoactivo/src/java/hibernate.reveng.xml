@@ -43,9 +43,11 @@ Contributor(s):
     <schema-selection match-schema="COBROCOACTIVO_V1"/>
     <table-filter match-name="CIV_ABOGADOS"/>
     <table-filter match-name="CIV_ATTEMPTS"/>
+    <table-filter match-name="CIV_COBRO_DEUDAS"/>
     <table-filter match-name="CIV_CONCEPTOS"/>
     <table-filter match-name="CIV_CONF_USU_REC"/>
     <table-filter match-name="CIV_DATOS_PERSONAS"/>
+    <table-filter match-name="CIV_DETALLE_COBRO_DEUDAS"/>
     <table-filter match-name="CIV_DETALLE_DEUDAS"/>
     <table-filter match-name="CIV_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_DETALLE_INGRESO_DEUDAS"/>
@@ -54,9 +56,11 @@ Contributor(s):
     <table-filter match-name="CIV_ENTIDADES"/>
     <table-filter match-name="CIV_ERRORES"/>
     <table-filter match-name="CIV_ESTADO_ABOGADOS"/>
+    <table-filter match-name="CIV_ESTADO_COBRO_DEUDA"/>
     <table-filter match-name="CIV_ESTADO_CONCEPTOS"/>
     <table-filter match-name="CIV_ESTADO_CONFUSUREC"/>
     <table-filter match-name="CIV_ESTADO_DATOS_PERSONAS"/>
+    <table-filter match-name="CIV_ESTADO_DETALLE_COBRO_DEUDA"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_DEUDAS"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_INGRESODEU"/>
@@ -70,6 +74,7 @@ Contributor(s):
     <table-filter match-name="CIV_ESTADO_FASES_TRABAJOS"/>
     <table-filter match-name="CIV_ESTADO_INGRESO_DEUDAS"/>
     <table-filter match-name="CIV_ESTADO_MODULOS"/>
+    <table-filter match-name="CIV_ESTADO_MOVIMIENTOS"/>
     <table-filter match-name="CIV_ESTADO_PERFILES"/>
     <table-filter match-name="CIV_ESTADO_PERSONAS"/>
     <table-filter match-name="CIV_ESTADO_PLAN_GENERALES"/>
@@ -77,8 +82,10 @@ Contributor(s):
     <table-filter match-name="CIV_ESTADO_RECURSOS"/>
     <table-filter match-name="CIV_ESTADO_REPORTE_TRABAJOS"/>
     <table-filter match-name="CIV_ESTADO_TIPO_DATOS_PERSONAS"/>
+    <table-filter match-name="CIV_ESTADO_TIPO_DETALLE_COBRO"/>
     <table-filter match-name="CIV_ESTADOUSP_HISTORIA"/>
     <table-filter match-name="CIV_ESTADO_USUARIOS"/>
+    <table-filter match-name="CIV_ESTADO_VALOR_TIPO_DETCOBRO"/>
     <table-filter match-name="CIV_ETAPAS_GENERALES"/>
     <table-filter match-name="CIV_ETAPAS_TRABAJOS"/>
     <table-filter match-name="CIV_EXPEDIENTES"/>
@@ -86,6 +93,7 @@ Contributor(s):
     <table-filter match-name="CIV_FASES_TRABAJOS"/>
     <table-filter match-name="CIV_INGRESO_DEUDAS"/>
     <table-filter match-name="CIV_MODULOS"/>
+    <table-filter match-name="CIV_MOVIMIENTOS"/>
     <table-filter match-name="CIV_PERFILES"/>
     <table-filter match-name="CIV_PERSONAS"/>
     <table-filter match-name="CIV_PLAN_GENERALES"/>
@@ -94,6 +102,7 @@ Contributor(s):
     <table-filter match-name="CIV_REPORTE_TRABAJOS"/>
     <table-filter match-name="CIV_TIPO_CONCEPTOS"/>
     <table-filter match-name="CIV_TIPO_DATOS_PERSONAS"/>
+    <table-filter match-name="CIV_TIPO_DETALLE_COBRO"/>
     <table-filter match-name="CIV_TIPO_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_TIPO_DEUDAS"/>
     <table-filter match-name="CIV_TIPO_DOCUMENTOS"/>
@@ -102,5 +111,6 @@ Contributor(s):
     <table-filter match-name="CIV_TIPO_RECURSOS"/>
     <table-filter match-name="CIV_USP_HISTORIA"/>
     <table-filter match-name="CIV_USUARIOS"/>
+    <table-filter match-name="CIV_VALOR_TIPO_DETALLE_COBRO"/>
     <table-filter match-name="LOG_EVENTOS"/>
 </hibernate-reverse-engineering>
