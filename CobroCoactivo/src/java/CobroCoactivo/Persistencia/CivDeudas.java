@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1
+// Generated 19/06/2018 11:34:10 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -15,6 +15,7 @@ public class CivDeudas  implements java.io.Serializable {
 
      private BigDecimal deuId;
      private CivTipoDeudas civTipoDeudas;
+     private CivPlanTrabajos civPlanTrabajos;
      private CivPersonas civPersonas;
      private CivEstadoDeudas civEstadoDeudas;
      private CivCobroDeudas civCobroDeudas;
@@ -32,15 +33,18 @@ public class CivDeudas  implements java.io.Serializable {
     }
 
 	
-    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas) {
+    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas) {
         this.deuId = deuId;
         this.civTipoDeudas = civTipoDeudas;
+        this.civPlanTrabajos = civPlanTrabajos;
         this.civPersonas = civPersonas;
         this.civEstadoDeudas = civEstadoDeudas;
+        this.civCobroDeudas = civCobroDeudas;
     }
-    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civMovimientoses, Set civExpedienteses) {
+    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civMovimientoses, Set civExpedienteses) {
        this.deuId = deuId;
        this.civTipoDeudas = civTipoDeudas;
+       this.civPlanTrabajos = civPlanTrabajos;
        this.civPersonas = civPersonas;
        this.civEstadoDeudas = civEstadoDeudas;
        this.civCobroDeudas = civCobroDeudas;
@@ -68,6 +72,13 @@ public class CivDeudas  implements java.io.Serializable {
     
     public void setCivTipoDeudas(CivTipoDeudas civTipoDeudas) {
         this.civTipoDeudas = civTipoDeudas;
+    }
+    public CivPlanTrabajos getCivPlanTrabajos() {
+        return this.civPlanTrabajos;
+    }
+    
+    public void setCivPlanTrabajos(CivPlanTrabajos civPlanTrabajos) {
+        this.civPlanTrabajos = civPlanTrabajos;
     }
     public CivPersonas getCivPersonas() {
         return this.civPersonas;

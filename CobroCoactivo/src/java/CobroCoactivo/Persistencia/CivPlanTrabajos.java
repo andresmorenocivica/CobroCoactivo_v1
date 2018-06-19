@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1
+// Generated 19/06/2018 11:34:10 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,6 +17,7 @@ public class CivPlanTrabajos  implements java.io.Serializable {
      private CivEstadoPlanTrabajos civEstadoPlanTrabajos;
      private String platraDescripcion;
      private Date platraFechaproceso;
+     private Set civDeudases = new HashSet(0);
      private Set civEtapasTrabajoses = new HashSet(0);
 
     public CivPlanTrabajos() {
@@ -28,11 +29,12 @@ public class CivPlanTrabajos  implements java.io.Serializable {
         this.civEstadoPlanTrabajos = civEstadoPlanTrabajos;
         this.platraDescripcion = platraDescripcion;
     }
-    public CivPlanTrabajos(BigDecimal platraId, CivEstadoPlanTrabajos civEstadoPlanTrabajos, String platraDescripcion, Date platraFechaproceso, Set civEtapasTrabajoses) {
+    public CivPlanTrabajos(BigDecimal platraId, CivEstadoPlanTrabajos civEstadoPlanTrabajos, String platraDescripcion, Date platraFechaproceso, Set civDeudases, Set civEtapasTrabajoses) {
        this.platraId = platraId;
        this.civEstadoPlanTrabajos = civEstadoPlanTrabajos;
        this.platraDescripcion = platraDescripcion;
        this.platraFechaproceso = platraFechaproceso;
+       this.civDeudases = civDeudases;
        this.civEtapasTrabajoses = civEtapasTrabajoses;
     }
    
@@ -63,6 +65,13 @@ public class CivPlanTrabajos  implements java.io.Serializable {
     
     public void setPlatraFechaproceso(Date platraFechaproceso) {
         this.platraFechaproceso = platraFechaproceso;
+    }
+    public Set getCivDeudases() {
+        return this.civDeudases;
+    }
+    
+    public void setCivDeudases(Set civDeudases) {
+        this.civDeudases = civDeudases;
     }
     public Set getCivEtapasTrabajoses() {
         return this.civEtapasTrabajoses;

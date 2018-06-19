@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 19/06/2018 11:34:12 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivPlanTrabajos" table="CIV_PLAN_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="platraId" type="big_decimal">
             <column name="PLATRA_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civEstadoPlanTrabajos" class="CobroCoactivo.Persistencia.CivEstadoPlanTrabajos" fetch="select">
             <column name="PLATRA_ESTPLATRA_FK" precision="22" scale="0" not-null="true" />
@@ -17,6 +17,12 @@
         <property name="platraFechaproceso" type="date">
             <column name="PLATRA_FECHAPROCESO" length="7" />
         </property>
+        <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DEU_PLATRA_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDeudas" />
+        </set>
         <set name="civEtapasTrabajoses" table="CIV_ETAPAS_TRABAJOS" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ETATRA_PLATRA_FK" precision="22" scale="0" not-null="true" />

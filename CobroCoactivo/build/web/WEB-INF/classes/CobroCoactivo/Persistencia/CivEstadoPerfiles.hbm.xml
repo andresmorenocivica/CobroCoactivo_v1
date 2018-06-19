@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 19/06/2018 11:34:12 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoPerfiles" table="CIV_ESTADO_PERFILES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara los estados que existen en el sistema referente a la tabla CIV_PERFILES</comment>
         <id name="estperfId" type="big_decimal">
             <column name="ESTPERF_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="estperfDescripcion" type="string">
             <column name="ESTPERF_DESCRIPCION" length="10" not-null="true">

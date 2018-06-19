@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1
+// Generated 19/06/2018 11:34:10 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -14,6 +14,7 @@ public class CivValorTipoDetalleCobro  implements java.io.Serializable {
 
 
      private BigDecimal valtipdetcobId;
+     private CivTipoDetalleCobro civTipoDetalleCobro;
      private CivEstadoValorTipoDetcobro civEstadoValorTipoDetcobro;
      private String valtipdetcobDescripcion;
      private Date valtipdetcobFechaproceso;
@@ -23,13 +24,15 @@ public class CivValorTipoDetalleCobro  implements java.io.Serializable {
     }
 
 	
-    public CivValorTipoDetalleCobro(BigDecimal valtipdetcobId, CivEstadoValorTipoDetcobro civEstadoValorTipoDetcobro, String valtipdetcobDescripcion) {
+    public CivValorTipoDetalleCobro(BigDecimal valtipdetcobId, CivTipoDetalleCobro civTipoDetalleCobro, CivEstadoValorTipoDetcobro civEstadoValorTipoDetcobro, String valtipdetcobDescripcion) {
         this.valtipdetcobId = valtipdetcobId;
+        this.civTipoDetalleCobro = civTipoDetalleCobro;
         this.civEstadoValorTipoDetcobro = civEstadoValorTipoDetcobro;
         this.valtipdetcobDescripcion = valtipdetcobDescripcion;
     }
-    public CivValorTipoDetalleCobro(BigDecimal valtipdetcobId, CivEstadoValorTipoDetcobro civEstadoValorTipoDetcobro, String valtipdetcobDescripcion, Date valtipdetcobFechaproceso, Set civDetalleCobroDeudases) {
+    public CivValorTipoDetalleCobro(BigDecimal valtipdetcobId, CivTipoDetalleCobro civTipoDetalleCobro, CivEstadoValorTipoDetcobro civEstadoValorTipoDetcobro, String valtipdetcobDescripcion, Date valtipdetcobFechaproceso, Set civDetalleCobroDeudases) {
        this.valtipdetcobId = valtipdetcobId;
+       this.civTipoDetalleCobro = civTipoDetalleCobro;
        this.civEstadoValorTipoDetcobro = civEstadoValorTipoDetcobro;
        this.valtipdetcobDescripcion = valtipdetcobDescripcion;
        this.valtipdetcobFechaproceso = valtipdetcobFechaproceso;
@@ -42,6 +45,13 @@ public class CivValorTipoDetalleCobro  implements java.io.Serializable {
     
     public void setValtipdetcobId(BigDecimal valtipdetcobId) {
         this.valtipdetcobId = valtipdetcobId;
+    }
+    public CivTipoDetalleCobro getCivTipoDetalleCobro() {
+        return this.civTipoDetalleCobro;
+    }
+    
+    public void setCivTipoDetalleCobro(CivTipoDetalleCobro civTipoDetalleCobro) {
+        this.civTipoDetalleCobro = civTipoDetalleCobro;
     }
     public CivEstadoValorTipoDetcobro getCivEstadoValorTipoDetcobro() {
         return this.civEstadoValorTipoDetcobro;

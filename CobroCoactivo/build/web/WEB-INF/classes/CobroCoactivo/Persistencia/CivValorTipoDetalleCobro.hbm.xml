@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 19/06/2018 11:34:12 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivValorTipoDetalleCobro" table="CIV_VALOR_TIPO_DETALLE_COBRO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="valtipdetcobId" type="big_decimal">
             <column name="VALTIPDETCOB_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
+        <many-to-one name="civTipoDetalleCobro" class="CobroCoactivo.Persistencia.CivTipoDetalleCobro" fetch="select">
+            <column name="VALTIPDETCOB_TIPDETCOB_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
         <many-to-one name="civEstadoValorTipoDetcobro" class="CobroCoactivo.Persistencia.CivEstadoValorTipoDetcobro" fetch="select">
             <column name="VALTIPDETCOB_ESTVALTIPDET_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>

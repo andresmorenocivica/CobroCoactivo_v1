@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 15/06/2018 09:05:14 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 19/06/2018 11:34:12 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivTipoDetalleCobro" table="CIV_TIPO_DETALLE_COBRO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tipdetcobId" type="big_decimal">
             <column name="TIPDETCOB_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civEstadoTipoDetalleCobro" class="CobroCoactivo.Persistencia.CivEstadoTipoDetalleCobro" fetch="select">
             <column name="TIPDETCOB_ESTTIPDET_FK" precision="22" scale="0" not-null="true" />
@@ -17,5 +17,11 @@
         <property name="tipdetcobFechaproceso" type="date">
             <column name="TIPDETCOB_FECHAPROCESO" length="7" />
         </property>
+        <set name="civValorTipoDetalleCobros" table="CIV_VALOR_TIPO_DETALLE_COBRO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VALTIPDETCOB_TIPDETCOB_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivValorTipoDetalleCobro" />
+        </set>
     </class>
 </hibernate-mapping>
