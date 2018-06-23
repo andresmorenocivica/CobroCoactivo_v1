@@ -3,6 +3,7 @@ package CobroCoactivo.Utility;
 import CobroCoactivo.ModeloSistema.LoginUser;
 import CobroCoactivo.Singleton.SessionSingleton;
 import CobroCoactivo.Persistencia.CivErrores;
+import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Persistencia.LogEventos;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -154,11 +155,15 @@ public class Log_Handler {
         long id = 0;
         Transaction tx = null;
         try {
+            CivUsuarios civUsuarios =  new CivUsuarios();
+            civUsuarios.setUsuId(new BigDecimal(1));
+            logEvento.setCivUsuarios(civUsuarios);
             tx = session.beginTransaction();
             id = Long.parseLong(session.save(logEvento).toString());
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
+                e.printStackTrace();
                 tx.rollback();
             }
         } finally {

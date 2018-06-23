@@ -118,10 +118,11 @@ public class DaoUsuarios implements ITUsuarios {
         if (query.list().size() > 0) {
             fecha = (Date) query.list().get(0);
         }
+        /*
         if (session.isOpen()) {
             session.flush();
             session.close();
-        }
+        }*/
         if (fecha != null) {
             return fecha;
         } else {

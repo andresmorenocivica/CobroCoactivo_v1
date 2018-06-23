@@ -24,7 +24,7 @@
                         </ol>
                     </section>
                     <section class="content">
-                        <h:form id="formPlanGeneral">
+                        <h:form id="formPlanGeneral" enctype="multipart/form-data">
                             <p:messages closable="true" autoUpdate="true" id="msggeneral2" showDetail="false" />
                             <div class="row" jsf:id="contenedor">
                                 <div class="col-md-3">
@@ -63,8 +63,6 @@
                                     <div class="box box-success" jsf:id="etapaGenerales" jsf:rendered="#{PlanGeneralbean.renderEtapaGeneral}">
                                         <div class="box-header with-border">
                                             <h5 class="box-title">Etapas Generales</h5>
-
-
                                             <div class="box-tools">
                                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                                 </button>
@@ -74,12 +72,15 @@
                                             <ul class="nav nav-pills nav-stacked">
                                                 <ui:repeat value="#{PlanGeneralbean.listadoEtapasGeneraleses}" var="etapaGeneral">
                                                     <li>
-                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}">
-                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.setRenderEtapaGeneral(true)}"/>
-                                                            <i class="fa fa-pencil-square-o" style="float: right" onclick="$('#etapaGeneral').modal('show');">
+                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}" class="col-sm-10">
+                                                            <f:ajax event="click" render="@form"  listener="#{PlanGeneralbean.listarFasesGeneralesPorFases(etapaGeneral)}"/>
+                                                        </h:commandLink>
+                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
+                                                            <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
                                                                 <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
                                                             </i>
-                                                        </h:commandLink>
+                                                        </div>
+
                                                     </li>
                                                 </ui:repeat> 
                                             </ul>
@@ -93,11 +94,18 @@
                                     <!-- /.box -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-9">
+                                <div class="col-md-9" jsf:id="fasesGenerales" jsf:rendered="#{PlanGeneralbean.renderFaseGeneral}">
                                     <div class="box box-success">
                                         <div class="box-header with-border">
                                             <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales"></h:outputLabel>
                                             <!-- /.box-tools -->
+                                            <div class="box-tools">
+                                                <h:commandLink type="button" class="btn btn-box-tool" id="btnAdd" onclick="$('#faseGeneral').modal('show');">
+                                                    <f:ajax event="click" render="formPlanGeneral:modalContentFases" listener="#{PlanGeneralbean.eventoGuardar(3)}"></f:ajax>
+                                                    <i class="fa fa-plus-square-o text-success fa-2x"></i>
+                                                </h:commandLink>
+                                            </div>
+
                                         </div>
                                         <!-- /.box-header -->
                                         <div class="box-body no-padding">
@@ -105,7 +113,39 @@
                                             </div>
                                             <!-- corte codigo fuente tabla  -->
                                             <div class="table-responsive mailbox-messages">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Descripción</th>
+                                                            <th>Estado</th>
+                                                            <th>Dia Min</th>
+                                                            <th>Dia Max</th>
+                                                            <th>Obligatorio</th>
+                                                            <th>Archivo</th>
+                                                            <th>Accion</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{PlanGeneralbean.listFasesGenerales}" var="fasegeneral">
+                                                            <tr>
+                                                                <td>#{fasegeneral.fasgenDescripcion}</td>
+                                                                <td>#{fasegeneral.estadoFasesGenerales.descripcion}</td>
+                                                                <td>#{fasegeneral.fasgenDianim}</td>
+                                                                <td>#{fasegeneral.fasgenDiamax}</td>
+                                                                <td>#{fasegeneral.fasgenObligatorio}</td>
+                                                                <td>#{fasegeneral.documenGenerales.docgenDescripcion}</td>
+                                                                <td>
 
+                                                                    <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.docgenArchivo)}">
+                                                                        <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height: 32 px;"></img>
+                                                                    </h:commandLink>
+
+                                                                </td>
+
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                             <!-- /.mail-box-messages -->
                                         </div>
@@ -126,12 +166,14 @@
 
 
 
+
                             <!-- start modal   plan general  -->
                             <div class="modal fade" id="planGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog ">
                                     <div class="modal-content" jsf:id="modalContent">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.nombreModalTitulo}</h4>
+                                            <p:messages autoUpdate="true" id="messagePlanGeneral" closable="true" showDetail="false"></p:messages>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -213,9 +255,16 @@
                                                         <h:selectOneMenu  class="form-control" value="#{PlanGeneralbean.obligatorio}" id="seletObligatorio">
                                                             <f:selectItem  itemLabel="Si" itemValue="TRUE"></f:selectItem>
                                                             <f:selectItem  itemLabel="No" itemValue="FALSE"></f:selectItem>
-                                                            
+
                                                         </h:selectOneMenu>
                                                     </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Orden</label>
+                                                        <h:inputText class="form-control" id="txtEtapaGeneral"  value="#{PlanGeneralbean.etapasGenerales.prioridad}"></h:inputText>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -228,10 +277,10 @@
                                                 </div>
                                                 <div class="col-lg-1">
                                                     <h:commandLink value="Guardar" id="btnGuardarEtapaGeneral" class="btn btn-success" rendered="#{PlanGeneralbean.estadoButton}">
-                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.guardarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral"/>
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.guardarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral formPlanGeneral:txtEtapaGeneral"/>
                                                     </h:commandLink>
                                                     <h:commandLink value="Actualizar" id="btnActualizarEtapaGeneral" class="btn btn-success" rendered="#{!PlanGeneralbean.estadoButton}">
-                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.actualizarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral"/>
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.actualizarEtapaGeneral()}" execute="formPlanGeneral:txtEtapaGeneralDescriptionRecurso formPlanGeneral:seletObligatorio formPlanGeneral:txtEstadoEtapaGeneral formPlanGeneral:txtEtapaGeneral"/>
                                                     </h:commandLink>
                                                 </div>
                                             </div>
@@ -242,6 +291,94 @@
                                 <!-- /.modal-dialog -->
                             </div>
                             <!-- end modal    -->
+
+
+                            <!-- start modal   fase general  -->
+                            <div class="modal fade" id="faseGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog ">
+                                    <div class="modal-content" jsf:id="modalContentFases">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.etapasGenerales.etagenDescripcion}</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Descripción:</label>
+                                                        <h:inputText class="form-control" id="txtDescriptionFase" value="#{PlanGeneralbean.fasesGenerales.fasgenDescripcion}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label>Estado:</label>
+                                                        <h:selectOneMenu id="txtEstadoFase" class="form-control" value="#{PlanGeneralbean.idEStadoFasesGeneral}">
+                                                            <f:selectItems value="#{PlanGeneralbean.listCivEstadoFasesGeneraleses}" var="estadoFasesGenerales" itemLabel="#{estadoFasesGenerales.estfasgenDescripcion}" itemValue="#{estadoFasesGenerales.estfasgenId}"></f:selectItems>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Dia Minimo:</label>
+                                                        <input type="number" class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenDianim}" jsf:id="txtDiaMinimoFase" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Dia Maximo:</label>
+                                                        <h:inputText class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenDiamax}" id="txtDiaMaximoFase"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Obligatorio:</label>
+                                                        <h:selectOneMenu class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenObligatorio}" id="selectObligatorioFase">
+                                                            <f:selectItem itemLabel="SI" itemValue="TRUE"></f:selectItem>
+                                                            <f:selectItem itemLabel="NO" itemValue="FALSE"></f:selectItem>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label> Agregar Archivo</label>
+                                                        <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{PlanGeneralbean.file}"/>
+
+                                                        <p class="help-block">.pdf</p>
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <h:commandLink value="Guardar" id="btnGuardarFase" class="btn btn-success" rendered="#{PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.guardarFasesGenerales()}" execute="formPlanGeneral:file formPlanGeneral:txtDescriptionFase formPlanGeneral:txtEstadoFase formPlanGeneral:txtDiaMinimoFase formPlanGeneral:txtDiaMaximoFase formPlanGeneral:selectObligatorioFase"/>
+                                                    </h:commandLink>
+                                                    <h:commandLink value="Actualizar" id="btnActualizarFase" class="btn btn-success" rendered="#{!PlanGeneralbean.estadoButton}">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{PlanGeneralbean.actualizarPlanGeneral()}" execute="formPlanGeneral:txtDescriptionRecurso formPlanGeneral:txtEstado"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- end modal    -->
+
+
+
+
+
                         </h:form>
                     </section>
                 </div>

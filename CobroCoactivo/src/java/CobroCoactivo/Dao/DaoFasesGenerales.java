@@ -25,10 +25,7 @@ public class DaoFasesGenerales extends ImpGeneryHibernateDao<CivFasesGenerales, 
         String hql = "from CivFasesGenerales where civEtapasGenerales.etagenId=:id";
         Query query = session.createQuery(hql);
         query.setParameter("id", new BigDecimal(id));
-        if (query.list().size() > 0) {
-            return query.list();
-        }
-        return null;
+        return query.list();
     }
     
 }

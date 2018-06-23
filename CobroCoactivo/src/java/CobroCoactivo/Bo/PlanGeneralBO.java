@@ -24,9 +24,14 @@ public interface PlanGeneralBO {
     void listarEtadoGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception;
 
     void ListarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception;
-    
+
     void GuardarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
-    
-     void ActualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
-    
+
+    void ActualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
+
+    void guardarFasesGeneral(BeanPlanGeneral bean) throws Exception;
+
+    void listarEstadoFasesGenerales(BeanPlanGeneral bean) throws Exception;
+
+    void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception;
 }

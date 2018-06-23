@@ -19,6 +19,7 @@ public class EtapasGenerales  implements java.io.Serializable {
      private String etagenDescripcion;
      private Date etagenFechaproceso;
      private String etagenObligatorio;
+     private Integer prioridad;
      private Set fasesGeneraleses = new HashSet(0);
 
     public EtapasGenerales() {
@@ -90,6 +91,20 @@ public class EtapasGenerales  implements java.io.Serializable {
     
     public void setFasesGeneraleses(Set fasesGeneraleses) {
         this.fasesGeneraleses = fasesGeneraleses;
+    }
+
+    /**
+     * @return the prioridad
+     */
+    public Integer getPrioridad() {
+        return prioridad;
+    }
+
+    /**
+     * @param prioridad the prioridad to set
+     */
+    public void setPrioridad(Integer prioridad) {
+        this.prioridad = prioridad;
     }
 
 

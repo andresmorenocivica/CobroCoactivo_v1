@@ -40,7 +40,7 @@ public class DaoEstadoUsuarios implements ITEstadoUsuarios {
     @Override
     public CivEstadoUsuarios consultarModuloById(Session session, int id) throws Exception {
         return (CivEstadoUsuarios) session.createCriteria(CivEstadoUsuarios.class)
-                .add(Restrictions.eq("estusuId", id))
+                .add(Restrictions.eq("estusuId", BigDecimal.valueOf(id)))
                 .uniqueResult();
     }
 

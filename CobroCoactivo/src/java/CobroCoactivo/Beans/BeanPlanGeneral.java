@@ -10,8 +10,12 @@ import CobroCoactivo.Bo.PlanGeneralImpBO;
 import CobroCoactivo.Modelo.EstadoEtapasGenerales;
 import CobroCoactivo.Modelo.EstadoPlanGenerales;
 import CobroCoactivo.Modelo.EtapasGenerales;
+import CobroCoactivo.Modelo.FasesGenerales;
 import CobroCoactivo.Modelo.PlanGenerales;
+import CobroCoactivo.Persistencia.CivEstadoFasesGenerales;
 import CobroCoactivo.Utility.Log_Handler;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -32,23 +40,36 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class BeanPlanGeneral implements Serializable {
 
+    //objecto utilidos en el beanPlanGeneral
+    private PlanGeneralBO planGeneralBO;
     private PlanGenerales planGenerales = new PlanGenerales();
     private EtapasGenerales etapasGenerales = new EtapasGenerales();
+    private FasesGenerales fasesGenerales = new FasesGenerales();
+    private Part file;
+    private BeanLogin loginBO;
+    //termina objectos utilizados en el bean plan general
+
+    // Lista de Objectos beanPlangeneral 
     private List<EstadoEtapasGenerales> estadoEtapasGenerales = new ArrayList<>();
-
-    private PlanGeneralBO planGeneralBO;
-
     private List<PlanGenerales> listadoPlanGeneraleses = new ArrayList<>();
     private List<EtapasGenerales> listadoEtapasGeneraleses = new ArrayList<>();
     private List<EstadoPlanGenerales> ListadoEStadoPlanesGenerales = new ArrayList<>();
+    private List<CivEstadoFasesGenerales> listCivEstadoFasesGeneraleses = new ArrayList<>();
+    private List<FasesGenerales> listFasesGenerales = new ArrayList<>();
+    //termina  lista de objectos beanplangeneral
 
+    // variables primitivas utiliza en el beanPlangenearal
     private int idEstadoGeneral;
     private int idEstapaGeneral;
+    private int idEStadoFasesGeneral;
 
     private Boolean estadoButton = true;
     private Boolean renderEtapaGeneral = false;
+    private Boolean renderFaseGeneral = false;
+
     private String obligatorio;
     private String nombreModalTitulo;
+    //termina las variables primitivas utilizadas en el beanPlangeneral
 
     public BeanPlanGeneral() {
 
@@ -57,6 +78,15 @@ public class BeanPlanGeneral implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            
+            
+            
+            setLoginBO(new BeanLogin());
+            
+            FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+           HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+            setLoginBO((BeanLogin) session.getAttribute("loginBean"));
+            
             setPlanGeneralBO(new PlanGeneralImpBO());
             getPlanGeneralBO().ListarPlanesGenerales(this);
             if (getListadoEStadoPlanesGenerales().size() == 0) {
@@ -65,6 +95,9 @@ public class BeanPlanGeneral implements Serializable {
 
             if (getEstadoEtapasGenerales().size() == 0) {
                 getPlanGeneralBO().ListarEstadoEtapasGenerales(this);
+            }
+            if (getListCivEstadoFasesGeneraleses().size() == 0) {
+                getPlanGeneralBO().listarEstadoFasesGenerales(this);
             }
 
         } catch (Exception ex) {
@@ -83,9 +116,9 @@ public class BeanPlanGeneral implements Serializable {
             requestContext.execute("$('#planGeneral').modal('hide')");
 
         } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
-            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",""));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("Plan" + "messagePlanGeneral");
         }
     }
 
@@ -164,8 +197,10 @@ public class BeanPlanGeneral implements Serializable {
         setEstadoButton(true);
         if (number == 1) {
             setPlanGenerales(new PlanGenerales());
-        } else {
+        } else if (number == 2) {
             setEtapasGenerales(new EtapasGenerales());
+        } else if (number == 3) {
+            setFasesGenerales(new FasesGenerales());
         }
 
     }
@@ -173,6 +208,7 @@ public class BeanPlanGeneral implements Serializable {
     public void ListarEtadoGeneralesPorIdPlanGeneral(PlanGenerales planGenerales) {
         try {
             setRenderEtapaGeneral(true);
+            setRenderFaseGeneral(false);
             setPlanGenerales(planGenerales);
             getPlanGeneralBO().listarEtadoGeneralesPorIdPlanGeneral(this);
 
@@ -182,6 +218,61 @@ public class BeanPlanGeneral implements Serializable {
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
 
+    }
+
+    public void listarFasesGeneralesPorFases(EtapasGenerales etapasGenerales) {
+        try {
+            setRenderFaseGeneral(true);
+            setEtapasGenerales(etapasGenerales);
+            getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+
+    }
+
+    public void guardarFasesGenerales() {
+        try {
+            getPlanGeneralBO().guardarFasesGeneral(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void mostrarPdf(String archivo) {
+        try {
+            File ficheroXLS = new File(archivo);
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            FileInputStream fis = new FileInputStream(ficheroXLS);
+            byte[] bytes = new byte[1000];
+            int read = 0;
+            if (!ctx.getResponseComplete()) {
+                String fileName = ficheroXLS.getName();
+                String contentType = "application/pdf";
+                HttpServletResponse response
+                        = (HttpServletResponse) ctx.getExternalContext().getResponse();
+                response.setContentType(contentType);
+                response.setHeader("Content-Disposition",
+                        "attachment;filename=\"" + fileName + "\"");
+                ServletOutputStream out = response.getOutputStream();
+                while ((read = fis.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                out.flush();
+                out.close();
+                ctx.responseComplete();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
     }
 
     /**
@@ -365,6 +456,105 @@ public class BeanPlanGeneral implements Serializable {
      */
     public void setIdEstapaGeneral(int idEstapaGeneral) {
         this.idEstapaGeneral = idEstapaGeneral;
+    }
+
+    /**
+     * @return the renderFaseGeneral
+     */
+    public Boolean getRenderFaseGeneral() {
+        return renderFaseGeneral;
+    }
+
+    /**
+     * @param renderFaseGeneral the renderFaseGeneral to set
+     */
+    public void setRenderFaseGeneral(Boolean renderFaseGeneral) {
+        this.renderFaseGeneral = renderFaseGeneral;
+    }
+
+    /**
+     * @return the fasesGenerales
+     */
+    public FasesGenerales getFasesGenerales() {
+        return fasesGenerales;
+    }
+
+    /**
+     * @param fasesGenerales the fasesGenerales to set
+     */
+    public void setFasesGenerales(FasesGenerales fasesGenerales) {
+        this.fasesGenerales = fasesGenerales;
+    }
+
+    /**
+     * @return the file
+     */
+    public Part getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(Part file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the listCivEstadoFasesGeneraleses
+     */
+    public List<CivEstadoFasesGenerales> getListCivEstadoFasesGeneraleses() {
+        return listCivEstadoFasesGeneraleses;
+    }
+
+    /**
+     * @param listCivEstadoFasesGeneraleses the listCivEstadoFasesGeneraleses to
+     * set
+     */
+    public void setListCivEstadoFasesGeneraleses(List<CivEstadoFasesGenerales> listCivEstadoFasesGeneraleses) {
+        this.listCivEstadoFasesGeneraleses = listCivEstadoFasesGeneraleses;
+    }
+
+    /**
+     * @return the idEStadoFasesGeneral
+     */
+    public int getIdEStadoFasesGeneral() {
+        return idEStadoFasesGeneral;
+    }
+
+    /**
+     * @param idEStadoFasesGeneral the idEStadoFasesGeneral to set
+     */
+    public void setIdEStadoFasesGeneral(int idEStadoFasesGeneral) {
+        this.idEStadoFasesGeneral = idEStadoFasesGeneral;
+    }
+
+    /**
+     * @return the listFasesGenerales
+     */
+    public List<FasesGenerales> getListFasesGenerales() {
+        return listFasesGenerales;
+    }
+
+    /**
+     * @param listFasesGenerales the listFasesGenerales to set
+     */
+    public void setListFasesGenerales(List<FasesGenerales> listFasesGenerales) {
+        this.listFasesGenerales = listFasesGenerales;
+    }
+
+    /**
+     * @return the loginBO
+     */
+    public BeanLogin getLoginBO() {
+        return loginBO;
+    }
+
+    /**
+     * @param loginBO the loginBO to set
+     */
+    public void setLoginBO(BeanLogin loginBO) {
+        this.loginBO = loginBO;
     }
 
 }
