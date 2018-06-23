@@ -73,6 +73,7 @@ public class LoginImplBO implements LoginBO {
         Date ini = new Date();
         ini.setTime(0);
         Session session = HibernateUtil.getSessionFactory().openSession();
+        session.isOpen();
         CivUsuarios login = new CivUsuarios();
         login.setUsuNombre(obj.getUser().trim().toUpperCase(Locale.ROOT));
         login.setUsuPass(obj.getPassword());
