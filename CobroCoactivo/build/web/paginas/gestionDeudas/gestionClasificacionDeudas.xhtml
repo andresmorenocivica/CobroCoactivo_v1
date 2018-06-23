@@ -25,49 +25,6 @@
                         <section class="content" >
                             <div class="row" jsf:id="contenedor">
                                 <div class="col-md-12">
-                                    <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
-                                        <h:panelGroup rendered="#{gestionDeudasBean.pnlTablaDeudas}">
-                                            <div class="box box-danger">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tipo</th>
-                                                            <th>Estado</th>
-                                                            <th>Referencia</th>
-                                                            <th>Persona</th>
-                                                            <th>Fecha Deuda</th>
-                                                            <th>Dificultad del Cobro</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
-                                                            <tr>
-                                                                <td>#{listDeudas.tipoDeudas.descripcion}</td>
-                                                                <td>#{listDeudas.estadoDeudas.descripcion}</td>
-                                                                <td>#{listDeudas.referencia}</td>
-                                                                <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
-                                                                <td>#{listDeudas.fechaDeudas}</td>
-                                                                <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
-                                                                    <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                                                        <i class="#{listDificultad.colorDificultad}"> 30%
-                                                                            <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad  , deudas)}"/>
-                                                                        </i> 
-                                                                    </h:commandLink>
-                                                                </ui:repeat>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </h:panelGroup>
-                                    </h:panelGrid>
-                                    <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
-                                        <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                            <i class="#{listDificultad.colorDificultad}"> 30%
-                                                <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, deudas)}"/>
-                                            </i> 
-                                        </h:commandLink>
-                                    </ui:repeat>
                                     <h:panelGrid id="pnlBusquedaDeuda" class="col-lg-12" >
                                         <h:panelGroup rendered="#{gestionDeudasBean.busquedaVisible}" >
                                             <section class="content">
@@ -147,32 +104,6 @@
                                                                             <br></br> 
                                                                         </div>
                                                                         <!-- /.tab-pane -->
-                                                                        <!-- <div class="tab-pane" id="fechas">
-                                                                             <br></br>
-                                                                             <div class="row">
-                                                                                 <div class="col-md-3"></div>
-                                                                                 <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
-                                                                                     <div class="input-group margin-2">
-                                                                                         <label class="control-label align-left">Fecha</label>
-                                                                                     </div>
-                                                                                 </div>
-                                                                                 <div class="col-lg-4">
-                                                                                     <div class="form-group">
-                                                                                         <div class="input-group margin-5">
-                                                                                             <h:inputText id="buscarFechaIngreso" class="date datepicker form-control" value="#{gestionpersonasBean.buscarFecha}" maxlength="10">
-                                                                                                 <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-                                                                                             </h:inputText>
-                                                                                             <span class="input-group-btn">
-                                                                                                 <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                                                 </h:commandLink>
-                                                                                             </span>
-                                                                                         </div>
-                                                                                     </div>
-                                                                                 </div>
-                                                                             </div>
-                                                                         </div> 
-                                                                        -->
-                                                                        <!-- /.tab-pane -->
                                                                     </div>
                                                                     <!-- /.tab-content -->
                                                                 </div>
@@ -185,7 +116,44 @@
                                             </section>
                                         </h:panelGroup>
                                     </h:panelGrid>
-
+                                    <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
+                                        <h:panelGroup rendered="#{gestionDeudasBean.pnlTablaDeudas}">
+                                            <div class="box box-danger">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Tipo</th>
+                                                            <th>Estado</th>
+                                                            <th>Referencia</th>
+                                                            <th>Persona</th>
+                                                            <th>Fecha Deuda</th>
+                                                            <th>Dificultad del Cobro</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
+                                                            <tr>
+                                                                <td>#{listDeudas.tipoDeudas.descripcion}</td>
+                                                                <td>#{listDeudas.estadoDeudas.descripcion}</td>
+                                                                <td>#{listDeudas.referencia}</td>
+                                                                <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
+                                                                <td>#{listDeudas.fechaDeudas}</td>
+                                                                <td>
+                                                                    <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
+                                                                        <h:commandLink onclick="$('#modalEjecutar').modal('show');">
+                                                                            <i class="#{listDificultad.colorDificultad}"> 30%
+                                                                                <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, listDeudas)}"/>
+                                                                            </i> 
+                                                                        </h:commandLink>
+                                                                    </ui:repeat>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
                                 </div>
                             </div>
                             <h:panelGrid id="plnBtnFiltro">
