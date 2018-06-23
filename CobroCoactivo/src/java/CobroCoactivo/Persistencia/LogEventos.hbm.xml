@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 19/06/2018 11:34:12 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 14/06/2018 01:42:30 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.LogEventos" table="LOG_EVENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="eveId" type="big_decimal">
             <column name="EVE_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="EVE_USU_FK" precision="22" scale="0" not-null="true">

@@ -3,7 +3,7 @@ package CobroCoactivo.Modelo;
 
 
 
-import java.math.BigDecimal;
+import CobroCoactivo.Persistencia.CivEstadoFasesTrabajos;
 import java.util.Date;
 
 /**
@@ -12,74 +12,95 @@ import java.util.Date;
 public class EstadoFasesTrabajos  implements java.io.Serializable {
 
 
-     private BigDecimal estfastraId;
-     private String estfastraDescripcion;
-     private Date estfastraFechainicial;
-     private Date estfastraFechafinal;
-     private Date estfastraFechaproceso;
-     private FasesTrabajos fasesTrabajos;
+     private int Id;
+     private String Descripcion;
+     private Date Fechainicial;
+     private Date Fechafinal;
+     private Date Fechaproceso;
 
     public EstadoFasesTrabajos() {
     }
 
 	
-    public EstadoFasesTrabajos(BigDecimal estfastraId, String estfastraDescripcion) {
-        this.estfastraId = estfastraId;
-        this.estfastraDescripcion = estfastraDescripcion;
+    
+    public EstadoFasesTrabajos(CivEstadoFasesTrabajos civEstadoFasesTrabajos) {
+       this.Id = civEstadoFasesTrabajos.getEstfastraId().intValue();
+       this.Descripcion = civEstadoFasesTrabajos.getEstfastraDescripcion();
+       this.Fechainicial = civEstadoFasesTrabajos.getEstfastraFechainicial();
+       this.Fechafinal = civEstadoFasesTrabajos.getEstfastraFechafinal();
+       this.Fechaproceso = civEstadoFasesTrabajos.getEstfastraFechaproceso();
     }
-    public EstadoFasesTrabajos(BigDecimal estfastraId, String estfastraDescripcion, Date estfastraFechainicial, Date estfastraFechafinal, Date estfastraFechaproceso, FasesTrabajos fasesTrabajos) {
-       this.estfastraId = estfastraId;
-       this.estfastraDescripcion = estfastraDescripcion;
-       this.estfastraFechainicial = estfastraFechainicial;
-       this.estfastraFechafinal = estfastraFechafinal;
-       this.estfastraFechaproceso = estfastraFechaproceso;
-       this.fasesTrabajos = fasesTrabajos;
+
+    /**
+     * @return the Id
+     */
+    public int getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(int Id) {
+        this.Id = Id;
+    }
+
+    /**
+     * @return the Descripcion
+     */
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    /**
+     * @param Descripcion the Descripcion to set
+     */
+    public void setDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
+    }
+
+    /**
+     * @return the Fechainicial
+     */
+    public Date getFechainicial() {
+        return Fechainicial;
+    }
+
+    /**
+     * @param Fechainicial the Fechainicial to set
+     */
+    public void setFechainicial(Date Fechainicial) {
+        this.Fechainicial = Fechainicial;
+    }
+
+    /**
+     * @return the Fechafinal
+     */
+    public Date getFechafinal() {
+        return Fechafinal;
+    }
+
+    /**
+     * @param Fechafinal the Fechafinal to set
+     */
+    public void setFechafinal(Date Fechafinal) {
+        this.Fechafinal = Fechafinal;
+    }
+
+    /**
+     * @return the Fechaproceso
+     */
+    public Date getFechaproceso() {
+        return Fechaproceso;
+    }
+
+    /**
+     * @param Fechaproceso the Fechaproceso to set
+     */
+    public void setFechaproceso(Date Fechaproceso) {
+        this.Fechaproceso = Fechaproceso;
     }
    
-    public BigDecimal getEstfastraId() {
-        return this.estfastraId;
-    }
-    
-    public void setEstfastraId(BigDecimal estfastraId) {
-        this.estfastraId = estfastraId;
-    }
-    public String getEstfastraDescripcion() {
-        return this.estfastraDescripcion;
-    }
-    
-    public void setEstfastraDescripcion(String estfastraDescripcion) {
-        this.estfastraDescripcion = estfastraDescripcion;
-    }
-    public Date getEstfastraFechainicial() {
-        return this.estfastraFechainicial;
-    }
-    
-    public void setEstfastraFechainicial(Date estfastraFechainicial) {
-        this.estfastraFechainicial = estfastraFechainicial;
-    }
-    public Date getEstfastraFechafinal() {
-        return this.estfastraFechafinal;
-    }
-    
-    public void setEstfastraFechafinal(Date estfastraFechafinal) {
-        this.estfastraFechafinal = estfastraFechafinal;
-    }
-    public Date getEstfastraFechaproceso() {
-        return this.estfastraFechaproceso;
-    }
-    
-    public void setEstfastraFechaproceso(Date estfastraFechaproceso) {
-        this.estfastraFechaproceso = estfastraFechaproceso;
-    }
-    public FasesTrabajos getFasesTrabajos() {
-        return this.fasesTrabajos;
-    }
-    
-    public void setFasesTrabajos(FasesTrabajos fasesTrabajos) {
-        this.fasesTrabajos = fasesTrabajos;
-    }
-
-
 
 
 }

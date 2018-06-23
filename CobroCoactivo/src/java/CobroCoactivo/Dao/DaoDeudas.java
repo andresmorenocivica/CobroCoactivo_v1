@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ import org.hibernate.Session;
  *
  * @author emadrid
  */
-public class DaoDeudas implements ITDeudas {
+public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> implements ITDeudas{
 
     @Override
     public List<CivDeudas> listarDeudas(int Id_personas) throws Exception {
@@ -56,6 +57,22 @@ public class DaoDeudas implements ITDeudas {
         if (query.list().size() > 0) {
             return query.list();
         }
+        session.close();
+        return null;
+    }
+    
+    @Override
+    public List<CivDeudas> listarDeudasByFechaAdquisicion(String fechaInicial, String fechaFinal) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        //String sql = "from CivDeudas where to_char(deuFechaproceso,'DD/MM/YYYY') between '01/01/2018' and '01/06/2018'";
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHAPROCESO,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN '01/01/2018' AND '31/12/2018'";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        //query.setDate("fechaInicial", fechaInicial);
+        //query.setDate("fechaFinal", fechaFinal);
+        if (query.list().size() > 0) {
+            return query.list();
+        }   
         session.close();
         return null;
     }

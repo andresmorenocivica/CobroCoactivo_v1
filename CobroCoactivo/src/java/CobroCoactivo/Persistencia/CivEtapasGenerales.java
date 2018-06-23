@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 19/06/2018 11:34:10 AM by Hibernate Tools 4.3.1
+// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -19,27 +19,29 @@ public class CivEtapasGenerales  implements java.io.Serializable {
      private String etagenDescripcion;
      private Date etagenFechaproceso;
      private String etagenObligatorio;
+     private BigDecimal etagenPrioridad;
      private Set civFasesGeneraleses = new HashSet(0);
-     private Integer prioridad;
 
     public CivEtapasGenerales() {
     }
 
 	
-    public CivEtapasGenerales(BigDecimal etagenId, CivPlanGenerales civPlanGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, String etagenDescripcion, String etagenObligatorio) {
+    public CivEtapasGenerales(BigDecimal etagenId, CivPlanGenerales civPlanGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, String etagenDescripcion, String etagenObligatorio, BigDecimal etagenPrioridad) {
         this.etagenId = etagenId;
         this.civPlanGenerales = civPlanGenerales;
         this.civEstadoEtapasGenerales = civEstadoEtapasGenerales;
         this.etagenDescripcion = etagenDescripcion;
         this.etagenObligatorio = etagenObligatorio;
+        this.etagenPrioridad = etagenPrioridad;
     }
-    public CivEtapasGenerales(BigDecimal etagenId, CivPlanGenerales civPlanGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, String etagenDescripcion, Date etagenFechaproceso, String etagenObligatorio, Set civFasesGeneraleses) {
+    public CivEtapasGenerales(BigDecimal etagenId, CivPlanGenerales civPlanGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, String etagenDescripcion, Date etagenFechaproceso, String etagenObligatorio, BigDecimal etagenPrioridad, Set civFasesGeneraleses) {
        this.etagenId = etagenId;
        this.civPlanGenerales = civPlanGenerales;
        this.civEstadoEtapasGenerales = civEstadoEtapasGenerales;
        this.etagenDescripcion = etagenDescripcion;
        this.etagenFechaproceso = etagenFechaproceso;
        this.etagenObligatorio = etagenObligatorio;
+       this.etagenPrioridad = etagenPrioridad;
        this.civFasesGeneraleses = civFasesGeneraleses;
     }
    
@@ -85,26 +87,19 @@ public class CivEtapasGenerales  implements java.io.Serializable {
     public void setEtagenObligatorio(String etagenObligatorio) {
         this.etagenObligatorio = etagenObligatorio;
     }
+    public BigDecimal getEtagenPrioridad() {
+        return this.etagenPrioridad;
+    }
+    
+    public void setEtagenPrioridad(BigDecimal etagenPrioridad) {
+        this.etagenPrioridad = etagenPrioridad;
+    }
     public Set getCivFasesGeneraleses() {
         return this.civFasesGeneraleses;
     }
     
     public void setCivFasesGeneraleses(Set civFasesGeneraleses) {
         this.civFasesGeneraleses = civFasesGeneraleses;
-    }
-
-    /**
-     * @return the prioridad
-     */
-    public Integer getPrioridad() {
-        return prioridad;
-    }
-
-    /**
-     * @param prioridad the prioridad to set
-     */
-    public void setPrioridad(Integer prioridad) {
-        this.prioridad = prioridad;
     }
 
 

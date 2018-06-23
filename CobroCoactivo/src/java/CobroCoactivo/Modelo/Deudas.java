@@ -5,6 +5,7 @@ import CobroCoactivo.Persistencia.CivCobroDeudas;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import java.util.Date;
 
@@ -26,6 +27,9 @@ public class Deudas implements java.io.Serializable {
     private double cobroFacil;
     private double cobroMediano;
     private double cobroDificil;
+    private boolean seleccionado;
+    private PlanTrabajos planTrabajoDeuda;
+    private int diasHabilesDeuda;
 
     public Deudas() {
     }
@@ -39,7 +43,7 @@ public class Deudas implements java.io.Serializable {
         this.Referencia = civDeudas.getDeuRefencia();
     }
 
-    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas) {
+    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos) {
         this.Id = civDeudas.getDeuId().intValue();
         this.FechaDeudas = civDeudas.getDeuFechadeuda();
         this.Valor = civDeudas.getDeuValor().intValue();
@@ -48,10 +52,11 @@ public class Deudas implements java.io.Serializable {
         this.Referencia = civDeudas.getDeuRefencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
+        this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
 
     }
 
-    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas) {
+    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivPlanTrabajos civPlanTrabajos) {
         this.Id = civDeudas.getDeuId().intValue();
         this.FechaDeudas = civDeudas.getDeuFechadeuda();
         this.Valor = civDeudas.getDeuValor().intValue();
@@ -61,6 +66,8 @@ public class Deudas implements java.io.Serializable {
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+        this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
+
     }
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas) {
@@ -74,6 +81,17 @@ public class Deudas implements java.io.Serializable {
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
         this.cobroDeudas = new CobroDeudas(civCobroDeudas);
+    }
+    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas) {
+        this.Id = civDeudas.getDeuId().intValue();
+        this.FechaDeudas = civDeudas.getDeuFechadeuda();
+        this.Valor = civDeudas.getDeuValor().intValue();
+        this.Saldo = civDeudas.getDeuSaldo().intValue();
+        this.Fechaproceso = civDeudas.getDeuFechaproceso();
+        this.Referencia = civDeudas.getDeuRefencia();
+        this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
+        this.tipoDeudas = new TipoDeudas(civTipoDeudas);
+        this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
     }
 
     /**
@@ -256,6 +274,48 @@ public class Deudas implements java.io.Serializable {
      */
     public void setCobroDeudas(CobroDeudas cobroDeudas) {
         this.cobroDeudas = cobroDeudas;
+    }
+
+    /**
+     * @return the seleccionado
+     */
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+
+    /**
+     * @param seleccionado the seleccionado to set
+     */
+    public void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
+
+    /**
+     * @return the planTrabajoDeuda
+     */
+    public PlanTrabajos getPlanTrabajoDeuda() {
+        return planTrabajoDeuda;
+    }
+
+    /**
+     * @param planTrabajoDeuda the planTrabajoDeuda to set
+     */
+    public void setPlanTrabajoDeuda(PlanTrabajos planTrabajoDeuda) {
+        this.planTrabajoDeuda = planTrabajoDeuda;
+    }
+
+    /**
+     * @return the diasHabilesDeuda
+     */
+    public int getDiasHabilesDeuda() {
+        return diasHabilesDeuda;
+    }
+
+    /**
+     * @param diasHabilesDeuda the diasHabilesDeuda to set
+     */
+    public void setDiasHabilesDeuda(int diasHabilesDeuda) {
+        this.diasHabilesDeuda = diasHabilesDeuda;
     }
 
 }

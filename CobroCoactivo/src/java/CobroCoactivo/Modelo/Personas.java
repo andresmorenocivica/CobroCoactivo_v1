@@ -84,7 +84,7 @@ public class Personas implements java.io.Serializable {
         this.estadoPersonas = new EstadoPersonas(civEstadoPersonas);
         this.tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
         for (CivDeudas civDeudas : listCivDeudas) {
-            Deudas deuda = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivTipoDeudas());
+            Deudas deuda = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivTipoDeudas(),civPersonas);
             this.Listdeuda.add(deuda);
         }
     }

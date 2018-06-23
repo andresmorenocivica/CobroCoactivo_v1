@@ -78,7 +78,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getEtagenDescripcion());
         civEtapasGenerales.setEtagenFechaproceso(new Date());
         civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
-        civEtapasGenerales.setPrioridad(bean.getEtapasGenerales().getPrioridad());
+        civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         getItEstapaGeneral().create(civEtapasGenerales);
         bean.init();
         bean.ListarEtadoGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
@@ -99,7 +99,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 etapasGenerales.setEtagenFechaproceso(listCivEtapasGenerale.getEtagenFechaproceso());
                 etapasGenerales.setEtagenObligatorio(listCivEtapasGenerale.getEtagenObligatorio());
                 etapasGenerales.setPlanGenerales(planGenerales);
-                etapasGenerales.setPrioridad(listCivEtapasGenerale.getPrioridad());
+                etapasGenerales.setPrioridad(listCivEtapasGenerale.getEtagenPrioridad().intValue());
                 if (etapasGenerales.getEstadoEtapasGenerales().getId() == 1) {
                     bean.getListadoEtapasGeneraleses().add(etapasGenerales);
                 }
@@ -167,7 +167,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
         civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getEtagenDescripcion());
         civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
-         civEtapasGenerales.setPrioridad(bean.getEtapasGenerales().getPrioridad());
+         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 
         if (bean.getIdEstapaGeneral() != 1) {
