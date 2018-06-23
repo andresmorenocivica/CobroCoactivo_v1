@@ -13,7 +13,11 @@ import java.util.List;
  * @author emadrid
  */
 public interface ITDeudas {
-    
-    public List<CivDeudas> listarDeudas (int  Id_personas) throws Exception;
-    
+
+    public List<CivDeudas> listarDeudas(int Id_personas) throws Exception;
+
+    public List<CivDeudas> listarDeudasByRefencia(String refencia) throws Exception;
+
+    public List<CivDeudas> listarDeudasByTipo(int tipoDeudas) throws Exception;
+
 }

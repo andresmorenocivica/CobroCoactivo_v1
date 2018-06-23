@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPersonas;
-import java.io.Serializable;
 import java.util.List;
 import org.hibernate.Session;
 

@@ -1,6 +1,7 @@
 package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
+import CobroCoactivo.Persistencia.CivCobroDeudas;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Persistencia.CivPersonas;
@@ -16,11 +17,15 @@ public class Deudas implements java.io.Serializable {
     private TipoDeudas tipoDeudas;
     private Personas personas;
     private EstadoDeudas estadoDeudas;
+    private CobroDeudas cobroDeudas;
     private Date FechaDeudas;
     private int Valor;
     private int Saldo;
     private Date Fechaproceso;
     private String Referencia;
+    private double cobroFacil;
+    private double cobroMediano;
+    private double cobroDificil;
 
     public Deudas() {
     }
@@ -56,6 +61,19 @@ public class Deudas implements java.io.Serializable {
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+    }
+
+    public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas) {
+        this.Id = civDeudas.getDeuId().intValue();
+        this.FechaDeudas = civDeudas.getDeuFechadeuda();
+        this.Valor = civDeudas.getDeuValor().intValue();
+        this.Saldo = civDeudas.getDeuSaldo().intValue();
+        this.Fechaproceso = civDeudas.getDeuFechaproceso();
+        this.Referencia = civDeudas.getDeuRefencia();
+        this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
+        this.tipoDeudas = new TipoDeudas(civTipoDeudas);
+        this.personas = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+        this.cobroDeudas = new CobroDeudas(civCobroDeudas);
     }
 
     /**
@@ -182,6 +200,62 @@ public class Deudas implements java.io.Serializable {
      */
     public void setReferencia(String Referencia) {
         this.Referencia = Referencia;
+    }
+
+    /**
+     * @return the cobroFacil
+     */
+    public double getCobroFacil() {
+        return cobroFacil;
+    }
+
+    /**
+     * @param cobroFacil the cobroFacil to set
+     */
+    public void setCobroFacil(double cobroFacil) {
+        this.cobroFacil = cobroFacil;
+    }
+
+    /**
+     * @return the cobroMediano
+     */
+    public double getCobroMediano() {
+        return cobroMediano;
+    }
+
+    /**
+     * @param cobroMediano the cobroMediano to set
+     */
+    public void setCobroMediano(double cobroMediano) {
+        this.cobroMediano = cobroMediano;
+    }
+
+    /**
+     * @return the cobroDificil
+     */
+    public double getCobroDificil() {
+        return cobroDificil;
+    }
+
+    /**
+     * @param cobroDificil the cobroDificil to set
+     */
+    public void setCobroDificil(double cobroDificil) {
+        this.cobroDificil = cobroDificil;
+    }
+
+    /**
+     * @return the cobroDeudas
+     */
+    public CobroDeudas getCobroDeudas() {
+        return cobroDeudas;
+    }
+
+    /**
+     * @param cobroDeudas the cobroDeudas to set
+     */
+    public void setCobroDeudas(CobroDeudas cobroDeudas) {
+        this.cobroDeudas = cobroDeudas;
     }
 
 }

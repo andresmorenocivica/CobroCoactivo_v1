@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGeneryHibernateDao<T, ID> {
 
-   private  SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     public ImpGeneryHibernateDao() {
         sessionFactory = HibernateUtil.getSessionFactory();
@@ -30,7 +30,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public  void create(T entity) throws Exception {
+    public void create(T entity) throws Exception {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.save(entity);
@@ -52,7 +52,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     @Override
     public T find(ID id) {
         T entity = null;
-        return  entity;
+        return entity;
     }
 
     @Override

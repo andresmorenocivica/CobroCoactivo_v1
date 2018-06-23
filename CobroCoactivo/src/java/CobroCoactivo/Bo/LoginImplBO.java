@@ -77,7 +77,7 @@ public class LoginImplBO implements LoginBO {
         login.setUsuNombre(obj.getUser().trim().toUpperCase(Locale.ROOT));
         login.setUsuPass(obj.getPassword());
         CivUsuarios usu = getLoginDAO().getUsuario(session, login.getUsuNombre()); //Esta variable se llena solamente cuando coincide el usuario. Esto es para el registro de intentos
-         if (usu != null) {
+        if (usu != null) {
             obj.setID_Usuario(usu.getUsuId() + "");
             this.registrarIntento(usu.getUsuId().intValue()); //Registro de intentos
         }
@@ -124,7 +124,7 @@ public class LoginImplBO implements LoginBO {
             session.close();
             throw new LoginException("Usuario y/o contraseña inválidos");
         }
-      //  session.close();
+        //  session.close();
     }
 
     //Registrar Intento

@@ -5,7 +5,6 @@
  */
 package CobroCoactivo.Dao;
 
-import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
@@ -17,7 +16,7 @@ import org.hibernate.Session;
  *
  * @author emadrid
  */
-public class DaoDeudas implements ITDeudas{
+public class DaoDeudas implements ITDeudas {
 
     @Override
     public List<CivDeudas> listarDeudas(int Id_personas) throws Exception {
@@ -28,9 +27,37 @@ public class DaoDeudas implements ITDeudas{
         query.setBigDecimal("idPersona", new BigDecimal(Id_personas));
         if (query.list().size() > 0) {
             return query.list();
-        }   
+        }
         session.close();
         return null;
     }
-    
+
+    @Override
+    public List<CivDeudas> listarDeudasByRefencia(String referencia) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_REFENCIA =:referencia";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        query.setString("referencia", referencia);
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
+    }
+
+    @Override
+    public List<CivDeudas> listarDeudasByTipo(int tipoDeudas) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_TIPDEU_FK=:tipoDeuda";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        query.setBigDecimal("tipoDeuda", new BigDecimal(tipoDeudas));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
+    }
+
 }

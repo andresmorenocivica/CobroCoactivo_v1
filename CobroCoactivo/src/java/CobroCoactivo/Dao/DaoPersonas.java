@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> implements  ITPersonas {
+public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> implements ITPersonas {
 
     @Override
     public CivPersonas consultarPersonasById(int per_id) throws Exception {
@@ -37,7 +37,7 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
     @Override
     @Transactional
     public CivPersonas consultarPersonasByDocumento(int tipo, String nro_documento) throws Exception {
-        Session session =getSessionFactory().openSession();
+        Session session = getSessionFactory().openSession();
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
         query.setParameter("tipo", new BigDecimal(tipo));
@@ -83,7 +83,4 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
                 .add(Restrictions.eq("perDocumento", nro_documento))
                 .uniqueResult();
     }
-
- 
-
 }
