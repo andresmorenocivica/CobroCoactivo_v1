@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivMovimientos" table="CIV_MOVIMIENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="movId" type="big_decimal">
             <column name="MOV_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="MOV_USUARIO_FK" precision="22" scale="0" not-null="true" />

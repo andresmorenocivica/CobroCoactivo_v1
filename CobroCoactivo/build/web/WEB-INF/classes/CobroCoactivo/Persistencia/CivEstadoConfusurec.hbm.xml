@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los estados que existen en el sistema para la tabla CIV_CONF_USU_REC</comment>
         <id name="estconfusurecId" type="big_decimal">
             <column name="ESTCONFUSUREC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estconfusurecDescripcion" type="string">
             <column name="ESTCONFUSUREC_DESCRIPCION" length="100">

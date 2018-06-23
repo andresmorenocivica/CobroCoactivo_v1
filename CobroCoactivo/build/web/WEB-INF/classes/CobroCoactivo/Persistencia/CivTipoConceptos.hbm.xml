@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivTipoConceptos" table="CIV_TIPO_CONCEPTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tipconId" type="big_decimal">
             <column name="TIPCON_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="tipconDescripcion" type="string">
             <column name="TIPCON_DESCRIPCION" length="100" not-null="true">

@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" table="CIV_ESTADO_FASES_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estfastraId" type="big_decimal">
             <column name="ESTFASTRA_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estfastraDescripcion" type="string">
             <column name="ESTFASTRA_DESCRIPCION" length="100" not-null="true">

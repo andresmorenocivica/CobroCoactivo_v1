@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivExpedientes" table="CIV_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="expId" type="big_decimal">
             <column name="EXP_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civTipoExpedientes" class="CobroCoactivo.Persistencia.CivTipoExpedientes" fetch="select">
             <column name="EXP_TIPEXP_FK" precision="22" scale="0" not-null="true" />
