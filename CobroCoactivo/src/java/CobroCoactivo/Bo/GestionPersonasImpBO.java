@@ -47,6 +47,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             beanGestionPersonas.getListTipoDocumento().add(tipoDocumentos);
         }
     }
+
     @Override
     public void cargarEstadoPersonas(BeanGestionPersonas bean) throws Exception {
         List<CivEstadoPersonas> listCivEstadoPersonas = getEstadoPersonasDAO().listAll();
@@ -62,9 +63,11 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             if (beanGestionPersonas.getDetallePersona() != null) {
                 if (beanGestionPersonas.getDetallePersona().getId() != 0) {
                     List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(beanGestionPersonas.getDetallePersona().getId());
-                    for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
-                        DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
-                        beanGestionPersonas.getDetallePersona().getListDatosPersonas().add(datosPersonas);
+                    if (listCivDatosPersonas != null) {
+                        for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
+                            DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
+                            beanGestionPersonas.getDetallePersona().getListDatosPersonas().add(datosPersonas);
+                        }
                     }
                 }
             }
@@ -148,7 +151,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civEstadoPersonas.setEstperFechaproceso(civEstadoPersonas.getEstperFechaproceso());
 
         civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
-       
+
         civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
         civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
         civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
