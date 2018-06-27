@@ -7,10 +7,12 @@ package CobroCoactivo.General;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
+import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author jvergara
+ * @param <T>
  */
 public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGeneryHibernateDao<T, ID> {
 
@@ -69,11 +72,26 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
 
     @Override
     public List<T> findAll() {
-        Session session = getSessionFactory().openSession();
-        Query query = session.createQuery("select e from " + getEntityClass().getName() + " e");
-        List<T> entities = query.list();
-        return entities;
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Query query = session.createQuery("select e from " + getEntityClass().getName() + " e");
+            List<T> entities = query.list();
 
+            if (getEntityClass().getName().contains("CivPlanGeneral")) {
+                for (CivPlanGenerales entity : (List<CivPlanGenerales>) entities) {
+                    Hibernate.initialize(entity.getCivEstadoPlanGenerales());
+                }
+            }
+
+            return entities;
+
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.flush();
+                session.close();
+            }
+        }
     }
 
     @Override

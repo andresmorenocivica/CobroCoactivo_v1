@@ -116,8 +116,13 @@
                                             </section>
                                         </h:panelGroup>
                                     </h:panelGrid>
+                                    
                                     <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
                                         <h:panelGroup rendered="#{gestionDeudasBean.pnlTablaDeudas}">
+                                            <h:commandLink onclick="$('#modalEjecutar').modal('show');">
+                                                <i class="#{listDificultad.colorDificultad}"> 30%</i>
+                                                <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, listDeudas)}"/>
+                                            </h:commandLink>
                                             <div class="box box-danger">
                                                 <table class="table table-hover">
                                                     <thead>
@@ -131,7 +136,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
+                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas" >
                                                             <tr>
                                                                 <td>#{listDeudas.tipoDeudas.descripcion}</td>
                                                                 <td>#{listDeudas.estadoDeudas.descripcion}</td>
@@ -139,13 +144,14 @@
                                                                 <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
                                                                 <td>#{listDeudas.fechaDeudas}</td>
                                                                 <td>
-                                                                    <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
-                                                                        <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                                                            <i class="#{listDificultad.colorDificultad}"> 30%
+                                                                    <h:dataTable value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
+                                                                        <h:column>
+                                                                            <h:commandLink onclick="$('#modalEjecutar').modal('show');">
+                                                                                <i class="#{listDificultad.colorDificultad}"> 30%</i>
                                                                                 <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, listDeudas)}"/>
-                                                                            </i> 
-                                                                        </h:commandLink>
-                                                                    </ui:repeat>
+                                                                            </h:commandLink>
+                                                                        </h:column>
+                                                                    </h:dataTable>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>

@@ -21,7 +21,6 @@ import CobroCoactivo.Dao.ITEstadoPlanGeneral;
 import CobroCoactivo.Dao.ITEstapaGeneral;
 import CobroCoactivo.Dao.ITFasesGenerales;
 import CobroCoactivo.Modelo.DocumenGenerales;
-import CobroCoactivo.Modelo.EstadoAbogados;
 import CobroCoactivo.Modelo.EstadoDocumengenerales;
 import CobroCoactivo.Modelo.EstadoEtapasGenerales;
 import CobroCoactivo.Modelo.EstadoFasesGenerales;
@@ -36,14 +35,16 @@ import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import CobroCoactivo.Persistencia.CivFasesGenerales;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Array;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.hibernate.Hibernate;
+import org.primefaces.context.RequestContext;
 
 public class PlanGeneralImpBO implements PlanGeneralBO {
 
@@ -80,12 +81,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         getItEstapaGeneral().create(civEtapasGenerales);
+
         bean.init();
-        bean.ListarEtadoGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+        bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
     }
 
     @Override
-    public void listarEtadoGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
+    public void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
         List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(bean.getPlanGenerales().getId());
         if (listCivEtapasGenerales != null) {
             bean.setListadoEtapasGeneraleses(new ArrayList<>());
@@ -129,27 +131,27 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     }
                 }
                 if (flag) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "debe desactivar las estapa generales", null));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                            "Debe desactivar las etapas generales", null));
 
                 } else {
                     getiTPlanGeneral().update(civPlanGenerales);
                     bean.init();
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Plan Actualizado Correctamnete", null));
+                            "Plan actualizado correctamnete", null));
                 }
             } else {
                 getiTPlanGeneral().update(civPlanGenerales);
                 bean.init();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan Actualizado Correctamnete", null));
+                        "Plan actualizado correctamente", null));
             }
 
         } else {
             getiTPlanGeneral().update(civPlanGenerales);
             bean.init();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Plan Actualizado Correctamente", null));
+                    "Plan actualizado correctamente", null));
         }
     }
 
@@ -167,7 +169,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
         civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getEtagenDescripcion());
         civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
-         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
+        civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 
         if (bean.getIdEstapaGeneral() != 1) {
@@ -180,27 +182,27 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 }
 
                 if (validador) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se puede desactivar la etapa por que tiene fases activas", null));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se puede desactivar la etapa por que tiene fases activas", null));
                 } else {
                     getItEstapaGeneral().update(civEtapasGenerales);
                     bean.init();
-                    bean.ListarEtadoGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+                    bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "etapa Actualizado Correctamente", null));
+                            "Etapa actualizado Correctamente", null));
                 }
 
             } else {
                 getItEstapaGeneral().update(civEtapasGenerales);
                 bean.init();
-                bean.ListarEtadoGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+                bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "etapa Actualizado Correctamente", null));
+                        "Etapa actualizado correctamente", null));
             }
 
         } else {
             getItEstapaGeneral().update(civEtapasGenerales);
             bean.init();
-            bean.ListarEtadoGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+            bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "etapa Actualizado Correctamente", null));
         }
@@ -212,6 +214,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         List<CivPlanGenerales> listcivPlanGeneral = getiTPlanGeneral().findAll();
         if (listcivPlanGeneral != null && listcivPlanGeneral.size() > 0) {
             for (CivPlanGenerales civPlanGenerales : listcivPlanGeneral) {
+                if (!Hibernate.isInitialized(civPlanGenerales.getCivEstadoPlanGenerales())) {
+                    Hibernate.initialize(civPlanGenerales.getCivEstadoPlanGenerales());
+                }
                 if (civPlanGenerales.getCivEstadoPlanGenerales().getEstplagenId().intValue() == 1) {
                     PlanGenerales planGenerales = new PlanGenerales(civPlanGenerales, civPlanGenerales.getCivEstadoPlanGenerales());
                     bean.getListadoPlanGeneraleses().add(planGenerales);
@@ -241,15 +246,22 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void GuardarPlanGeneral(BeanPlanGeneral bean) throws Exception {
-
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
         civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getIdEstadoGeneral()));
-        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion());
+        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
         civPlanGenerales.setPlagenFechaproceso(new Date());
         getiTPlanGeneral().create(civPlanGenerales);
+        List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
+        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Persuasiva", new Date(), "FALSE", new BigDecimal(1)));
+        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Juridica", new Date(), "TRUE", new BigDecimal(2)));
+        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Embargo", new Date(), "TRUE", new BigDecimal(3)));
+        for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
+            getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
+        }
         bean.init();
+        
     }
 
     @Override
@@ -263,64 +275,73 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void guardarFasesGeneral(BeanPlanGeneral bean) throws Exception {
-        CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
-        CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
-        civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(bean.getIdEStadoFasesGeneral()));
-        CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
-        civEtapasGenerales.setEtagenId(bean.getEtapasGenerales().getEtagenId());
-
-        CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
-        CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
-        civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
-        civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-        civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
-        civDocumenGenerales.setDocgenFechaproceso(new Date());
-        civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-        getiTDocumentoGenerales().create(civDocumenGenerales);
-        civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getFasgenDescripcion());
-        civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
-        civFasesGenerales.setFasgenFechaproceso(new Date());
-        civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
-        civFasesGenerales.setFasgenDianim(bean.getFasesGenerales().getFasgenDianim());
-        civFasesGenerales.setFasgenDiamax(bean.getFasesGenerales().getFasgenDiamax());
-        civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getFasgenObligatorio());
-        civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
-        getiTFasesGenerales().create(civFasesGenerales);
-        InputStream stream = bean.getFile().getInputStream();
-        Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath());
-
+        if (bean.getFasesGenerales().getFasgenDianim() < bean.getFasesGenerales().getFasgenDiamax()) {
+            CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
+            CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
+            civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(bean.getIdEStadoFasesGeneral()));
+            CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
+            civEtapasGenerales.setEtagenId(bean.getEtapasGenerales().getEtagenId());
+            CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
+            CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
+            civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
+            civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+            civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
+            civDocumenGenerales.setDocgenFechaproceso(new Date());
+            civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+            getiTDocumentoGenerales().create(civDocumenGenerales);
+            civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getFasgenDescripcion());
+            civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
+            civFasesGenerales.setFasgenFechaproceso(new Date());
+            civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
+            civFasesGenerales.setFasgenDianim(BigDecimal.valueOf(bean.getFasesGenerales().getFasgenDianim()));
+            civFasesGenerales.setFasgenDiamax(BigDecimal.valueOf(bean.getFasesGenerales().getFasgenDiamax()));
+            civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getFasgenObligatorio());
+            civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
+            getiTFasesGenerales().create(civFasesGenerales);
+            InputStream stream = bean.getFile().getInputStream();
+            Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#faseGeneral').modal('hide')");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente",null));
+            listarFasesGeneralesPorEtapa(bean);
+            
+            
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Dia minimo debe ser menor que dia maximo", null));
+        }
     }
 
     @Override
     public void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception {
         bean.setListFasesGenerales(new ArrayList<>());
-           List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(bean.getEtapasGenerales().getEtagenId().intValue());
-           for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
-               DocumenGenerales documenGenerales = new DocumenGenerales();
-               documenGenerales.setDocgenId(civFasesGenerale.getCivDocumenGenerales().getDocgenId());
-               documenGenerales.setDocgenDescripcion(civFasesGenerale.getCivDocumenGenerales().getDocgenDescripcion());
-               documenGenerales.setDocgenFechaproceso(civFasesGenerale.getCivDocumenGenerales().getDocgenFechaproceso());
-               documenGenerales.setEstadoDocumengenerales(new EstadoDocumengenerales(civFasesGenerale.getCivDocumenGenerales().getCivEstadoDocumengenerales()));
-               documenGenerales.setDocgenArchivo(civFasesGenerale.getCivDocumenGenerales().getDocgenArchivo());
-               FasesGenerales fasesGenerales = new FasesGenerales();
-               fasesGenerales.setFasgenId(civFasesGenerale.getFasgenId());
-               fasesGenerales.setFasgenDescripcion(civFasesGenerale.getFasgenDescripcion());
-               fasesGenerales.setEstadoFasesGenerales(new EstadoFasesGenerales(civFasesGenerale.getCivEstadoFasesGenerales()));
-               fasesGenerales.setFasgenFechaproceso(civFasesGenerale.getFasgenFechaproceso());
-               EtapasGenerales estaGenerales = new EtapasGenerales();
-               estaGenerales.setEtagenId(civFasesGenerale.getCivEtapasGenerales().getEtagenId());
-               estaGenerales.setEtagenDescripcion(civFasesGenerale.getCivEtapasGenerales().getEtagenDescripcion());
-               fasesGenerales.setEtapasGenerales(estaGenerales);
-               fasesGenerales.setFasgenDianim(civFasesGenerale.getFasgenDianim());
-               fasesGenerales.setFasgenDiamax(civFasesGenerale.getFasgenDiamax());
-               fasesGenerales.setFasgenObligatorio(civFasesGenerale.getFasgenObligatorio());
-               fasesGenerales.setDocumenGenerales(documenGenerales);
-               bean.getListFasesGenerales().add(fasesGenerales);
-                       
-            
+        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(bean.getEtapasGenerales().getEtagenId().intValue());
+        for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
+            DocumenGenerales documenGenerales = new DocumenGenerales();
+            documenGenerales.setDocgenId(civFasesGenerale.getCivDocumenGenerales().getDocgenId());
+            documenGenerales.setDocgenDescripcion(civFasesGenerale.getCivDocumenGenerales().getDocgenDescripcion());
+            documenGenerales.setDocgenFechaproceso(civFasesGenerale.getCivDocumenGenerales().getDocgenFechaproceso());
+            documenGenerales.setEstadoDocumengenerales(new EstadoDocumengenerales(civFasesGenerale.getCivDocumenGenerales().getCivEstadoDocumengenerales()));
+            documenGenerales.setDocgenArchivo(civFasesGenerale.getCivDocumenGenerales().getDocgenArchivo());
+            FasesGenerales fasesGenerales = new FasesGenerales();
+            fasesGenerales.setFasgenId(civFasesGenerale.getFasgenId());
+            fasesGenerales.setFasgenDescripcion(civFasesGenerale.getFasgenDescripcion());
+            fasesGenerales.setEstadoFasesGenerales(new EstadoFasesGenerales(civFasesGenerale.getCivEstadoFasesGenerales()));
+            fasesGenerales.setFasgenFechaproceso(civFasesGenerale.getFasgenFechaproceso());
+            EtapasGenerales estaGenerales = new EtapasGenerales();
+            estaGenerales.setEtagenId(civFasesGenerale.getCivEtapasGenerales().getEtagenId());
+            estaGenerales.setEtagenDescripcion(civFasesGenerale.getCivEtapasGenerales().getEtagenDescripcion());
+            fasesGenerales.setEtapasGenerales(estaGenerales);
+            fasesGenerales.setFasgenDianim(civFasesGenerale.getFasgenDianim().intValue());
+            fasesGenerales.setFasgenDiamax(civFasesGenerale.getFasgenDiamax().intValue());
+            fasesGenerales.setFasgenObligatorio(civFasesGenerale.getFasgenObligatorio());
+            fasesGenerales.setDocumenGenerales(documenGenerales);
+            bean.getListFasesGenerales().add(fasesGenerales);
+
         }
-           
-           
+        
+       
+
     }
 
     /**

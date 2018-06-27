@@ -21,7 +21,7 @@ public interface PlanGeneralBO {
 
     void ListarEstadoGenerales(BeanPlanGeneral bean) throws Exception;
 
-    void listarEtadoGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception;
+    void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception;
 
     void ListarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception;
 

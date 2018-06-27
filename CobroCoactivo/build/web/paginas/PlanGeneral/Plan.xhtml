@@ -25,8 +25,8 @@
                     </section>
                     <section class="content">
                         <h:form id="formPlanGeneral" enctype="multipart/form-data">
-                            <p:messages closable="true" autoUpdate="true" id="msggeneral2" showDetail="false" />
                             <div class="row" jsf:id="contenedor">
+                                <p:messages severity="info,warn"  closable="true" id="planMensajeGeneral" showDetail="false"  showIcon="false" />
                                 <div class="col-md-3">
                                     <div class="box box-success">
                                         <div class="box-header with-border">
@@ -41,7 +41,7 @@
                                                 <ui:repeat value="#{PlanGeneralbean.listadoPlanGeneraleses}" var="listaPlangeneral">
                                                     <li>
                                                         <h:commandLink title="Editar Proceso Juridico" value=" #{listaPlangeneral.descripcion}" class="col-sm-10">
-                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtadoGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
+                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtapaGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
                                                         </h:commandLink>
                                                         <div jsf:id="test" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
                                                             <i class="fa fa-pencil-square-o center-block"  onclick="$('#planGeneral').modal('show');">
@@ -62,7 +62,7 @@
                                     <!-- /. box -->
                                     <div class="box box-success" jsf:id="etapaGenerales" jsf:rendered="#{PlanGeneralbean.renderEtapaGeneral}">
                                         <div class="box-header with-border">
-                                            <h5 class="box-title">Etapas Generales</h5>
+                                            <h5 class="box-title">Etapas generales #{PlanGeneralbean.planGenerales.descripcion.toLowerCase()}</h5>
                                             <div class="box-tools">
                                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                                 </button>
@@ -72,13 +72,15 @@
                                             <ul class="nav nav-pills nav-stacked">
                                                 <ui:repeat value="#{PlanGeneralbean.listadoEtapasGeneraleses}" var="etapaGeneral">
                                                     <li>
-                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}" class="col-sm-10">
+                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}" class="col-sm-10" id="btnEtapagene">
                                                             <f:ajax event="click" render="@form"  listener="#{PlanGeneralbean.listarFasesGeneralesPorFases(etapaGeneral)}"/>
                                                         </h:commandLink>
-                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
-                                                            <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
-                                                                <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
-                                                            </i>
+                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px" >
+                                                            <c:if test="#{etapaGeneral.prioridad !=1 and etapaGeneral.prioridad !=2 and  etapaGeneral.prioridad !=3 }">
+                                                                <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
+                                                                    <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
+                                                                </i>
+                                                            </c:if>
                                                         </div>
 
                                                     </li>
@@ -97,7 +99,7 @@
                                 <div class="col-md-9" jsf:id="fasesGenerales" jsf:rendered="#{PlanGeneralbean.renderFaseGeneral}">
                                     <div class="box box-success">
                                         <div class="box-header with-border">
-                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales"></h:outputLabel>
+                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales #{PlanGeneralbean.etapasGenerales.etagenDescripcion}"></h:outputLabel>
                                             <!-- /.box-tools -->
                                             <div class="box-tools">
                                                 <h:commandLink type="button" class="btn btn-box-tool" id="btnAdd" onclick="$('#faseGeneral').modal('show');">
@@ -135,13 +137,11 @@
                                                                 <td>#{fasegeneral.fasgenObligatorio}</td>
                                                                 <td>#{fasegeneral.documenGenerales.docgenDescripcion}</td>
                                                                 <td>
+                                                                    <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.docgenArchivo)}" immediate="true">
 
-                                                                    <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.docgenArchivo)}">
                                                                         <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height: 32 px;"></img>
                                                                     </h:commandLink>
-
                                                                 </td>
-
                                                             </tr>
                                                         </ui:repeat>
                                                     </tbody>
@@ -150,13 +150,7 @@
                                             <!-- /.mail-box-messages -->
                                         </div>
                                         <!-- /.box-body -->
-                                        <div class="box-footer no-padding">
-                                            <div class="mailbox-controls">
-                                                <h:commandButton value="Realizar Proceso" class="btn btn-success" rendered="#{gestionMovimientosBean.renderBtnGuardar}" id="btnGuardar">
-                                                    <f:ajax event="click" render="@form" listener="#{gestionMovimientosBean.movimientoDeudaCambiarFase()}" onevent="test"></f:ajax>
-                                                </h:commandButton>
-                                            </div>
-                                        </div>
+
                                     </div>
                                     <!-- /. box -->
                                 </div>
@@ -172,19 +166,20 @@
                                 <div class="modal-dialog ">
                                     <div class="modal-content" jsf:id="modalContent">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.nombreModalTitulo}</h4>
-                                            <p:messages autoUpdate="true" id="messagePlanGeneral" closable="true" showDetail="false"></p:messages>
+                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.nombreModalTitulo} </h4>
+
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
                                             </div>
                                         </div>
                                         <div class="modal-body">
+                                            <p:messages id="messagePlanGeneral" autoUpdate="true" closable="true" showDetail="false" showIcon="false"></p:messages>
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" value="#{PlanGeneralbean.planGenerales.descripcion}" />
+                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.planGenerales.descripcion}" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -234,11 +229,12 @@
                                             </div>
                                         </div>
                                         <div class="modal-body">
+                                            <p:messages autoUpdate="true" closable="true"></p:messages>
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtEtapaGeneralDescriptionRecurso" value="#{PlanGeneralbean.etapasGenerales.etagenDescripcion}" />
+                                                        <h:inputText label="Descripción" class="form-control" id="txtEtapaGeneralDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.etapasGenerales.etagenDescripcion}" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -262,9 +258,9 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Orden</label>
-                                                        <h:inputText class="form-control" id="txtEtapaGeneral"  value="#{PlanGeneralbean.etapasGenerales.prioridad}"></h:inputText>
+                                                        <h:inputText label="orden" class="form-control" id="txtEtapaGeneral" required="true" requiredMessage="Deber ingresar el orden" value="#{PlanGeneralbean.etapasGenerales.prioridad}"></h:inputText>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -305,11 +301,12 @@
                                             </div>
                                         </div>
                                         <div class="modal-body">
+                                            <p:messages autoUpdate="true" showIcon="false" closable="true"></p:messages>
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionFase" value="#{PlanGeneralbean.fasesGenerales.fasgenDescripcion}"/>
+                                                        <h:inputText class="form-control" id="txtDescriptionFase" label="Descrición" value="#{PlanGeneralbean.fasesGenerales.fasgenDescripcion}" required="true" requiredMessage="Descripción es requerido"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -323,13 +320,13 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label>Dia Minimo:</label>
-                                                        <input type="number" class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenDianim}" jsf:id="txtDiaMinimoFase" />
+                                                        <h:inputText class="form-control" label="Dia Minimo" value="#{PlanGeneralbean.fasesGenerales.fasgenDianim}" id="txtDiaMinimoFase" required="true" requiredMessage="Dia minimo es requerido" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label>Dia Maximo:</label>
-                                                        <h:inputText class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenDiamax}" id="txtDiaMaximoFase"/>
+                                                        <h:inputText class="form-control" label="Dia Maximo" value="#{PlanGeneralbean.fasesGenerales.fasgenDiamax}" id="txtDiaMaximoFase" required="true" requiredMessage="Dia maximo es requerido" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -344,7 +341,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label> Agregar Archivo</label>
-                                                        <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{PlanGeneralbean.file}"/>
+                                                        <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{PlanGeneralbean.file}" jsf:required="true" jsf:requiredMessage="Debe seleccionar un archivo"/>
 
                                                         <p class="help-block">.pdf</p>
                                                     </div>  
@@ -374,11 +371,6 @@
                                 <!-- /.modal-dialog -->
                             </div>
                             <!-- end modal    -->
-
-
-
-
-
                         </h:form>
                     </section>
                 </div>

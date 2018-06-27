@@ -23,6 +23,12 @@ public class CivEstadoEtapasGenerales  implements java.io.Serializable {
     public CivEstadoEtapasGenerales() {
     }
 
+    public CivEstadoEtapasGenerales(BigDecimal estetagenId) {
+        this.estetagenId = estetagenId;
+    }
+    
+    
+
 	
     public CivEstadoEtapasGenerales(BigDecimal estetagenId, String estetagenDescripcion, Date estetagenFechainicial) {
         this.estetagenId = estetagenId;

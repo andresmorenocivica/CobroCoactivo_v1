@@ -23,6 +23,17 @@ public class EstadoEtapasGenerales  implements java.io.Serializable {
     public EstadoEtapasGenerales() {
     }
 
+    public EstadoEtapasGenerales(int Id) {
+        this.Id = Id;
+    }
+    
+    
+    
+
+  
+    
+    
+
 	
    
     public EstadoEtapasGenerales(CivEstadoEtapasGenerales civEstadoEtapasGenerales) {

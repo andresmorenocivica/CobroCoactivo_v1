@@ -44,6 +44,18 @@ public class CivEtapasGenerales  implements java.io.Serializable {
        this.etagenPrioridad = etagenPrioridad;
        this.civFasesGeneraleses = civFasesGeneraleses;
     }
+
+    public CivEtapasGenerales(CivPlanGenerales civPlanGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, String etagenDescripcion, Date etagenFechaproceso, String etagenObligatorio, BigDecimal etagenPrioridad) {
+        this.civPlanGenerales = civPlanGenerales;
+        this.civEstadoEtapasGenerales = civEstadoEtapasGenerales;
+        this.etagenDescripcion = etagenDescripcion;
+        this.etagenFechaproceso = etagenFechaproceso;
+        this.etagenObligatorio = etagenObligatorio;
+        this.etagenPrioridad = etagenPrioridad;
+    }
+    
+    
+    
    
     public BigDecimal getEtagenId() {
         return this.etagenId;

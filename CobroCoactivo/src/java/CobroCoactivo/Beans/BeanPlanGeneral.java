@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -38,10 +39,10 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean(name = "PlanGeneralbean")
 @ViewScoped
-public class BeanPlanGeneral implements Serializable {
+public class BeanPlanGeneral {
 
     //objecto utilidos en el beanPlanGeneral
-    private PlanGeneralBO planGeneralBO;
+    private PlanGeneralBO planGeneralBO = new PlanGeneralImpBO();
     private PlanGenerales planGenerales = new PlanGenerales();
     private EtapasGenerales etapasGenerales = new EtapasGenerales();
     private FasesGenerales fasesGenerales = new FasesGenerales();
@@ -79,14 +80,13 @@ public class BeanPlanGeneral implements Serializable {
     public void init() {
         try {
             
-            
-            
             setLoginBO(new BeanLogin());
-            
+            setRenderFaseGeneral(false);
+            setRenderEtapaGeneral(false);
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
-           HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+            HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             setLoginBO((BeanLogin) session.getAttribute("loginBean"));
-            
+
             setPlanGeneralBO(new PlanGeneralImpBO());
             getPlanGeneralBO().ListarPlanesGenerales(this);
             if (getListadoEStadoPlanesGenerales().size() == 0) {
@@ -110,14 +110,14 @@ public class BeanPlanGeneral implements Serializable {
 
         try {
             getPlanGeneralBO().GuardarPlanGeneral(this);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Plan General Creado exitoxamente", null));
+            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Plan general creado exitosamente", "Plan General Creado exitosamente"));
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#planGeneral').modal('hide')");
 
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",""));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("Plan" + "messagePlanGeneral");
         }
     }
@@ -140,7 +140,7 @@ public class BeanPlanGeneral implements Serializable {
         try {
             getPlanGeneralBO().GuardarEtapaGeneral(this);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Etapa general Creada exitoxamente", null));
+                    "Etapa general creada exitosamente", null));
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#etapaGeneral').modal('hide')");
 
@@ -205,12 +205,12 @@ public class BeanPlanGeneral implements Serializable {
 
     }
 
-    public void ListarEtadoGeneralesPorIdPlanGeneral(PlanGenerales planGenerales) {
+    public void ListarEtapaGeneralesPorIdPlanGeneral(PlanGenerales planGenerales) {
         try {
             setRenderEtapaGeneral(true);
             setRenderFaseGeneral(false);
             setPlanGenerales(planGenerales);
-            getPlanGeneralBO().listarEtadoGeneralesPorIdPlanGeneral(this);
+            getPlanGeneralBO().listarEtapaGeneralesPorIdPlanGeneral(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,6 +237,8 @@ public class BeanPlanGeneral implements Serializable {
     public void guardarFasesGenerales() {
         try {
             getPlanGeneralBO().guardarFasesGeneral(this);
+            
+           
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
