@@ -23,7 +23,6 @@
                                         <h:panelGroup id="pnlEditarUsuario" >
                                             <h:commandLink class="fa fa-pencil-square-o col-sm-4" id="editarUsuario" rendered="#{!gestionPersonaBean.detallePersona.editable}">
                                                 <f:ajax event="click" listener="#{gestionPersonaBean.detallePersona.setEditable(true)}" render="frmDetallePersona:editableControladores frmDetallePersona:pnlEditarUsuario frmDetallePersona:pnlGuardarUsuario"></f:ajax>
-
                                             </h:commandLink>
                                         </h:panelGroup>
                                         <h:panelGroup id="pnlGuardarUsuario" >
@@ -31,12 +30,9 @@
                                                 <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 "   render="frmDetallePersona:editableControladores frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
                                             </h:commandLink>
                                         </h:panelGroup>
-
                                     </div>
                                 </div>
-
                             </div>
-
                             <h:panelGroup id="editableControladores" >
                                 <div class="box-body">
                                     <div class="col-sm-3">
@@ -51,7 +47,6 @@
                                         <div class="form-group">
                                             <label>N Documento</label>
                                             <h:inputText id="txtDocumento" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" ></h:inputText>
-
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
@@ -84,14 +79,12 @@
                                             <h:inputText id="txtApellido2" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                   
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Estado</label>
                                             <h:inputText id="txtEstado" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.estadoPersonas.descripcion}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </h:panelGroup>
                         </div>
@@ -119,12 +112,8 @@
                                     <tbody>
                                         <ui:repeat value="#{gestionPersonaBean.detallePersona.listDatosPersonas}" var="datoPersona">
                                             <tr>
-                                                <td>
-                                                    #{datoPersona.tipoDatosPersonas.descripcion}
-                                                </td>
-                                                <td>
-                                                    #{datoPersona.descripcion}
-                                                </td>
+                                                <td>#{datoPersona.tipoDatosPersonas.descripcion}</td>
+                                                <td>#{datoPersona.descripcion}</td>
                                             </tr>
                                         </ui:repeat>
                                     </tbody>
@@ -141,7 +130,6 @@
                                         <h3 class="box-title">Deudas de la Personas</h3>
                                     </div>
                                     <div class="col-lg-1">
-
                                     </div>
                                 </div>
                             </div>
@@ -156,6 +144,7 @@
                                             <th>Valor</th>
                                             <th>Fecha Deuda</th>
                                             <th>Nombre Persona</th>
+                                            <th>Mostrar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -166,9 +155,13 @@
                                                 <td>#{deudas.estadoDeudas.descripcion}</td>
                                                 <td>#{deudas.saldo}</td>
                                                 <td>#{deudas.valor}</td>
-                                                <td>#{deudas.saldo}</td>
+                                                <td>#{deudas.fechaDeudas}</td>
                                                 <td>#{deudas.personas.nombre1}</td>
-
+                                                <td>
+                                                    <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalMovimiento').modal('show');">
+                                                        <f:ajax event="click" listener="#{gestionPersonaBean.cargarMovimientosDeuda(deudas)}" render="frmDetallePersona:modalMovimiento frmDetallePersona:tablaMovimientos frmDetallePersona:tblMovimientoDeudas" ></f:ajax>
+                                                    </h:commandLink>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -176,7 +169,46 @@
                             </h:panelGroup>
                         </div>
                     </div>
-
+                    <div class="modal fade" id="modalMovimiento" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Movimiento De la Deuda</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h:panelGroup id="tablaMovimientos">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fecha movimiento</th>
+                                                    <th>Referencia</th>
+                                                    <th>Fases</th>
+                                                    <th>Usuario</th>
+                                                    <th>Persona</th>
+                                                    <th>Plan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat value="#{gestionPersonaBean.deudaSelecionada.listMovimientos}" var="MovimientoDeuda" >
+                                                    <tr>
+                                                        <td>#{MovimientoDeuda.fechaproceso}</td>
+                                                        <td>#{MovimientoDeuda.deudas.referencia}</td>
+                                                        <td>#{MovimientoDeuda.fasesTrabajos.descripcion}</td>
+                                                        <td>#{MovimientoDeuda.usuarios.nombre}</td>
+                                                        <td>#{MovimientoDeuda.personas.nombre1} #{MovimientoDeuda.personas.apellido1}</td>
+                                                        <td>#{MovimientoDeuda.deudas.planTrabajoDeuda.descripcion} </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             </div>
         </h:form>

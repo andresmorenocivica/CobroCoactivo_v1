@@ -84,8 +84,8 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
                     Hibernate.initialize(entity.getCivEstadoPlanGenerales());
                 }
             }
-            
-              if (getEntityClass().getName().contains("CivPlanTrabajos")) {
+
+            if (getEntityClass().getName().contains("CivPlanTrabajos")) {
                 for (CivPlanTrabajos entity : (List<CivPlanTrabajos>) entities) {
                     Hibernate.initialize(entity.getCivEstadoPlanTrabajos());
                 }

@@ -3,6 +3,7 @@ package CobroCoactivo.Modelo;
 
 import CobroCoactivo.Persistencia.CivEstadoFasesTrabajos;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
+import CobroCoactivo.Persistencia.CivReporteTrabajos;
 import java.util.Date;
 
 /**
@@ -22,13 +23,32 @@ public class FasesTrabajos implements java.io.Serializable {
     public FasesTrabajos() {
     }
 
-    public FasesTrabajos(CivFasesTrabajos civFasesTrabajos,CivEstadoFasesTrabajos civEstadoFasesTrabajos) {
+    
+     public FasesTrabajos(CivFasesTrabajos civFasesTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos) {
         this.Id = civFasesTrabajos.getFastraId().intValue();
         this.Descripcion = civFasesTrabajos.getFastraDescripcion();
         this.Fechaproceso = civFasesTrabajos.getFastraFechaproceso();
         this.Dianim = civFasesTrabajos.getFastraDianim().intValue();
         this.Diamax = civFasesTrabajos.getFastraDiamax().intValue();
         this.estadoFasesTrabajos = new EstadoFasesTrabajos(civEstadoFasesTrabajos);
+    }
+
+    public FasesTrabajos(CivFasesTrabajos civFasesTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, CivReporteTrabajos civReporteTrabajos) {
+        this.Id = civFasesTrabajos.getFastraId().intValue();
+        this.Descripcion = civFasesTrabajos.getFastraDescripcion();
+        this.Fechaproceso = civFasesTrabajos.getFastraFechaproceso();
+        this.Dianim = civFasesTrabajos.getFastraDianim().intValue();
+        this.Diamax = civFasesTrabajos.getFastraDiamax().intValue();
+        this.estadoFasesTrabajos = new EstadoFasesTrabajos(civEstadoFasesTrabajos);
+        this.reporteTrabajos = new ReporteTrabajos(civReporteTrabajos);
+    }
+    
+    public FasesTrabajos(CivFasesTrabajos civFasesTrabajos) {
+        this.Id = civFasesTrabajos.getFastraId().intValue();
+        this.Descripcion = civFasesTrabajos.getFastraDescripcion();
+        this.Fechaproceso = civFasesTrabajos.getFastraFechaproceso();
+        this.Dianim = civFasesTrabajos.getFastraDianim().intValue();
+        this.Diamax = civFasesTrabajos.getFastraDiamax().intValue();
     }
 
     /**

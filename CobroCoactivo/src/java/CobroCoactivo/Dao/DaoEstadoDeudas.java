@@ -6,8 +6,9 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivCobroDeudas;
+import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.math.BigDecimal;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -15,20 +16,19 @@ import org.hibernate.Session;
  *
  * @author emadrid
  */
-public class DaoCobroDeudas extends ImpGeneryHibernateDao<CivCobroDeudas, Integer> implements ITCobroDeudas {
+public class DaoEstadoDeudas extends ImpGeneryHibernateDao<CivEstadoDeudas, Integer> implements ITEstadoDeudas {
 
     @Override
-    public CivCobroDeudas getCobroDeudas(int idCobroDeuda) throws Exception {
+    public CivEstadoDeudas getEstadoDeudas(BigDecimal estadoDeudas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "from CivCobroDeudas where cobdeuId=:cobroDeuda";
+        String hql = "from CivEstadoDeudas where estdeuId=:codigoEstado";
         Query query = session.createQuery(hql);
-        query.setInteger("cobroDeuda", idCobroDeuda);
+        query.setBigDecimal("codigoEstado", estadoDeudas);
         if (query.list().size() > 0) {
-            return (CivCobroDeudas) query.list().get(0);
+            return (CivEstadoDeudas) query.list().get(0);
         }
         session.close();
         return null;
-
     }
 
 }

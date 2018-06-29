@@ -16,8 +16,6 @@ import org.hibernate.Session;
  */
 public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
 
-
-  
     public CivPersonas consultarPersonasById(int per_id) throws Exception;
 
     /**
@@ -31,7 +29,7 @@ public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
      * @throws Exception La Excepción lanzada en caso de error.
      */
     public CivPersonas consultarPersonasByDocumento(int tipo, String Documento) throws Exception;
-    
+
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un
      * vehiculo de la base de datos.
@@ -41,8 +39,8 @@ public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
      * en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public List<CivPersonas> listarPersonas(Session session,String persona) throws Exception;
-    
+    public List<CivPersonas> listarPersonas(Session session, String persona) throws Exception;
+
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un
      * vehiculo de la base de datos.
@@ -52,8 +50,8 @@ public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
      * en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public List<CivPersonas> listarPersonasFecha(Session session,String fecha) throws Exception;
-    
+    public List<CivPersonas> listarPersonasFecha(Session session, String fecha) throws Exception;
+
     /**
      * Retorna La Persona de la base de datos por medio del documento de
      * identificación.
@@ -63,6 +61,6 @@ public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
      * encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivPersonas consultarPersonasDocumento(Session session,String Documento) throws Exception;
-    
+    public CivPersonas consultarPersonasDocumento(Session session, String Documento) throws Exception;
+
 }

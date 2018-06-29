@@ -63,7 +63,7 @@
                                                                     <input type="text" placeholder="Numero Del documento" class="form-control text-uppercase" maxlength="20" jsf:id="txtNumero" value="#{gestionPersonaBean.documentoPersona}"></input>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
-                                                                            <f:ajax event="click" execute="frmPersonas:txtNumero frmPersonas:sltDocumentos" listener="#{gestionPersonaBean.buscarPersona(1)}" render="frmPersonas:tblPersona" ></f:ajax>
+                                                                            <f:ajax event="click" execute="frmPersonas:sltDocumentos frmPersonas:txtNumero" listener="#{gestionPersonaBean.buscarPersona(1)}" render="frmPersonas:tblPersona" ></f:ajax>
                                                                         </h:commandLink>
                                                                     </span>
                                                                 </div>
@@ -119,11 +119,9 @@
                                                                             </h:commandLink>
                                                                         </span>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr></hr>
                                                     </div>
                                                     <!-- /.tab-pane -->
                                                 </div>
@@ -147,7 +145,6 @@
                                     <tbody>
                                         <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
                                             <tr>
-
                                                 <td>#{persona.id}</td>
                                                 <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.apellido1}</td>
                                                 <td>#{persona.sexo}</td>
@@ -164,7 +161,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
                             <!-- Comienza Modal Agregar Persona -->
                             <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog ">
@@ -177,7 +173,6 @@
                                             </div>
                                         </div>
                                         <div class="modal-body">
-
                                             <div class="col-lg-4">
                                                 <div class="form-group">
                                                     <label>ID</label> 
@@ -190,7 +185,6 @@
                                                     <h:inputText class="form-control" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" />
                                                 </div>
                                             </div>
-
                                             <div class="col-lg-4">
                                                 <div class="form-group">
                                                     <label>Segundo Nombre:</label> 
@@ -231,7 +225,6 @@
                                                     <h:inputText class="form-control" id="NumDocumento" value="#{gestionPersonaBean.detallePersona.documento}" />
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="modal-footer">
                                             <div class="row">
@@ -255,9 +248,6 @@
                                 </div>
                             </div>
                             <!-- Final Modal Agregar Persona -->
-
-
-
                             <h:commandLink class="float" onclick="$('#modalAgregarPersona').modal('show');">
                                 <i class="fa fa-plus my-float"></i>
                                 <f:ajax event="click" render="" ></f:ajax>

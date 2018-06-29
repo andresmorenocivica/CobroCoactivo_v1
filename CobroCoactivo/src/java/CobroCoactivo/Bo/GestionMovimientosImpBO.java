@@ -10,13 +10,11 @@ import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoFasesTrabajo;
 import CobroCoactivo.Dao.DaoPersonas;
-import CobroCoactivo.Dao.DaoPlanGeneral;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesTrabajo;
 import CobroCoactivo.Dao.ITPersonas;
-import CobroCoactivo.Dao.ITPlanGeneral;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EtapasTrabajos;
@@ -26,13 +24,14 @@ import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
 import CobroCoactivo.Persistencia.CivPersonas;
-import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.DateUtility;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -56,11 +55,11 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
 
     @Override
     public void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-        List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().findAll();
-        for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
-            PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
-            beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
-        }
+            List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().findAll();
+            for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
+                PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
+                beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
+            }
     }
 
     @Override
@@ -79,7 +78,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
                 CivPersonas civPersonas = getPersonaDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
                 CivPlanTrabajos civPlanTrabajo = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
                 civDeuda.setCivPlanTrabajos(civPlanTrabajo);
-                Deudas deuda = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civDeuda.getCivTipoDeudas(), civPersonas,civPlanTrabajo);
+                Deudas deuda = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civPlanTrabajo, civDeuda.getCivTipoDeudas(), civPersonas);
                 deuda.setDiasHabilesDeuda(DateUtility.fechasDiferenciaEnDias(deuda.getFechaproceso(), new Date()));
                 beanGestionMovimientos.getListaDeudas().add(deuda);
                 beanGestionMovimientos.getListaDeudasTabla().add(deuda);
@@ -108,19 +107,18 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         }
 
     }
-    
+
     @Override
     public void filtarListaDeudaTabla(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         List<Deudas> listaDeudas = new ArrayList<>();
-        for(Deudas deuda : beanGestionMovimientos.getListaDeudas()){
-            if(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId() == deuda.getPlanTrabajoDeuda().getId()){
+        for (Deudas deuda : beanGestionMovimientos.getListaDeudas()) {
+            if (beanGestionMovimientos.getPlanTrabajoSeleccionado().getId() == deuda.getPlanTrabajoDeuda().getId()) {
                 listaDeudas.add(deuda);
             }
         }
         beanGestionMovimientos.setListaDeudasTabla(new ArrayList<>());
         beanGestionMovimientos.setListaDeudasTabla(listaDeudas);
-        
-        
+
     }
 
     /**
@@ -192,7 +190,5 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     public void setFasesTrabajoDAO(ITFasesTrabajo fasesTrabajoDAO) {
         this.fasesTrabajoDAO = fasesTrabajoDAO;
     }
-
-    
 
 }

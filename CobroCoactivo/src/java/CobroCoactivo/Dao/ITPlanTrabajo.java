@@ -6,13 +6,13 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 
 /**
  *
  * @author AMORENO
  */
-public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos,Integer>{
-    public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo)throws Exception;
+public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos, Integer> {
+
+    public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo) throws Exception;
 }

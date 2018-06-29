@@ -13,6 +13,9 @@ import java.util.List;
  *
  * @author AMORENO
  */
-public interface ITFasesTrabajo extends ITGeneryHibernateDao<CivFasesTrabajos,Integer>{
-     public List<CivFasesTrabajos> listarFasesTrabajo(int idEtapaTrabajo) throws Exception;
+public interface ITFasesTrabajo extends ITGeneryHibernateDao<CivFasesTrabajos, Integer> {
+
+    public List<CivFasesTrabajos> listarFasesTrabajo(int idEtapaTrabajo) throws Exception;
+    
+    public CivFasesTrabajos getFasesTrabajos (int idFasesTrabajos) throws Exception;
 }

@@ -7,7 +7,6 @@ package CobroCoactivo.Modelo;
 
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivEstadoDatosPersonas;
-import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import java.util.Date;
 

@@ -6,14 +6,15 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivCobroDeudas;
+import CobroCoactivo.Persistencia.CivMovimientos;
+import java.util.List;
 
 /**
  *
  * @author emadrid
  */
-public interface ITCobroDeudas extends ITGeneryHibernateDao<CivCobroDeudas, Integer> {
-
-    public CivCobroDeudas getCobroDeudas(int idCobroDeuda) throws Exception;
+public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Integer> {
+    
+    public List<CivMovimientos> listMovimientos (int idMovimientos) throws Exception;
 
 }

@@ -31,6 +31,11 @@ public class PlanTrabajos implements java.io.Serializable {
         this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
         this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
     }
+     public PlanTrabajos(CivPlanTrabajos civPlanTrabajos) {
+        this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
+        this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
+        this.Id = civPlanTrabajos.getPlatraId().intValue();
+    }
 
     /**
      * @return the Id

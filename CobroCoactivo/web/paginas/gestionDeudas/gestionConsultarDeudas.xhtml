@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <h1>
+                            Consultas
+                            <small>guia formulario para consultas</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                            <li><a href="#">Example</a></li>
+                            <li class="active">Consultas</li>
+                        </ol>
+                    </section>
+                    <h:form id="frmConsultarDeudas">
+                        <section class="content" >
+                            <div class="col-md-12">
+                                <h:panelGrid id="pnlBusquedaDeuda" class="col-lg-12" >
+                                    <h:panelGroup rendered="#{gestionDeudasBean.busquedaVisible}" >
+                                        <section class="content">
+                                            <!-- Default box -->
+                                            <div class="box box-danger">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Filtro de busquedas de Deudas</h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <!-- Custom Tabs -->
+                                                            <div class="nav-tabs-custom" >
+                                                                <ul class="nav nav-tabs" >
+                                                                    <li class="active" ><a href="#referencia" data-toggle="tab">Referencia</a></li>
+                                                                    <li><a href="#tipoDeuda" data-toggle="tab">Tipo Deuda</a></li>
+                                                                </ul>
+                                                                <div class="tab-content">
+                                                                    <div class="tab-pane active" id="referencia">
+                                                                        <br></br>
+                                                                        <div class="row">
+                                                                            <div class="col-md-3"></div>
+                                                                            <div class="col-xs-12 visible-xs visible-sm">
+                                                                                <div class="input-group margin-2">
+                                                                                    <label class="control-label align-left">N° Referencia</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                                <div class="input-group margin-2">
+                                                                                    <label class="control-label align-left">N° Referencia</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                                <div class="input-group margin-5">
+                                                                                    <h:inputText class="form-control text-uppercase" id="txtReferencia" value="#{gestionDeudasBean.referenciaDeuda}">
+                                                                                    </h:inputText>
+                                                                                    <span class="input-group-btn">
+                                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                                            <f:ajax event="click" execute="txtReferencia" listener="#{gestionDeudasBean.buscarDeudas(1)}" render="frmConsultarDeudas:pnlBusquedaDeuda frmConsultarDeudas:pnlTablaDeudas frmConsultarDeudas:plnBtnFiltro"></f:ajax>
+                                                                                        </h:commandLink>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <br></br>
+                                                                    </div>
+                                                                    <!-- /.tab-pane -->
+                                                                    <div class="tab-pane" id="tipoDeuda">
+                                                                        <br></br>
+                                                                        <div class="row">
+                                                                            <div class="col-md-3"></div>
+                                                                            <div class="col-xs-12 visible-xs visible-sm">
+                                                                                <div class="input-group margin-2">
+                                                                                    <label class="control-label align-left">Tipo Deuda</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                                <div class="input-group margin-2">
+                                                                                    <label class="control-label align-left">Tipo Deuda</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                                <div class="input-group margin-5">
+                                                                                    <div class="form-group ">
+                                                                                        <h:selectOneMenu  id="selectTipoDeudas" class="form-control" value="#{gestionDeudasBean.tipoDeudas}">
+                                                                                            <f:selectItems value="#{gestionDeudasBean.listTipoDeudas}" var="listTipoDeuda" itemValue="#{listTipoDeuda.id}" itemLabel="#{listTipoDeuda.descripcion}"></f:selectItems>
+                                                                                        </h:selectOneMenu>
+                                                                                    </div>
+                                                                                    <span class="input-group-btn">
+                                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                                            <f:ajax event="click" execute="selectTipoDeudas" listener="#{gestionDeudasBean.buscarDeudas(2)}" render="frmConsultarDeudas:pnlBusquedaDeuda frmConsultarDeudas:pnlTablaDeudas frmConsultarDeudas:plnBtnFiltro"></f:ajax>
+                                                                                        </h:commandLink>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <br></br> 
+                                                                    </div>
+                                                                    <!-- /.tab-pane -->
+                                                                </div>
+                                                                <!-- /.tab-content -->
+                                                            </div>
+                                                            <!-- nav-tabs-custom -->
+                                                        </div>
+                                                        <!-- /.col -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                                <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
+                                    <h:panelGroup >
+                                        <div class="box box-danger">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tipo</th>
+                                                        <th>Estado</th>
+                                                        <th>Referencia</th>
+                                                        <th>Persona</th>
+                                                        <th>Fecha Deuda</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
+                                                        <tr>
+                                                            <td>#{listDeudas.tipoDeudas.descripcion}</td>
+                                                            <td>#{listDeudas.estadoDeudas.descripcion}</td>
+                                                            <td>#{listDeudas.referencia}</td>
+                                                            <td>
+                                                                <h:commandLink  >
+                                                                    <f:setPropertyActionListener value="#{listDeudas.personas}" target="#{requestBean.personas}"/>
+                                                                    <f:ajax event="click" listener="#{requestBean.ejemplo(listDeudas.personas)}"></f:ajax>
+                                                                    <f:ajax event="click" listener="#{detallePersonasBean.init()}" ></f:ajax>
+                                                                        #{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}
+                                                                </h:commandLink>
+                                                            </td>
+                                                            <td>#{listDeudas.fechaDeudas}</td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </div>
+                        </section>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

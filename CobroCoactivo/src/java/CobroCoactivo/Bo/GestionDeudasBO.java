@@ -14,7 +14,7 @@ import CobroCoactivo.Modelo.Deudas;
  */
 public interface GestionDeudasBO {
 
-    void buscarDeudas(BeanGestionDeudas bean) throws Exception;
+    void clasificacionDeudas(BeanGestionDeudas bean) throws Exception;
 
     void cargarListaTipoDeudas(BeanGestionDeudas bean) throws Exception;
 
@@ -23,5 +23,7 @@ public interface GestionDeudasBO {
     Deudas cargarProcentajeCobro(Deudas deudas) throws Exception;
 
     void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception;
+    
+    void buscarDeudas(BeanGestionDeudas bean) throws  Exception;
 
 }

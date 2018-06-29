@@ -30,4 +30,6 @@ public interface GestionPersonasBO {
 
     void guardarPersona(BeanGestionPersonas bean) throws Exception;
 
+    void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception;
+
 }

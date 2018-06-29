@@ -30,6 +30,7 @@ public class BeanGestionDeudas {
     private BeanLogin loginBO;
     private int tipoBusqueda;
     private int tipoDeudas;
+    private int estadoDeudas;
     private String referenciaDeuda;
     private List<TipoDeudas> listTipoDeudas = new ArrayList<>();
     private List<Deudas> listDeudas = new ArrayList<>();
@@ -37,20 +38,19 @@ public class BeanGestionDeudas {
     private Deudas deudas = new Deudas();
     private boolean busquedaVisible = true;
     private boolean btnFiltroBusqueda = false;
-    private boolean pnlTablaDeudas = false;
+    private boolean pnlTablaClasificacionDeudas = true;
     private List<CobroDeudas> listCobroDeudas = new ArrayList<>();
-    private CobroDeudas cobroDeudasSeleccionado = new CobroDeudas();
-    private Deudas deudaSeleccionada = new Deudas();
+    private CobroDeudas cobroDeudasSeleccionado;
+    private Deudas deudaSeleccionada;
 
     @PostConstruct
     public void init() {
         try {
             setGestionDeudasBO(new GestionDeudasImpBO());
             setLoginBO(new BeanLogin());
-            if (getListTipoDeudas() != null) {
-                getGestionDeudasBO().cargarListaTipoDeudas(this);
-                getGestionDeudasBO().cargarListaCobroDeudas(this);
-            }
+            getGestionDeudasBO().cargarListaTipoDeudas(this);
+            getGestionDeudasBO().cargarListaCobroDeudas(this);
+            getGestionDeudasBO().clasificacionDeudas(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -63,11 +63,8 @@ public class BeanGestionDeudas {
         try {
             setTipoBusqueda(tipo);
             getGestionDeudasBO().buscarDeudas(this);
-            if (listDeudas.size() > 0) {
-                setBusquedaVisible(false);
-                setBtnFiltroBusqueda(true);
-                setPnlTablaDeudas(true);
-            }
+            
+            
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -75,13 +72,10 @@ public class BeanGestionDeudas {
         }
     }
 
-    public void cargar(CobroDeudas cobroDeudas, Deudas deudas) {
-        setCobroDeudasSeleccionado(cobroDeudas);
-        setDeudaSeleccionada(deudas);
-    }
-
-    public void dificultadDeudas() {
+    public void dificultadDeudas(CobroDeudas cobroDeudas, Deudas deudas) {
         try {
+            setCobroDeudasSeleccionado(cobroDeudas);
+            setDeudaSeleccionada(deudas);
             getGestionDeudasBO().actualizarDeudaCargada(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -218,20 +212,6 @@ public class BeanGestionDeudas {
     }
 
     /**
-     * @return the pnlTablaDeudas
-     */
-    public boolean isPnlTablaDeudas() {
-        return pnlTablaDeudas;
-    }
-
-    /**
-     * @param pnlTablaDeudas the pnlTablaDeudas to set
-     */
-    public void setPnlTablaDeudas(boolean pnlTablaDeudas) {
-        this.pnlTablaDeudas = pnlTablaDeudas;
-    }
-
-    /**
      * @return the tipoDeudas
      */
     public int getTipoDeudas() {
@@ -299,6 +279,34 @@ public class BeanGestionDeudas {
      */
     public void setDeudaSeleccionada(Deudas deudaSeleccionada) {
         this.deudaSeleccionada = deudaSeleccionada;
+    }
+
+    /**
+     * @return the estadoDeudas
+     */
+    public int getEstadoDeudas() {
+        return estadoDeudas;
+    }
+
+    /**
+     * @param estadoDeudas the estadoDeudas to set
+     */
+    public void setEstadoDeudas(int estadoDeudas) {
+        this.estadoDeudas = estadoDeudas;
+    }
+
+    /**
+     * @return the pnlTablaClasificacionDeudas
+     */
+    public boolean isPnlTablaClasificacionDeudas() {
+        return pnlTablaClasificacionDeudas;
+    }
+
+    /**
+     * @param pnlTablaClasificacionDeudas the pnlTablaClasificacionDeudas to set
+     */
+    public void setPnlTablaClasificacionDeudas(boolean pnlTablaClasificacionDeudas) {
+        this.pnlTablaClasificacionDeudas = pnlTablaClasificacionDeudas;
     }
 
 }

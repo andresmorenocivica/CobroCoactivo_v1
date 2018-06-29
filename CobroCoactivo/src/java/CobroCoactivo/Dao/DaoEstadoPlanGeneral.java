@@ -6,9 +6,7 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivAbogados;
 import CobroCoactivo.Persistencia.CivEstadoPlanGenerales;
-import java.io.Serializable;
 
 /**
  *

@@ -6,11 +6,14 @@ import CobroCoactivo.Dao.*;
 import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoPersonas;
+import CobroCoactivo.Persistencia.CivFasesTrabajos;
+import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.math.BigDecimal;
@@ -25,18 +28,25 @@ import javax.faces.context.FacesContext;
  */
 public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
-    private ITTipoDocumento tipoDocumentoDAO;
-    private ITPersonas personasDAO;
-    private ITDatosPersonas datosPersonasDAO;
     private ITDeudas deudasDAO;
+    private ITPersonas personasDAO;
+    private ITMovimientos movimientosDAO;
+    private ITDatosPersonas datosPersonasDAO;
+    private ITTipoDocumento tipoDocumentoDAO;
     private ITEstadoPersonas estadoPersonasDAO;
+    private ITFasesTrabajo fasesTrabajoDAO;
+    private ITPlanTrabajo planTrabajoDAO;
 
     public GestionPersonasImpBO() {
-        tipoDocumentoDAO = new DaoTipoDocumento();
+        deudasDAO = new DaoDeudas();
         personasDAO = new DaoPersonas();
+        movimientosDAO = new DaoMovimientos();
+        fasesTrabajoDAO = new DaoFasesTrabajo();
+        tipoDocumentoDAO = new DaoTipoDocumento();
         datosPersonasDAO = new DaoDatosPersonas();
         estadoPersonasDAO = new DaoEstadoPersonas();
-        deudasDAO = new DaoDeudas();
+        planTrabajoDAO = new DaoPlanTrabajo();
+
     }
 
     @Override
@@ -54,6 +64,16 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         for (CivEstadoPersonas civEstadoPersona : listCivEstadoPersonas) {
             EstadoPersonas estadoPersonas = new EstadoPersonas(civEstadoPersona);
             bean.getListEstadoPersonas().add(estadoPersonas);
+        }
+    }
+
+    @Override
+    public void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception {
+        List<CivMovimientos> listCivMovimientos = getMovimientosDAO().listMovimientos(bean.getDeudaSelecionada().getId());
+        for (CivMovimientos civMovimiento : listCivMovimientos) {
+            CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
+            Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
+            bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
         }
     }
 
@@ -112,7 +132,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                 if (bean.getDetallePersona().getId() != 0) {
                     List<CivDeudas> listCivDeudas = getDeudasDAO().listarDeudas(bean.getDetallePersona().getId());
                     for (CivDeudas civDeudas : listCivDeudas) {
-                        Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
+                        Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
                         bean.getDetallePersona().getListdeuda().add(deudas);
                     }
                 }
@@ -151,7 +171,6 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civEstadoPersonas.setEstperFechaproceso(civEstadoPersonas.getEstperFechaproceso());
 
         civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
-
         civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
         civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
         civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
@@ -231,6 +250,48 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
      */
     public void setEstadoPersonasDAO(ITEstadoPersonas estadoPersonasDAO) {
         this.estadoPersonasDAO = estadoPersonasDAO;
+    }
+
+    /**
+     * @return the movimientosDAO
+     */
+    public ITMovimientos getMovimientosDAO() {
+        return movimientosDAO;
+    }
+
+    /**
+     * @param movimientosDAO the movimientosDAO to set
+     */
+    public void setMovimientosDAO(ITMovimientos movimientosDAO) {
+        this.movimientosDAO = movimientosDAO;
+    }
+
+    /**
+     * @return the fasesTrabajoDAO
+     */
+    public ITFasesTrabajo getFasesTrabajoDAO() {
+        return fasesTrabajoDAO;
+    }
+
+    /**
+     * @param fasesTrabajoDAO the fasesTrabajoDAO to set
+     */
+    public void setFasesTrabajoDAO(ITFasesTrabajo fasesTrabajoDAO) {
+        this.fasesTrabajoDAO = fasesTrabajoDAO;
+    }
+
+    /**
+     * @return the planTrabajoDAO
+     */
+    public ITPlanTrabajo getPlanTrabajoDAO() {
+        return planTrabajoDAO;
+    }
+
+    /**
+     * @param planTrabajoDAO the planTrabajoDAO to set
+     */
+    public void setPlanTrabajoDAO(ITPlanTrabajo planTrabajoDAO) {
+        this.planTrabajoDAO = planTrabajoDAO;
     }
 
 }

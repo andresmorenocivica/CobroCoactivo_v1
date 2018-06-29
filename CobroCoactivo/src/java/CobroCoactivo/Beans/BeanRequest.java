@@ -15,21 +15,24 @@ import javax.faces.bean.SessionScoped;
  *
  * @author amoreno
  */
-@ManagedBean(name = "requestBean",eager = true)
+@ManagedBean(name = "requestBean", eager = true)
 @SessionScoped
-public class BeanRequest  implements Serializable{
+public class BeanRequest implements Serializable {
+
     private static final long serialVersionUID = -1612020613604473554L;
     // ESTA VARIABLE SE VA A UTILIZAR PARA CARGAR LA RUTA DEL FORMULARIO PARA PODER NAVEGAR
     private String ruta;
-    
-    
-    
+
     /// OBJETO PARA INTERACTUAR CON EL DETALLE USUARIO
     private Usuarios usuario;
-    
-    //se declara un objeto para ver eñ detalle persona
+
+    //se declara un objeto para ver el detalle persona
     private Personas personas;
-    
+
+    public void ejemplo(Personas p) {
+        p.getId();
+        setPersonas(p);
+    }
 
     /**
      * @return the serialVersionUID
@@ -74,6 +77,4 @@ public class BeanRequest  implements Serializable{
         this.personas = personas;
     }
 
-  
-    
 }

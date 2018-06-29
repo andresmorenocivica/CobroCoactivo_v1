@@ -7,7 +7,9 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionPersonasBO;
 import CobroCoactivo.Bo.GestionPersonasImpBO;
+import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Utility.Log_Handler;
@@ -41,6 +43,10 @@ public class BeanGestionPersonas implements Serializable {
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     // lista que se utilizara para cargar la tabla de resultado de la busqueda
     private List<Personas> listPersonas = new ArrayList<>();
+
+    // Objeto que se utiliza para captura la deuda que seleccione para mostrar sus movimientos
+    private Deudas deudaSelecionada;
+    private Movimientos detalleMovimientos = new Movimientos();
 
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
     private int estadoPersonas;
@@ -85,7 +91,6 @@ public class BeanGestionPersonas implements Serializable {
                 // busqueda por tipo documento y documento
                 case 1:
                     getGestionPersonasBO().consultarByDocumentoByTipoDocumento(this);
-
                     break;
                 case 2:
                     break;
@@ -99,13 +104,24 @@ public class BeanGestionPersonas implements Serializable {
         }
     }
 
+    public void cargarMovimientosDeuda(Deudas deudas) {
+        try {
+            setDeudaSelecionada(deudas);
+            getGestionPersonasBO().cargarMovimientosDeudas(this);
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+
+    }
+
     public void editarPersona() {
         try {
             getDetallePersona().setEditable(false);
             getDetallePersona();
             getGestionPersonasBO().updatePersona(this);
         } catch (Exception e) {
-
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -117,9 +133,7 @@ public class BeanGestionPersonas implements Serializable {
             getGestionPersonasBO().guardarPersona(this);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalAgregarPersona').modal('hide')");
-
         } catch (Exception e) {
-
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -321,6 +335,34 @@ public class BeanGestionPersonas implements Serializable {
      */
     public void setEstadoPersonas(int estadoPersonas) {
         this.estadoPersonas = estadoPersonas;
+    }
+
+    /**
+     * @return the deudaSelecionada
+     */
+    public Deudas getDeudaSelecionada() {
+        return deudaSelecionada;
+    }
+
+    /**
+     * @param deudaSelecionada the deudaSelecionada to set
+     */
+    public void setDeudaSelecionada(Deudas deudaSelecionada) {
+        this.deudaSelecionada = deudaSelecionada;
+    }
+
+    /**
+     * @return the detalleMovimientos
+     */
+    public Movimientos getDetalleMovimientos() {
+        return detalleMovimientos;
+    }
+
+    /**
+     * @param detalleMovimientos the detalleMovimientos to set
+     */
+    public void setDetalleMovimientos(Movimientos detalleMovimientos) {
+        this.detalleMovimientos = detalleMovimientos;
     }
 
 }
