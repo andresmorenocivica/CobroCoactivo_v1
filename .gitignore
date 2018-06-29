@@ -2,3 +2,5 @@
 CobroCoactivo/dist/CobroCoactivo.war
 CobroCoactivo/lib/ojdbc7.jar
 /CobroCoactivo/dist/
+/CobroCoactivo/build/*
+/CobroCoactivo/nbproject/*
