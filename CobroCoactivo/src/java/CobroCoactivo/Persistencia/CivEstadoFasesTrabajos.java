@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -18,8 +18,7 @@ public class CivEstadoFasesTrabajos  implements java.io.Serializable {
      private Date estfastraFechainicial;
      private Date estfastraFechafinal;
      private Date estfastraFechaproceso;
-     private CivFasesTrabajos civFasesTrabajosByEstfastraId;
-     private Set civFasesTrabajosesForFastraEstfastraFk = new HashSet(0);
+     private Set civFasesTrabajoses = new HashSet(0);
 
     public CivEstadoFasesTrabajos() {
     }
@@ -30,14 +29,13 @@ public class CivEstadoFasesTrabajos  implements java.io.Serializable {
         this.estfastraDescripcion = estfastraDescripcion;
         this.estfastraFechainicial = estfastraFechainicial;
     }
-    public CivEstadoFasesTrabajos(BigDecimal estfastraId, String estfastraDescripcion, Date estfastraFechainicial, Date estfastraFechafinal, Date estfastraFechaproceso, CivFasesTrabajos civFasesTrabajosByEstfastraId, Set civFasesTrabajosesForFastraEstfastraFk) {
+    public CivEstadoFasesTrabajos(BigDecimal estfastraId, String estfastraDescripcion, Date estfastraFechainicial, Date estfastraFechafinal, Date estfastraFechaproceso, Set civFasesTrabajoses) {
        this.estfastraId = estfastraId;
        this.estfastraDescripcion = estfastraDescripcion;
        this.estfastraFechainicial = estfastraFechainicial;
        this.estfastraFechafinal = estfastraFechafinal;
        this.estfastraFechaproceso = estfastraFechaproceso;
-       this.civFasesTrabajosByEstfastraId = civFasesTrabajosByEstfastraId;
-       this.civFasesTrabajosesForFastraEstfastraFk = civFasesTrabajosesForFastraEstfastraFk;
+       this.civFasesTrabajoses = civFasesTrabajoses;
     }
    
     public BigDecimal getEstfastraId() {
@@ -75,19 +73,12 @@ public class CivEstadoFasesTrabajos  implements java.io.Serializable {
     public void setEstfastraFechaproceso(Date estfastraFechaproceso) {
         this.estfastraFechaproceso = estfastraFechaproceso;
     }
-    public CivFasesTrabajos getCivFasesTrabajosByEstfastraId() {
-        return this.civFasesTrabajosByEstfastraId;
+    public Set getCivFasesTrabajoses() {
+        return this.civFasesTrabajoses;
     }
     
-    public void setCivFasesTrabajosByEstfastraId(CivFasesTrabajos civFasesTrabajosByEstfastraId) {
-        this.civFasesTrabajosByEstfastraId = civFasesTrabajosByEstfastraId;
-    }
-    public Set getCivFasesTrabajosesForFastraEstfastraFk() {
-        return this.civFasesTrabajosesForFastraEstfastraFk;
-    }
-    
-    public void setCivFasesTrabajosesForFastraEstfastraFk(Set civFasesTrabajosesForFastraEstfastraFk) {
-        this.civFasesTrabajosesForFastraEstfastraFk = civFasesTrabajosesForFastraEstfastraFk;
+    public void setCivFasesTrabajoses(Set civFasesTrabajoses) {
+        this.civFasesTrabajoses = civFasesTrabajoses;
     }
 
 

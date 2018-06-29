@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" table="CIV_ESTADO_FASES_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estfastraId" type="big_decimal">
@@ -28,8 +28,7 @@
                 <comment>Campo que guardara la fecha proceso o fecha del sistema del estado.</comment>
             </column>
         </property>
-        <one-to-one name="civFasesTrabajosByEstfastraId" class="CobroCoactivo.Persistencia.CivFasesTrabajos"></one-to-one>
-        <set name="civFasesTrabajosesForFastraEstfastraFk" table="CIV_FASES_TRABAJOS" inverse="true" lazy="true" fetch="select">
+        <set name="civFasesTrabajoses" table="CIV_FASES_TRABAJOS" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="FASTRA_ESTFASTRA_FK" precision="22" scale="0" not-null="true" />
             </key>

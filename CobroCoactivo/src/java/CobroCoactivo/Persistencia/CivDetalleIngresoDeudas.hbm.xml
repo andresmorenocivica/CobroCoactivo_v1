@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDetalleIngresoDeudas" table="CIV_DETALLE_INGRESO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detingdeuId" type="big_decimal">
@@ -10,13 +10,13 @@
                 <param name="property">civEstadoDetalleIngresodeu</param>
             </generator>
         </id>
+        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
+            <column name="DETINGDEU_DEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
         <many-to-one name="civIngresoDeudas" class="CobroCoactivo.Persistencia.CivIngresoDeudas" fetch="select">
             <column name="DETINGDEU_INGDEU_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <one-to-one name="civEstadoDetalleIngresodeu" class="CobroCoactivo.Persistencia.CivEstadoDetalleIngresodeu" constrained="true"></one-to-one>
-        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
-            <column name="DETINGDEU_DEU_FK" precision="22" scale="0" not-null="true" />
-        </many-to-one>
         <property name="detingdeuEstdetingdeuFk" type="big_decimal">
             <column name="DETINGDEU_ESTDETINGDEU_FK" precision="22" scale="0" not-null="true" />
         </property>

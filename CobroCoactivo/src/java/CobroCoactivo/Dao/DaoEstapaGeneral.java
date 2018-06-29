@@ -19,8 +19,8 @@ import org.hibernate.Session;
 public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, Integer> implements ITEstapaGeneral {
 
     @Override
-    public List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(int id) throws Exception {
-        Session session = getSessionFactory().openSession();
+    public List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(Session session ,int id) throws Exception {
+     
         String hql = "from CivEtapasGenerales where civPlanGenerales.plagenId=:id order by etagenPrioridad";
         Query query = session.createQuery(hql);
         query.setParameter("id", new BigDecimal(id));

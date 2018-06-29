@@ -20,8 +20,7 @@ import org.hibernate.Session;
 public class DaoFasesGenerales extends ImpGeneryHibernateDao<CivFasesGenerales, Integer> implements ITFasesGenerales{
 
     @Override
-    public List<CivFasesGenerales> AllListByEtapaGeneral(int id) throws Exception {
-        Session session = getSessionFactory().openSession();
+    public List<CivFasesGenerales> AllListByEtapaGeneral(Session session ,int id) throws Exception {
         String hql = "from CivFasesGenerales where civEtapasGenerales.etagenId=:id";
         Query query = session.createQuery(hql);
         query.setParameter("id", new BigDecimal(id));

@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -14,8 +14,8 @@ public class CivConceptos  implements java.io.Serializable {
 
 
      private BigDecimal conId;
-     private CivTipoConceptos civTipoConceptos;
      private CivEstadoConceptos civEstadoConceptos;
+     private CivTipoConceptos civTipoConceptos;
      private String conDescripcion;
      private Date conFechaproceso;
      private Set civDetalleDeudases = new HashSet(0);
@@ -24,16 +24,16 @@ public class CivConceptos  implements java.io.Serializable {
     }
 
 	
-    public CivConceptos(BigDecimal conId, CivTipoConceptos civTipoConceptos, CivEstadoConceptos civEstadoConceptos, String conDescripcion) {
+    public CivConceptos(BigDecimal conId, CivEstadoConceptos civEstadoConceptos, CivTipoConceptos civTipoConceptos, String conDescripcion) {
         this.conId = conId;
-        this.civTipoConceptos = civTipoConceptos;
         this.civEstadoConceptos = civEstadoConceptos;
+        this.civTipoConceptos = civTipoConceptos;
         this.conDescripcion = conDescripcion;
     }
-    public CivConceptos(BigDecimal conId, CivTipoConceptos civTipoConceptos, CivEstadoConceptos civEstadoConceptos, String conDescripcion, Date conFechaproceso, Set civDetalleDeudases) {
+    public CivConceptos(BigDecimal conId, CivEstadoConceptos civEstadoConceptos, CivTipoConceptos civTipoConceptos, String conDescripcion, Date conFechaproceso, Set civDetalleDeudases) {
        this.conId = conId;
-       this.civTipoConceptos = civTipoConceptos;
        this.civEstadoConceptos = civEstadoConceptos;
+       this.civTipoConceptos = civTipoConceptos;
        this.conDescripcion = conDescripcion;
        this.conFechaproceso = conFechaproceso;
        this.civDetalleDeudases = civDetalleDeudases;
@@ -46,19 +46,19 @@ public class CivConceptos  implements java.io.Serializable {
     public void setConId(BigDecimal conId) {
         this.conId = conId;
     }
-    public CivTipoConceptos getCivTipoConceptos() {
-        return this.civTipoConceptos;
-    }
-    
-    public void setCivTipoConceptos(CivTipoConceptos civTipoConceptos) {
-        this.civTipoConceptos = civTipoConceptos;
-    }
     public CivEstadoConceptos getCivEstadoConceptos() {
         return this.civEstadoConceptos;
     }
     
     public void setCivEstadoConceptos(CivEstadoConceptos civEstadoConceptos) {
         this.civEstadoConceptos = civEstadoConceptos;
+    }
+    public CivTipoConceptos getCivTipoConceptos() {
+        return this.civTipoConceptos;
+    }
+    
+    public void setCivTipoConceptos(CivTipoConceptos civTipoConceptos) {
+        this.civTipoConceptos = civTipoConceptos;
     }
     public String getConDescripcion() {
         return this.conDescripcion;

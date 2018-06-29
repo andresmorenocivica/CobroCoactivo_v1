@@ -17,6 +17,7 @@ public class FasesTrabajos implements java.io.Serializable {
     private Date Fechaproceso;
     private int Dianim;
     private int Diamax;
+    private String Obligatorio;
 
     public FasesTrabajos() {
     }
@@ -126,6 +127,20 @@ public class FasesTrabajos implements java.io.Serializable {
      */
     public void setDiamax(int Diamax) {
         this.Diamax = Diamax;
+    }
+
+    /**
+     * @return the Obligatorio
+     */
+    public String getObligatorio() {
+        return Obligatorio;
+    }
+
+    /**
+     * @param Obligatorio the Obligatorio to set
+     */
+    public void setObligatorio(String Obligatorio) {
+        this.Obligatorio = Obligatorio;
     }
 
 }

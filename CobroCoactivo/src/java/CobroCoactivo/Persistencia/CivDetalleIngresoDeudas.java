@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,9 +12,9 @@ public class CivDetalleIngresoDeudas  implements java.io.Serializable {
 
 
      private BigDecimal detingdeuId;
+     private CivDeudas civDeudas;
      private CivIngresoDeudas civIngresoDeudas;
      private CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu;
-     private CivDeudas civDeudas;
      private BigDecimal detingdeuEstdetingdeuFk;
      private Date detingdeuFechaproceso;
 
@@ -22,16 +22,16 @@ public class CivDetalleIngresoDeudas  implements java.io.Serializable {
     }
 
 	
-    public CivDetalleIngresoDeudas(CivIngresoDeudas civIngresoDeudas, CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu, CivDeudas civDeudas, BigDecimal detingdeuEstdetingdeuFk) {
+    public CivDetalleIngresoDeudas(CivDeudas civDeudas, CivIngresoDeudas civIngresoDeudas, CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu, BigDecimal detingdeuEstdetingdeuFk) {
+        this.civDeudas = civDeudas;
         this.civIngresoDeudas = civIngresoDeudas;
         this.civEstadoDetalleIngresodeu = civEstadoDetalleIngresodeu;
-        this.civDeudas = civDeudas;
         this.detingdeuEstdetingdeuFk = detingdeuEstdetingdeuFk;
     }
-    public CivDetalleIngresoDeudas(CivIngresoDeudas civIngresoDeudas, CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu, CivDeudas civDeudas, BigDecimal detingdeuEstdetingdeuFk, Date detingdeuFechaproceso) {
+    public CivDetalleIngresoDeudas(CivDeudas civDeudas, CivIngresoDeudas civIngresoDeudas, CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu, BigDecimal detingdeuEstdetingdeuFk, Date detingdeuFechaproceso) {
+       this.civDeudas = civDeudas;
        this.civIngresoDeudas = civIngresoDeudas;
        this.civEstadoDetalleIngresodeu = civEstadoDetalleIngresodeu;
-       this.civDeudas = civDeudas;
        this.detingdeuEstdetingdeuFk = detingdeuEstdetingdeuFk;
        this.detingdeuFechaproceso = detingdeuFechaproceso;
     }
@@ -42,6 +42,13 @@ public class CivDetalleIngresoDeudas  implements java.io.Serializable {
     
     public void setDetingdeuId(BigDecimal detingdeuId) {
         this.detingdeuId = detingdeuId;
+    }
+    public CivDeudas getCivDeudas() {
+        return this.civDeudas;
+    }
+    
+    public void setCivDeudas(CivDeudas civDeudas) {
+        this.civDeudas = civDeudas;
     }
     public CivIngresoDeudas getCivIngresoDeudas() {
         return this.civIngresoDeudas;
@@ -56,13 +63,6 @@ public class CivDetalleIngresoDeudas  implements java.io.Serializable {
     
     public void setCivEstadoDetalleIngresodeu(CivEstadoDetalleIngresodeu civEstadoDetalleIngresodeu) {
         this.civEstadoDetalleIngresodeu = civEstadoDetalleIngresodeu;
-    }
-    public CivDeudas getCivDeudas() {
-        return this.civDeudas;
-    }
-    
-    public void setCivDeudas(CivDeudas civDeudas) {
-        this.civDeudas = civDeudas;
     }
     public BigDecimal getDetingdeuEstdetingdeuFk() {
         return this.detingdeuEstdetingdeuFk;

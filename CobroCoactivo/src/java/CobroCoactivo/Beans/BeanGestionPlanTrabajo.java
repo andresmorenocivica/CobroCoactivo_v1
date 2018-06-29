@@ -1,0 +1,272 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package CobroCoactivo.Beans;
+
+import CobroCoactivo.Bo.GestionPlanTrabajoBO;
+import CobroCoactivo.Bo.GestionPlanTrabajoImpBO;
+import CobroCoactivo.Modelo.EtapasTrabajos;
+import CobroCoactivo.Modelo.FasesTrabajos;
+import CobroCoactivo.Modelo.PlanGenerales;
+import CobroCoactivo.Modelo.PlanTrabajos;
+import CobroCoactivo.Utility.Log_Handler;
+import com.sun.javafx.application.PlatformImpl;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import org.primefaces.context.RequestContext;
+
+/**
+ * el bean encargado de administrar todo lo referente a la vista plan trabajo
+ *
+ * @author jesison
+ * @version 1.0. 27/06/2018
+ */
+@ManagedBean(name = "gestionPlanTrabajoBean")
+@ViewScoped
+public class BeanGestionPlanTrabajo {
+
+    private List<PlanGenerales> listPlanGenerales = new ArrayList<>();
+    private List<PlanTrabajos> listPlanTrabajos = new ArrayList<>();
+    private GestionPlanTrabajoBO gestionPlanTrabajoBO = new GestionPlanTrabajoImpBO();
+    private PlanTrabajos planTrabajos = new PlanTrabajos();
+    private List<EtapasTrabajos> listEtapaTrabajos = new ArrayList<>();
+    private boolean renderEtapaTrabajo = false;
+    private EtapasTrabajos etapasTrabajos = new EtapasTrabajos();
+    private List<FasesTrabajos> listFasesTrabajoses = new ArrayList<>();
+    private boolean renderFaseTrabajo;
+
+    /**
+     * metodo que se ejecuta despues de iniciar el bean
+     */
+    @PostConstruct
+    public void init() {
+        try {
+            gestionPlanTrabajoBO.getListaTrabajo(this);
+            gestionPlanTrabajoBO.getListPlanGenaral(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * guardar un plan de trabajo
+     */
+    public void guardarPlanTrabajo() {
+        try {
+            getGestionPlanTrabajoBO().guardarPlanTrabajo(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listaEtapaTrabajo(PlanTrabajos planTrabajos) {
+        try {
+            setPlanTrabajos(planTrabajos);
+            setRenderEtapaTrabajo(true);
+            getGestionPlanTrabajoBO().getListEtapaTrabajo(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();;
+        }
+
+    }
+
+    public void listarFasestrabajo(EtapasTrabajos etapasTrabajos) {
+
+        try {
+            setEtapasTrabajos(etapasTrabajos);
+            setRenderFaseTrabajo(true);
+            getGestionPlanTrabajoBO().getFases(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+       public void mostrarPdf(String archivo) {
+        try {
+            File ficheroXLS = new File(archivo);
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            FileInputStream fis = new FileInputStream(ficheroXLS);
+            byte[] bytes = new byte[1000];
+            int read = 0;
+            if (!ctx.getResponseComplete()) {
+                String fileName = ficheroXLS.getName();
+                String contentType = "application/pdf";
+                HttpServletResponse response
+                        = (HttpServletResponse) ctx.getExternalContext().getResponse();
+                response.setContentType(contentType);
+                response.setHeader("Content-Disposition",
+                        "attachment;filename=\"" + fileName + "\"");
+                ServletOutputStream out = response.getOutputStream();
+                while ((read = fis.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                out.flush();
+                out.close();
+                ctx.responseComplete();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public boolean renderBottonAdicionar() {
+        if (getListPlanGenerales().size() == 0 || getListPlanGenerales() == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Contructor por defecto
+     */
+    public BeanGestionPlanTrabajo() {
+    }
+
+    /**
+     * el que controla el acesso a la base de datos es el controlador
+     *
+     * @return the gestionPlanTrabajoBO
+     */
+    public GestionPlanTrabajoBO getGestionPlanTrabajoBO() {
+        return gestionPlanTrabajoBO;
+    }
+
+    /**
+     * @param gestionPlanTrabajoBO the gestionPlanTrabajoBO to set
+     */
+    public void setGestionPlanTrabajoBO(GestionPlanTrabajoBO gestionPlanTrabajoBO) {
+        this.gestionPlanTrabajoBO = gestionPlanTrabajoBO;
+    }
+
+    /**
+     * @return the listPlanTrabajos
+     */
+    public List<PlanTrabajos> getListPlanTrabajos() {
+        return listPlanTrabajos;
+    }
+
+    /**
+     * @param listPlanTrabajos the listPlanTrabajos to set
+     */
+    public void setListPlanTrabajos(List<PlanTrabajos> listPlanTrabajos) {
+        this.listPlanTrabajos = listPlanTrabajos;
+    }
+
+    /**
+     * @return the listPlanGenerales
+     */
+    public List<PlanGenerales> getListPlanGenerales() {
+        return listPlanGenerales;
+    }
+
+    /**
+     * @param listPlanGenerales the listPlanGenerales to set
+     */
+    public void setListPlanGenerales(List<PlanGenerales> listPlanGenerales) {
+        this.listPlanGenerales = listPlanGenerales;
+    }
+
+    /**
+     * @return the listEtapaTrabajos
+     */
+    public List<EtapasTrabajos> getListEtapaTrabajos() {
+        return listEtapaTrabajos;
+    }
+
+    /**
+     * @param listEtapaTrabajos the listEtapaTrabajos to set
+     */
+    public void setListEtapaTrabajos(List<EtapasTrabajos> listEtapaTrabajos) {
+        this.listEtapaTrabajos = listEtapaTrabajos;
+    }
+
+    /**
+     * @return the renderEtapaTrabajo
+     */
+    public boolean isRenderEtapaTrabajo() {
+        return renderEtapaTrabajo;
+    }
+
+    /**
+     * @param renderEtapaTrabajo the renderEtapaTrabajo to set
+     */
+    public void setRenderEtapaTrabajo(boolean renderEtapaTrabajo) {
+        this.renderEtapaTrabajo = renderEtapaTrabajo;
+    }
+
+    /**
+     * @return the planTrabajos
+     */
+    public PlanTrabajos getPlanTrabajos() {
+        return planTrabajos;
+    }
+
+    /**
+     * @param planTrabajos the planTrabajos to set
+     */
+    public void setPlanTrabajos(PlanTrabajos planTrabajos) {
+        this.planTrabajos = planTrabajos;
+    }
+
+    /**
+     * @return the renderFaseTrabajo
+     */
+    public boolean isRenderFaseTrabajo() {
+        return renderFaseTrabajo;
+    }
+
+    /**
+     * @param renderFaseTrabajo the renderFaseTrabajo to set
+     */
+    public void setRenderFaseTrabajo(boolean renderFaseTrabajo) {
+        this.renderFaseTrabajo = renderFaseTrabajo;
+    }
+
+    /**
+     * @return the etapasTrabajos
+     */
+    public EtapasTrabajos getEtapasTrabajos() {
+        return etapasTrabajos;
+    }
+
+    /**
+     * @param etapasTrabajos the etapasTrabajos to set
+     */
+    public void setEtapasTrabajos(EtapasTrabajos etapasTrabajos) {
+        this.etapasTrabajos = etapasTrabajos;
+    }
+
+    /**
+     * @return the listFasesTrabajoses
+     */
+    public List<FasesTrabajos> getListFasesTrabajoses() {
+        return listFasesTrabajoses;
+    }
+
+    /**
+     * @param listFasesTrabajoses the listFasesTrabajoses to set
+     */
+    public void setListFasesTrabajoses(List<FasesTrabajos> listFasesTrabajoses) {
+        this.listFasesTrabajoses = listFasesTrabajoses;
+    }
+
+}

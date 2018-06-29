@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,32 +12,32 @@ public class CivMovimientos  implements java.io.Serializable {
 
 
      private BigDecimal movId;
-     private CivUsuarios civUsuarios;
-     private CivPersonas civPersonas;
-     private CivFasesTrabajos civFasesTrabajos;
-     private CivEstadoMovimientos civEstadoMovimientos;
      private CivDeudas civDeudas;
+     private CivPersonas civPersonas;
+     private CivEstadoMovimientos civEstadoMovimientos;
+     private CivUsuarios civUsuarios;
+     private CivFasesTrabajos civFasesTrabajos;
      private Date movFechaproceso;
 
     public CivMovimientos() {
     }
 
 	
-    public CivMovimientos(BigDecimal movId, CivUsuarios civUsuarios, CivPersonas civPersonas, CivFasesTrabajos civFasesTrabajos, CivEstadoMovimientos civEstadoMovimientos, CivDeudas civDeudas) {
+    public CivMovimientos(BigDecimal movId, CivDeudas civDeudas, CivPersonas civPersonas, CivEstadoMovimientos civEstadoMovimientos, CivUsuarios civUsuarios, CivFasesTrabajos civFasesTrabajos) {
         this.movId = movId;
-        this.civUsuarios = civUsuarios;
-        this.civPersonas = civPersonas;
-        this.civFasesTrabajos = civFasesTrabajos;
-        this.civEstadoMovimientos = civEstadoMovimientos;
         this.civDeudas = civDeudas;
+        this.civPersonas = civPersonas;
+        this.civEstadoMovimientos = civEstadoMovimientos;
+        this.civUsuarios = civUsuarios;
+        this.civFasesTrabajos = civFasesTrabajos;
     }
-    public CivMovimientos(BigDecimal movId, CivUsuarios civUsuarios, CivPersonas civPersonas, CivFasesTrabajos civFasesTrabajos, CivEstadoMovimientos civEstadoMovimientos, CivDeudas civDeudas, Date movFechaproceso) {
+    public CivMovimientos(BigDecimal movId, CivDeudas civDeudas, CivPersonas civPersonas, CivEstadoMovimientos civEstadoMovimientos, CivUsuarios civUsuarios, CivFasesTrabajos civFasesTrabajos, Date movFechaproceso) {
        this.movId = movId;
-       this.civUsuarios = civUsuarios;
-       this.civPersonas = civPersonas;
-       this.civFasesTrabajos = civFasesTrabajos;
-       this.civEstadoMovimientos = civEstadoMovimientos;
        this.civDeudas = civDeudas;
+       this.civPersonas = civPersonas;
+       this.civEstadoMovimientos = civEstadoMovimientos;
+       this.civUsuarios = civUsuarios;
+       this.civFasesTrabajos = civFasesTrabajos;
        this.movFechaproceso = movFechaproceso;
     }
    
@@ -48,12 +48,12 @@ public class CivMovimientos  implements java.io.Serializable {
     public void setMovId(BigDecimal movId) {
         this.movId = movId;
     }
-    public CivUsuarios getCivUsuarios() {
-        return this.civUsuarios;
+    public CivDeudas getCivDeudas() {
+        return this.civDeudas;
     }
     
-    public void setCivUsuarios(CivUsuarios civUsuarios) {
-        this.civUsuarios = civUsuarios;
+    public void setCivDeudas(CivDeudas civDeudas) {
+        this.civDeudas = civDeudas;
     }
     public CivPersonas getCivPersonas() {
         return this.civPersonas;
@@ -62,13 +62,6 @@ public class CivMovimientos  implements java.io.Serializable {
     public void setCivPersonas(CivPersonas civPersonas) {
         this.civPersonas = civPersonas;
     }
-    public CivFasesTrabajos getCivFasesTrabajos() {
-        return this.civFasesTrabajos;
-    }
-    
-    public void setCivFasesTrabajos(CivFasesTrabajos civFasesTrabajos) {
-        this.civFasesTrabajos = civFasesTrabajos;
-    }
     public CivEstadoMovimientos getCivEstadoMovimientos() {
         return this.civEstadoMovimientos;
     }
@@ -76,12 +69,19 @@ public class CivMovimientos  implements java.io.Serializable {
     public void setCivEstadoMovimientos(CivEstadoMovimientos civEstadoMovimientos) {
         this.civEstadoMovimientos = civEstadoMovimientos;
     }
-    public CivDeudas getCivDeudas() {
-        return this.civDeudas;
+    public CivUsuarios getCivUsuarios() {
+        return this.civUsuarios;
     }
     
-    public void setCivDeudas(CivDeudas civDeudas) {
-        this.civDeudas = civDeudas;
+    public void setCivUsuarios(CivUsuarios civUsuarios) {
+        this.civUsuarios = civUsuarios;
+    }
+    public CivFasesTrabajos getCivFasesTrabajos() {
+        return this.civFasesTrabajos;
+    }
+    
+    public void setCivFasesTrabajos(CivFasesTrabajos civFasesTrabajos) {
+        this.civFasesTrabajos = civFasesTrabajos;
     }
     public Date getMovFechaproceso() {
         return this.movFechaproceso;

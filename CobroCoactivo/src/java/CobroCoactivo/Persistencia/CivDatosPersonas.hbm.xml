@@ -1,18 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDatosPersonas" table="CIV_DATOS_PERSONAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="datperId" type="big_decimal">
             <column name="DATPER_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
-        <many-to-one name="civTipoDatosPersonas" class="CobroCoactivo.Persistencia.CivTipoDatosPersonas" fetch="select">
-            <column name="DATPER_TIPDATPER_FK" precision="22" scale="0" not-null="true">
-                <comment>Campo que guarda el ID del tipo de datos que se almacena, y es FOREIGN KEY de la tabla CIV_TIPO_DATOS_PERSONAS</comment>
-            </column>
-        </many-to-one>
         <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
             <column name="DATPER_PERSONA_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que almacena el ID de la persona que hace refencia mediante de una FOREIGN KEY a la tabla CIV_PERSONAS</comment>
@@ -21,6 +16,11 @@
         <many-to-one name="civEstadoDatosPersonas" class="CobroCoactivo.Persistencia.CivEstadoDatosPersonas" fetch="select">
             <column name="DATPER_ESTDATPER_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que almacena el ID del estado del registro, que es FOREIGN KEY hace refencia a la tabla CIV_ESTADO_DATO_PERSONAS</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civTipoDatosPersonas" class="CobroCoactivo.Persistencia.CivTipoDatosPersonas" fetch="select">
+            <column name="DATPER_TIPDATPER_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guarda el ID del tipo de datos que se almacena, y es FOREIGN KEY de la tabla CIV_TIPO_DATOS_PERSONAS</comment>
             </column>
         </many-to-one>
         <property name="datperDescripcion" type="string">

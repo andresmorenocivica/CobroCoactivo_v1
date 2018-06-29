@@ -102,7 +102,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         List<CivFasesTrabajos> listaCivFasesTrabajoses = getFasesTrabajoDAO().listarFasesTrabajo(beanGestionMovimientos.getEtapaTrabajoSeleccionada().getId());
         if (listaCivFasesTrabajoses != null && listaCivFasesTrabajoses.size() > 0) {
             for (CivFasesTrabajos civFasesTrabajose : listaCivFasesTrabajoses) {
-                FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajose, civFasesTrabajose.getCivEstadoFasesTrabajosByEstfastraId());
+                FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajose, civFasesTrabajose.getCivEstadoFasesTrabajos());
                 beanGestionMovimientos.getEtapaTrabajoSeleccionada().getListaFasesTrabajo().add(fasesTrabajos);
             }
         }

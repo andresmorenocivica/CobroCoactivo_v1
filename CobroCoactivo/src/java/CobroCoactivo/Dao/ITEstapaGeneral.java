@@ -9,6 +9,7 @@ import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import java.io.Serializable;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -16,6 +17,14 @@ import java.util.List;
  */
 public interface ITEstapaGeneral extends ITGeneryHibernateDao<CivEtapasGenerales, Integer>{
     
-        List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(int id) throws Exception ;
+    
+        /**
+         *  trae una lista de la etapa general
+         * @param session 
+         * @param id del civ plan general
+         * @return list CivEtapasGenerales
+         * @throws Exception 
+         */
+        List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(Session session, int id) throws Exception ;
     
 }

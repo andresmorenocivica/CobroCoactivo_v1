@@ -5,7 +5,6 @@ import CobroCoactivo.Persistencia.CivEstadoPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import java.util.Date;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotEmpty;
 
 
 /**
@@ -21,6 +20,7 @@ public class PlanGenerales {
     private String descripcion;
 
     private Date Fechaproceso;
+    private boolean  selecionado;
 
     public PlanGenerales() {
     }
@@ -94,4 +94,19 @@ public class PlanGenerales {
         this.Fechaproceso = Fechaproceso;
     }
 
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
+    }
+
+  
 }

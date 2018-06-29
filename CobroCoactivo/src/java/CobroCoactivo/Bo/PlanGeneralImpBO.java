@@ -33,9 +33,9 @@ import CobroCoactivo.Persistencia.CivEstadoEtapasGenerales;
 import CobroCoactivo.Persistencia.CivEstadoFasesGenerales;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import CobroCoactivo.Persistencia.CivFasesGenerales;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -44,6 +44,7 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.primefaces.context.RequestContext;
 
 public class PlanGeneralImpBO implements PlanGeneralBO {
@@ -88,7 +89,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
-        List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(bean.getPlanGenerales().getId());
+         Session session = HibernateUtil.getSessionFactory().openSession();
+        List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session,bean.getPlanGenerales().getId());
         if (listCivEtapasGenerales != null) {
             bean.setListadoEtapasGeneraleses(new ArrayList<>());
             for (CivEtapasGenerales listCivEtapasGenerale : listCivEtapasGenerales) {
@@ -110,10 +112,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         } else {
             bean.setListadoEtapasGeneraleses(new ArrayList<>());
         }
+        
+        session.close();
     }
 
     @Override
     public void ActualizarPlanGeneral(BeanPlanGeneral bean) throws Exception {
+         Session session = HibernateUtil.getSessionFactory().openSession();
         boolean flag = false;
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
@@ -123,7 +128,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civPlanGenerales.setPlagenFechaproceso(new Date());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
         if (bean.getIdEstadoGeneral() != 1) {
-            List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(civPlanGenerales.getPlagenId().intValue());
+            List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral( session, civPlanGenerales.getPlagenId().intValue());
             if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
                 for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
                     if (civEtapasGenerales.getCivEstadoEtapasGenerales().getEstetagenId().intValue() == 1) {
@@ -153,10 +158,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Plan actualizado correctamente", null));
         }
+        
+        session.close();
     }
 
     @Override
     public void ActualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         boolean validador = false;
         CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
         CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
@@ -173,7 +181,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 
         if (bean.getIdEstapaGeneral() != 1) {
-            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(bean.getEtapasGenerales().getEtagenId().intValue());
+            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session  ,bean.getEtapasGenerales().getEtagenId().intValue());
             if (listCivFasesGenerales != null && listCivFasesGenerales.size() > 0) {
                 for (CivFasesGenerales civFasesGenerales : listCivFasesGenerales) {
                     if (civFasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId().intValue() == 1) {
@@ -206,6 +214,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "etapa Actualizado Correctamente", null));
         }
+        
+        session.close();
     }
 
     @Override
@@ -254,14 +264,35 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civPlanGenerales.setPlagenFechaproceso(new Date());
         getiTPlanGeneral().create(civPlanGenerales);
         List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
-        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Persuasiva", new Date(), "FALSE", new BigDecimal(1)));
-        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Juridica", new Date(), "TRUE", new BigDecimal(2)));
-        civEtapaGeneralesPorDefecto.add(new CivEtapasGenerales(civPlanGenerales, new CivEstadoEtapasGenerales(new BigDecimal(1)), "Embargo", new Date(), "TRUE", new BigDecimal(3)));
+        CivEtapasGenerales persuasiva = new CivEtapasGenerales();
+        persuasiva.setCivPlanGenerales(civPlanGenerales);
+        persuasiva.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+        persuasiva.setEtagenDescripcion("Persuasiva");
+        persuasiva.setEtagenFechaproceso(new Date());
+        persuasiva.setEtagenObligatorio("FALSE");
+        persuasiva.setEtagenPrioridad(new BigDecimal(1));
+        CivEtapasGenerales juridica = new CivEtapasGenerales();
+        juridica.setCivPlanGenerales(civPlanGenerales);
+        juridica.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+        juridica.setEtagenDescripcion("Juridica");
+        juridica.setEtagenFechaproceso(new Date());
+        juridica.setEtagenObligatorio("TRUE");
+        juridica.setEtagenPrioridad(new BigDecimal(2));
+        CivEtapasGenerales embargo = new CivEtapasGenerales();
+        embargo.setCivPlanGenerales(civPlanGenerales);
+        embargo.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+        embargo.setEtagenDescripcion("Embargo");
+        embargo.setEtagenFechaproceso(new Date());
+        embargo.setEtagenObligatorio("TRUE");
+        embargo.setEtagenPrioridad(new BigDecimal(3));
+        civEtapaGeneralesPorDefecto.add(persuasiva);
+        civEtapaGeneralesPorDefecto.add(juridica);
+        civEtapaGeneralesPorDefecto.add(embargo);
         for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
             getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
         }
         bean.init();
-        
+
     }
 
     @Override
@@ -302,10 +333,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#faseGeneral').modal('hide')");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente",null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente", null));
             listarFasesGeneralesPorEtapa(bean);
-            
-            
+
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Dia minimo debe ser menor que dia maximo", null));
@@ -314,8 +344,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception {
+         Session session = HibernateUtil.getSessionFactory().openSession();
         bean.setListFasesGenerales(new ArrayList<>());
-        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(bean.getEtapasGenerales().getEtagenId().intValue());
+        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral( session, bean.getEtapasGenerales().getEtagenId().intValue());
         for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
             DocumenGenerales documenGenerales = new DocumenGenerales();
             documenGenerales.setDocgenId(civFasesGenerale.getCivDocumenGenerales().getDocgenId());
@@ -340,7 +371,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
         }
         
-       
+        session.close();
 
     }
 

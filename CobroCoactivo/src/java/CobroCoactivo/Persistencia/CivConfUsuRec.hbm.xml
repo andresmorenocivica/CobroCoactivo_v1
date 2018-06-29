@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivConfUsuRec" table="CIV_CONF_USU_REC" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara las configuraciones que se hagan</comment>
@@ -9,6 +9,11 @@
             <column name="CONFUSUREC_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
+        <many-to-one name="civEstadoConfusurec" class="CobroCoactivo.Persistencia.CivEstadoConfusurec" fetch="select">
+            <column name="CONFUSUREC_ESTADO_FK" precision="22" scale="0" not-null="true">
+                <comment>Campo que guardara el ESTADO de la configuracion, que hace refencia a la Tabla CIV_ESTADO_CONFUSUREC</comment>
+            </column>
+        </many-to-one>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select" lazy="false">
             <column name="CONFUSUREC_USUARIOS_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guardara el usuario que hizo la configurarion, que hace refencia a la tabla CIV_USUARIO</comment>
@@ -17,11 +22,6 @@
         <many-to-one name="civRecursos" class="CobroCoactivo.Persistencia.CivRecursos" fetch="select" lazy="false">
             <column name="CONFUSUREC_RECURSO_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guardara el Recurso al cual se le hizo la configuracion, que hace refencia a la tabla CIV_RECURSO</comment>
-            </column>
-        </many-to-one>
-        <many-to-one name="civEstadoConfusurec" class="CobroCoactivo.Persistencia.CivEstadoConfusurec" fetch="select">
-            <column name="CONFUSUREC_ESTADO_FK" precision="22" scale="0" not-null="true">
-                <comment>Campo que guardara el ESTADO de la configuracion, que hace refencia a la Tabla CIV_ESTADO_CONFUSUREC</comment>
             </column>
         </many-to-one>
         <property name="confusurecFechaproceso" type="date">

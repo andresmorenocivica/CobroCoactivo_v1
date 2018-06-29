@@ -9,6 +9,7 @@ import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.util.List;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -31,5 +32,7 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
         session.close();
         return null;
     }
+    
+  
 
 }

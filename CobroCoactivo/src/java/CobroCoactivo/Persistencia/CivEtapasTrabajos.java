@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -18,24 +18,30 @@ public class CivEtapasTrabajos  implements java.io.Serializable {
      private CivEstadoEtapaTrabajos civEstadoEtapaTrabajos;
      private String etatraDescricion;
      private Date etatraFechaproceso;
+     private String etatraObligatorio;
+     private BigDecimal etatraPrioridad;
      private Set civFasesTrabajoses = new HashSet(0);
 
     public CivEtapasTrabajos() {
     }
 
 	
-    public CivEtapasTrabajos(BigDecimal etatraId, CivPlanTrabajos civPlanTrabajos, CivEstadoEtapaTrabajos civEstadoEtapaTrabajos, String etatraDescricion) {
+    public CivEtapasTrabajos(BigDecimal etatraId, CivPlanTrabajos civPlanTrabajos, CivEstadoEtapaTrabajos civEstadoEtapaTrabajos, String etatraDescricion, String etatraObligatorio, BigDecimal etatraPrioridad) {
         this.etatraId = etatraId;
         this.civPlanTrabajos = civPlanTrabajos;
         this.civEstadoEtapaTrabajos = civEstadoEtapaTrabajos;
         this.etatraDescricion = etatraDescricion;
+        this.etatraObligatorio = etatraObligatorio;
+        this.etatraPrioridad = etatraPrioridad;
     }
-    public CivEtapasTrabajos(BigDecimal etatraId, CivPlanTrabajos civPlanTrabajos, CivEstadoEtapaTrabajos civEstadoEtapaTrabajos, String etatraDescricion, Date etatraFechaproceso, Set civFasesTrabajoses) {
+    public CivEtapasTrabajos(BigDecimal etatraId, CivPlanTrabajos civPlanTrabajos, CivEstadoEtapaTrabajos civEstadoEtapaTrabajos, String etatraDescricion, Date etatraFechaproceso, String etatraObligatorio, BigDecimal etatraPrioridad, Set civFasesTrabajoses) {
        this.etatraId = etatraId;
        this.civPlanTrabajos = civPlanTrabajos;
        this.civEstadoEtapaTrabajos = civEstadoEtapaTrabajos;
        this.etatraDescricion = etatraDescricion;
        this.etatraFechaproceso = etatraFechaproceso;
+       this.etatraObligatorio = etatraObligatorio;
+       this.etatraPrioridad = etatraPrioridad;
        this.civFasesTrabajoses = civFasesTrabajoses;
     }
    
@@ -73,6 +79,20 @@ public class CivEtapasTrabajos  implements java.io.Serializable {
     
     public void setEtatraFechaproceso(Date etatraFechaproceso) {
         this.etatraFechaproceso = etatraFechaproceso;
+    }
+    public String getEtatraObligatorio() {
+        return this.etatraObligatorio;
+    }
+    
+    public void setEtatraObligatorio(String etatraObligatorio) {
+        this.etatraObligatorio = etatraObligatorio;
+    }
+    public BigDecimal getEtatraPrioridad() {
+        return this.etatraPrioridad;
+    }
+    
+    public void setEtatraPrioridad(BigDecimal etatraPrioridad) {
+        this.etatraPrioridad = etatraPrioridad;
     }
     public Set getCivFasesTrabajoses() {
         return this.civFasesTrabajoses;

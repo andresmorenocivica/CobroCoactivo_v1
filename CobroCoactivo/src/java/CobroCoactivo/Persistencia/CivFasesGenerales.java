@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 23/06/2018 10:46:28 AM by Hibernate Tools 4.3.1
+// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -13,8 +13,8 @@ public class CivFasesGenerales  implements java.io.Serializable {
 
      private BigDecimal fasgenId;
      private CivEtapasGenerales civEtapasGenerales;
-     private CivEstadoFasesGenerales civEstadoFasesGenerales;
      private CivDocumenGenerales civDocumenGenerales;
+     private CivEstadoFasesGenerales civEstadoFasesGenerales;
      private String fasgenDescripcion;
      private Date fasgenFechaproceso;
      private BigDecimal fasgenDianim;
@@ -24,20 +24,11 @@ public class CivFasesGenerales  implements java.io.Serializable {
     public CivFasesGenerales() {
     }
 
-	
-    public CivFasesGenerales(BigDecimal fasgenId, CivEtapasGenerales civEtapasGenerales, CivEstadoFasesGenerales civEstadoFasesGenerales, CivDocumenGenerales civDocumenGenerales, String fasgenDescripcion, String fasgenObligatorio) {
-        this.fasgenId = fasgenId;
-        this.civEtapasGenerales = civEtapasGenerales;
-        this.civEstadoFasesGenerales = civEstadoFasesGenerales;
-        this.civDocumenGenerales = civDocumenGenerales;
-        this.fasgenDescripcion = fasgenDescripcion;
-        this.fasgenObligatorio = fasgenObligatorio;
-    }
-    public CivFasesGenerales(BigDecimal fasgenId, CivEtapasGenerales civEtapasGenerales, CivEstadoFasesGenerales civEstadoFasesGenerales, CivDocumenGenerales civDocumenGenerales, String fasgenDescripcion, Date fasgenFechaproceso, BigDecimal fasgenDianim, BigDecimal fasgenDiamax, String fasgenObligatorio) {
+    public CivFasesGenerales(BigDecimal fasgenId, CivEtapasGenerales civEtapasGenerales, CivDocumenGenerales civDocumenGenerales, CivEstadoFasesGenerales civEstadoFasesGenerales, String fasgenDescripcion, Date fasgenFechaproceso, BigDecimal fasgenDianim, BigDecimal fasgenDiamax, String fasgenObligatorio) {
        this.fasgenId = fasgenId;
        this.civEtapasGenerales = civEtapasGenerales;
-       this.civEstadoFasesGenerales = civEstadoFasesGenerales;
        this.civDocumenGenerales = civDocumenGenerales;
+       this.civEstadoFasesGenerales = civEstadoFasesGenerales;
        this.fasgenDescripcion = fasgenDescripcion;
        this.fasgenFechaproceso = fasgenFechaproceso;
        this.fasgenDianim = fasgenDianim;
@@ -59,19 +50,19 @@ public class CivFasesGenerales  implements java.io.Serializable {
     public void setCivEtapasGenerales(CivEtapasGenerales civEtapasGenerales) {
         this.civEtapasGenerales = civEtapasGenerales;
     }
-    public CivEstadoFasesGenerales getCivEstadoFasesGenerales() {
-        return this.civEstadoFasesGenerales;
-    }
-    
-    public void setCivEstadoFasesGenerales(CivEstadoFasesGenerales civEstadoFasesGenerales) {
-        this.civEstadoFasesGenerales = civEstadoFasesGenerales;
-    }
     public CivDocumenGenerales getCivDocumenGenerales() {
         return this.civDocumenGenerales;
     }
     
     public void setCivDocumenGenerales(CivDocumenGenerales civDocumenGenerales) {
         this.civDocumenGenerales = civDocumenGenerales;
+    }
+    public CivEstadoFasesGenerales getCivEstadoFasesGenerales() {
+        return this.civEstadoFasesGenerales;
+    }
+    
+    public void setCivEstadoFasesGenerales(CivEstadoFasesGenerales civEstadoFasesGenerales) {
+        this.civEstadoFasesGenerales = civEstadoFasesGenerales;
     }
     public String getFasgenDescripcion() {
         return this.fasgenDescripcion;

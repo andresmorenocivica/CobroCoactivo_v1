@@ -1,36 +1,36 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivFasesTrabajos" table="CIV_FASES_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="fastraId" type="big_decimal">
             <column name="FASTRA_ID" precision="22" scale="0" />
-            <generator class="foreign">
-                <param name="property">civEstadoFasesTrabajosByEstfastraId</param>
-            </generator>
+            <generator class="assigned" />
         </id>
-        <many-to-one name="civReporteTrabajos" class="CobroCoactivo.Persistencia.CivReporteTrabajos" fetch="select">
-            <column name="FASTRA_REPTRA_FK" precision="22" scale="0" />
-        </many-to-one>
         <many-to-one name="civEtapasTrabajos" class="CobroCoactivo.Persistencia.CivEtapasTrabajos" fetch="select">
             <column name="FASTRA_ETATRA_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <one-to-one name="civEstadoFasesTrabajosByEstfastraId" class="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" constrained="true"></one-to-one>
-        <many-to-one name="civEstadoFasesTrabajosByFastraEstfastraFk" class="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" fetch="select">
+        <many-to-one name="civReporteTrabajos" class="CobroCoactivo.Persistencia.CivReporteTrabajos" fetch="select">
+            <column name="FASTRA_REPTRA_FK" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="civEstadoFasesTrabajos" class="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" fetch="select">
             <column name="FASTRA_ESTFASTRA_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="fastraDescripcion" type="string">
             <column name="FASTRA_DESCRIPCION" length="100" not-null="true" />
         </property>
         <property name="fastraFechaproceso" type="date">
-            <column name="FASTRA_FECHAPROCESO" length="7" />
+            <column name="FASTRA_FECHAPROCESO" length="7" not-null="true" />
         </property>
         <property name="fastraDianim" type="big_decimal">
-            <column name="FASTRA_DIANIM" precision="22" scale="0" />
+            <column name="FASTRA_DIANIM" precision="22" scale="0" not-null="true" />
         </property>
         <property name="fastraDiamax" type="big_decimal">
-            <column name="FASTRA_DIAMAX" precision="22" scale="0" />
+            <column name="FASTRA_DIAMAX" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="fastraObligatorio" type="string">
+            <column name="FASTRA_OBLIGATORIO" length="20" not-null="true" />
         </property>
         <set name="civMovimientoses" table="CIV_MOVIMIENTOS" inverse="true" lazy="true" fetch="select">
             <key>

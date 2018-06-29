@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivAbogados" table="CIV_ABOGADOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="aboId" type="big_decimal">
@@ -39,7 +39,7 @@
             </column>
         </property>
         <property name="aboFirma" type="string">
-            <column name="ABO_FIRMA" length="0">
+            <column name="ABO_FIRMA" length="1000">
                 <comment>Se guardara la firma del abogado</comment>
             </column>
         </property>

@@ -1,34 +1,34 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 23/06/2018 10:46:29 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDeudas" table="CIV_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="deuId" type="big_decimal">
             <column name="DEU_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
-        <many-to-one name="civTipoDeudas" class="CobroCoactivo.Persistencia.CivTipoDeudas" fetch="select">
-            <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true">
-                <comment>Tipo de deuda, que hace referencia ala tabla CIV_TIPO_DEUDAS Ej: Impuesto, Comparendos</comment>
-            </column>
-        </many-to-one>
-        <many-to-one name="civPlanTrabajos" class="CobroCoactivo.Persistencia.CivPlanTrabajos" fetch="select">
-            <column name="DEU_PLATRA_FK" precision="22" scale="0" not-null="true" />
-        </many-to-one>
         <many-to-one name="civPersonas" class="CobroCoactivo.Persistencia.CivPersonas" fetch="select">
             <column name="DEU_PER_FK" precision="22" scale="0" not-null="true">
                 <comment>ID de la persona que pertenece la deuda.</comment>
             </column>
         </many-to-one>
-        <many-to-one name="civEstadoDeudas" class="CobroCoactivo.Persistencia.CivEstadoDeudas" fetch="select">
-            <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true">
-                <comment>estado de la deuda, EJ:activo, inactico. Hace refencia a la tabla CIV_ESTADO_DEUDAS</comment>
-            </column>
-        </many-to-one>
         <many-to-one name="civCobroDeudas" class="CobroCoactivo.Persistencia.CivCobroDeudas" fetch="select">
             <column name="DEU_COBDEU_FK" precision="22" scale="0" not-null="true">
                 <comment>Medicion de cobro ej:Facil cobro, Mediano cobro, Dificil cobro</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civPlanTrabajos" class="CobroCoactivo.Persistencia.CivPlanTrabajos" fetch="select">
+            <column name="DEU_PLATRA_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civTipoDeudas" class="CobroCoactivo.Persistencia.CivTipoDeudas" fetch="select">
+            <column name="DEU_TIPDEU_FK" precision="22" scale="0" not-null="true">
+                <comment>Tipo de deuda, que hace referencia ala tabla CIV_TIPO_DEUDAS Ej: Impuesto, Comparendos</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="civEstadoDeudas" class="CobroCoactivo.Persistencia.CivEstadoDeudas" fetch="select">
+            <column name="DEU_ESTDEU_FK" precision="22" scale="0" not-null="true">
+                <comment>estado de la deuda, EJ:activo, inactico. Hace refencia a la tabla CIV_ESTADO_DEUDAS</comment>
             </column>
         </many-to-one>
         <property name="deuFechadeuda" type="date">
