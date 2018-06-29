@@ -18,6 +18,7 @@ public class PlanTrabajos implements java.io.Serializable {
     private Date Fechaproceso;
     private List<EtapasTrabajos> listaEtapasTrabajo = new ArrayList<>();
     private int countDeudas = 0;
+    private List<Deudas>listaDeudas = new ArrayList<>();
    
     
     
@@ -119,6 +120,20 @@ public class PlanTrabajos implements java.io.Serializable {
      */
     public void setCountDeudas(int countDeudas) {
         this.countDeudas = countDeudas;
+    }
+
+    /**
+     * @return the listaDeudas
+     */
+    public List<Deudas> getListaDeudas() {
+        return listaDeudas;
+    }
+
+    /**
+     * @param listaDeudas the listaDeudas to set
+     */
+    public void setListaDeudas(List<Deudas> listaDeudas) {
+        this.listaDeudas = listaDeudas;
     }
 
 

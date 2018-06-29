@@ -6,6 +6,7 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionMovimientos;
+import CobroCoactivo.Beans.viejo_BeanGestionMovimientos;
 
 /**
  *
@@ -13,7 +14,7 @@ import CobroCoactivo.Beans.BeanGestionMovimientos;
  */
 public interface GestionMovimientosBO {
     void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
-    void buscarDeudasByTipoBusqueda(BeanGestionMovimientos beanGestionMovimientos) throws Exception;
+    void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception;
     void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void cargarFasesTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void filtarListaDeudaTabla(BeanGestionMovimientos beanGestionMovimientos)throws Exception;

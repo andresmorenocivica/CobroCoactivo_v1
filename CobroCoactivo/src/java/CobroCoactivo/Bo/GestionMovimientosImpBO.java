@@ -9,29 +9,35 @@ import CobroCoactivo.Beans.BeanGestionMovimientos;
 import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoFasesTrabajo;
+import CobroCoactivo.Dao.DaoMovimiento;
 import CobroCoactivo.Dao.DaoPersonas;
+import CobroCoactivo.Dao.DaoPlanGeneral;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesTrabajo;
+import CobroCoactivo.Dao.ITMovimiento;
 import CobroCoactivo.Dao.ITPersonas;
+import CobroCoactivo.Dao.ITPlanGeneral;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanTrabajos;
 import CobroCoactivo.Persistencia.CivDeudas;
+import CobroCoactivo.Persistencia.CivEstadoDeudas;
+import CobroCoactivo.Persistencia.CivEstadoPlanTrabajos;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
+import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.DateUtility;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.hibernate.Session;
 
 /**
  *
@@ -44,6 +50,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     private ITDeudas deudasDAO;
     private ITPersonas personaDAO;
     private ITFasesTrabajo fasesTrabajoDAO;
+    private ITMovimiento movimientoDAO;
 
     public GestionMovimientosImpBO() {
         planTrabajoDAO = new DaoPlanTrabajo();
@@ -51,57 +58,108 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         personaDAO = new DaoPersonas();
         etapasTrabajoDAO = new DaoEtapasTrabajo();
         fasesTrabajoDAO = new DaoFasesTrabajo();
+        movimientoDAO = new DaoMovimiento();
     }
 
     @Override
     public void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-            List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().findAll();
-            for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
-                PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
-                beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
+         List<Deudas> listDeudas = beanGestionMovimientos.getListaDeudas();
+        List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().getAllPlanTrabajo();
+        for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
+            PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
+            List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(planTrabajos.getId());
+            if (listCivEtapasTrabajos != null) {
+                for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
+                    EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
+                    planTrabajos.getListaEtapasTrabajo().add(etapasTrabajos);
+                }
             }
+            List<Deudas> listaDeudarRemovidas = new ArrayList<>();
+            if (listDeudas != null) {
+                for (Deudas deudas : listDeudas) {
+                    if (deudas.getPlanTrabajoDeuda().getId() == civPlanTrabajos.getPlatraId().intValue()) {
+                        planTrabajos.getListaDeudas().add(deudas);
+                        listaDeudarRemovidas.add(deudas);
+                    }
+                }
+                for (Deudas deudarRemovida : listaDeudarRemovidas) {
+                    listDeudas.remove(deudarRemovida);
+                }
+            }
+            beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
+        }
     }
 
     @Override
-    public void buscarDeudasByTipoBusqueda(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
+    public void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         List<CivDeudas> listaCivDeudas = new ArrayList<>();
-        switch (beanGestionMovimientos.getTipoBusqueda()) {
-            case 1:
-                // tipo busqueda por fecha de adquisicion de la deuda
-                listaCivDeudas = getDeudasDAO().listarDeudasByFechaAdquisicion(beanGestionMovimientos.getFechaAdquisicionInicial(), beanGestionMovimientos.getFechaAdquisicionFinal());
-                break;
-            case 2:
-                break;
-        }
-        if (listaCivDeudas.size() > 0) {
+        listaCivDeudas = getDeudasDAO().findAll();
+        if (listaCivDeudas != null) {
             for (CivDeudas civDeuda : listaCivDeudas) {
-                CivPersonas civPersonas = getPersonaDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
-                CivPlanTrabajos civPlanTrabajo = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
-                civDeuda.setCivPlanTrabajos(civPlanTrabajo);
-                Deudas deuda = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civPlanTrabajo, civDeuda.getCivTipoDeudas(), civPersonas);
-                deuda.setDiasHabilesDeuda(DateUtility.fechasDiferenciaEnDias(deuda.getFechaproceso(), new Date()));
-                beanGestionMovimientos.getListaDeudas().add(deuda);
-                beanGestionMovimientos.getListaDeudasTabla().add(deuda);
-            }
-        }
 
+                CivPersonas civPersonas = getPersonaDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
+                CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
+                Deudas deudas = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas);
+                int diasDeuda = DateUtility.fechasDiferenciaEnDias(deudas.getFechaproceso(), new Date());
+                deudas.setDiasHabilesDeuda(diasDeuda);
+                beanGestionMovimientos.getListaDeudas().add(deudas);
+            }
+
+        }
     }
 
     @Override
     public void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
+        List<Deudas> listDeudas = beanGestionMovimientos.getPlanTrabajoSeleccionado().getListaDeudas();
         List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId());
-        for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
-            EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
-            beanGestionMovimientos.getPlanTrabajoSeleccionado().getListaEtapasTrabajo().add(etapasTrabajos);
+        if (listCivEtapasTrabajos != null) {
+            for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
+                EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
+                List<CivFasesTrabajos> listcivCivFasesTrabajos = getFasesTrabajoDAO().listarFasesTrabajo(etapasTrabajos.getId());
+                if (listcivCivFasesTrabajos != null) {
+                    for (CivFasesTrabajos civCivFasesTrabajo : listcivCivFasesTrabajos) {
+                        FasesTrabajos fasesTrabajos = new FasesTrabajos(civCivFasesTrabajo, civCivFasesTrabajo.getCivEstadoFasesTrabajos());
+                        if (listDeudas != null) {
+                            List<Deudas> listaDeudarRemovidas = new ArrayList<>();
+                            for (Deudas deuda : listDeudas) {
+                                CivMovimientos civMovimientos = getMovimientoDAO().getMovimientoByDeudaByFaseTrabajo(deuda.getId(), fasesTrabajos.getId());
+                                if (civMovimientos == null) {
+                                    etapasTrabajos.getListDeudas().add(deuda);
+                                    listaDeudarRemovidas.add(deuda);
+                                }
+                            }
+                            for (Deudas deudarRemovida : listaDeudarRemovidas) {
+                                listDeudas.remove(deudarRemovida);
+                            }
+                        }
+                        etapasTrabajos.getListaFasesTrabajo().add(fasesTrabajos);
+                    }
+                }
+                beanGestionMovimientos.getPlanTrabajoSeleccionado().getListaEtapasTrabajo().add(etapasTrabajos);
+            }
         }
     }
 
     @Override
     public void cargarFasesTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
+        List<Deudas> listDeudas = beanGestionMovimientos.getEtapaTrabajoSeleccionada().getListDeudas();
         List<CivFasesTrabajos> listaCivFasesTrabajoses = getFasesTrabajoDAO().listarFasesTrabajo(beanGestionMovimientos.getEtapaTrabajoSeleccionada().getId());
         if (listaCivFasesTrabajoses != null && listaCivFasesTrabajoses.size() > 0) {
             for (CivFasesTrabajos civFasesTrabajose : listaCivFasesTrabajoses) {
                 FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajose, civFasesTrabajose.getCivEstadoFasesTrabajos());
+                if (listDeudas != null) {
+                    List<Deudas> listaDeudarRemovidas = new ArrayList<>();
+                    for (Deudas deuda : listDeudas) {
+                        CivMovimientos civMovimientos = getMovimientoDAO().getMovimientoByDeudaByFaseTrabajo(deuda.getId(), fasesTrabajos.getId());
+                        if (civMovimientos == null) {
+                            fasesTrabajos.getListaDeudas().add(deuda);
+                            listaDeudarRemovidas.add(deuda);
+                        }
+                    }
+                    for (Deudas deudarRemovida : listaDeudarRemovidas) {
+                        listDeudas.remove(deudarRemovida);
+                    }
+                }
                 beanGestionMovimientos.getEtapaTrabajoSeleccionada().getListaFasesTrabajo().add(fasesTrabajos);
             }
         }
@@ -110,14 +168,15 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
 
     @Override
     public void filtarListaDeudaTabla(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-        List<Deudas> listaDeudas = new ArrayList<>();
-        for (Deudas deuda : beanGestionMovimientos.getListaDeudas()) {
-            if (beanGestionMovimientos.getPlanTrabajoSeleccionado().getId() == deuda.getPlanTrabajoDeuda().getId()) {
-                listaDeudas.add(deuda);
-            }
-        }
-        beanGestionMovimientos.setListaDeudasTabla(new ArrayList<>());
-        beanGestionMovimientos.setListaDeudasTabla(listaDeudas);
+//        List<Deudas> listaDeudas = new ArrayList<>();
+//        for(Deudas deuda : beanGestionMovimientos.getListaDeudas()){
+//            if(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId() == deuda.getPlanTrabajoDeuda().getId()){
+//                listaDeudas.add(deuda);
+//            }
+//        }
+//        beanGestionMovimientos.setListaDeudasTabla(new ArrayList<>());
+//        beanGestionMovimientos.setListaDeudasTabla(listaDeudas);
+//        
 
     }
 
@@ -189,6 +248,20 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
      */
     public void setFasesTrabajoDAO(ITFasesTrabajo fasesTrabajoDAO) {
         this.fasesTrabajoDAO = fasesTrabajoDAO;
+    }
+
+    /**
+     * @return the movimientoDAO
+     */
+    public ITMovimiento getMovimientoDAO() {
+        return movimientoDAO;
+    }
+
+    /**
+     * @param movimientoDAO the movimientoDAO to set
+     */
+    public void setMovimientoDAO(ITMovimiento movimientoDAO) {
+        this.movimientoDAO = movimientoDAO;
     }
 
 }

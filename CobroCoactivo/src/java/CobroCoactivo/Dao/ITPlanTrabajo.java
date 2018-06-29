@@ -7,6 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
+import java.util.List;
 
 /**
  *
@@ -15,4 +16,6 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos, Integer> {
 
     public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo) throws Exception;
+    
+    public List<CivPlanTrabajos> getAllPlanTrabajo()throws Exception;
 }

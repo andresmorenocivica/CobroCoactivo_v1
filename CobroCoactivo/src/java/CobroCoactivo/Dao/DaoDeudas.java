@@ -10,6 +10,7 @@ import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -17,7 +18,7 @@ import org.hibernate.Session;
  *
  * @author emadrid
  */
-public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> implements ITDeudas{
+public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> implements ITDeudas {
 
     @Override
     public List<CivDeudas> listarDeudas(int Id_personas) throws Exception {
@@ -60,7 +61,7 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         session.close();
         return null;
     }
-    
+
     @Override
     public List<CivDeudas> listarDeudasByFechaAdquisicion(String fechaInicial, String fechaFinal) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -72,9 +73,33 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         //query.setDate("fechaFinal", fechaFinal);
         if (query.list().size() > 0) {
             return query.list();
-        }   
+        }
         session.close();
         return null;
     }
 
+    @Override
+    public long countDeudas(long idPlanTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "Select count(*) from CivDeudas where civPlanTrabajos.platraId = :idPlanTrabajo";
+        Query query = session.createQuery(hql);
+        query.setParameter("idPlanTrabajo", new BigDecimal(idPlanTrabajo));
+        long cantidad = (long) query.list().get(0);
+        session.close();
+        return cantidad;
+    }
+
+    @Override
+    public List<CivDeudas> listarDeudasByPlanTrabajo(int idPlanTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_PLATRA_FK=:idPlanTrabajo";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        query.setInteger("idPlanTrabajo", idPlanTrabajo);
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
+    }
 }

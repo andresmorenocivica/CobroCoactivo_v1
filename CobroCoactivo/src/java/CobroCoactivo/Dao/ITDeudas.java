@@ -23,5 +23,9 @@ public interface ITDeudas extends ITGeneryHibernateDao<CivDeudas, Integer>{
     public List<CivDeudas> listarDeudasByTipo(int tipoDeudas) throws Exception;
     
     public List<CivDeudas> listarDeudasByFechaAdquisicion(String fechaInicial,String fechaFinal) throws Exception ;
+    
+    public long countDeudas(long idPlanTrabajo) throws Exception;
+    
+    public List<CivDeudas> listarDeudasByPlanTrabajo(int idPlanTrabajo) throws Exception;
 
 }

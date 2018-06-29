@@ -21,6 +21,8 @@ public class EtapasTrabajos  implements java.io.Serializable {
      private String Descricion;
      private Date Fechaproceso;
      private List<FasesTrabajos> listaFasesTrabajo = new ArrayList<>();
+     private int cantidadDeudas;
+     private List<Deudas> listDeudas = new ArrayList<>();
 
     public EtapasTrabajos() {
     }
@@ -102,6 +104,34 @@ public class EtapasTrabajos  implements java.io.Serializable {
      */
     public void setListaFasesTrabajo(List<FasesTrabajos> listaFasesTrabajo) {
         this.listaFasesTrabajo = listaFasesTrabajo;
+    }
+
+    /**
+     * @return the cantidadDeudas
+     */
+    public int getCantidadDeudas() {
+        return cantidadDeudas;
+    }
+
+    /**
+     * @param cantidadDeudas the cantidadDeudas to set
+     */
+    public void setCantidadDeudas(int cantidadDeudas) {
+        this.cantidadDeudas = cantidadDeudas;
+    }
+
+    /**
+     * @return the listDeudas
+     */
+    public List<Deudas> getListDeudas() {
+        return listDeudas;
+    }
+
+    /**
+     * @param listDeudas the listDeudas to set
+     */
+    public void setListDeudas(List<Deudas> listDeudas) {
+        this.listDeudas = listDeudas;
     }
 
     
