@@ -12,12 +12,14 @@ import CobroCoactivo.Dao.DaoFasesGenerales;
 import CobroCoactivo.Dao.DaoFasesTrabajo;
 import CobroCoactivo.Dao.DaoPlanGeneral;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
+import CobroCoactivo.Dao.DaoReporteTrabajos;
 import CobroCoactivo.Dao.ITEstapaGeneral;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesGenerales;
 import CobroCoactivo.Dao.ITFasesTrabajo;
 import CobroCoactivo.Dao.ITPlanGeneral;
 import CobroCoactivo.Dao.ITPlanTrabajo;
+import CobroCoactivo.Dao.ITReporteTrabajos;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanGenerales;
@@ -25,6 +27,7 @@ import CobroCoactivo.Modelo.PlanTrabajos;
 import CobroCoactivo.Persistencia.CivEstadoEtapaTrabajos;
 import CobroCoactivo.Persistencia.CivEstadoFasesTrabajos;
 import CobroCoactivo.Persistencia.CivEstadoPlanTrabajos;
+import CobroCoactivo.Persistencia.CivEstadoReporteTrabajos;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Persistencia.CivFasesGenerales;
@@ -54,6 +57,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     private ITEstapaGeneral iTEstapaGeneral;
     private ITFasesGenerales iTFasesGenerales;
     private ITFasesTrabajo iTFasesTrabajo;
+    private ITReporteTrabajos iTReporteTrabajos;
 
     /**
      * contructor e inicializador Dao
@@ -66,6 +70,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
         iTEstapaGeneral = new DaoEstapaGeneral();
         iTFasesGenerales = new DaoFasesGenerales();
         iTFasesTrabajo = new DaoFasesTrabajo();
+        iTReporteTrabajos = new DaoReporteTrabajos();
 
     }
 
@@ -145,16 +150,28 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                         civEtapasTrabajos.setEtatraPrioridad(etapaGeneral.getEtagenPrioridad());
                         //finaliza  la CivEtapasTrabajo a guardar
                         getiTEtapasTrabajo().create(civEtapasTrabajos);
-                        List<CivFasesGenerales> listFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, civEstadoEtapaTrabajos.getEstetatraId().intValue());
+                        List<CivFasesGenerales> listFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, civEtapasTrabajos.getEtatraId().intValue());
                         for (CivFasesGenerales fasesGenerales : listFasesGenerales) {
                             CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
-                            civEstadoEtapaTrabajos.setEstetatraId(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId());
-                            civEstadoEtapaTrabajos.setEstetatraDescripcion(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenDescripcion());
-                            civEstadoEtapaTrabajos.setEstetatraFechainicial(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechainicial());
-                            civEstadoEtapaTrabajos.setEstetatraFechafinal(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechafinal());
-                            civEstadoEtapaTrabajos.setEstetatraFechaproceso(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechaproceso());
+                            civEstadoFasesTrabajos.setEstfastraId(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId());
+                            civEstadoFasesTrabajos.setEstfastraDescripcion(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenDescripcion());
+                            civEstadoFasesTrabajos.setEstfastraFechainicial(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechainicial());
+                            civEstadoFasesTrabajos.setEstfastraFechafinal(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechafinal());
+                            civEstadoFasesTrabajos.setEstfastraFechaproceso(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenFechaproceso());
+                            CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                            civEstadoReporteTrabajos.setEstreptraId(fasesGenerales.getCivDocumenGenerales().getCivEstadoDocumengenerales().getEstdocgenId());
+                            civEstadoReporteTrabajos.setEstreptraDescripcion(fasesGenerales.getCivDocumenGenerales().getCivEstadoDocumengenerales().getEstdocgenDescripcion());
+                            civEstadoReporteTrabajos.setEstreptraFechainicial(fasesGenerales.getCivDocumenGenerales().getCivEstadoDocumengenerales().getEstdocgenFechainicial());
+                            civEstadoReporteTrabajos.setEstreptraFechafinal(fasesGenerales.getCivDocumenGenerales().getCivEstadoDocumengenerales().getEstdocgenFechafinal());
+                            civEstadoReporteTrabajos.setEstreptraFechaproceso(fasesGenerales.getCivDocumenGenerales().getCivEstadoDocumengenerales().getEstdocgenFechaproceso());
                             CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
                             civReporteTrabajos.setReptraId(fasesGenerales.getCivDocumenGenerales().getDocgenId());
+                            civReporteTrabajos.setReptraDescripcion(fasesGenerales.getCivDocumenGenerales().getDocgenDescripcion());
+                            civReporteTrabajos.setReptraFechaproceso(fasesGenerales.getCivDocumenGenerales().getDocgenFechaproceso());
+                            civReporteTrabajos.setReptraArchivo(fasesGenerales.getCivDocumenGenerales().getDocgenArchivo());
+                            civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                            getiTReporteTrabajos().create(civReporteTrabajos);
+                            //Objeto civFasesTrabajos
                             CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
                             civFasesTrabajos.setFastraId(fasesGenerales.getFasgenId());
                             civFasesTrabajos.setFastraDescripcion(fasesGenerales.getFasgenDescripcion());
@@ -190,7 +207,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
         beanGestionPlanTrabajo.setListFasesTrabajoses(new ArrayList<>());
         List<CivFasesTrabajos> listFasesTrabajose = getiTFasesTrabajo().listarFasesTrabajo(beanGestionPlanTrabajo.getEtapasTrabajos().getId());
         for (CivFasesTrabajos civFasesTrabajos : listFasesTrabajose) {
-            FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajos, civFasesTrabajos.getCivEstadoFasesTrabajos());
+            FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajos, civFasesTrabajos.getCivEstadoFasesTrabajos(),civFasesTrabajos.getCivReporteTrabajos());
             beanGestionPlanTrabajo.getListFasesTrabajoses().add(fasesTrabajos);
 
         }
@@ -278,6 +295,20 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
      */
     public void setiTFasesTrabajo(ITFasesTrabajo iTFasesTrabajo) {
         this.iTFasesTrabajo = iTFasesTrabajo;
+    }
+
+    /**
+     * @return the iTReporteTrabajos
+     */
+    public ITReporteTrabajos getiTReporteTrabajos() {
+        return iTReporteTrabajos;
+    }
+
+    /**
+     * @param iTReporteTrabajos the iTReporteTrabajos to set
+     */
+    public void setiTReporteTrabajos(ITReporteTrabajos iTReporteTrabajos) {
+        this.iTReporteTrabajos = iTReporteTrabajos;
     }
 
 }
