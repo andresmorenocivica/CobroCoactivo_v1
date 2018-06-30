@@ -114,7 +114,6 @@
                                                             <th>Dia Max</th>
                                                             <th>Obligatorio</th>
                                                             <th>Archivo</th>
-                                                            <th>Accion</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -126,11 +125,7 @@
                                                                 <td>#{fasestrabajos.diamax}</td>
                                                                 <td>#{fasestrabajos.obligatorio}</td>
                                                                 <td>#{fasestrabajos.reporteTrabajos.reptraDescripcion}</td>
-                                                                <td>
-                                                                    <h:commandLink actionListener="#{gestionPlanTrabajoBean.mostrarPdf(fasestrabajos.documenGenerales.docgenArchivo)}" immediate="true">
-                                                                    <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height: 32 px;"></img>
-                                                                </h:commandLink>
-                                                                </td>
+                                                                
                                                             </tr>
                                                         </ui:repeat>
                                                     </tbody>
