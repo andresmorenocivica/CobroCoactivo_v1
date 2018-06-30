@@ -6,7 +6,6 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.util.List;
@@ -41,11 +40,9 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
         query.addEntity(CivPlanTrabajos.class);
         if (query.list().size() > 0) {
             return query.list();
-        }   
+        }
         session.close();
         return null;
     }
-
-  
 
 }

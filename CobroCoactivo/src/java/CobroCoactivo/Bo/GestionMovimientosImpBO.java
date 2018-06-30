@@ -63,7 +63,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
 
     @Override
     public void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-         List<Deudas> listDeudas = beanGestionMovimientos.getListaDeudas();
+        List<Deudas> listDeudas = beanGestionMovimientos.getListaDeudas();
         List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().getAllPlanTrabajo();
         for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
             PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());

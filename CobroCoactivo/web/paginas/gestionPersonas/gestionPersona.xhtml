@@ -38,8 +38,8 @@
                                             <div class="nav-tabs-custom" >
                                                 <ul class="nav nav-tabs" >
                                                     <li class="active" ><a href="#documento" data-toggle="tab">Documento</a></li>
-                                                    <li><a href="#nombrePersona" data-toggle="tab">Nombre Persona</a></li>
-                                                    <li><a href="#fechas" data-toggle="tab">Fechas</a></li>
+                                                 <!--   <li><a href="#nombrePersona" data-toggle="tab">Nombre Persona</a></li>
+                                                    <li><a href="#fechas" data-toggle="tab">Fechas</a></li> -->
                                                 </ul>
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="documento">
@@ -72,7 +72,7 @@
                                                         <br></br>
                                                     </div>
                                                     <!-- /.tab-pane -->
-                                                    <div class="tab-pane" id="nombrePersona">
+                                                    <!--<div class="tab-pane" id="nombrePersona">
                                                         <br></br>
                                                         <div class="row">
                                                             <div class="col-md-3"></div>
@@ -97,32 +97,32 @@
                                                             </div>
                                                         </div>
                                                         <br></br> 
-                                                    </div>
+                                                    </div> -->
                                                     <!-- /.tab-pane -->
-                                                    <div class="tab-pane" id="fechas">
-                                                        <br></br>
-                                                        <div class="row">
-                                                            <div class="col-md-3"></div>
-                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
-                                                                <div class="input-group margin-2">
-                                                                    <label class="control-label align-left">Fecha</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <div class="form-group">
-                                                                    <div class="input-group margin-5">
-                                                                        <h:inputText id="buscarFechaIngreso" class="date datepicker form-control"  maxlength="10">
-                                                                            <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-                                                                        </h:inputText><!--VALUE OK-->
-                                                                        <span class="input-group-btn">
-                                                                            <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                            </h:commandLink>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <!--   <div class="tab-pane" id="fechas">
+                                                          <br></br>
+                                                          <div class="row">
+                                                              <div class="col-md-3"></div>
+                                                              <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                  <div class="input-group margin-2">
+                                                                      <label class="control-label align-left">Fecha</label>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="col-lg-4">
+                                                                  <div class="form-group">
+                                                                      <div class="input-group margin-5">
+                                                                          <h:inputText id="buscarFechaIngreso" class="date datepicker form-control"  maxlength="10">
+                                                                              <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                                                          </h:inputText>
+                                                                          <span class="input-group-btn">
+                                                                              <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                              </h:commandLink>
+                                                                          </span>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>-->
                                                     <!-- /.tab-pane -->
                                                 </div>
                                                 <!-- /.tab-content -->
@@ -163,7 +163,7 @@
                             </div>
                             <!-- Comienza Modal Agregar Persona -->
                             <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog ">
+                                <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="myModalLabel">Agregar Persona</h4>
@@ -173,31 +173,26 @@
                                             </div>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label>ID</label> 
-                                                    <h:inputText class="form-control" id="txtID" value="#{gestionPersonaBean.detallePersona.id}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
+
+                                            <div class="col-lg-3">
                                                 <div class="form-group">
                                                     <label>Primer Nombre:</label> 
                                                     <h:inputText class="form-control" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" />
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="form-group">
                                                     <label>Segundo Nombre:</label> 
                                                     <h:inputText class="form-control" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="form-group">
                                                     <label>Primer Apellido:</label> 
                                                     <h:inputText class="form-control" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" />
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="form-group">
                                                     <label>Segundo Apellido:</label> 
                                                     <h:inputText class="form-control" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
@@ -225,7 +220,14 @@
                                                     <h:inputText class="form-control" id="NumDocumento" value="#{gestionPersonaBean.detallePersona.documento}" />
                                                 </div>
                                             </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label>ID</label> 
+                                                    <h:inputText class="form-control" id="txtID" value="#{gestionPersonaBean.detallePersona.id}" />
+                                                </div>
+                                            </div>
                                         </div>
+
                                         <div class="modal-footer">
                                             <div class="row">
                                                 <div class="col-lg-8">

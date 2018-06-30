@@ -89,8 +89,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
-         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session,bean.getPlanGenerales().getId());
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, bean.getPlanGenerales().getId());
         if (listCivEtapasGenerales != null) {
             bean.setListadoEtapasGeneraleses(new ArrayList<>());
             for (CivEtapasGenerales listCivEtapasGenerale : listCivEtapasGenerales) {
@@ -112,13 +112,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         } else {
             bean.setListadoEtapasGeneraleses(new ArrayList<>());
         }
-        
+
         session.close();
     }
 
     @Override
     public void ActualizarPlanGeneral(BeanPlanGeneral bean) throws Exception {
-         Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         boolean flag = false;
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
@@ -128,7 +128,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civPlanGenerales.setPlagenFechaproceso(new Date());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
         if (bean.getIdEstadoGeneral() != 1) {
-            List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral( session, civPlanGenerales.getPlagenId().intValue());
+            List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanGenerales.getPlagenId().intValue());
             if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
                 for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
                     if (civEtapasGenerales.getCivEstadoEtapasGenerales().getEstetagenId().intValue() == 1) {
@@ -158,7 +158,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Plan actualizado correctamente", null));
         }
-        
+
         session.close();
     }
 
@@ -181,7 +181,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 
         if (bean.getIdEstapaGeneral() != 1) {
-            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session  ,bean.getEtapasGenerales().getEtagenId().intValue());
+            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getEtagenId().intValue());
             if (listCivFasesGenerales != null && listCivFasesGenerales.size() > 0) {
                 for (CivFasesGenerales civFasesGenerales : listCivFasesGenerales) {
                     if (civFasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId().intValue() == 1) {
@@ -214,7 +214,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "etapa Actualizado Correctamente", null));
         }
-        
+
         session.close();
     }
 
@@ -344,9 +344,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception {
-         Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         bean.setListFasesGenerales(new ArrayList<>());
-        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral( session, bean.getEtapasGenerales().getEtagenId().intValue());
+        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getEtagenId().intValue());
         for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
             DocumenGenerales documenGenerales = new DocumenGenerales();
             documenGenerales.setDocgenId(civFasesGenerale.getCivDocumenGenerales().getDocgenId());
@@ -370,7 +370,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             bean.getListFasesGenerales().add(fasesGenerales);
 
         }
-        
+
         session.close();
 
     }

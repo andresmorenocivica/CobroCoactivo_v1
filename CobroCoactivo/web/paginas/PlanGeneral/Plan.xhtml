@@ -88,7 +88,6 @@
                                             </ul>
                                             <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#etapaGeneral').modal('show');">
                                                 <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoGuardar(2)}"/>
-
                                             </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
@@ -138,8 +137,7 @@
                                                                 <td>#{fasegeneral.documenGenerales.docgenDescripcion}</td>
                                                                 <td>
                                                                     <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.docgenArchivo)}" immediate="true">
-
-                                                                        <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height: 32 px;"></img>
+                                                                        <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height:32px;"></img>
                                                                     </h:commandLink>
                                                                 </td>
                                                             </tr>
@@ -157,10 +155,6 @@
                                 <!-- /.col -->
                             </div>
                             <!-- row main -->
-
-
-
-
                             <!-- start modal   plan general  -->
                             <div class="modal fade" id="planGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog ">

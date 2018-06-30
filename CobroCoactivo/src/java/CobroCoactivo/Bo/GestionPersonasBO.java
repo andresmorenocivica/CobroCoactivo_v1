@@ -16,6 +16,7 @@ public interface GestionPersonasBO {
     // metodo para cargar los tipos de documento
     void cargarTipoDocumento(BeanGestionPersonas beanGestionPersonas) throws Exception;
 
+    //Metodo para cargar los estados de las personas 
     void cargarEstadoPersonas(BeanGestionPersonas bean) throws Exception;
 
     void consultarByDocumentoByTipoDocumento(BeanGestionPersonas bean) throws Exception;
@@ -26,8 +27,10 @@ public interface GestionPersonasBO {
     // Metodo para cargar las deudas de la persona que se consulto.
     void cargarDeudas(BeanGestionPersonas bean) throws Exception;
 
+    // Metodo para actualizar informacion de una persona
     void updatePersona(BeanGestionPersonas bean) throws Exception;
 
+    //Metodo que sirve para guardar una persona
     void guardarPersona(BeanGestionPersonas bean) throws Exception;
 
     void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception;

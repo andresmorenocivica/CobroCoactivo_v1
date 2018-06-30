@@ -6,7 +6,6 @@
                 xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-
     <ui:define name="content">
         <h:form id="frmDetallePersona">
             <div class="content-wrapper">
@@ -17,7 +16,7 @@
                             <div class="box-header with-border">
                                 <div class="row">
                                     <div class="col-lg-11">
-                                        <h3 class="box-title">Información Personas</h3>
+                                        <h3 class="box-title">Información persona</h3>
                                     </div>
                                     <div class="col-lg-1">
                                         <h:panelGroup id="pnlEditarUsuario" >
@@ -37,16 +36,26 @@
                                 <div class="box-body">
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label>Tipo Documento</label>
-                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
-                                                <f:selectItems id="tipoDocumento" value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
-                                            </h:selectOneMenu>
+                                            <label>Primer nombre</label>
+                                            <h:inputText id="txtNombre1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label>N Documento</label>
-                                            <h:inputText id="txtDocumento" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" ></h:inputText>
+                                            <label>Segundo nombre</label>
+                                            <h:inputText id="txtNombre2" style="border-color: black" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Primer apellido</label>
+                                            <h:inputText id="txtApellido1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Segundo apellido</label>
+                                            <h:inputText id="txtApellido2" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
@@ -57,26 +66,16 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
-                                            <label>Primer Nombre</label>
-                                            <h:inputText id="txtNombre1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <label>Tipo documento</label>
+                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
+                                                <f:selectItems id="tipoDocumento" value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
+                                            </h:selectOneMenu>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
-                                            <label>Segundo Nombre</label>
-                                            <h:inputText id="txtNombre2" style="border-color: black" value="#{gestionPersonaBean.detallePersona.nombre2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label>Primer Apellido</label>
-                                            <h:inputText id="txtApellido1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label>Segundo Apellido</label>
-                                            <h:inputText id="txtApellido2" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <label>N documento</label>
+                                            <h:inputText id="txtDocumento" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" ></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
@@ -94,7 +93,7 @@
                             <div class="box-header with-border">
                                 <div class="row">
                                     <div class="col-lg-11">
-                                        <h3 class="box-title">Personas Datos Adicionales</h3>
+                                        <h3 class="box-title">Personas datos adicionales</h3>
                                     </div>
                                     <div class="col-lg-1">
 
@@ -127,7 +126,7 @@
                             <div class="box-header with-border">
                                 <div class="row">
                                     <div class="col-lg-11">
-                                        <h3 class="box-title">Deudas de la Personas</h3>
+                                        <h3 class="box-title">Deudas de la persona</h3>
                                     </div>
                                     <div class="col-lg-1">
                                     </div>
@@ -137,13 +136,13 @@
                                 <table class="table table-bordered ">
                                     <thead>
                                         <tr>
-                                            <th>Tipo de Deudas</th>
+                                            <th>Tipo de deudas</th>
                                             <th>Refencia</th>
                                             <th>Estado</th>
                                             <th>Saldo</th>
                                             <th>Valor</th>
-                                            <th>Fecha Deuda</th>
-                                            <th>Nombre Persona</th>
+                                            <th>Fecha deuda</th>
+                                            <th>Nombre persona</th>
                                             <th>Mostrar</th>
                                         </tr>
                                     </thead>
@@ -173,7 +172,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">Movimiento De la Deuda</h4>
+                                    <h4 class="modal-title" id="myModalLabel">Movimiento de la deuda</h4>
                                 </div>
                                 <div class="modal-body">
                                     <h:panelGroup id="tablaMovimientos">

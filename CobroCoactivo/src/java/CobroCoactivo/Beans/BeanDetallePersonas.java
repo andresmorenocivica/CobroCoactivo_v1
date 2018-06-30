@@ -7,15 +7,12 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.DetallePersonaBO;
 import CobroCoactivo.Bo.DetallePersonaImpBO;
-import CobroCoactivo.Bo.GestionPersonasBO;
-import CobroCoactivo.Bo.GestionPersonasImpBO;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Utility.Log_Handler;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;

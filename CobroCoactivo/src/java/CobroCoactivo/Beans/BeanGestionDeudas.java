@@ -63,8 +63,7 @@ public class BeanGestionDeudas {
         try {
             setTipoBusqueda(tipo);
             getGestionDeudasBO().buscarDeudas(this);
-            
-            
+
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));

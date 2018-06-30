@@ -23,7 +23,7 @@ public interface GestionDeudasBO {
     Deudas cargarProcentajeCobro(Deudas deudas) throws Exception;
 
     void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception;
-    
-    void buscarDeudas(BeanGestionDeudas bean) throws  Exception;
+
+    void buscarDeudas(BeanGestionDeudas bean) throws Exception;
 
 }
