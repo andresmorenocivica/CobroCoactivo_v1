@@ -26,5 +26,6 @@ public interface ITPlanGeneral extends ITGeneryHibernateDao<CivPlanGenerales,Int
      */
        
     List<CivPlanGenerales> findCivPlanGeneral(Session session ,int id) throws Exception;
+    CivPlanGenerales getCivPlanGeneral(int idPlangeneral) throws Exception ;
     
 }

@@ -46,7 +46,7 @@ public interface GestionPlanTrabajoBO {
      */
     public void getListEtapaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception;
     
-    
+    public void getListEtapaGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception;
     
     /**
      * 

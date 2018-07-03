@@ -20,6 +20,7 @@ import CobroCoactivo.Dao.ITFasesTrabajo;
 import CobroCoactivo.Dao.ITPlanGeneral;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITReporteTrabajos;
+import CobroCoactivo.Modelo.EtapasGenerales;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanGenerales;
@@ -51,33 +52,33 @@ import org.primefaces.context.RequestContext;
  */
 public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
-    private ITPlanGeneral planGeneral;
-    private ITPlanTrabajo iTPlanTrabajo;
-    private ITEtapasTrabajo iTEtapasTrabajo;
-    private ITEstapaGeneral iTEstapaGeneral;
-    private ITFasesGenerales iTFasesGenerales;
-    private ITFasesTrabajo iTFasesTrabajo;
-    private ITReporteTrabajos iTReporteTrabajos;
+    private ITPlanGeneral planGeneralDAO;
+    private ITPlanTrabajo PlanTrabajoDAO;
+    private ITEtapasTrabajo EtapasTrabajoDAO;
+    private ITEstapaGeneral EtapaGeneralDAO;
+    private ITFasesGenerales FasesGeneralesDAO;
+    private ITFasesTrabajo FasesTrabajoDAO;
+    private ITReporteTrabajos ReporteTrabajosDAO;
 
     /**
      * contructor e inicializador Dao
      *
      */
     public GestionPlanTrabajoImpBO() {
-        planGeneral = new DaoPlanGeneral();
-        iTPlanTrabajo = new DaoPlanTrabajo();
-        iTEtapasTrabajo = new DaoEtapasTrabajo();
-        iTEstapaGeneral = new DaoEstapaGeneral();
-        iTFasesGenerales = new DaoFasesGenerales();
-        iTFasesTrabajo = new DaoFasesTrabajo();
-        iTReporteTrabajos = new DaoReporteTrabajos();
+        planGeneralDAO = new DaoPlanGeneral();
+        PlanTrabajoDAO = new DaoPlanTrabajo();
+        EtapasTrabajoDAO = new DaoEtapasTrabajo();
+        EtapaGeneralDAO = new DaoEstapaGeneral();
+        FasesGeneralesDAO = new DaoFasesGenerales();
+        FasesTrabajoDAO = new DaoFasesTrabajo();
+        ReporteTrabajosDAO = new DaoReporteTrabajos();
 
     }
 
     @Override
     public void getListPlanGenaral(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         beanGestionPlanTrabajo.setListPlanGenerales(new ArrayList<>());
-        List<CivPlanGenerales> listCivPlanGenerales = getPlanGeneral().findAll();
+        List<CivPlanGenerales> listCivPlanGenerales = getPlanGeneralDAO().findAll();
         for (CivPlanGenerales civPlanGenerale : listCivPlanGenerales) {
             boolean flag = true;
             for (PlanTrabajos planTrabajo : beanGestionPlanTrabajo.getListPlanTrabajos()) {
@@ -95,7 +96,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     @Override
     public void getListaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         beanGestionPlanTrabajo.setListPlanTrabajos(new ArrayList<>());
-        List<CivPlanTrabajos> listCivPlanTrabajos = getiTPlanTrabajo().findAll();
+        List<CivPlanTrabajos> listCivPlanTrabajos = getPlanTrabajoDAO().findAll();
         for (CivPlanTrabajos civPlanTrabajo : listCivPlanTrabajos) {
             PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajo, civPlanTrabajo.getCivEstadoPlanTrabajos());
             beanGestionPlanTrabajo.getListPlanTrabajos().add(planTrabajos);
@@ -104,9 +105,29 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     }
 
     @Override
+    public void getListEtapaGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        beanGestionPlanTrabajo.setListEtapaGenerales(new ArrayList<>());
+        List<CivEtapasGenerales> listEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, beanGestionPlanTrabajo.getPlanTrabajos().getId());
+        for (CivEtapasGenerales civEtapasGeneral : listEtapasGenerales) {
+            boolean sw = true;
+            for (EtapasTrabajos etapasTrabajo : beanGestionPlanTrabajo.getListEtapaTrabajos()) {
+                if (etapasTrabajo.getDescricion().equals(civEtapasGeneral.getEtagenDescripcion())) {
+                    sw = false;
+                }
+            }
+            if (sw) {
+                EtapasGenerales etapasGenerales = new EtapasGenerales(civEtapasGeneral, civEtapasGeneral.getCivEstadoEtapasGenerales());
+                beanGestionPlanTrabajo.getListEtapaGenerales().add(etapasGenerales);
+            }
+        }
+        session.close();
+    }
+
+    @Override
     public void getListEtapaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         beanGestionPlanTrabajo.setListEtapaTrabajos(new ArrayList<>());
-        List<CivEtapasTrabajos> listCivEtapasTrabajos = getiTEtapasTrabajo().listarEtapasTrabajoByPlantrabajo(beanGestionPlanTrabajo.getPlanTrabajos().getId());
+        List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(beanGestionPlanTrabajo.getPlanTrabajos().getId());
         for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
             EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
             beanGestionPlanTrabajo.getListEtapaTrabajos().add(etapasTrabajos);
@@ -127,8 +148,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                 civPlanTrabajos.setPlatraDescripcion(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getDescripcion());
                 civPlanTrabajos.setCivEstadoPlanTrabajos(civEstadoPlanTrabajos);
                 civPlanTrabajos.setPlatraFechaproceso(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getFechaproceso());
-                getiTPlanTrabajo().create(civPlanTrabajos);
-                List<CivEtapasGenerales> listCivEtapasGenerales = getiTEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanTrabajos.getPlatraId().intValue());
+                getPlanTrabajoDAO().create(civPlanTrabajos);
+                List<CivEtapasGenerales> listCivEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, civPlanTrabajos.getPlatraId().intValue());
                 for (CivEtapasGenerales etapaGeneral : listCivEtapasGenerales) {
                     if (etapaGeneral.getEtagenObligatorio().equals("TRUE")) {
                         //creamos un civEstado y le pasamos sus valores
@@ -149,8 +170,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                         civEtapasTrabajos.setEtatraObligatorio(etapaGeneral.getEtagenObligatorio());
                         civEtapasTrabajos.setEtatraPrioridad(etapaGeneral.getEtagenPrioridad());
                         //finaliza  la CivEtapasTrabajo a guardar
-                        getiTEtapasTrabajo().create(civEtapasTrabajos);
-                        List<CivFasesGenerales> listFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, civEtapasTrabajos.getEtatraId().intValue());
+                        getEtapasTrabajoDAO().create(civEtapasTrabajos);
+                        List<CivFasesGenerales> listFasesGenerales = getFasesGeneralesDAO().AllListByEtapaGeneral(session, civEtapasTrabajos.getEtatraId().intValue());
                         for (CivFasesGenerales fasesGenerales : listFasesGenerales) {
                             CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
                             civEstadoFasesTrabajos.setEstfastraId(fasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId());
@@ -170,7 +191,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                             civReporteTrabajos.setReptraFechaproceso(fasesGenerales.getCivDocumenGenerales().getDocgenFechaproceso());
                             civReporteTrabajos.setReptraArchivo(fasesGenerales.getCivDocumenGenerales().getDocgenArchivo());
                             civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                            getiTReporteTrabajos().create(civReporteTrabajos);
+                            getReporteTrabajosDAO().create(civReporteTrabajos);
                             //Objeto civFasesTrabajos
                             CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
                             civFasesTrabajos.setFastraId(fasesGenerales.getFasgenId());
@@ -183,7 +204,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                             civFasesTrabajos.setFastraObligatorio(fasesGenerales.getFasgenObligatorio());
                             civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
                             if (civFasesTrabajos.getFastraObligatorio().equals("TRUE")) {
-                                getiTFasesTrabajo().create(civFasesTrabajos);
+                                getFasesTrabajoDAO().create(civFasesTrabajos);
                             }
                         }
 
@@ -205,110 +226,112 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     @Override
     public void getFases(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         beanGestionPlanTrabajo.setListFasesTrabajoses(new ArrayList<>());
-        List<CivFasesTrabajos> listFasesTrabajose = getiTFasesTrabajo().listarFasesTrabajo(beanGestionPlanTrabajo.getEtapasTrabajos().getId());
-        for (CivFasesTrabajos civFasesTrabajos : listFasesTrabajose) {
-            FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajos, civFasesTrabajos.getCivEstadoFasesTrabajos(),civFasesTrabajos.getCivReporteTrabajos());
-            beanGestionPlanTrabajo.getListFasesTrabajoses().add(fasesTrabajos);
+        List<CivFasesTrabajos> listFasesTrabajose = getFasesTrabajoDAO().listarFasesTrabajo(beanGestionPlanTrabajo.getEtapasTrabajos().getId());
+        if (listFasesTrabajose != null) {
+            for (CivFasesTrabajos civFasesTrabajos : listFasesTrabajose) {
+                FasesTrabajos fasesTrabajos = new FasesTrabajos(civFasesTrabajos, civFasesTrabajos.getCivEstadoFasesTrabajos(), civFasesTrabajos.getCivReporteTrabajos());
+                beanGestionPlanTrabajo.getListFasesTrabajoses().add(fasesTrabajos);
 
+            }
         }
     }
 
     /**
-     * @return the planGeneral
+     * @return the planGeneralDAO
      */
-    public ITPlanGeneral getPlanGeneral() {
-        return planGeneral;
+    public ITPlanGeneral getPlanGeneralDAO() {
+        return planGeneralDAO;
     }
 
     /**
-     * @param planGeneral the planGeneral to set
+     * @param planGeneralDAO the planGeneralDAO to set
      */
-    public void setPlanGeneral(ITPlanGeneral planGeneral) {
-        this.planGeneral = planGeneral;
+    public void setPlanGeneralDAO(ITPlanGeneral planGeneralDAO) {
+        this.planGeneralDAO = planGeneralDAO;
     }
 
     /**
-     * @return the iTPlanTrabajo
+     * @return the PlanTrabajoDAO
      */
-    public ITPlanTrabajo getiTPlanTrabajo() {
-        return iTPlanTrabajo;
+    public ITPlanTrabajo getPlanTrabajoDAO() {
+        return PlanTrabajoDAO;
     }
 
     /**
-     * @param iTPlanTrabajo the iTPlanTrabajo to set
+     * @param PlanTrabajoDAO the PlanTrabajoDAO to set
      */
-    public void setiTPlanTrabajo(ITPlanTrabajo iTPlanTrabajo) {
-        this.iTPlanTrabajo = iTPlanTrabajo;
+    public void setPlanTrabajoDAO(ITPlanTrabajo PlanTrabajoDAO) {
+        this.PlanTrabajoDAO = PlanTrabajoDAO;
     }
 
     /**
-     * @return the iTEtapasTrabajo
+     * @return the EtapasTrabajoDAO
      */
-    public ITEtapasTrabajo getiTEtapasTrabajo() {
-        return iTEtapasTrabajo;
+    public ITEtapasTrabajo getEtapasTrabajoDAO() {
+        return EtapasTrabajoDAO;
     }
 
     /**
-     * @param iTEtapasTrabajo the iTEtapasTrabajo to set
+     * @param EtapasTrabajoDAO the EtapasTrabajoDAO to set
      */
-    public void setiTEtapasTrabajo(ITEtapasTrabajo iTEtapasTrabajo) {
-        this.iTEtapasTrabajo = iTEtapasTrabajo;
+    public void setEtapasTrabajoDAO(ITEtapasTrabajo EtapasTrabajoDAO) {
+        this.EtapasTrabajoDAO = EtapasTrabajoDAO;
     }
 
     /**
-     * @return the iTEstapaGeneral
+     * @return the FasesGeneralesDAO
      */
-    public ITEstapaGeneral getiTEstapaGeneral() {
-        return iTEstapaGeneral;
+    public ITFasesGenerales getFasesGeneralesDAO() {
+        return FasesGeneralesDAO;
     }
 
     /**
-     * @param iTEstapaGeneral the iTEstapaGeneral to set
+     * @param FasesGeneralesDAO the FasesGeneralesDAO to set
      */
-    public void setiTEstapaGeneral(ITEstapaGeneral iTEstapaGeneral) {
-        this.iTEstapaGeneral = iTEstapaGeneral;
+    public void setFasesGeneralesDAO(ITFasesGenerales FasesGeneralesDAO) {
+        this.FasesGeneralesDAO = FasesGeneralesDAO;
     }
 
     /**
-     * @return the iTFasesGenerales
+     * @return the FasesTrabajoDAO
      */
-    public ITFasesGenerales getiTFasesGenerales() {
-        return iTFasesGenerales;
+    public ITFasesTrabajo getFasesTrabajoDAO() {
+        return FasesTrabajoDAO;
     }
 
     /**
-     * @param iTFasesGenerales the iTFasesGenerales to set
+     * @param FasesTrabajoDAO the FasesTrabajoDAO to set
      */
-    public void setiTFasesGenerales(ITFasesGenerales iTFasesGenerales) {
-        this.iTFasesGenerales = iTFasesGenerales;
+    public void setFasesTrabajoDAO(ITFasesTrabajo FasesTrabajoDAO) {
+        this.FasesTrabajoDAO = FasesTrabajoDAO;
     }
 
     /**
-     * @return the iTFasesTrabajo
+     * @return the ReporteTrabajosDAO
      */
-    public ITFasesTrabajo getiTFasesTrabajo() {
-        return iTFasesTrabajo;
+    public ITReporteTrabajos getReporteTrabajosDAO() {
+        return ReporteTrabajosDAO;
     }
 
     /**
-     * @param iTFasesTrabajo the iTFasesTrabajo to set
+     * @param ReporteTrabajosDAO the ReporteTrabajosDAO to set
      */
-    public void setiTFasesTrabajo(ITFasesTrabajo iTFasesTrabajo) {
-        this.iTFasesTrabajo = iTFasesTrabajo;
+    public void setReporteTrabajosDAO(ITReporteTrabajos ReporteTrabajosDAO) {
+        this.ReporteTrabajosDAO = ReporteTrabajosDAO;
     }
 
     /**
-     * @return the iTReporteTrabajos
+     * @return the EtapaGeneralDAO
      */
-    public ITReporteTrabajos getiTReporteTrabajos() {
-        return iTReporteTrabajos;
+    public ITEstapaGeneral getEtapaGeneralDAO() {
+        return EtapaGeneralDAO;
     }
 
     /**
-     * @param iTReporteTrabajos the iTReporteTrabajos to set
+     * @param EtapaGeneralDAO the EtapaGeneralDAO to set
      */
-    public void setiTReporteTrabajos(ITReporteTrabajos iTReporteTrabajos) {
-        this.iTReporteTrabajos = iTReporteTrabajos;
+    public void setEtapaGeneralDAO(ITEstapaGeneral EtapaGeneralDAO) {
+        this.EtapaGeneralDAO = EtapaGeneralDAO;
     }
 
 }

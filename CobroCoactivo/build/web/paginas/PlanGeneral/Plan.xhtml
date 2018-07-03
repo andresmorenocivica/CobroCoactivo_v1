@@ -72,7 +72,7 @@
                                             <ul class="nav nav-pills nav-stacked">
                                                 <ui:repeat value="#{PlanGeneralbean.listadoEtapasGeneraleses}" var="etapaGeneral">
                                                     <li>
-                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.etagenDescripcion}" class="col-sm-10" id="btnEtapagene">
+                                                        <h:commandLink title="estapa general" value=" #{etapaGeneral.descripcion}" class="col-sm-10" id="btnEtapagene">
                                                             <f:ajax event="click" render="@form"  listener="#{PlanGeneralbean.listarFasesGeneralesPorFases(etapaGeneral)}"/>
                                                         </h:commandLink>
                                                         <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px" >
@@ -88,7 +88,6 @@
                                             </ul>
                                             <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#etapaGeneral').modal('show');">
                                                 <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoGuardar(2)}"/>
-
                                             </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
@@ -99,7 +98,7 @@
                                 <div class="col-md-9" jsf:id="fasesGenerales" jsf:rendered="#{PlanGeneralbean.renderFaseGeneral}">
                                     <div class="box box-success">
                                         <div class="box-header with-border">
-                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales #{PlanGeneralbean.etapasGenerales.etagenDescripcion}"></h:outputLabel>
+                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases Generales #{PlanGeneralbean.etapasGenerales.descripcion}"></h:outputLabel>
                                             <!-- /.box-tools -->
                                             <div class="box-tools">
                                                 <h:commandLink type="button" class="btn btn-box-tool" id="btnAdd" onclick="$('#faseGeneral').modal('show');">
@@ -130,16 +129,15 @@
                                                     <tbody>
                                                         <ui:repeat value="#{PlanGeneralbean.listFasesGenerales}" var="fasegeneral">
                                                             <tr>
-                                                                <td>#{fasegeneral.fasgenDescripcion}</td>
+                                                                <td>#{fasegeneral.descripcion}</td>
                                                                 <td>#{fasegeneral.estadoFasesGenerales.descripcion}</td>
-                                                                <td>#{fasegeneral.fasgenDianim}</td>
-                                                                <td>#{fasegeneral.fasgenDiamax}</td>
-                                                                <td>#{fasegeneral.fasgenObligatorio}</td>
-                                                                <td>#{fasegeneral.documenGenerales.docgenDescripcion}</td>
+                                                                <td>#{fasegeneral.dianim}</td>
+                                                                <td>#{fasegeneral.diamax}</td>
+                                                                <td>#{fasegeneral.obligatorio}</td>
+                                                                <td>#{fasegeneral.documenGenerales.descripcion}</td>
                                                                 <td>
-                                                                    <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.docgenArchivo)}" immediate="true">
-
-                                                                        <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height: 32 px;"></img>
+                                                                    <h:commandLink actionListener="#{PlanGeneralbean.mostrarPdf(fasegeneral.documenGenerales.archivo)}" immediate="true">
+                                                                        <img src="#{request.contextPath}/recursos/images/pdf.png" style="width: 32px; height:32px;"></img>
                                                                     </h:commandLink>
                                                                 </td>
                                                             </tr>
@@ -157,10 +155,6 @@
                                 <!-- /.col -->
                             </div>
                             <!-- row main -->
-
-
-
-
                             <!-- start modal   plan general  -->
                             <div class="modal fade" id="planGeneral" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog ">
@@ -234,7 +228,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText label="Descripción" class="form-control" id="txtEtapaGeneralDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.etapasGenerales.etagenDescripcion}" />
+                                                        <h:inputText label="Descripción" class="form-control" id="txtEtapaGeneralDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.etapasGenerales.descripcion}" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -294,7 +288,7 @@
                                 <div class="modal-dialog ">
                                     <div class="modal-content" jsf:id="modalContentFases">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.etapasGenerales.etagenDescripcion}</h4>
+                                            <h4 class="modal-title" id="myModalLabel">#{PlanGeneralbean.etapasGenerales.descripcion}</h4>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -306,7 +300,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionFase" label="Descrición" value="#{PlanGeneralbean.fasesGenerales.fasgenDescripcion}" required="true" requiredMessage="Descripción es requerido"/>
+                                                        <h:inputText class="form-control" id="txtDescriptionFase" label="Descrición" value="#{PlanGeneralbean.fasesGenerales.descripcion}" required="true" requiredMessage="Descridescripcionpción es requerido"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -320,19 +314,19 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label>Dia Minimo:</label>
-                                                        <h:inputText class="form-control" label="Dia Minimo" value="#{PlanGeneralbean.fasesGenerales.fasgenDianim}" id="txtDiaMinimoFase" required="true" requiredMessage="Dia minimo es requerido" />
+                                                        <h:inputText class="form-control" label="Dia Minimo" value="#{PlanGeneralbean.fasesGenerales.dianim}" id="txtDiaMinimoFase" required="true" requiredMessage="Dia minimo es requerido" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label>Dia Maximo:</label>
-                                                        <h:inputText class="form-control" label="Dia Maximo" value="#{PlanGeneralbean.fasesGenerales.fasgenDiamax}" id="txtDiaMaximoFase" required="true" requiredMessage="Dia maximo es requerido" />
+                                                        <h:inputText class="form-control" label="Dia Maximo" value="#{PlanGeneralbean.fasesGenerales.diamax}" id="txtDiaMaximoFase" required="true" requiredMessage="Dia maximo es requerido" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label>Obligatorio:</label>
-                                                        <h:selectOneMenu class="form-control" value="#{PlanGeneralbean.fasesGenerales.fasgenObligatorio}" id="selectObligatorioFase">
+                                                        <h:selectOneMenu class="form-control" value="#{PlanGeneralbean.fasesGenerales.obligatorio}" id="selectObligatorioFase">
                                                             <f:selectItem itemLabel="SI" itemValue="TRUE"></f:selectItem>
                                                             <f:selectItem itemLabel="NO" itemValue="FALSE"></f:selectItem>
                                                         </h:selectOneMenu>

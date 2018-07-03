@@ -28,4 +28,17 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales,Integ
         return query.list();
     }
     
+    @Override
+    public CivPlanGenerales getCivPlanGeneral(int idPlangeneral) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_PLAN_GENERALES WHERE PLAGEN_ID = :idPlangeneral";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivPlanGenerales.class);
+        query.setInteger("idPlangeneral", idPlangeneral);
+        if (query.list().size() > 0) {
+            return (CivPlanGenerales) query.list().get(0);
+        }   
+        session.close();
+        return null;
+    }
 }

@@ -2,6 +2,8 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 
+import CobroCoactivo.Persistencia.CivDocumenGenerales;
+import CobroCoactivo.Persistencia.CivEstadoDocumengenerales;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,76 +15,99 @@ import java.util.Set;
 public class DocumenGenerales  implements java.io.Serializable {
 
 
-     private BigDecimal docgenId;
+     private int Id;
      private EstadoDocumengenerales estadoDocumengenerales;
-     private String docgenDescripcion;
-     private Date docgenFechaproceso;
-     private String docgenArchivo;
-     private Set fasesGeneraleses = new HashSet(0);
+     private String Descripcion;
+     private Date Fechaproceso;
+     private String Archivo;
 
     public DocumenGenerales() {
     }
 
 	
-    public DocumenGenerales(BigDecimal docgenId, EstadoDocumengenerales estadoDocumengenerales, String docgenDescripcion) {
-        this.docgenId = docgenId;
-        this.estadoDocumengenerales = estadoDocumengenerales;
-        this.docgenDescripcion = docgenDescripcion;
+    public DocumenGenerales(CivDocumenGenerales civDocumenGenerales) {
+        this.Id = civDocumenGenerales.getDocgenId().intValue();
+        this.Descripcion = civDocumenGenerales.getDocgenDescripcion();
+        this.Fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
+        this.Archivo = civDocumenGenerales.getDocgenArchivo();
     }
-    public DocumenGenerales(BigDecimal docgenId, EstadoDocumengenerales estadoDocumengenerales, String docgenDescripcion, Date docgenFechaproceso, String docgenArchivo, Set fasesGeneraleses) {
-       this.docgenId = docgenId;
-       this.estadoDocumengenerales = estadoDocumengenerales;
-       this.docgenDescripcion = docgenDescripcion;
-       this.docgenFechaproceso = docgenFechaproceso;
-       this.docgenArchivo = docgenArchivo;
-       this.fasesGeneraleses = fasesGeneraleses;
+    public DocumenGenerales(CivDocumenGenerales civDocumenGenerales,CivEstadoDocumengenerales civEstadoDocumengenerales) {
+        this.Id = civDocumenGenerales.getDocgenId().intValue();
+        this.Descripcion = civDocumenGenerales.getDocgenDescripcion();
+        this.Fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
+        this.Archivo = civDocumenGenerales.getDocgenArchivo();
+        this.estadoDocumengenerales = new EstadoDocumengenerales(civEstadoDocumengenerales);
     }
-   
-    public BigDecimal getDocgenId() {
-        return this.docgenId;
+
+    /**
+     * @return the Id
+     */
+    public int getId() {
+        return Id;
     }
-    
-    public void setDocgenId(BigDecimal docgenId) {
-        this.docgenId = docgenId;
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(int Id) {
+        this.Id = Id;
     }
+
+    /**
+     * @return the estadoDocumengenerales
+     */
     public EstadoDocumengenerales getEstadoDocumengenerales() {
-        return this.estadoDocumengenerales;
+        return estadoDocumengenerales;
     }
-    
+
+    /**
+     * @param estadoDocumengenerales the estadoDocumengenerales to set
+     */
     public void setEstadoDocumengenerales(EstadoDocumengenerales estadoDocumengenerales) {
         this.estadoDocumengenerales = estadoDocumengenerales;
     }
-    public String getDocgenDescripcion() {
-        return this.docgenDescripcion;
-    }
-    
-    public void setDocgenDescripcion(String docgenDescripcion) {
-        this.docgenDescripcion = docgenDescripcion;
-    }
-    public Date getDocgenFechaproceso() {
-        return this.docgenFechaproceso;
-    }
-    
-    public void setDocgenFechaproceso(Date docgenFechaproceso) {
-        this.docgenFechaproceso = docgenFechaproceso;
-    }
-    public String getDocgenArchivo() {
-        return this.docgenArchivo;
-    }
-    
-    public void setDocgenArchivo(String docgenArchivo) {
-        this.docgenArchivo = docgenArchivo;
-    }
-    public Set getFasesGeneraleses() {
-        return this.fasesGeneraleses;
-    }
-    
-    public void setFasesGeneraleses(Set fasesGeneraleses) {
-        this.fasesGeneraleses = fasesGeneraleses;
+
+    /**
+     * @return the Descripcion
+     */
+    public String getDescripcion() {
+        return Descripcion;
     }
 
+    /**
+     * @param Descripcion the Descripcion to set
+     */
+    public void setDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
+    }
 
+    /**
+     * @return the Fechaproceso
+     */
+    public Date getFechaproceso() {
+        return Fechaproceso;
+    }
 
+    /**
+     * @param Fechaproceso the Fechaproceso to set
+     */
+    public void setFechaproceso(Date Fechaproceso) {
+        this.Fechaproceso = Fechaproceso;
+    }
+
+    /**
+     * @return the Archivo
+     */
+    public String getArchivo() {
+        return Archivo;
+    }
+
+    /**
+     * @param Archivo the Archivo to set
+     */
+    public void setArchivo(String Archivo) {
+        this.Archivo = Archivo;
+    }
 
 }
 

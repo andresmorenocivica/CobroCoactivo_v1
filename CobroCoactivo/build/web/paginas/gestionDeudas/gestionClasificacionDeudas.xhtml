@@ -9,21 +9,21 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
-                <h:form id="frmConsultaDeudas">
-                    <div class="content-wrapper">
-                        <section class="content-header">
-                            <h1>
-                                Filtros
-                                <small>Formulario de busqueda para deudas</small>
-                            </h1>
-                            <ol class="breadcrumb">
-                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                                <li><a href="#">Example</a></li>
-                                <li class="active">Consultas</li>
-                            </ol>
-                        </section>
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <h1>
+                            Consultas
+                            <small>guia formulario para consultas</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                            <li><a href="#">Example</a></li>
+                            <li class="active">Consultas</li>
+                        </ol>
+                    </section>
+                    <h:form id="frmClasificacionDeudas">
                         <section class="content" >
-                            <div class="row" jsf:id="contenedor">
+                            <div jsf:id="contenedor">
                                 <div class="col-md-12">
                                     <h:panelGrid id="pnlBusquedaDeuda" class="col-lg-12" >
                                         <h:panelGroup rendered="#{gestionDeudasBean.busquedaVisible}" >
@@ -63,7 +63,7 @@
                                                                                         </h:inputText>
                                                                                         <span class="input-group-btn">
                                                                                             <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                                                <f:ajax event="click" execute="txtReferencia" listener="#{gestionDeudasBean.buscarDeudas(1)}" render="frmConsultaDeudas:pnlBusquedaDeuda frmConsultaDeudas:pnlTablaDeudas frmConsultaDeudas:plnBtnFiltro"></f:ajax>
+                                                                                                <f:ajax event="click" execute="txtReferencia" listener="#{gestionDeudasBean.buscarDeudas(1)}" render="frmClasificacionDeudas:pnlBusquedaDeuda frmClasificacionDeudas:pnlTablaDeudas frmClasificacionDeudas:plnBtnFiltro"></f:ajax>
                                                                                             </h:commandLink>
                                                                                         </span>
                                                                                     </div>
@@ -95,7 +95,7 @@
                                                                                         </div>
                                                                                         <span class="input-group-btn">
                                                                                             <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                                                <f:ajax event="click" execute="selectTipoDeudas" listener="#{gestionDeudasBean.buscarDeudas(2)}" render="frmConsultaDeudas:pnlBusquedaDeuda frmConsultaDeudas:pnlTablaDeudas frmConsultaDeudas:plnBtnFiltro"></f:ajax>
+                                                                                                <f:ajax event="click" execute="selectTipoDeudas" listener="#{gestionDeudasBean.buscarDeudas(2)}" render="frmClasificacionDeudas:pnlBusquedaDeuda frmClasificacionDeudas:plnBtnFiltro"></f:ajax>
                                                                                             </h:commandLink>
                                                                                         </span>
                                                                                     </div>
@@ -116,13 +116,8 @@
                                             </section>
                                         </h:panelGroup>
                                     </h:panelGrid>
-                                    
                                     <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
-                                        <h:panelGroup rendered="#{gestionDeudasBean.pnlTablaDeudas}">
-                                            <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                                <i class="#{listDificultad.colorDificultad}"> 30%</i>
-                                                <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, listDeudas)}"/>
-                                            </h:commandLink>
+                                        <h:panelGroup rendered="#{gestionDeudasBean.pnlTablaClasificacionDeudas}">
                                             <div class="box box-danger">
                                                 <table class="table table-hover">
                                                     <thead>
@@ -136,7 +131,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas" >
+                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
                                                             <tr>
                                                                 <td>#{listDeudas.tipoDeudas.descripcion}</td>
                                                                 <td>#{listDeudas.estadoDeudas.descripcion}</td>
@@ -144,14 +139,13 @@
                                                                 <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
                                                                 <td>#{listDeudas.fechaDeudas}</td>
                                                                 <td>
-                                                                    <h:dataTable value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
-                                                                        <h:column>
-                                                                            <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                                                                <i class="#{listDificultad.colorDificultad}"> 30%</i>
-                                                                                <f:ajax event="click" listener="#{gestionDeudasBean.cargar(listDificultad, listDeudas)}"/>
-                                                                            </h:commandLink>
-                                                                        </h:column>
-                                                                    </h:dataTable>
+                                                                    <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
+                                                                        <h:commandLink onclick="$('#modalEjecutar').modal('show');">
+                                                                            <i class="#{listDificultad.colorDificultad}"> 30%
+                                                                                <f:ajax event="click" listener="#{gestionDeudasBean.dificultadDeudas(listDificultad, listDeudas)}"/>
+                                                                            </i> 
+                                                                        </h:commandLink>
+                                                                    </ui:repeat>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
@@ -162,47 +156,9 @@
                                     </h:panelGrid>
                                 </div>
                             </div>
-                            <h:panelGrid id="plnBtnFiltro">
-                                <h:panelGroup rendered="#{gestionDeudasBean.btnFiltroBusqueda}">
-                                    <h:commandLink  class="float">
-                                        <i class="fa fa-filter my-float"></i>
-                                        <f:ajax event="click" listener="#{gestionDeudasBean.setBusquedaVisible(true)}" render="frmConsultaDeudas:pnlBusquedaDeuda frmConsultaDeudas:plnBtnFiltro"></f:ajax>
-                                    </h:commandLink> 
-                                </h:panelGroup>
-                            </h:panelGrid>
-                            <div class="modal fade" id="modalEjecutar" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog ">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Ejecutar</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p> ¿Desea Ejecutar La Accion?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <h:panelGrid id="pnlAceptar">
-                                                        <h:panelGroup >
-                                                            <h:commandLink value="Aceptar" id="btnAceptar" class="btn btn-success">
-                                                                <f:ajax event="click" execute="btnAceptar" listener="#{gestionDeudasBean.dificultadDeudas()}"/>
-                                                            </h:commandLink>
-                                                        </h:panelGroup>
-                                                    </h:panelGrid>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </section>
-                    </div>
-                </h:form>
+                    </h:form>
+                </div>
             </ui:define>
         </ui:composition>
     </body>

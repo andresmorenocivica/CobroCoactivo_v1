@@ -8,6 +8,7 @@ package CobroCoactivo.General;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
+import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
@@ -101,6 +102,11 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
                     Hibernate.initialize(entity.getCivEstadoDeudas());
                     Hibernate.initialize(entity.getCivTipoDeudas());
                     Hibernate.initialize(entity.getCivPlanTrabajos());
+                }
+            }
+            if (getEntityClass().getName().contains("CivEtapasGenerales")) {
+                for (CivEtapasGenerales entity : (List<CivEtapasGenerales>) entities) {
+                    Hibernate.initialize(entity.getCivEstadoEtapasGenerales());
                 }
             }
 

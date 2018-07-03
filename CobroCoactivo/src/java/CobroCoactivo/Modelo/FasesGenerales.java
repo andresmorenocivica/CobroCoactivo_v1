@@ -1,6 +1,11 @@
 package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
+import CobroCoactivo.Persistencia.CivDocumenGenerales;
+import CobroCoactivo.Persistencia.CivEstadoDeudas;
+import CobroCoactivo.Persistencia.CivEstadoFasesGenerales;
+import CobroCoactivo.Persistencia.CivEtapasGenerales;
+import CobroCoactivo.Persistencia.CivFasesGenerales;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.validation.constraints.Digits;
@@ -12,127 +17,177 @@ import javax.validation.constraints.Size;
  */
 public class FasesGenerales implements java.io.Serializable {
 
-    private BigDecimal fasgenId;
+    private int Id;
     private EtapasGenerales etapasGenerales;
     private EstadoFasesGenerales estadoFasesGenerales;
     private DocumenGenerales documenGenerales;
     @Size(min = 2, max = 30, message = "Minimo 2 caracteres, Maximo 30")
-    private String fasgenDescripcion;
-    private Date fasgenFechaproceso;
+    private String Descripcion;
+    private Date Fechaproceso;
 
     @Min(value = 1, message = "Minimo valor 1")
     @Digits(integer = 2, fraction = 0, message = "debe ser un numero menor a 100")
-    private Integer fasgenDianim;
+    private Integer Dianim;
     @Min(value = 1, message = "Minimo valor 1")
     @Digits(integer = 2, fraction = 0, message = "debe ser un numero menor a 100")  
-    private Integer fasgenDiamax;
-    private String fasgenObligatorio;
+    private Integer Diamax;
+    private String Obligatorio;
 
     public FasesGenerales() {
     }
 
-    public FasesGenerales(EtapasGenerales etapasGenerales, EstadoFasesGenerales estadoFasesGenerales, DocumenGenerales documenGenerales, String fasgenDescripcion, Date fasgenFechaproceso, Integer fasgenDianim, Integer fasgenDiamax, String fasgenObligatorio) {
-        this.etapasGenerales = etapasGenerales;
-        this.estadoFasesGenerales = estadoFasesGenerales;
-        this.documenGenerales = documenGenerales;
-        this.fasgenDescripcion = fasgenDescripcion;
-        this.fasgenFechaproceso = fasgenFechaproceso;
-        this.fasgenDianim = fasgenDianim;
-        this.fasgenDiamax = fasgenDiamax;
-        this.fasgenObligatorio = fasgenObligatorio;
+    public FasesGenerales(CivFasesGenerales civFasesGenerales) {
+        this.Id = civFasesGenerales.getFasgenId().intValue();
+        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+    }
+    public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales) {
+        this.Id = civFasesGenerales.getFasgenId().intValue();
+        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.estadoFasesGenerales = new EstadoFasesGenerales(civEstadoFasesGenerales);
+    }
+    public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales,CivEtapasGenerales civEtapasGenerales,CivDocumenGenerales civDocumenGenerales) {
+        this.Id = civFasesGenerales.getFasgenId().intValue();
+        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.estadoFasesGenerales = new EstadoFasesGenerales(civEstadoFasesGenerales);
+        this.etapasGenerales = new EtapasGenerales(civEtapasGenerales);
+        this.documenGenerales = new DocumenGenerales(civDocumenGenerales,civDocumenGenerales.getCivEstadoDocumengenerales());
     }
 
-    public FasesGenerales(BigDecimal fasgenId, EtapasGenerales etapasGenerales, EstadoFasesGenerales estadoFasesGenerales, DocumenGenerales documenGenerales, String fasgenDescripcion, String fasgenObligatorio) {
-        this.fasgenId = fasgenId;
-        this.etapasGenerales = etapasGenerales;
-        this.estadoFasesGenerales = estadoFasesGenerales;
-        this.documenGenerales = documenGenerales;
-        this.fasgenDescripcion = fasgenDescripcion;
-        this.fasgenObligatorio = fasgenObligatorio;
+  
+
+    /**
+     * @return the Id
+     */
+    public int getId() {
+        return Id;
     }
 
-    public FasesGenerales(BigDecimal fasgenId, EtapasGenerales etapasGenerales, EstadoFasesGenerales estadoFasesGenerales, DocumenGenerales documenGenerales, String fasgenDescripcion, Date fasgenFechaproceso, Integer fasgenDianim, Integer fasgenDiamax, String fasgenObligatorio) {
-        this.fasgenId = fasgenId;
-        this.etapasGenerales = etapasGenerales;
-        this.estadoFasesGenerales = estadoFasesGenerales;
-        this.documenGenerales = documenGenerales;
-        this.fasgenDescripcion = fasgenDescripcion;
-        this.fasgenFechaproceso = fasgenFechaproceso;
-        this.fasgenDianim = fasgenDianim;
-        this.fasgenDiamax = fasgenDiamax;
-        this.fasgenObligatorio = fasgenObligatorio;
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(int Id) {
+        this.Id = Id;
     }
 
-    public BigDecimal getFasgenId() {
-        return this.fasgenId;
-    }
-
-    public void setFasgenId(BigDecimal fasgenId) {
-        this.fasgenId = fasgenId;
-    }
-
+    /**
+     * @return the etapasGenerales
+     */
     public EtapasGenerales getEtapasGenerales() {
-        return this.etapasGenerales;
+        return etapasGenerales;
     }
 
+    /**
+     * @param etapasGenerales the etapasGenerales to set
+     */
     public void setEtapasGenerales(EtapasGenerales etapasGenerales) {
         this.etapasGenerales = etapasGenerales;
     }
 
+    /**
+     * @return the estadoFasesGenerales
+     */
     public EstadoFasesGenerales getEstadoFasesGenerales() {
-        return this.estadoFasesGenerales;
+        return estadoFasesGenerales;
     }
 
+    /**
+     * @param estadoFasesGenerales the estadoFasesGenerales to set
+     */
     public void setEstadoFasesGenerales(EstadoFasesGenerales estadoFasesGenerales) {
         this.estadoFasesGenerales = estadoFasesGenerales;
     }
 
+    /**
+     * @return the documenGenerales
+     */
     public DocumenGenerales getDocumenGenerales() {
-        return this.documenGenerales;
+        return documenGenerales;
     }
 
+    /**
+     * @param documenGenerales the documenGenerales to set
+     */
     public void setDocumenGenerales(DocumenGenerales documenGenerales) {
         this.documenGenerales = documenGenerales;
     }
 
-    public String getFasgenDescripcion() {
-        return this.fasgenDescripcion;
+    /**
+     * @return the Descripcion
+     */
+    public String getDescripcion() {
+        return Descripcion;
     }
 
-    public void setFasgenDescripcion(String fasgenDescripcion) {
-        this.fasgenDescripcion = fasgenDescripcion;
+    /**
+     * @param Descripcion the Descripcion to set
+     */
+    public void setDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
     }
 
-    public Date getFasgenFechaproceso() {
-        return this.fasgenFechaproceso;
+    /**
+     * @return the Fechaproceso
+     */
+    public Date getFechaproceso() {
+        return Fechaproceso;
     }
 
-    public void setFasgenFechaproceso(Date fasgenFechaproceso) {
-        this.fasgenFechaproceso = fasgenFechaproceso;
+    /**
+     * @param Fechaproceso the Fechaproceso to set
+     */
+    public void setFechaproceso(Date Fechaproceso) {
+        this.Fechaproceso = Fechaproceso;
     }
 
-    public Integer getFasgenDianim() {
-        return this.fasgenDianim;
+    /**
+     * @return the Dianim
+     */
+    public Integer getDianim() {
+        return Dianim;
     }
 
-    public void setFasgenDianim(Integer fasgenDianim) {
-        this.fasgenDianim = fasgenDianim;
+    /**
+     * @param Dianim the Dianim to set
+     */
+    public void setDianim(Integer Dianim) {
+        this.Dianim = Dianim;
     }
 
-    public Integer getFasgenDiamax() {
-        return this.fasgenDiamax;
+    /**
+     * @return the Diamax
+     */
+    public Integer getDiamax() {
+        return Diamax;
     }
 
-    public void setFasgenDiamax(Integer fasgenDiamax) {
-        this.fasgenDiamax = fasgenDiamax;
+    /**
+     * @param Diamax the Diamax to set
+     */
+    public void setDiamax(Integer Diamax) {
+        this.Diamax = Diamax;
     }
 
-    public String getFasgenObligatorio() {
-        return this.fasgenObligatorio;
+    /**
+     * @return the Obligatorio
+     */
+    public String getObligatorio() {
+        return Obligatorio;
     }
 
-    public void setFasgenObligatorio(String fasgenObligatorio) {
-        this.fasgenObligatorio = fasgenObligatorio;
+    /**
+     * @param Obligatorio the Obligatorio to set
+     */
+    public void setObligatorio(String Obligatorio) {
+        this.Obligatorio = Obligatorio;
     }
 
 }
