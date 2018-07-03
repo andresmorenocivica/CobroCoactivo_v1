@@ -26,5 +26,7 @@ public interface ITEstapaGeneral extends ITGeneryHibernateDao<CivEtapasGenerales
          * @throws Exception 
          */
         List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(Session session, int id) throws Exception ;
+        
+         CivEtapasGenerales getCivEtapaGeneral(int idPlangeneral) throws Exception;
     
 }

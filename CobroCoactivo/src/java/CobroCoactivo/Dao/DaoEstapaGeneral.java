@@ -7,9 +7,11 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 /**
@@ -29,6 +31,20 @@ public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, 
         }
         return null;
 
+    }
+    
+    @Override
+    public CivEtapasGenerales getCivEtapaGeneral(int idEtapaGeneral) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_ETAPAS_GENERALES WHERE ETAGEN_ID = :idEtapaGeneral";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivEtapasGenerales.class);
+        query.setInteger("idEtapaGeneral", idEtapaGeneral);
+        if (query.list().size() > 0) {
+            return (CivEtapasGenerales) query.list().get(0);
+        }   
+        session.close();
+        return null;
     }
 
 }

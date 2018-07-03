@@ -15,4 +15,5 @@ import java.io.Serializable;
  */
 public interface ITDocumentoGenerales extends ITGeneryHibernateDao<CivDocumenGenerales, Integer>{
     
+    CivDocumenGenerales getCivDocumentoGeneral(int idDocumentoGeneral) throws Exception ;
 }

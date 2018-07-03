@@ -340,8 +340,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         bean.setListFasesGenerales(new ArrayList<>());
         List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
         for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
-            CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().find(civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
-            CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().find(civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
+            CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().getCivEtapaGeneral(civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
+            CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().getCivDocumentoGeneral(civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
             FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale,civFasesGenerale.getCivEstadoFasesGenerales(),civEtapasGenerales,civDocumenGenerales);
             bean.getListFasesGenerales().add(fasesGenerales);
         }
