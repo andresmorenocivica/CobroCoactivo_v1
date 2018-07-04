@@ -11,13 +11,9 @@ import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Persistencia.CivUsuarios;
-import CobroCoactivo.Persistencia.CivPersonas;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.Session;
 import CobroCoactivo.Modelo.Usuarios;
-import CobroCoactivo.Modelo.Personas;
 import java.io.Serializable;
 
 /**
@@ -28,16 +24,15 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     private ITUsuarios usuariosDAO;
     private ITPersonas personasDAO;
-    
-    public GestionUsuariosImplBO(){
+
+    public GestionUsuariosImplBO() {
         usuariosDAO = new DaoUsuarios();
         personasDAO = new DaoPersonas();
-    
+
     }
 
     @Override
     public void consultarUsuario(BeanGestionUsuarios bean) throws Exception {
-      
         //List<CivUsuarios> listarCivUsuario = new ArrayList<CivUsuarios>();
         List<CivUsuarios> listaCivUsuario = new ArrayList<>();
         switch (bean.getTipoBusqueda()) {

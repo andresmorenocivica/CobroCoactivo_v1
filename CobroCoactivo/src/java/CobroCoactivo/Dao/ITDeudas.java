@@ -6,7 +6,6 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
 import java.util.List;
 

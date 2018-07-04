@@ -55,9 +55,7 @@ public class BeanGestionUsuarios {
         try {
             setTipoBusqueda(tipo);
             getGestionUsuariosBO().consultarUsuario(this);
-            getListadoUsuarios().size();
         } catch (Exception e) {
-
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
@@ -22,6 +23,7 @@
                     </section>
                     <h:form id="frmConsultarDeudas">
                         <section class="content" >
+                            <p:messages autoUpdate="true" id="mensajeConsultarDeudas" showIcon="false" closable="true"></p:messages>
                             <div class="col-md-12">
                                 <h:panelGrid id="pnlBusquedaDeuda" class="col-lg-12" >
                                     <h:panelGroup rendered="#{gestionDeudasBean.busquedaVisible}" >
@@ -57,7 +59,7 @@
                                                                             </div>
                                                                             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
                                                                                 <div class="input-group margin-5">
-                                                                                    <h:inputText class="form-control text-uppercase" id="txtReferencia" value="#{gestionDeudasBean.referenciaDeuda}">
+                                                                                    <h:inputText class="form-control text-uppercase" id="txtReferencia" value="#{gestionDeudasBean.referenciaDeuda}" required="true" requiredMessage="Escriba la referencia">
                                                                                     </h:inputText>
                                                                                     <span class="input-group-btn">
                                                                                         <h:commandLink class="btn btn-info btn-danger" value="Buscar">

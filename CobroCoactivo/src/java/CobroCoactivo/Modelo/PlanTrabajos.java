@@ -18,12 +18,16 @@ public class PlanTrabajos implements java.io.Serializable {
     private Date Fechaproceso;
     private List<EtapasTrabajos> listaEtapasTrabajo = new ArrayList<>();
     private int countDeudas = 0;
-    private List<Deudas>listaDeudas = new ArrayList<>();
-   
-    
-    
+    private List<Deudas> listaDeudas = new ArrayList<>();
 
     public PlanTrabajos() {
+    }
+
+    public PlanTrabajos(CivPlanTrabajos civPlanTrabajos) {
+        this.Id = civPlanTrabajos.getPlatraId().intValue();
+        this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
+        this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
+
     }
 
     public PlanTrabajos(CivPlanTrabajos civPlanTrabajos, CivEstadoPlanTrabajos civEstadoPlanTrabajos) {
@@ -31,11 +35,6 @@ public class PlanTrabajos implements java.io.Serializable {
         this.estadoPlanTrabajos = new EstadoPlanTrabajos(civEstadoPlanTrabajos);
         this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
         this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
-    }
-     public PlanTrabajos(CivPlanTrabajos civPlanTrabajos) {
-        this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
-        this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
-        this.Id = civPlanTrabajos.getPlatraId().intValue();
     }
 
     /**
@@ -135,6 +134,5 @@ public class PlanTrabajos implements java.io.Serializable {
     public void setListaDeudas(List<Deudas> listaDeudas) {
         this.listaDeudas = listaDeudas;
     }
-
 
 }

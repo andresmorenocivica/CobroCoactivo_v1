@@ -25,7 +25,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                            <h:messages id="msggeneral2" showDetail="false" />
+                            <p:messages autoUpdate="true" id="mensajeConsultarPersona" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
                             <!-- Default box -->
                             <div class="box box-danger">
                                 <div class="box-header with-border">
@@ -38,8 +38,8 @@
                                             <div class="nav-tabs-custom" >
                                                 <ul class="nav nav-tabs" >
                                                     <li class="active" ><a href="#documento" data-toggle="tab">Documento</a></li>
-                                                 <!--   <li><a href="#nombrePersona" data-toggle="tab">Nombre Persona</a></li>
-                                                    <li><a href="#fechas" data-toggle="tab">Fechas</a></li> -->
+                                                    <!--   <li><a href="#nombrePersona" data-toggle="tab">Nombre Persona</a></li>
+                                                       <li><a href="#fechas" data-toggle="tab">Fechas</a></li> -->
                                                 </ul>
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="documento">
@@ -60,7 +60,7 @@
                                                             </div>
                                                             <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
                                                                 <div class="input-group margin-5">
-                                                                    <input type="text" placeholder="Numero Del documento" class="form-control text-uppercase" maxlength="20" jsf:id="txtNumero" value="#{gestionPersonaBean.documentoPersona}"></input>
+                                                                    <h:inputText class="form-control" maxlength="15" id="txtNumero" value="#{gestionPersonaBean.documentoPersona}" required="true" requiredMessage="Digite el numero de documento"></h:inputText>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
                                                                             <f:ajax event="click" execute="frmPersonas:sltDocumentos frmPersonas:txtNumero" listener="#{gestionPersonaBean.buscarPersona(1)}" render="frmPersonas:tblPersona" ></f:ajax>
@@ -161,98 +161,9 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- Comienza Modal Agregar Persona -->
-                            <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Agregar Persona</h4>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                            </div>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <label>Primer Nombre:</label> 
-                                                    <h:inputText class="form-control" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <label>Segundo Nombre:</label> 
-                                                    <h:inputText class="form-control" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <label>Primer Apellido:</label> 
-                                                    <h:inputText class="form-control" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <label>Segundo Apellido:</label> 
-                                                    <h:inputText class="form-control" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label>Sexo:</label> 
-                                                    <h:inputText class="form-control" id="txtSexo" value="#{gestionPersonaBean.detallePersona.sexo}" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group ">
-                                                <h:selectOneMenu  id="selectEstados" class="form-control" value="#{gestionPersonaBean.estadoPersonas}" converter="javax.faces.Integer">
-                                                    <f:selectItems value="#{gestionPersonaBean.listEstadoPersonas}" var="listEstado" itemValue="#{listEstado.id}" itemLabel="#{listEstado.descripcion}"></f:selectItems>
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="form-group ">
-                                                <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">
-                                                    <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label>N Documento:</label> 
-                                                    <h:inputText class="form-control" id="NumDocumento" value="#{gestionPersonaBean.detallePersona.documento}" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label>ID</label> 
-                                                    <h:inputText class="form-control" id="txtID" value="#{gestionPersonaBean.detallePersona.id}" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <h:panelGrid id="pnlGuardar">
-                                                        <h:panelGroup >
-                                                            <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                                <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmPersonas:txtID frmPersonas:txtNombre1 frmPersonas:txtNombre2 frmPersonas:txtApellido1 frmPersonas:txtApellido2 frmPersonas:txtSexo frmPersonas:selectEstados frmPersonas:selectDocumentos frmPersonas:NumDocumento" />
-                                                            </h:commandLink>
-                                                        </h:panelGroup>
-                                                    </h:panelGrid>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Final Modal Agregar Persona -->
                             <h:commandLink class="float" onclick="$('#modalAgregarPersona').modal('show');">
                                 <i class="fa fa-plus my-float"></i>
-                                <f:ajax event="click" render="" ></f:ajax>
+                                <f:ajax event="click" ></f:ajax>
                             </h:commandLink> 
                         </section>
                     </div>

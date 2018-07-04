@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:head>
         <title>Civitrans</title>
@@ -73,7 +74,9 @@
             .cursor{
                 cursor: pointer;
             }
-            #collapse{cursor: pointer}
+            #collapse{
+                cursor: pointer
+            }
         </style>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"></link>
@@ -811,6 +814,95 @@
                     </ui:insert>
                 </div><!--container-->
             </div><!--left and Container--> 
+            <h:form id="frmModalAgregarPersona">
+                <!-- Comienza Modal Agregar Persona -->
+                <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">Guardar Persona</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p:messages autoUpdate="true" id="mensajeModalAgregarPersona" showIcon="false" closable="true" severity="error"></p:messages>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group ">
+                                            <label>Estado</label>
+                                            <h:selectOneMenu  id="selectEstados" class="form-control" value="#{gestionPersonaBean.estadoPersonas}" converter="javax.faces.Integer">
+                                                <f:selectItems value="#{gestionPersonaBean.listEstadoPersonas}" var="listEstado" itemValue="#{listEstado.id}" itemLabel="#{listEstado.descripcion}"></f:selectItems>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group ">
+                                            <label>Tipo de documento</label>
+                                            <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">
+                                                <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>N Documento:</label> 
+                                            <h:inputText class="form-control" id="NumDocumento" value="#{gestionPersonaBean.detallePersona.documento}" required="true" requiredMessage="Numero de documento requerido"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Primer Nombre:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Segundo Nombre:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Primer Apellido:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Segundo apellido Requerido"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Segundo Apellido:</label> 
+                                            <h:inputText class="form-control " id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Sexo:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtSexo" value="#{gestionPersonaBean.detallePersona.sexo}" required="true" requiredMessage="Sexo requerido" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <h:panelGrid id="pnlGuardar">
+                                            <h:panelGroup >
+                                                <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
+                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtSexo frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
+                                                </h:commandLink>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Final Modal Agregar Persona -->
+            </h:form>
             <div class="modal fade" id="modalDetallePersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg ">
                     <div class="modal-content">

@@ -70,10 +70,15 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     @Override
     public void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception {
         List<CivMovimientos> listCivMovimientos = getMovimientosDAO().listMovimientos(bean.getDeudaSelecionada().getId());
-        for (CivMovimientos civMovimiento : listCivMovimientos) {
-            CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
-            Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
-            bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
+        if (listCivMovimientos == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro movimiento en el sistema de esta deuda", null));
+        }
+        if (listCivMovimientos != null) {
+            for (CivMovimientos civMovimiento : listCivMovimientos) {
+                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
+                Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
+                bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
+            }
         }
     }
 
@@ -131,9 +136,11 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             if (bean.getDetallePersona() != null) {
                 if (bean.getDetallePersona().getId() != 0) {
                     List<CivDeudas> listCivDeudas = getDeudasDAO().listarDeudas(bean.getDetallePersona().getId());
-                    for (CivDeudas civDeudas : listCivDeudas) {
-                        Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
-                        bean.getDetallePersona().getListdeuda().add(deudas);
+                    if (listCivDeudas != null) {
+                        for (CivDeudas civDeudas : listCivDeudas) {
+                            Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
+                            bean.getDetallePersona().getListdeuda().add(deudas);
+                        }
                     }
                 }
             }
@@ -144,11 +151,13 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     public void consultarByDocumentoByTipoDocumento(BeanGestionPersonas bean) throws Exception {
         bean.setListPersonas(new ArrayList<>());
         CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
-        if (civPersonas == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "no se encontro la persona en el sistema", null));
+        if (civPersonas != null) {
+            Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+            bean.getListPersonas().add(persona);
         }
-        Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
-        bean.getListPersonas().add(persona);
+        if (civPersonas == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+        }
     }
 
     @Override
@@ -171,15 +180,18 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civEstadoPersonas.setEstperFechaproceso(civEstadoPersonas.getEstperFechaproceso());
 
         civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
-        civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
-        civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
-        civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
+        civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1().toUpperCase());
+        civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2().toUpperCase());
+        civPersonas.setPerSexo(bean.getDetallePersona().getSexo().toUpperCase());
         civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-        civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1());
-        civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2());
+        civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1().toUpperCase());
+        civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2().toUpperCase());
         civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
         getPersonasDAO().create(civPersonas);
+        if (civPersonas != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
+        }
     }
 
     /**

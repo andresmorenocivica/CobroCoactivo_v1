@@ -12,7 +12,6 @@
                     <div class="content-wrapper">
                         <h:outputText value="#{gestionUsuariosBean.encabezadoDetalleUsuario}" escape="false"></h:outputText>
                         <section class="content">
-
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="box box-danger">
@@ -31,7 +30,10 @@
                                                     <b>Friends</b> <a class="pull-right">13,287</a>
                                                 </li>
                                             </ul>
-                                            <a href="#" class="btn btn-danger btn-block"><b>Restablecer Contraseña</b></a>
+                                            <h:commandLink class="btn btn-danger btn-block" onclick="$('#modalRestablecerContraseña').modal('show');">
+                                                <b>Restablecer Contraseña</b>
+                                                <f:ajax event="click" ></f:ajax>
+                                            </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
                                     </div>
@@ -53,10 +55,8 @@
                                                                 <f:ajax event="click" listener="#{gestionUsuariosBean.detalleUsuario.setEditable(false)}" render="frmDetalleUsuario:txtDetUsuarioNombre frmDetalleUsuario:pnlGuardarUsuario frmDetalleUsuario:pnlEditarUsuario"></f:ajax>
                                                             </h:commandLink>
                                                         </h:panelGroup>
-
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <!-- /.box-header -->
                                             <div class="box-body">
@@ -87,8 +87,6 @@
                                         </div>
                                     </h:form>
                                 </div>
-
-
                                 <div class="col-md-9">
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
@@ -97,15 +95,12 @@
                                         </ul>
                                         <div class="tab-content">
                                             <div class="tab-pane" id="activity">
-
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="timeline">
                                                 <!-- The timeline -->
                                             </div>
                                             <!-- /.tab-pane -->
-
-
                                             <!-- /.tab-pane -->
                                         </div>
                                         <!-- /.tab-content -->
@@ -113,13 +108,51 @@
                                     <!-- /.nav-tabs-custom -->
                                 </div>
                             </div>
+                            <div class="modal fade" id="modalRestablecerContraseña" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Restablecer contraseña</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-group has-feedback left-inner-addon">
+                                                    <!-- <p:watermark for="txtpass" value="PASSWORD" id="watermark2" />  -->
+                                                    <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
+                                                    <h:inputSecret autocomplete="false" id="txtpass_" class="form-control" style="display: none"/>
+                                                    <h:inputSecret value="#{loginBean.password}" validatorMessage="Formato de contraseña inválida. No se permiten carácteres especiales." requiredMessage="Por favor ingrese su contraseña." autocomplete="false" id="txtpass" class="form-control" required="true" maxlength="20">
+
+                                                    </h:inputSecret>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Nueva contraseña:</label> 
+                                                    <h:inputText class="form-control" id="passNueva" value="" required="true" requiredMessage="Primer nombre requerido" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Confirme contraseña:</label> 
+                                                    <h:inputText class="form-control" id="passNuevaConfirmada" value="" required="true" requiredMessage="Primer nombre requerido" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                            <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
+                                                <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtSexo frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
+                                            </h:commandLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </h:form>
             </ui:define>
         </ui:composition>
-
-
     </h:body>
 </html>
 
