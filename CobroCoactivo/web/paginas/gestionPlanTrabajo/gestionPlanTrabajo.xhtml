@@ -41,7 +41,7 @@
                                                 <ui:repeat value="#{gestionPlanTrabajoBean.listPlanTrabajos}" var="planTrabajo">
                                                     <li>
                                                         <h:commandLink title="Plan trabajo" value=" #{planTrabajo.descripcion}" class="col-sm-12">
-                                                            <f:ajax event="click" render="formPlanTrabajo:contenedor"  listener="#{gestionPlanTrabajoBean.listaEtapaTrabajo(planTrabajo)}"/>
+                                                            <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalAgregarEtapasTrabajo"  listener="#{gestionPlanTrabajoBean.listaEtapaTrabajo(planTrabajo)}"/>
                                                         </h:commandLink>
 
                                                     </li>  
@@ -76,7 +76,6 @@
                                                                 </i>
                                                             </c:if>
                                                         </div>
-
                                                     </li>
                                                 </ui:repeat> 
                                             </ul>
