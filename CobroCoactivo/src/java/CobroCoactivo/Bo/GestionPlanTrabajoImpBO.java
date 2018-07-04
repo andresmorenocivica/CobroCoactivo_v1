@@ -6,6 +6,7 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionPlanTrabajo;
+import CobroCoactivo.Dao.DaoEstadoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoEstapaGeneral;
 import CobroCoactivo.Dao.DaoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoFasesGenerales;
@@ -13,6 +14,8 @@ import CobroCoactivo.Dao.DaoFasesTrabajo;
 import CobroCoactivo.Dao.DaoPlanGeneral;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoReporteTrabajos;
+import CobroCoactivo.Dao.ITEstadoEtapageneral;
+import CobroCoactivo.Dao.ITEstadoEtapasTrabajo;
 import CobroCoactivo.Dao.ITEstapaGeneral;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesGenerales;
@@ -38,6 +41,7 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivReporteTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -59,6 +63,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     private ITFasesGenerales FasesGeneralesDAO;
     private ITFasesTrabajo FasesTrabajoDAO;
     private ITReporteTrabajos ReporteTrabajosDAO;
+    private ITEstadoEtapasTrabajo estadoEtapasTrabajoDAO;
 
     /**
      * contructor e inicializador Dao
@@ -72,7 +77,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
         FasesGeneralesDAO = new DaoFasesGenerales();
         FasesTrabajoDAO = new DaoFasesTrabajo();
         ReporteTrabajosDAO = new DaoReporteTrabajos();
-
+        estadoEtapasTrabajoDAO = new DaoEstadoEtapasTrabajo();
     }
 
     @Override
@@ -211,8 +216,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                     }
                 }
 
-                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan general creado exitosamente", "Plan de trabajo exitosamente"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Plan de trabajo creado exitosamente", "Plan de trabajo exitosamente"));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#planTrabajo').modal('hide')");
             }
@@ -221,6 +226,31 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
         RequestContext requestContext = RequestContext.getCurrentInstance();
         requestContext.execute("$('#planTrabajo').modal('hide')");
         session.close();
+    }
+
+    @Override
+    public void guardarEtapaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        for (int i = 0; i < beanGestionPlanTrabajo.getListEtapaGenerales().size(); i++) {
+            if (beanGestionPlanTrabajo.getListEtapaGenerales().get(i).isSeleccionado() == true) {
+                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                civEtapasTrabajos.setEtatraId(new BigDecimal(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getId()));
+                civEtapasTrabajos.setEtatraDescricion(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getDescripcion());
+                civEtapasTrabajos.setEtatraFechaproceso(new java.util.Date());
+                civEtapasTrabajos.setEtatraObligatorio(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getObligatorio());
+                civEtapasTrabajos.setEtatraPrioridad(new BigDecimal(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getPrioridad()));
+                CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = getEstadoEtapasTrabajoDAO().find(BigDecimal.ONE);
+                civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
+                CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(beanGestionPlanTrabajo.getPlanTrabajos().getId());
+                civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
+                getEtapasTrabajoDAO().create(civEtapasTrabajos);
+            }
+        }
+        beanGestionPlanTrabajo.listaEtapaTrabajo(beanGestionPlanTrabajo.getPlanTrabajos());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Etapa De trabajo creada exitosamente", "Etapa De trabajo exitosamente"));
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("$('#EtapasTrabajo').modal('hide')");
+
     }
 
     @Override
@@ -332,6 +362,20 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
      */
     public void setEtapaGeneralDAO(ITEstapaGeneral EtapaGeneralDAO) {
         this.EtapaGeneralDAO = EtapaGeneralDAO;
+    }
+
+    /**
+     * @return the estadoEtapasTrabajoDAO
+     */
+    public ITEstadoEtapasTrabajo getEstadoEtapasTrabajoDAO() {
+        return estadoEtapasTrabajoDAO;
+    }
+
+    /**
+     * @param estadoEtapasTrabajoDAO the estadoEtapasTrabajoDAO to set
+     */
+    public void setEstadoEtapasTrabajoDAO(ITEstadoEtapasTrabajo estadoEtapasTrabajoDAO) {
+        this.estadoEtapasTrabajoDAO = estadoEtapasTrabajoDAO;
     }
 
 }

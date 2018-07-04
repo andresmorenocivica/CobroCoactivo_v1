@@ -6,6 +6,7 @@
 package CobroCoactivo.General;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface ITGeneryHibernateDao<T, ID extends Serializable> {
 
     public void update(T entity) throws Exception;
 
-    public T find(ID id) throws Exception;
+    public T find(BigDecimal id) throws Exception;
 
     public void remove(ID id) throws Exception;
 

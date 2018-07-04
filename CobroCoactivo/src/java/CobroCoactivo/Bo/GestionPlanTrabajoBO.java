@@ -30,6 +30,8 @@ public interface GestionPlanTrabajoBO {
      */
     public void guardarPlanTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception;
     
+    public void guardarEtapaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception;
+    
     
     /**
      * retorna una lista de civplantrabajo activa

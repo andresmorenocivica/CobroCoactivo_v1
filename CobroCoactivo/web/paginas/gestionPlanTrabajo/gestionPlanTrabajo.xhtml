@@ -67,12 +67,12 @@
                                                 <ui:repeat value="#{gestionPlanTrabajoBean.listEtapaTrabajos}" var="etapaTrabajo">
                                                     <li>
                                                         <h:commandLink title="Etapa trabajo" value=" #{etapaTrabajo.descricion}" class="col-sm-10" id="btnEtapaTrabajo">
-                                                            <f:ajax event="click" render="formPlanGeneral:fasesTrabajo"  listener="#{gestionPlanTrabajoBean.listarFasestrabajo(etapaTrabajo)}"/>
+                                                            <f:ajax event="click" render="formPlanTrabajo:contenedor"  listener="#{gestionPlanTrabajoBean.listarFasestrabajo(etapaTrabajo)}"/>
                                                         </h:commandLink>
                                                         <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px" >
-                                                            <c:if test="#{etapaGeneral.prioridad !=1 and etapaGeneral.prioridad !=2 and  etapaGeneral.prioridad !=3 }">
+                                                            <c:if test="#{etapaTrabajo.prioridad !=1 and etapaTrabajo.prioridad !=2 and  etapaTrabajo.prioridad !=3 }">
                                                                 <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
-                                                                    <f:ajax event="click" render="formPlanGeneral:modalAgregarEtapasTrabajo" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
+                                                                    <f:ajax event="click" render="formPlanTrabajo:modalAgregarEtapasTrabajo" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
                                                                 </i>
                                                             </c:if>
                                                         </div>
@@ -81,8 +81,7 @@
                                                 </ui:repeat> 
                                             </ul>
                                             <h:commandLink value="Adicionar etapas" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#EtapasTrabajo').modal('show');">
-                                                <f:ajax event="click" render="formPlanGeneral:modalAgregarEtapasTrabajo"/>
-
+                                                <f:ajax event="click" render="formPlanTrabajo:modalAgregarEtapasTrabajo"/>
                                             </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
@@ -148,7 +147,7 @@
                             <!-- start modal   plan general  -->
                             <div class="modal fade bd-example-modal-sm"  tabindex="-1" id="planTrabajo"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog modal-sm">
-                                    <div class="modal-content" jsf:id="modalAgregarPlanTrabajo">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="myModalLabel">Planes de trabajo</h4>
 
@@ -209,7 +208,6 @@
                             
                             
                             
-                            
                               <div class="modal fade bd-example-modal-md"  tabindex="-1" id="EtapasTrabajo"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog modal-md">
                                     <div class="modal-content" jsf:id="modalAgregarEtapasTrabajo">
@@ -233,7 +231,7 @@
                                                 <tbody>
                                                     <ui:repeat value="#{gestionPlanTrabajoBean.listEtapaGenerales}" var="etapaGeneral">
                                                         <tr>
-                                                            <td>#{etapaGeneral.etagenDescripcion}</td>
+                                                            <td>#{etapaGeneral.descripcion}</td>
                                                             <td>
                                                                 <p:selectBooleanCheckbox value="#{etapaGeneral.seleccionado}">
                                                                     <p:ajax event="change" ></p:ajax>
@@ -254,7 +252,7 @@
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <h:commandLink value="Guardar" id="btnGuardarEtapaTrabajo" class="btn btn-success">
-                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor" listener="#{gestionPlanTrabajoBean.guardarPlanTrabajo()}"/>
+                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalAgregarEtapasTrabajo" listener="#{gestionPlanTrabajoBean.guardarEtapaTrabajo()}"/>
                                                     </h:commandLink>
                                                 </div>
                                             </div>

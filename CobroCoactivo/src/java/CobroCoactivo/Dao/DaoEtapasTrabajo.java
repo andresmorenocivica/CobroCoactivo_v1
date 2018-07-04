@@ -22,7 +22,7 @@ public class DaoEtapasTrabajo extends ImpGeneryHibernateDao<CivEtapasTrabajos, I
     @Override
     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(int idPlanTrabajo) throws Exception {
        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_ETAPAS_TRABAJOS WHERE ETATRA_PLATRA_FK =:idPlanTrabajo";
+        String sql = "SELECT * FROM CIV_ETAPAS_TRABAJOS WHERE ETATRA_PLATRA_FK =:idPlanTrabajo ORDER BY ETATRA_PRIORIDAD";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivEtapasTrabajos.class);
         query.setInteger("idPlanTrabajo", idPlanTrabajo);

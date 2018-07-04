@@ -14,6 +14,7 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -56,8 +57,10 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     }
 
     @Override
-    public T find(ID id) {
-        T entity = null;
+    public T find(BigDecimal id) {
+        Session session = session = getSessionFactory().openSession();
+        T entity = (T) session.get(getEntityClass(),id);
+        session.close();
         return entity;
     }
 
