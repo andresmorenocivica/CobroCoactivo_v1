@@ -34,4 +34,6 @@ public interface PlanGeneralBO {
     void listarEstadoFasesGenerales(BeanPlanGeneral bean) throws Exception;
 
     void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception;
+
+    void actualizarFase(BeanPlanGeneral bean) throws Exception;
 }

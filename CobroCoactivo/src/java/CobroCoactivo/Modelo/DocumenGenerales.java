@@ -15,27 +15,27 @@ import java.util.Set;
 public class DocumenGenerales  implements java.io.Serializable {
 
 
-     private int Id;
+     private int id;
      private EstadoDocumengenerales estadoDocumengenerales;
-     private String Descripcion;
-     private Date Fechaproceso;
-     private String Archivo;
+     private String descripcion;
+     private Date fechaproceso;
+     private String archivo;
 
     public DocumenGenerales() {
     }
 
 	
     public DocumenGenerales(CivDocumenGenerales civDocumenGenerales) {
-        this.Id = civDocumenGenerales.getDocgenId().intValue();
-        this.Descripcion = civDocumenGenerales.getDocgenDescripcion();
-        this.Fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
-        this.Archivo = civDocumenGenerales.getDocgenArchivo();
+        this.id = civDocumenGenerales.getDocgenId().intValue();
+        this.descripcion = civDocumenGenerales.getDocgenDescripcion();
+        this.fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
+        this.archivo = civDocumenGenerales.getDocgenArchivo();
     }
     public DocumenGenerales(CivDocumenGenerales civDocumenGenerales,CivEstadoDocumengenerales civEstadoDocumengenerales) {
-        this.Id = civDocumenGenerales.getDocgenId().intValue();
-        this.Descripcion = civDocumenGenerales.getDocgenDescripcion();
-        this.Fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
-        this.Archivo = civDocumenGenerales.getDocgenArchivo();
+        this.id = civDocumenGenerales.getDocgenId().intValue();
+        this.descripcion = civDocumenGenerales.getDocgenDescripcion();
+        this.fechaproceso = civDocumenGenerales.getDocgenFechaproceso();
+        this.archivo = civDocumenGenerales.getDocgenArchivo();
         this.estadoDocumengenerales = new EstadoDocumengenerales(civEstadoDocumengenerales);
     }
 
@@ -43,14 +43,14 @@ public class DocumenGenerales  implements java.io.Serializable {
      * @return the Id
      */
     public int getId() {
-        return Id;
+        return id;
     }
 
     /**
      * @param Id the Id to set
      */
     public void setId(int Id) {
-        this.Id = Id;
+        this.id = Id;
     }
 
     /**
@@ -71,42 +71,42 @@ public class DocumenGenerales  implements java.io.Serializable {
      * @return the Descripcion
      */
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
     /**
      * @param Descripcion the Descripcion to set
      */
     public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+        this.descripcion = Descripcion;
     }
 
     /**
      * @return the Fechaproceso
      */
     public Date getFechaproceso() {
-        return Fechaproceso;
+        return fechaproceso;
     }
 
     /**
      * @param Fechaproceso the Fechaproceso to set
      */
     public void setFechaproceso(Date Fechaproceso) {
-        this.Fechaproceso = Fechaproceso;
+        this.fechaproceso = Fechaproceso;
     }
 
     /**
      * @return the Archivo
      */
     public String getArchivo() {
-        return Archivo;
+        return archivo;
     }
 
     /**
      * @param Archivo the Archivo to set
      */
     public void setArchivo(String Archivo) {
-        this.Archivo = Archivo;
+        this.archivo = Archivo;
     }
 
 }

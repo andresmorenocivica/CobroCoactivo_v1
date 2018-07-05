@@ -18,6 +18,7 @@ public class PlanGenerales {
    
     @Size(min = 2, max = 30, message = "Minimo dos caracteres maximo 30 caracteres")
     private String descripcion;
+    private String color;
 
     private Date Fechaproceso;
     private boolean  selecionado;
@@ -36,6 +37,7 @@ public class PlanGenerales {
         this.descripcion = civPlanGenerales.getPlagenDescripcion();
         this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso();
         this.estadoPlanGenerales = new EstadoPlanGenerales(civEstadoPlanGenerales);
+        this.color = civPlanGenerales.getColor();
     }
 
     /**
@@ -106,6 +108,20 @@ public class PlanGenerales {
      */
     public void setSelecionado(boolean selecionado) {
         this.selecionado = selecionado;
+    }
+
+    /**
+     * @return the color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(String color) {
+        this.color = color;
     }
 
   

@@ -28,7 +28,7 @@
                             <div class="row" jsf:id="contenedor">
                                 <p:messages severity="info,warn"  closable="true" id="planTrabajo" showDetail="false"  showIcon="false" />
                                 <div class="col-md-3">
-                                    <div class="box box-success">
+                                    <div class="box" style="border-top-color: #{gestionPlanTrabajoBean.planTrabajos.color}">
                                         <div class="box-header with-border">
                                             <h3 class="box-title">Plan de trabajo</h3>
                                             <div class="box-tools">
@@ -54,7 +54,7 @@
                                         <!-- /.box-body -->
                                     </div>
                                     <!-- /. box -->
-                                    <div class="box box-success" jsf:id="etapaTrabajo" jsf:rendered="#{gestionPlanTrabajoBean.renderEtapaTrabajo}">
+                                    <div class="box" style="border-top-color:#{gestionPlanTrabajoBean.planTrabajos.color} " jsf:id="etapaTrabajo" jsf:rendered="#{gestionPlanTrabajoBean.renderEtapaTrabajo}">
                                         <div class="box-header with-border">
                                             <h5 class="box-title">Etapas Trabajos #{gestionPlanTrabajoBean.planTrabajos.descripcion}</h5>
                                             <div class="box-tools">
@@ -89,7 +89,7 @@
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-md-9" jsf:id="fasesTrabajo" jsf:rendered="#{gestionPlanTrabajoBean.renderFaseTrabajo}">
-                                    <div class="box box-success">
+                                    <div class="box" style="border-top-color: #{gestionPlanTrabajoBean.planTrabajos.color}">
                                         <div class="box-header with-border">
                                             <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases de trabajo #{gestionPlanTrabajoBean.etapasTrabajos.descricion}"></h:outputLabel>
                                             <!-- /.box-tools -->

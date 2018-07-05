@@ -21,7 +21,7 @@ public class DaoFasesGenerales extends ImpGeneryHibernateDao<CivFasesGenerales, 
 
     @Override
     public List<CivFasesGenerales> AllListByEtapaGeneral(Session session ,int id) throws Exception {
-        String hql = "from CivFasesGenerales where civEtapasGenerales.etagenId=:id";
+        String hql = "from CivFasesGenerales where civEtapasGenerales.etagenId=:id and civEstadoFasesGenerales.estfasgenId=1";
         Query query = session.createQuery(hql);
         query.setParameter("id", new BigDecimal(id));
         return query.list();

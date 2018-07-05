@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +65,7 @@ public class BeanPlanGeneral {
     private Boolean estadoButton = true;
     private Boolean renderEtapaGeneral = false;
     private Boolean renderFaseGeneral = false;
+    private boolean renderDivCambiarArchivo = false;
 
     private String obligatorio;
     private String nombreModalTitulo;
@@ -78,7 +78,7 @@ public class BeanPlanGeneral {
     @PostConstruct
     public void init() {
         try {
-            
+
             setLoginBO(new BeanLogin());
             setRenderFaseGeneral(false);
             setRenderEtapaGeneral(false);
@@ -101,6 +101,22 @@ public class BeanPlanGeneral {
 
         } catch (Exception ex) {
             Logger.getLogger(BeanPlanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void actualizarFase() {
+        try {
+
+            getPlanGeneralBO().actualizarFase(this);
+            getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Plan general creado exitosamente", "Plan General Creado exitosamente"));
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#planGeneral').modal('hide')");
+
         }
 
     }
@@ -200,8 +216,27 @@ public class BeanPlanGeneral {
             setEtapasGenerales(new EtapasGenerales());
         } else if (number == 3) {
             setFasesGenerales(new FasesGenerales());
+            setRenderDivCambiarArchivo(false);
         }
 
+    }
+
+    public void cambiarArchivo() {
+        try {
+            setRenderDivCambiarArchivo(false);
+        } catch (Exception e) {
+        }
+    }
+
+    public void modalActualizarFase(FasesGenerales fasesGenerales) {
+        try {
+            setFile(null);
+            setRenderDivCambiarArchivo(true);
+            setEstadoButton(false);
+            setFasesGenerales(fasesGenerales);
+
+        } catch (Exception e) {
+        }
     }
 
     public void ListarEtapaGeneralesPorIdPlanGeneral(PlanGenerales planGenerales) {
@@ -236,8 +271,7 @@ public class BeanPlanGeneral {
     public void guardarFasesGenerales() {
         try {
             getPlanGeneralBO().guardarFasesGeneral(this);
-            
-           
+
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -556,6 +590,20 @@ public class BeanPlanGeneral {
      */
     public void setLoginBO(BeanLogin loginBO) {
         this.loginBO = loginBO;
+    }
+
+    /**
+     * @return the renderDivCambiarArchivo
+     */
+    public boolean isRenderDivCambiarArchivo() {
+        return renderDivCambiarArchivo;
+    }
+
+    /**
+     * @param renderDivCambiarArchivo the renderDivCambiarArchivo to set
+     */
+    public void setRenderDivCambiarArchivo(boolean renderDivCambiarArchivo) {
+        this.renderDivCambiarArchivo = renderDivCambiarArchivo;
     }
 
 }

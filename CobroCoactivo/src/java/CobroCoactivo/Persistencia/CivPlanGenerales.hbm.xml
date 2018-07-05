@@ -17,6 +17,10 @@
         <property name="plagenFechaproceso" type="date">
             <column name="PLAGEN_FECHAPROCESO" length="7" />
         </property>
+        
+        <property name="color" column="PLAGEN_COLOR">
+           
+        </property>
         <set name="civEtapasGeneraleses" table="CIV_ETAPAS_GENERALES" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ETAGEN_PLAGEN_FK" precision="22" scale="0" not-null="true" />

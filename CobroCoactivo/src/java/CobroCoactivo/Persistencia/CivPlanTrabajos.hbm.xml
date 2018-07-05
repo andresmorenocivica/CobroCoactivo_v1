@@ -14,6 +14,9 @@
         <property name="platraDescripcion" type="string">
             <column name="PLATRA_DESCRIPCION" length="100" not-null="true" />
         </property>
+        <property name="platraColor" column="PLATRA_COLOR">
+            
+        </property>
         <property name="platraFechaproceso" type="date">
             <column name="PLATRA_FECHAPROCESO" length="7" />
         </property>

@@ -17,6 +17,8 @@ public class CivPlanGenerales  implements java.io.Serializable {
      private CivEstadoPlanGenerales civEstadoPlanGenerales;
      private String plagenDescripcion;
      private Date plagenFechaproceso;
+     private String color; 
+            
      private Set civEtapasGeneraleses = new HashSet(0);
 
     public CivPlanGenerales() {
@@ -70,6 +72,20 @@ public class CivPlanGenerales  implements java.io.Serializable {
     
     public void setCivEtapasGeneraleses(Set civEtapasGeneraleses) {
         this.civEtapasGeneraleses = civEtapasGeneraleses;
+    }
+
+    /**
+     * @return the color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(String color) {
+        this.color = color;
     }
 
 

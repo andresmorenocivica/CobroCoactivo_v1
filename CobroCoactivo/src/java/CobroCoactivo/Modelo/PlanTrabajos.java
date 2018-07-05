@@ -16,6 +16,7 @@ public class PlanTrabajos implements java.io.Serializable {
     private EstadoPlanTrabajos estadoPlanTrabajos;
     private String Descripcion;
     private Date Fechaproceso;
+    private String color;
     private List<EtapasTrabajos> listaEtapasTrabajo = new ArrayList<>();
     private int countDeudas = 0;
     private List<Deudas> listaDeudas = new ArrayList<>();
@@ -35,6 +36,7 @@ public class PlanTrabajos implements java.io.Serializable {
         this.estadoPlanTrabajos = new EstadoPlanTrabajos(civEstadoPlanTrabajos);
         this.Descripcion = civPlanTrabajos.getPlatraDescripcion();
         this.Fechaproceso = civPlanTrabajos.getPlatraFechaproceso();
+        this.color = civPlanTrabajos.getPlatraColor();
     }
 
     /**
@@ -133,6 +135,20 @@ public class PlanTrabajos implements java.io.Serializable {
      */
     public void setListaDeudas(List<Deudas> listaDeudas) {
         this.listaDeudas = listaDeudas;
+    }
+
+    /**
+     * @return the color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(String color) {
+        this.color = color;
     }
 
 }

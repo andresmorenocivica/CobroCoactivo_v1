@@ -16,9 +16,9 @@ public class EtapasGenerales implements java.io.Serializable {
 
     private int Id;
     @Size(min = 2, max = 30, message = "Minimo dos caracteres, maximo 30")
-    private String Descripcion;
-    private Date Fechaproceso;
-    private String Obligatorio;
+    private String descripcion;
+    private Date fechaproceso;
+    private String obligatorio;
     @Min(value = 1, message = "Minimo valor 1")
     @Digits(integer = 1, fraction = 0, message = "debe ser un numero")
     private int prioridad;
@@ -31,25 +31,25 @@ public class EtapasGenerales implements java.io.Serializable {
 
     public EtapasGenerales(CivEtapasGenerales civEtapasGenerales) {
         this.Id = civEtapasGenerales.getEtagenId().intValue();
-        this.Descripcion = civEtapasGenerales.getEtagenDescripcion();
-        this.Fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
-        this.Obligatorio = civEtapasGenerales.getEtagenObligatorio();
+        this.descripcion = civEtapasGenerales.getEtagenDescripcion();
+        this.fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
+        this.obligatorio = civEtapasGenerales.getEtagenObligatorio();
         this.prioridad = civEtapasGenerales.getEtagenPrioridad().intValue();
     }
     
      public EtapasGenerales(CivEtapasGenerales civEtapasGenerales,CivEstadoEtapasGenerales civEstadoEtapasGenerales) {
         this.Id = civEtapasGenerales.getEtagenId().intValue();
-        this.Descripcion = civEtapasGenerales.getEtagenDescripcion();
-        this.Fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
-        this.Obligatorio = civEtapasGenerales.getEtagenObligatorio();
+        this.descripcion = civEtapasGenerales.getEtagenDescripcion();
+        this.fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
+        this.obligatorio = civEtapasGenerales.getEtagenObligatorio();
         this.prioridad = civEtapasGenerales.getEtagenPrioridad().intValue();
         this.estadoEtapasGenerales = new EstadoEtapasGenerales(civEstadoEtapasGenerales);
     }
      public EtapasGenerales(CivEtapasGenerales civEtapasGenerales,CivEstadoEtapasGenerales civEstadoEtapasGenerales,CivPlanGenerales civPlanGenerales) {
         this.Id = civEtapasGenerales.getEtagenId().intValue();
-        this.Descripcion = civEtapasGenerales.getEtagenDescripcion();
-        this.Fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
-        this.Obligatorio = civEtapasGenerales.getEtagenObligatorio();
+        this.descripcion = civEtapasGenerales.getEtagenDescripcion();
+        this.fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
+        this.obligatorio = civEtapasGenerales.getEtagenObligatorio();
         this.prioridad = civEtapasGenerales.getEtagenPrioridad().intValue();
         this.estadoEtapasGenerales = new EstadoEtapasGenerales(civEstadoEtapasGenerales);
         this.planGenerales = new PlanGenerales(civPlanGenerales);
@@ -74,42 +74,42 @@ public class EtapasGenerales implements java.io.Serializable {
      * @return the Descripcion
      */
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
     /**
      * @param Descripcion the Descripcion to set
      */
     public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+        this.descripcion = Descripcion;
     }
 
     /**
      * @return the Fechaproceso
      */
     public Date getFechaproceso() {
-        return Fechaproceso;
+        return fechaproceso;
     }
 
     /**
      * @param Fechaproceso the Fechaproceso to set
      */
     public void setFechaproceso(Date Fechaproceso) {
-        this.Fechaproceso = Fechaproceso;
+        this.fechaproceso = Fechaproceso;
     }
 
     /**
      * @return the Obligatorio
      */
     public String getObligatorio() {
-        return Obligatorio;
+        return obligatorio;
     }
 
     /**
      * @param Obligatorio the Obligatorio to set
      */
     public void setObligatorio(String Obligatorio) {
-        this.Obligatorio = Obligatorio;
+        this.obligatorio = Obligatorio;
     }
 
     /**

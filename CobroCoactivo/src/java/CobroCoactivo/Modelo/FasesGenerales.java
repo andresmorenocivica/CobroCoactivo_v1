@@ -2,11 +2,9 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 import CobroCoactivo.Persistencia.CivDocumenGenerales;
-import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Persistencia.CivEstadoFasesGenerales;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
 import CobroCoactivo.Persistencia.CivFasesGenerales;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -22,41 +20,42 @@ public class FasesGenerales implements java.io.Serializable {
     private EstadoFasesGenerales estadoFasesGenerales;
     private DocumenGenerales documenGenerales;
     @Size(min = 2, max = 30, message = "Minimo 2 caracteres, Maximo 30")
-    private String Descripcion;
-    private Date Fechaproceso;
+    private String descripcion;
+    private Date fechaproceso;
 
     @Min(value = 1, message = "Minimo valor 1")
     @Digits(integer = 2, fraction = 0, message = "debe ser un numero menor a 100")
-    private Integer Dianim;
+    private Integer dianim;
     @Min(value = 1, message = "Minimo valor 1")
     @Digits(integer = 2, fraction = 0, message = "debe ser un numero menor a 100")  
-    private Integer Diamax;
-    private String Obligatorio;
+    private Integer diamax;
+    private String obligatorio;
 
     public FasesGenerales() {
     }
 
     public FasesGenerales(CivFasesGenerales civFasesGenerales) {
         this.Id = civFasesGenerales.getFasgenId().intValue();
-        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
-        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
-        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
-        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.diamax = civFasesGenerales.getFasgenDiamax().intValue();
     }
     public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales) {
         this.Id = civFasesGenerales.getFasgenId().intValue();
-        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
-        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
-        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
-        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.diamax = civFasesGenerales.getFasgenDiamax().intValue();
         this.estadoFasesGenerales = new EstadoFasesGenerales(civEstadoFasesGenerales);
     }
     public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales,CivEtapasGenerales civEtapasGenerales,CivDocumenGenerales civDocumenGenerales) {
         this.Id = civFasesGenerales.getFasgenId().intValue();
-        this.Descripcion = civFasesGenerales.getFasgenDescripcion();
-        this.Fechaproceso = civFasesGenerales.getFasgenFechaproceso();
-        this.Dianim = civFasesGenerales.getFasgenDianim().intValue();
-        this.Diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.descripcion = civFasesGenerales.getFasgenDescripcion();
+        this.fechaproceso = civFasesGenerales.getFasgenFechaproceso();
+        this.dianim = civFasesGenerales.getFasgenDianim().intValue();
+        this.diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.obligatorio = civFasesGenerales.getFasgenObligatorio();
         this.estadoFasesGenerales = new EstadoFasesGenerales(civEstadoFasesGenerales);
         this.etapasGenerales = new EtapasGenerales(civEtapasGenerales);
         this.documenGenerales = new DocumenGenerales(civDocumenGenerales,civDocumenGenerales.getCivEstadoDocumengenerales());
@@ -124,70 +123,70 @@ public class FasesGenerales implements java.io.Serializable {
      * @return the Descripcion
      */
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
     /**
      * @param Descripcion the Descripcion to set
      */
     public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+        this.descripcion = Descripcion;
     }
 
     /**
      * @return the Fechaproceso
      */
     public Date getFechaproceso() {
-        return Fechaproceso;
+        return fechaproceso;
     }
 
     /**
      * @param Fechaproceso the Fechaproceso to set
      */
     public void setFechaproceso(Date Fechaproceso) {
-        this.Fechaproceso = Fechaproceso;
+        this.fechaproceso = Fechaproceso;
     }
 
     /**
      * @return the Dianim
      */
     public Integer getDianim() {
-        return Dianim;
+        return dianim;
     }
 
     /**
      * @param Dianim the Dianim to set
      */
     public void setDianim(Integer Dianim) {
-        this.Dianim = Dianim;
+        this.dianim = Dianim;
     }
 
     /**
      * @return the Diamax
      */
     public Integer getDiamax() {
-        return Diamax;
+        return diamax;
     }
 
     /**
      * @param Diamax the Diamax to set
      */
     public void setDiamax(Integer Diamax) {
-        this.Diamax = Diamax;
+        this.diamax = Diamax;
     }
 
     /**
      * @return the Obligatorio
      */
     public String getObligatorio() {
-        return Obligatorio;
+        return obligatorio;
     }
 
     /**
      * @param Obligatorio the Obligatorio to set
      */
     public void setObligatorio(String Obligatorio) {
-        this.Obligatorio = Obligatorio;
+        this.obligatorio = Obligatorio;
     }
 
 }
