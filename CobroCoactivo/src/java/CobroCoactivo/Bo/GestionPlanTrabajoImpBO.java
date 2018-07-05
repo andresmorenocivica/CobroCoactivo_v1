@@ -216,14 +216,11 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
                     }
                 }
-
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan de trabajo creado exitosamente", "Plan de trabajo exitosamente"));
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#planTrabajo').modal('hide')");
             }
         }
         beanGestionPlanTrabajo.init();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Plan de trabajo creado exitosamente", "Plan de trabajo exitosamente"));
         RequestContext requestContext = RequestContext.getCurrentInstance();
         requestContext.execute("$('#planTrabajo').modal('hide')");
         session.close();
