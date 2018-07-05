@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
     <h:body>
-
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
                 <h:form id="frmDetalleUsuario">
@@ -101,7 +102,6 @@
                                                 <!-- The timeline -->
                                             </div>
                                             <!-- /.tab-pane -->
-                                            <!-- /.tab-pane -->
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
@@ -109,40 +109,44 @@
                                 </div>
                             </div>
                             <div class="modal fade" id="modalRestablecerContraseña" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
+                                <div class="modal-dialog modal-md">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             <h4 class="modal-title" id="myModalLabel">Restablecer contraseña</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="form-group">
-                                                <div class="form-group has-feedback left-inner-addon">
-                                                    <!-- <p:watermark for="txtpass" value="PASSWORD" id="watermark2" />  -->
-                                                    <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
-                                                    <h:inputSecret autocomplete="false" id="txtpass_" class="form-control" style="display: none"/>
-                                                    <h:inputSecret value="#{loginBean.password}" validatorMessage="Formato de contraseña inválida. No se permiten carácteres especiales." requiredMessage="Por favor ingrese su contraseña." autocomplete="false" id="txtpass" class="form-control" required="true" maxlength="20">
-
-                                                    </h:inputSecret>
+                                            <div class="row">
+                                                <p:messages autoUpdate="true" id="mensajeModalRestablecer" showIcon="false" closable="true" severity="error,info"></p:messages>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="form-group has-feedback left-inner-addon">
+                                                            <label>Contraseña Actual:</label> 
+                                                            <h:inputSecret value="#{gestionUsuariosBean.contraseñaActual}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                                            </h:inputSecret>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Nueva contraseña:</label> 
-                                                    <h:inputText class="form-control" id="passNueva" value="" required="true" requiredMessage="Primer nombre requerido" />
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Nueva contraseña:</label> 
+                                                        <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="20" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
+                                                        </h:inputSecret>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Confirme contraseña:</label> 
-                                                    <h:inputText class="form-control" id="passNuevaConfirmada" value="" required="true" requiredMessage="Primer nombre requerido" />
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Confirme contraseña:</label> 
+                                                        <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="20" value="#{gestionUsuariosBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
+                                                        </h:inputSecret>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                            <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtSexo frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
+                                            <h:commandLink value="Actualizar" id="btnGuardarContraseña" class="btn btn-success">
+                                                <f:ajax event="click" listener="#{gestionUsuariosBean.actualizarContraseña()}" execute="frmDetalleUsuario:txtPassActual frmDetalleUsuario:txtPassNueva frmDetalleUsuario:txtPassConfirmacionNueva" />
                                             </h:commandLink>
                                         </div>
                                     </div>

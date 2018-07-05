@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import org.hibernate.Session;
  *
  * @author JefreySistemas
  */
-public interface ITUsuarios {
+public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
 
     /**
      * Valida el usuario y la contraseña. Usado para el inicio de sesión

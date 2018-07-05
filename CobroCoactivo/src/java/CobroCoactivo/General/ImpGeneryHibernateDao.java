@@ -59,7 +59,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     @Override
     public T find(BigDecimal id) {
         Session session = session = getSessionFactory().openSession();
-        T entity = (T) session.get(getEntityClass(),id);
+        T entity = (T) session.get(getEntityClass(), id);
         session.close();
         return entity;
     }

@@ -19,6 +19,7 @@ public interface GestionUsuariosBO {
      * @throws Exception
      */
     void consultarUsuario(BeanGestionUsuarios bean) throws Exception;
-    
+
+    void actualizarContraseña(BeanGestionUsuarios bean) throws Exception;
 
 }

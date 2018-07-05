@@ -34,5 +34,5 @@ public interface ITLogin {
      * @throws Exception
      */
     public CivUsuarios getUsuario(Session session,String nombre_usu) throws Exception;
-
+    
 }

@@ -24,7 +24,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                            <p:messages autoUpdate="true" id="mensajeConsultarPersona" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
+                            <p:messages autoUpdate="true" id="mensajeConsultarUsuarios" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
                             <div class="box box-danger">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Busquedas</h3>
@@ -55,7 +55,7 @@
                                                                 <div class="input-group margin-5">
                                                                     <h:inputText class="form-control text-uppercase" maxlength="20" id="txtNombreUsuario" value="#{gestionUsuariosBean.nombreUsuario}" required="true" requiredMessage="Digite el nombre del usuario"></h:inputText>
                                                                     <span class="input-group-btn">
-                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                        <h:commandLink class="btn btn-danger" value="Buscar">
                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.consultarUsuarios(1)}" execute="frmConsultas:txtNombreUsuario" render="frmConsultas:tblUsuario"/>
                                                                         </h:commandLink>
                                                                     </span>

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Jefrey Padilla
  */
-public interface LoginBO{
+public interface LoginBO {
 
     /**
      *
@@ -34,7 +34,7 @@ public interface LoginBO{
      * @return @throws Exception
      */
     public String generarContrasena() throws Exception;
-    
+
     /**
      *
      * @param obj
@@ -42,7 +42,7 @@ public interface LoginBO{
      * @throws java.lang.Exception
      */
     void listarPerfilRecursos(BeanLogin obj) throws Exception;
-    
+
     /**
      *
      * @param obj
@@ -50,7 +50,6 @@ public interface LoginBO{
      * @return
      * @throws java.lang.Exception
      */
-
     /**
      *
      * @param obj

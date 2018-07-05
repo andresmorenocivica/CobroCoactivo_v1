@@ -23,7 +23,6 @@ import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Utility.DateUtility;
 import CobroCoactivo.Utility.Log_Handler;
 import CobroCoactivo.Utility.ValidacionPassword;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;

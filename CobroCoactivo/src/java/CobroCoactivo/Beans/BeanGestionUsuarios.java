@@ -9,6 +9,7 @@ import CobroCoactivo.Bo.GestionUsuariosBO;
 import CobroCoactivo.Bo.GestionUsuariosImplBO;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Utility.Log_Handler;
+import static com.sun.faces.facelets.util.Path.context;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -33,6 +34,9 @@ public class BeanGestionUsuarios {
 
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
+    private String contraseñaActual;
+    private String contraseñaNueva;
+    private String contraseñaConfirmacion;
 
     @PostConstruct
     public void init() {
@@ -55,6 +59,29 @@ public class BeanGestionUsuarios {
         try {
             setTipoBusqueda(tipo);
             getGestionUsuariosBO().consultarUsuario(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void actualizarContraseña() {
+        try {
+            if (!getDetalleUsuario().getPass().equals(contraseñaActual)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
+            }
+            if (getDetalleUsuario().getPass().equals(contraseñaActual) && !getContraseñaNueva().equals(contraseñaConfirmacion)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
+            }
+
+            if (getDetalleUsuario().getPass().equals(contraseñaActual) && getContraseñaNueva().equals(contraseñaConfirmacion)) {
+                if (getContraseñaNueva().equals(contraseñaActual)) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
+                } else {
+                    getGestionUsuariosBO().actualizarContraseña(this);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
+                }
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -143,5 +170,47 @@ public class BeanGestionUsuarios {
      */
     public void setEncabezadoDetalleUsuario(String encabezadoDetalleUsuario) {
         this.encabezadoDetalleUsuario = encabezadoDetalleUsuario;
+    }
+
+    /**
+     * @return the contraseñaActual
+     */
+    public String getContraseñaActual() {
+        return contraseñaActual;
+    }
+
+    /**
+     * @param contraseñaActual the contraseñaActual to set
+     */
+    public void setContraseñaActual(String contraseñaActual) {
+        this.contraseñaActual = contraseñaActual;
+    }
+
+    /**
+     * @return the contraseñaNueva
+     */
+    public String getContraseñaNueva() {
+        return contraseñaNueva;
+    }
+
+    /**
+     * @param contraseñaNueva the contraseñaNueva to set
+     */
+    public void setContraseñaNueva(String contraseñaNueva) {
+        this.contraseñaNueva = contraseñaNueva;
+    }
+
+    /**
+     * @return the contraseñaConfirmacion
+     */
+    public String getContraseñaConfirmacion() {
+        return contraseñaConfirmacion;
+    }
+
+    /**
+     * @param contraseñaConfirmacion the contraseñaConfirmacion to set
+     */
+    public void setContraseñaConfirmacion(String contraseñaConfirmacion) {
+        this.contraseñaConfirmacion = contraseñaConfirmacion;
     }
 }

@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <h:head>
         <title>Civitrans</title>
@@ -848,7 +849,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>N Documento:</label> 
-                                            <h:inputText class="form-control" id="NumDocumento" value="#{gestionPersonaBean.detallePersona.documento}" required="true" requiredMessage="Numero de documento requerido"/>
+                                            <input type="number" class="form-control" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">

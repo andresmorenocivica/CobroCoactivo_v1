@@ -60,7 +60,7 @@
                                                             </div>
                                                             <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
                                                                 <div class="input-group margin-5">
-                                                                    <h:inputText class="form-control" maxlength="15" id="txtNumero" value="#{gestionPersonaBean.documentoPersona}" required="true" requiredMessage="Digite el numero de documento"></h:inputText>
+                                                                    <input placeholder="Ingrese el documento" type="number" class="form-control" maxlength="15" jsf:id="txtNumero" jsf:value="#{gestionPersonaBean.documentoPersona}" jsf:required="true" jsf:requiredMessage="Digite el numero de documento"></input>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
                                                                             <f:ajax event="click" execute="frmPersonas:sltDocumentos frmPersonas:txtNumero" listener="#{gestionPersonaBean.buscarPersona(1)}" render="frmPersonas:tblPersona" ></f:ajax>

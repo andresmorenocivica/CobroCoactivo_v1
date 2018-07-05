@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.HibernateUtil;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoUsuarios implements ITUsuarios {
+public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios  {
 
 //    @Override
 //    public CivUsuarios consultarUsuario(String usuario, String password) throws Exception {

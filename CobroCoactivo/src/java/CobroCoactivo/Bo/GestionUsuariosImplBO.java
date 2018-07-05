@@ -14,7 +14,9 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import java.util.ArrayList;
 import java.util.List;
 import CobroCoactivo.Modelo.Usuarios;
+import CobroCoactivo.Persistencia.CivEstadoUsuarios;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -46,6 +48,13 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 bean.getListadoUsuarios().add(usuarios);
             }
         }
+    }
+
+    @Override
+    public void actualizarContraseña(BeanGestionUsuarios bean) throws Exception {
+        CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
+        civUsuarios.setUsuPass(bean.getContraseñaConfirmacion());
+        getUsuariosDAO().update(civUsuarios);
     }
 
     /**
