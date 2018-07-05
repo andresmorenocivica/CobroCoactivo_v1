@@ -18,6 +18,7 @@ import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -163,23 +164,8 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     @Override
     public void guardarPersona(BeanGestionPersonas bean) throws Exception {
         CivPersonas civPersonas = new CivPersonas();
-
         CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(BigDecimal.valueOf(bean.getTipoDocumentoPersona()));
-        civTipoDocumentos.setTipdocId(civTipoDocumentos.getTipdocId());
-        civTipoDocumentos.setTipdocDescripcion(civTipoDocumentos.getTipdocDescripcion());
-        civTipoDocumentos.setTipdocNombrecorto(civTipoDocumentos.getTipdocNombrecorto());
-        civTipoDocumentos.setTipdocCodigo(civTipoDocumentos.getTipdocCodigo());
-        civTipoDocumentos.setTipdocFechainicial(civTipoDocumentos.getTipdocFechainicial());
-        civTipoDocumentos.setTipdocFechafinal(civTipoDocumentos.getTipdocFechafinal());
-
-        CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(bean.getEstadoPersonas()));
-        civEstadoPersonas.setEstperId(civEstadoPersonas.getEstperId());
-        civEstadoPersonas.setEstperDescripcion(civEstadoPersonas.getEstperDescripcion());
-        civEstadoPersonas.setEstperFechainicial(civEstadoPersonas.getEstperFechainicial());
-        civEstadoPersonas.setEstperFechafinal(civEstadoPersonas.getEstperFechafinal());
-        civEstadoPersonas.setEstperFechaproceso(civEstadoPersonas.getEstperFechaproceso());
-
-        civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
+        CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(1));
         civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1().toUpperCase());
         civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2().toUpperCase());
         civPersonas.setPerSexo(bean.getDetallePersona().getSexo().toUpperCase());
@@ -187,6 +173,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1().toUpperCase());
         civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2().toUpperCase());
         civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
+        civPersonas.setPerFechaproceso(new Date());
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
         getPersonasDAO().create(civPersonas);
         if (civPersonas != null) {
