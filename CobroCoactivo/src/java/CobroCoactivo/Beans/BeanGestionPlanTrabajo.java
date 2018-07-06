@@ -9,11 +9,11 @@ import CobroCoactivo.Bo.GestionPlanTrabajoBO;
 import CobroCoactivo.Bo.GestionPlanTrabajoImpBO;
 import CobroCoactivo.Modelo.EtapasGenerales;
 import CobroCoactivo.Modelo.EtapasTrabajos;
+import CobroCoactivo.Modelo.FasesGenerales;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanGenerales;
 import CobroCoactivo.Modelo.PlanTrabajos;
 import CobroCoactivo.Utility.Log_Handler;
-import com.sun.javafx.application.PlatformImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -25,7 +25,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.primefaces.context.RequestContext;
 
 /**
  * el bean encargado de administrar todo lo referente a la vista plan trabajo
@@ -36,7 +35,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "gestionPlanTrabajoBean")
 @ViewScoped
 public class BeanGestionPlanTrabajo {
-
+    
     private List<PlanGenerales> listPlanGenerales = new ArrayList<>();
     private List<PlanTrabajos> listPlanTrabajos = new ArrayList<>();
     private GestionPlanTrabajoBO gestionPlanTrabajoBO = new GestionPlanTrabajoImpBO();
@@ -46,6 +45,7 @@ public class BeanGestionPlanTrabajo {
     private boolean renderEtapaTrabajo = false;
     private EtapasTrabajos etapasTrabajos = new EtapasTrabajos();
     private List<FasesTrabajos> listFasesTrabajoses = new ArrayList<>();
+    private List<FasesGenerales> listFasesGeneral = new ArrayList<>();
     private boolean renderFaseTrabajo;
     private BeanLogin loginBO;
 
@@ -57,13 +57,13 @@ public class BeanGestionPlanTrabajo {
         try {
             getGestionPlanTrabajoBO().getListaTrabajo(this);
             getGestionPlanTrabajoBO().getListPlanGenaral(this);
-
+            
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
         }
-
+        
     }
 
     /**
@@ -72,7 +72,7 @@ public class BeanGestionPlanTrabajo {
     public void guardarPlanTrabajo() {
         try {
             getGestionPlanTrabajoBO().guardarPlanTrabajo(this);
-
+            
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -80,7 +80,17 @@ public class BeanGestionPlanTrabajo {
         }
     }
     
-    public void guardarEtapaTrabajo(){
+    public void guardarFasesTrabajo() {
+        try {
+            getGestionPlanTrabajoBO().guardarFaseTrabajo(this);
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
+        }
+    }
+    
+    public void guardarEtapaTrabajo() {
         try {
             getGestionPlanTrabajoBO().guardarEtapaTrabajo(this);
         } catch (Exception e) {
@@ -89,11 +99,12 @@ public class BeanGestionPlanTrabajo {
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
         }
     }
-
+    
     public void listaEtapaTrabajo(PlanTrabajos planTrabajos) {
         try {
             setPlanTrabajos(planTrabajos);
             setRenderEtapaTrabajo(true);
+            setRenderFaseTrabajo(false);
             getGestionPlanTrabajoBO().getListEtapaTrabajo(this);
             getGestionPlanTrabajoBO().getListEtapaGenerales(this);
             getListEtapaGenerales();
@@ -102,22 +113,23 @@ public class BeanGestionPlanTrabajo {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
         }
-
+        
     }
-
+    
     public void listarFasestrabajo(EtapasTrabajos etapasTrabajos) {
-
+        
         try {
             setEtapasTrabajos(etapasTrabajos);
             setRenderFaseTrabajo(true);
             getGestionPlanTrabajoBO().getFases(this);
+            getGestionPlanTrabajoBO().getfasesGenerales(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
         }
     }
-
+    
     public void mostrarPdf(String archivo) {
         try {
             File ficheroXLS = new File(archivo);
@@ -141,20 +153,37 @@ public class BeanGestionPlanTrabajo {
                 out.close();
                 ctx.responseComplete();
             }
-
+            
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
         }
     }
-
+    
     public boolean renderBottonAdicionar() {
         if (getListPlanGenerales().size() == 0 || getListPlanGenerales() == null) {
             return false;
         }
-
+        
         return true;
+    }
+    
+    public boolean renderBottonAdicionarEtapas() {
+        if (getListEtapaGenerales().size() == 0 || getListEtapaGenerales() == null) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public boolean renderBotonAdicionatFases() {
+        if (getListFasesGeneral().size() == 0 || getListFasesGeneral() == null) {
+            return false;
+        }
+        
+        return true;
+        
     }
 
     /**
@@ -319,4 +348,18 @@ public class BeanGestionPlanTrabajo {
         this.listEtapaGenerales = listEtapaGenerales;
     }
 
+    /**
+     * @return the listFasesGeneral
+     */
+    public List<FasesGenerales> getListFasesGeneral() {
+        return listFasesGeneral;
+    }
+
+    /**
+     * @param listFasesGeneral the listFasesGeneral to set
+     */
+    public void setListFasesGeneral(List<FasesGenerales> listFasesGeneral) {
+        this.listFasesGeneral = listFasesGeneral;
+    }
+    
 }

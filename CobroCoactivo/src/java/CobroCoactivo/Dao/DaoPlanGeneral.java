@@ -8,7 +8,9 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -40,5 +42,12 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales,Integ
         }   
         session.close();
         return null;
+    }
+    
+    @Override
+    public List<CivPlanGenerales> getListPlanGenerales(Session session) throws Exception {
+        String hql = "from CivPlanGenerales where civEstadoPlanGenerales.estplagenId=1";
+        Query query = session.createQuery(hql);
+        return query.list();
     }
 }

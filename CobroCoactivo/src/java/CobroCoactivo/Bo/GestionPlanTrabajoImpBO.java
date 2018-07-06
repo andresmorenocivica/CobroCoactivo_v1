@@ -14,7 +14,6 @@ import CobroCoactivo.Dao.DaoFasesTrabajo;
 import CobroCoactivo.Dao.DaoPlanGeneral;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoReporteTrabajos;
-import CobroCoactivo.Dao.ITEstadoEtapageneral;
 import CobroCoactivo.Dao.ITEstadoEtapasTrabajo;
 import CobroCoactivo.Dao.ITEstapaGeneral;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
@@ -25,6 +24,7 @@ import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITReporteTrabajos;
 import CobroCoactivo.Modelo.EtapasGenerales;
 import CobroCoactivo.Modelo.EtapasTrabajos;
+import CobroCoactivo.Modelo.FasesGenerales;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanGenerales;
 import CobroCoactivo.Modelo.PlanTrabajos;
@@ -41,7 +41,6 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivReporteTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -82,8 +81,9 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
     @Override
     public void getListPlanGenaral(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        Session session =  HibernateUtil.getSessionFactory().openSession();
         beanGestionPlanTrabajo.setListPlanGenerales(new ArrayList<>());
-        List<CivPlanGenerales> listCivPlanGenerales = getPlanGeneralDAO().findAll();
+        List<CivPlanGenerales> listCivPlanGenerales = getPlanGeneralDAO().getListPlanGenerales(session);
         for (CivPlanGenerales civPlanGenerale : listCivPlanGenerales) {
             boolean flag = true;
             for (PlanTrabajos planTrabajo : beanGestionPlanTrabajo.getListPlanTrabajos()) {
@@ -96,6 +96,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                 beanGestionPlanTrabajo.getListPlanGenerales().add(planGenerales);
             }
         }
+        
+        session.close();
     }
 
     @Override
@@ -227,6 +229,39 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     }
 
     @Override
+    public void guardarFaseTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        for (int i = 0; i < beanGestionPlanTrabajo.getListFasesGeneral().size(); i++) {
+            if (beanGestionPlanTrabajo.getListFasesGeneral().get(i).isSeleccionado()) {
+                CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
+                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                civEtapasTrabajos.setEtatraId(new BigDecimal(beanGestionPlanTrabajo.getEtapasTrabajos().getId()));
+                CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
+                civReporteTrabajos.setReptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getId()));
+                CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
+                civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getEstadoFasesGenerales().getId()));
+                civFasesTrabajos.setFastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getId()));
+                civFasesTrabajos.setFastraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDescripcion());
+                civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
+                civFasesTrabajos.setFastraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getFechaproceso());
+                civFasesTrabajos.setFastraDianim(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDianim()));
+                civFasesTrabajos.setFastraDiamax(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDiamax()));
+                civFasesTrabajos.setFastraObligatorio(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getObligatorio());
+                civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
+                civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
+                getFasesTrabajoDAO().create(civFasesTrabajos);
+                
+            }
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "fase de trabajo creada exitosamente", "Etapa De trabajo exitosamente"));
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("$('#fasesTrabajos').modal('hide')");
+        getFases(beanGestionPlanTrabajo);
+        getfasesGenerales(beanGestionPlanTrabajo);
+    }
+
+    @Override
     public void guardarEtapaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         for (int i = 0; i < beanGestionPlanTrabajo.getListEtapaGenerales().size(); i++) {
             if (beanGestionPlanTrabajo.getListEtapaGenerales().get(i).isSeleccionado() == true) {
@@ -262,6 +297,27 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
             }
         }
+    }
+
+    @Override
+    public void getfasesGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        beanGestionPlanTrabajo.setListFasesGeneral(new ArrayList<>());
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        List<CivFasesGenerales> listFasesGenerales = FasesGeneralesDAO.AllListByEtapaGeneral(session, beanGestionPlanTrabajo.getEtapasTrabajos().getId());
+        for (CivFasesGenerales civFasesGenerale : listFasesGenerales) {
+            FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale, civFasesGenerale.getCivEstadoFasesGenerales(), civFasesGenerale.getCivEtapasGenerales(), civFasesGenerale.getCivDocumenGenerales());
+            boolean flag = true;
+            for (FasesTrabajos fasesTrabajos : beanGestionPlanTrabajo.getListFasesTrabajoses()) {
+                if (fasesTrabajos.getId() == fasesGenerales.getId()) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                beanGestionPlanTrabajo.getListFasesGeneral().add(fasesGenerales);
+            }
+
+        }
+        session.close();
     }
 
     /**

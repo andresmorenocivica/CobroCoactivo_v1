@@ -30,6 +30,7 @@ public class FasesGenerales implements java.io.Serializable {
     @Digits(integer = 2, fraction = 0, message = "debe ser un numero menor a 100")  
     private Integer diamax;
     private String obligatorio;
+    private boolean seleccionado;
 
     public FasesGenerales() {
     }
@@ -40,6 +41,7 @@ public class FasesGenerales implements java.io.Serializable {
         this.fechaproceso = civFasesGenerales.getFasgenFechaproceso();
         this.dianim = civFasesGenerales.getFasgenDianim().intValue();
         this.diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.obligatorio = civFasesGenerales.getFasgenObligatorio();
     }
     public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales) {
         this.Id = civFasesGenerales.getFasgenId().intValue();
@@ -47,6 +49,7 @@ public class FasesGenerales implements java.io.Serializable {
         this.fechaproceso = civFasesGenerales.getFasgenFechaproceso();
         this.dianim = civFasesGenerales.getFasgenDianim().intValue();
         this.diamax = civFasesGenerales.getFasgenDiamax().intValue();
+        this.obligatorio = civFasesGenerales.getFasgenObligatorio();
         this.estadoFasesGenerales = new EstadoFasesGenerales(civEstadoFasesGenerales);
     }
     public FasesGenerales(CivFasesGenerales civFasesGenerales,CivEstadoFasesGenerales civEstadoFasesGenerales,CivEtapasGenerales civEtapasGenerales,CivDocumenGenerales civDocumenGenerales) {
@@ -187,6 +190,20 @@ public class FasesGenerales implements java.io.Serializable {
      */
     public void setObligatorio(String Obligatorio) {
         this.obligatorio = Obligatorio;
+    }
+
+    /**
+     * @return the seleccionado
+     */
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+
+    /**
+     * @param seleccionado the seleccionado to set
+     */
+    public void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
     }
 
 }
