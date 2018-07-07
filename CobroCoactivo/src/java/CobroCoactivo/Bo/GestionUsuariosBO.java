@@ -22,4 +22,9 @@ public interface GestionUsuariosBO {
 
     void actualizarContraseña(BeanGestionUsuarios bean) throws Exception;
 
+    void cargarDatosPersonas(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarTipoDocumento(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarModulos(BeanGestionUsuarios bean) throws Exception;
 }

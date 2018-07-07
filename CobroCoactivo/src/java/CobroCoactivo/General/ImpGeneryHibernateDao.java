@@ -9,8 +9,10 @@ import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
+import CobroCoactivo.Persistencia.CivModulos;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
+import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -113,6 +115,19 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
                 }
             }
 
+            if (getEntityClass().getName().contains("CivRecursos")) {
+                for (CivRecursos entity : (List<CivRecursos>) entities) {
+                    Hibernate.initialize(entity.getCivEstadoRecursos());
+                    Hibernate.initialize(entity.getCivTipoRecursos());
+                    Hibernate.initialize(entity.getCivModulos());
+                    Hibernate.initialize(entity.getCivPerfiles());
+                }
+            }
+            if (getEntityClass().getName().contains("CivModulos")) {
+                for (CivModulos entity : (List<CivModulos>) entities) {
+                    Hibernate.initialize(entity.getCivEstadoModulos());
+                }
+            }
             return entities;
 
         } finally {

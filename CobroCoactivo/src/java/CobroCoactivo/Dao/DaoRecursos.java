@@ -6,30 +6,31 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivMovimientos;
+import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.math.BigDecimal;
+import java.util.List;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 /**
  *
- * @author AMORENO
+ * @author emadrid
  */
-public class DaoMovimiento extends ImpGeneryHibernateDao<CivMovimientos, Integer> implements ITMovimiento{
+public class DaoRecursos extends ImpGeneryHibernateDao<CivRecursos, Integer> implements ITRecursos {
 
     @Override
-    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception {
+    public List<CivRecursos> getRecursos(int idRecursos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_MOVIMIENTOS WHERE MOV_DEUDA_FK = :deuId AND MOV_FASTRA_FK = :faseTrabajo";
+        String sql = "SELECT * FROM CIV_RECURSOS WHERE REC_MODULOS_FK =:idRecursos";
         SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivMovimientos.class);
-        query.setInteger("deuId", deuId);
-        query.setInteger("faseTrabajo", faseTrabajo);
+        query.addEntity(CivRecursos.class);
+        query.setBigDecimal("idRecursos", new BigDecimal(idRecursos));
         if (query.list().size() > 0) {
-            return (CivMovimientos) query.list().get(0);
-        }   
+            return query.list();
+        }
         session.close();
         return null;
     }
-    
+
 }

@@ -46,12 +46,14 @@ public class BeanDetallePersonas {
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             if (obj_ != null) {
-                setDetallePersonasModal(obj_.getPersonas());
-                getDetallePersonaBO().cargarDatosPersonas(this);
-                getDetallePersonaBO().cargarTipoDocumento(this);
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
-                requestContext.execute("$('#modalDetallePersona').modal('show')");
+                if (obj_.getPersonas() != null) {
+                    setDetallePersonasModal(obj_.getPersonas());
+                    getDetallePersonaBO().cargarDatosPersonas(this);
+                    getDetallePersonaBO().cargarTipoDocumento(this);
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
+                    requestContext.execute("$('#modalDetallePersona').modal('show')");
+                }
             }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));

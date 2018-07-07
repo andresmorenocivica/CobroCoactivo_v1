@@ -132,36 +132,40 @@
                                         <!-- /.col -->
                                     </div>
                                 </div>
-                                <table jsf:id="tblPersona" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Sexo</th>
-                                            <th>Estado</th>
-                                            <th>Mostrar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
-                                            <tr>
-                                                <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.nombre2} #{persona.apellido1} #{persona.apellido2}</td>
-                                                <td>#{persona.sexo}</td>
-                                                <td>
-                                                    <span class="#{persona.estadoPersonas.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
-                                                        #{persona.estadoPersonas.descripcion}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <h:commandLink class="fa fa-eye col-sm-2" action="detallePersona">
-                                                        <f:setPropertyActionListener value="#{persona}" target="#{requestBean.personas}"/>
-                                                        <c:set value="&lt;section class=&quot;content-header&quot;&gt;&lt;ol class=&quot;breadcrumb&quot;&gt;&lt;li&gt;&lt;a href=&quot;inicio.htm&quot;&gt;&lt;i class=&quot;fa fa-home&quot;&gt;&lt;/i&gt; Inicio&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;i class=&quot;fa fa-user&quot;&gt;&lt;/i&gt; Personas&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;gestionPersona.htm&quot;&gt;&lt;i class=&quot;fa fa-cogs&quot;&gt;&lt;/i&gt;Administra Persona&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;active&quot;&gt;&lt;i class=&quot;fa fa-address-card&quot;&gt;&lt;/i&gt; Detalle Persona&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;/section&gt;" var="valor"/>
-                                                        <f:setPropertyActionListener value="#{valor}" target="#{requestBean.ruta}"/>
-                                                    </h:commandLink>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                                <h:panelGroup id="tblPersona">
+                                    <table class="table table-bordered">
+                                        <div class="row">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Nombre</th>
+                                                    <th class="col-md-3">Sexo</th>
+                                                    <th class="col-md-3">Estado</th>
+                                                    <th class="col-md-3">Mostrar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
+                                                    <tr>
+                                                        <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.nombre2} #{persona.apellido1} #{persona.apellido2}</td>
+                                                        <td>#{persona.sexo}</td>
+                                                        <td>
+                                                            <span class="#{persona.estadoPersonas.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                #{persona.estadoPersonas.descripcion}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <h:commandLink class="fa fa-eye col-sm-2" action="detallePersona">
+                                                                <f:setPropertyActionListener value="#{persona}" target="#{requestBean.personas}"/>
+                                                                <c:set value="&lt;section class=&quot;content-header&quot;&gt;&lt;ol class=&quot;breadcrumb&quot;&gt;&lt;li&gt;&lt;a href=&quot;inicio.htm&quot;&gt;&lt;i class=&quot;fa fa-home&quot;&gt;&lt;/i&gt; Inicio&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;i class=&quot;fa fa-user&quot;&gt;&lt;/i&gt; Personas&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;gestionPersona.htm&quot;&gt;&lt;i class=&quot;fa fa-cogs&quot;&gt;&lt;/i&gt;Administra Persona&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;active&quot;&gt;&lt;i class=&quot;fa fa-address-card&quot;&gt;&lt;/i&gt; Detalle Persona&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;/section&gt;" var="valor"/>
+                                                                <f:setPropertyActionListener value="#{valor}" target="#{requestBean.ruta}"/>
+                                                            </h:commandLink>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </div>
+                                    </table>
+                                </h:panelGroup>
                             </div>
                             <h:commandLink class="float" onclick="$('#modalAgregarPersona').modal('show');">
                                 <i class="fa fa-plus my-float"></i>

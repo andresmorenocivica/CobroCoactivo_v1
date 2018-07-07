@@ -10,7 +10,7 @@ import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoEstadoMovimientos;
 import CobroCoactivo.Dao.DaoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoFasesTrabajo;
-import CobroCoactivo.Dao.DaoMovimiento;
+import CobroCoactivo.Dao.DaoMovimientos;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoUsuarios;
@@ -18,7 +18,7 @@ import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITEstadoMovimientos;
 import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesTrabajo;
-import CobroCoactivo.Dao.ITMovimiento;
+import CobroCoactivo.Dao.ITMovimientos;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITUsuarios;
@@ -54,7 +54,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     private ITDeudas deudasDAO;
     private ITPersonas personaDAO;
     private ITFasesTrabajo fasesTrabajoDAO;
-    private ITMovimiento movimientoDAO;
+    private ITMovimientos movimientoDAO;
     private ITEstadoMovimientos estadoMovimientosDAO;
     private ITUsuarios usuarioDAO;
 
@@ -64,7 +64,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         personaDAO = new DaoPersonas();
         etapasTrabajoDAO = new DaoEtapasTrabajo();
         fasesTrabajoDAO = new DaoFasesTrabajo();
-        movimientoDAO = new DaoMovimiento();
+        movimientoDAO = new DaoMovimientos();
         estadoMovimientosDAO = new DaoEstadoMovimientos();
         usuarioDAO = new DaoUsuarios();
     }
@@ -334,14 +334,14 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     /**
      * @return the movimientoDAO
      */
-    public ITMovimiento getMovimientoDAO() {
+    public ITMovimientos getMovimientoDAO() {
         return movimientoDAO;
     }
 
     /**
      * @param movimientoDAO the movimientoDAO to set
      */
-    public void setMovimientoDAO(ITMovimiento movimientoDAO) {
+    public void setMovimientoDAO(ITMovimientos movimientoDAO) {
         this.movimientoDAO = movimientoDAO;
     }
 

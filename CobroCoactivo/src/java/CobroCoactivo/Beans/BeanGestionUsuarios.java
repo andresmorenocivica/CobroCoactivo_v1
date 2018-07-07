@@ -7,9 +7,12 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionUsuariosBO;
 import CobroCoactivo.Bo.GestionUsuariosImplBO;
+import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.Modulos;
+import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Utility.Log_Handler;
-import static com.sun.faces.facelets.util.Path.context;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,6 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -32,6 +36,10 @@ public class BeanGestionUsuarios {
     private List<Usuarios> listadoUsuarios = new ArrayList<>();
     private int tipoBusqueda;
 
+    private Personas detallePersonaModal = new Personas(); //Objeto que se utilizara para mostrar la persona del usuario
+    private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
+    private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
+    private List<Modulos> listModulos = new ArrayList<>();
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
     private String contraseñaActual;
@@ -41,14 +49,23 @@ public class BeanGestionUsuarios {
     @PostConstruct
     public void init() {
         try {
+            setGestionUsuariosBO(new GestionUsuariosImplBO());
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             if (obj_ != null) {
                 setDetalleUsuario(obj_.getUsuario());
-                setEncabezadoDetalleUsuario(obj_.getRuta());
+                getGestionUsuariosBO().cargarModulos(this);
+                if (obj_.getPersonas() != null) {
+                    setEncabezadoDetalleUsuario(obj_.getRuta());
+                    setDetallePersonaModal(obj_.getPersonas());
+                    getGestionUsuariosBO().cargarDatosPersonas(this);
+                    getGestionUsuariosBO().cargarTipoDocumento(this);
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
+                    requestContext.execute("$('#modalDetallePersona').modal('show')");
+                }
             }
-            setGestionUsuariosBO(new GestionUsuariosImplBO());
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -212,5 +229,61 @@ public class BeanGestionUsuarios {
      */
     public void setContraseñaConfirmacion(String contraseñaConfirmacion) {
         this.contraseñaConfirmacion = contraseñaConfirmacion;
+    }
+
+    /**
+     * @return the detallePersonaModal
+     */
+    public Personas getDetallePersonaModal() {
+        return detallePersonaModal;
+    }
+
+    /**
+     * @param detallePersonaModal the detallePersonaModal to set
+     */
+    public void setDetallePersonaModal(Personas detallePersonaModal) {
+        this.detallePersonaModal = detallePersonaModal;
+    }
+
+    /**
+     * @return the listTipoDocumento
+     */
+    public List<TipoDocumentos> getListTipoDocumento() {
+        return listTipoDocumento;
+    }
+
+    /**
+     * @param listTipoDocumento the listTipoDocumento to set
+     */
+    public void setListTipoDocumento(List<TipoDocumentos> listTipoDocumento) {
+        this.listTipoDocumento = listTipoDocumento;
+    }
+
+    /**
+     * @return the listEstadoPersonas
+     */
+    public List<EstadoPersonas> getListEstadoPersonas() {
+        return listEstadoPersonas;
+    }
+
+    /**
+     * @param listEstadoPersonas the listEstadoPersonas to set
+     */
+    public void setListEstadoPersonas(List<EstadoPersonas> listEstadoPersonas) {
+        this.listEstadoPersonas = listEstadoPersonas;
+    }
+
+    /**
+     * @return the listModulos
+     */
+    public List<Modulos> getListModulos() {
+        return listModulos;
+    }
+
+    /**
+     * @param listModulos the listModulos to set
+     */
+    public void setListModulos(List<Modulos> listModulos) {
+        this.listModulos = listModulos;
     }
 }

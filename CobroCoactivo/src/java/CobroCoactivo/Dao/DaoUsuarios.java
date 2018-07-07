@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios  {
+public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios {
 
 //    @Override
 //    public CivUsuarios consultarUsuario(String usuario, String password) throws Exception {
@@ -65,7 +65,7 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
 
     public List<CivUsuarios> listarUsuarios(String nombre_usuario) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_USUARIOS WHERE USU_NOMBRE LIKE '%"+nombre_usuario+"%' ORDER BY 1 asc";
+        String sql = "SELECT * FROM CIV_USUARIOS WHERE USU_NOMBRE LIKE '%" + nombre_usuario + "%' ORDER BY 1 asc";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivUsuarios.class);
         if (query.list().size() > 0) {

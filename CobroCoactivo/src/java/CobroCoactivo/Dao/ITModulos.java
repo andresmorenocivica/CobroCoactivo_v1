@@ -6,12 +6,12 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivMovimientos;
+import CobroCoactivo.Persistencia.CivModulos;
 
 /**
  *
- * @author AMORENO
+ * @author emadrid
  */
-public interface ITMovimiento extends ITGeneryHibernateDao<CivMovimientos,Integer>{
-    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception;
+public interface ITModulos extends ITGeneryHibernateDao<CivModulos, Integer> {
+
 }

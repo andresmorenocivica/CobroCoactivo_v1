@@ -6,17 +6,15 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivMovimientos;
+import CobroCoactivo.Persistencia.CivRecursos;
 import java.util.List;
 
 /**
  *
  * @author emadrid
  */
-public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Integer> {
+public interface ITRecursos extends ITGeneryHibernateDao<CivRecursos, Integer>{
     
-    public List<CivMovimientos> listMovimientos (int idMovimientos) throws Exception;
+    public List<CivRecursos> getRecursos(int idRecursos) throws Exception;
     
-    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception;
-
 }

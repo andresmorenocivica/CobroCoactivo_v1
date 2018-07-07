@@ -14,6 +14,7 @@ import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +45,7 @@ public class DetallePersonaImpBO implements DetallePersonaBO {
         if (bean != null) {
             if (bean.getDetallePersonasModal() != null) {
                 if (bean.getDetallePersonasModal().getId() != 0) {
+                    bean.getDetallePersonasModal().setListDatosPersonas(new ArrayList<>());
                     List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(bean.getDetallePersonasModal().getId());
                     if (listCivDatosPersonas != null) {
                         for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
