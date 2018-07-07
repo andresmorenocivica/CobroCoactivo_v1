@@ -831,14 +831,6 @@
                                 <p:messages autoUpdate="true" id="mensajeModalAgregarPersona" showIcon="false" closable="true" severity="error"></p:messages>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="form-group ">
-                                            <label>Estado</label>
-                                            <h:selectOneMenu  id="selectEstados" class="form-control" value="#{gestionPersonaBean.estadoPersonas}" converter="javax.faces.Integer">
-                                                <f:selectItems value="#{gestionPersonaBean.listEstadoPersonas}" var="listEstado" itemValue="#{listEstado.id}" itemLabel="#{listEstado.descripcion}"></f:selectItems>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
                                         <div class="input-group ">
                                             <label>Tipo de documento</label>
                                             <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">

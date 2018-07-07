@@ -7,6 +7,8 @@ package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionMovimientos;
 import CobroCoactivo.Beans.viejo_BeanGestionMovimientos;
+import CobroCoactivo.Modelo.Deudas;
+import java.util.List;
 
 /**
  *
@@ -18,4 +20,5 @@ public interface GestionMovimientosBO {
     void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void cargarFasesTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void filtarListaDeudaTabla(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
+    void generarMovimiento(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
 }

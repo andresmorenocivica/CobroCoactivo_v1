@@ -5,11 +5,13 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
+                
                 <h:form id="frmGestionMovimientos">
                     <div class="content-wrapper">
                         <section class="content-header">
@@ -24,6 +26,7 @@
                             </ol>
                         </section>
                         <section class="content">
+                            <p:messages closable="true" autoUpdate="true" id="msggeneral2" showDetail="false" />
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="box box-danger">
@@ -34,21 +37,23 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="box-body no-padding">
-                                            <ul class="nav nav-pills nav-stacked">
-                                                <ui:repeat value="#{gestionMovimientoBean.listaPlanTrabajo}"  var="PlanesTrabajo" varStatus="contProceso">
-                                                    <li>
-                                                        <h:commandLink class="col-lg-12">
-                                                            <i class="fa fa-briefcase"></i>  
-                                                            #{PlanesTrabajo.descripcion}   
-                                                            <span title="Deudas" class="label label-warning pull-right">#{PlanesTrabajo.listaDeudas.size()}</span>  
-                                                            <span title="Etapas" class="label label-default pull-right" style="margin-right:10px">#{PlanesTrabajo.listaEtapasTrabajo.size()}</span>
-                                                            <f:ajax event="click" listener="#{gestionMovimientoBean.buscarEtapasByPlanTrabajo(PlanesTrabajo)}" render="frmGestionMovimientos:pnlEtapas frmGestionMovimientos:pnlNombreEtapas frmGestionMovimientos:pnlFases frmGestionMovimientos:pnlNombreFases"/>
-                                                        </h:commandLink>
-                                                    </li>
-                                                </ui:repeat>
-                                            </ul>  
-                                        </div>
+                                        <h:panelGroup id="pnlPlanesTrabajo">
+                                            <div class="box-body no-padding">
+                                                <ul class="nav nav-pills nav-stacked">
+                                                    <ui:repeat value="#{gestionMovimientoBean.listaPlanTrabajo}"  var="PlanesTrabajo" varStatus="contProceso">
+                                                        <li>
+                                                            <h:commandLink class="col-lg-12">
+                                                                <i class="fa fa-briefcase"></i>  
+                                                                #{PlanesTrabajo.descripcion}   
+                                                                <span title="Deudas" class="label label-warning pull-right">#{PlanesTrabajo.listaDeudas.size()}</span>  
+                                                                <span title="Etapas" class="label label-default pull-right" style="margin-right:10px">#{PlanesTrabajo.listaEtapasTrabajo.size()}</span>
+                                                                <f:ajax event="click" listener="#{gestionMovimientoBean.buscarEtapasByPlanTrabajo(PlanesTrabajo)}" render="frmGestionMovimientos:pnlEtapas frmGestionMovimientos:pnlNombreEtapas frmGestionMovimientos:pnlFases frmGestionMovimientos:pnlNombreFases"/>
+                                                            </h:commandLink>
+                                                        </li>
+                                                    </ui:repeat>
+                                                </ul>  
+                                            </div>
+                                        </h:panelGroup>
                                         <!-- /.box-body -->
                                     </div>
 
@@ -103,7 +108,7 @@
                                                                     <i class="fa fa-thumb-tack"></i> #{fase.descripcion}
                                                                     <span title="Deudas" class="label label-warning  pull-right">#{fase.listaDeudas.size()}</span>
                                                                     <span title="Periodo" class="label label-default pull-right" style="margin-right:10px">#{fase.dianim} - #{fase.diamax}</span>
-                                                                    <f:ajax event="click" listener="#{gestionMovimientoBean.mostarDeudasFases(fase)}" render="frmGestionMovimientos:pnlTablaDeudas" onevent="test"></f:ajax>
+                                                                    <f:ajax event="click" listener="#{gestionMovimientoBean.mostarDeudasFases(fase)}" render="frmGestionMovimientos:pnlTablaDeudas frmGestionMovimientos:divBtnGuardar" onevent="test"></f:ajax>
                                                                 </h:commandLink>
                                                             </li>
                                                         </ui:repeat>
@@ -126,11 +131,12 @@
                                             <div class="mailbox-controls">
                                             </div>
                                             <!-- corte codigo fuente tabla  -->
-                                            <div class="table-responsive mailbox-messages" jsf:id="deudas">
+                                            <div class="table-responsive" jsf:id="deudas">
                                                 <h:panelGroup id="pnlTablaDeudas">
                                                     <table id="dataTableDetalle" class="table table-bordered table-hover">
                                                         <thead>
                                                             <tr>
+                                                                <th>Opción</th>
                                                                 <th>Referencia</th>
                                                                 <th>Persona</th>
                                                                 <th>Valor</th>
@@ -143,6 +149,11 @@
                                                         <tbody>
                                                             <ui:repeat value="#{gestionMovimientoBean.listaDeudasTabla}" var="Deuda" varStatus="i">
                                                                 <tr>
+                                                                    <td>
+                                                                        <p:selectBooleanCheckbox value="#{Deuda.seleccionado}">
+                                                                            <p:ajax event="change" ></p:ajax>
+                                                                        </p:selectBooleanCheckbox>
+                                                                    </td>
                                                                     <td>#{Deuda.referencia}</td>
                                                                     <td>#{Deuda.personas.nombre1}</td>
                                                                     <td>#{Deuda.valor}</td>
@@ -154,20 +165,24 @@
                                                             </ui:repeat>
                                                         </tbody>
                                                     </table>
+                                                    <c:if test="#{gestionMovimientoBean.listaDeudasTabla.size() ne 0}">
+                                                        <div class="box-footer no-padding">
+                                                            <div class="mailbox-controls">
+                                                                <h:commandButton value="Realizar Proceso" class="btn btn-success" id="btnGuardar">
+                                                                    <f:ajax event="click" listener="#{gestionMovimientoBean.guardarMovimiento()}"
+                                                                            onevent="test" 
+                                                                            render="frmGestionMovimientos:pnlEtapas frmGestionMovimientos:pnlFases frmGestionMovimientos:pnlTablaDeudas frmGestionMovimientos:deudas frmGestionMovimientos:pnlPlanesTrabajo"></f:ajax>
+                                                                </h:commandButton>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
                                                 </h:panelGroup>
                                                 <!-- /.table -->
                                             </div>
                                             <!-- /.mail-box-messages -->
                                         </div>
                                         <!-- /.box-body -->
-                                        <div class="box-footer no-padding">
-                                            <div class="mailbox-controls" jsf:id="divBtnGuardar">
-                                                <h:commandButton value="Realizar Proceso" class="btn btn-success" rendered="#{gestionMovimientosBean.renderBtnGuardar}" id="btnGuardar">
-                                                    <f:ajax event="click" listener="#{gestionMovimientoBean.movimientoDeudaCambiarFase()}" onevent="test" render="formGestionMovimientos:pnlTablaDeudas formGestionMovimientos:pnlFases"></f:ajax>
-                                                </h:commandButton>
 
-                                            </div>
-                                        </div>
                                     </div>
                                     <!-- /. box -->
                                 </div>

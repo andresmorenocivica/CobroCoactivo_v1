@@ -20,6 +20,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,9 +32,11 @@ public class BeanGestionMovimientos implements Serializable {
 
     private GestionMovimientosBO gestionMovimientosBO;
     private BeanLogin loginBO;
+    private BeanRequest loginBean;
     private List<PlanTrabajos> listaPlanTrabajo = new ArrayList<>();
     private PlanTrabajos planTrabajoSeleccionado;
     private EtapasTrabajos etapaTrabajoSeleccionada;
+    private FasesTrabajos faseTrabajoSeleccionada;
 
     private List<Deudas> listaDeudasTabla = new ArrayList<>();
     private List<Deudas> listaDeudas = new ArrayList<>();
@@ -41,8 +44,10 @@ public class BeanGestionMovimientos implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+            setLoginBO((BeanLogin) session.getAttribute("loginBean"));
             setGestionMovimientosBO(new GestionMovimientosImpBO());
-            setLoginBO(new BeanLogin());
             getGestionMovimientosBO().cargarListadoDeudas(this);
             getGestionMovimientosBO().cargarListadoPlanesTrabajo(this);
         } catch (Exception e) {
@@ -89,12 +94,28 @@ public class BeanGestionMovimientos implements Serializable {
         try {
             setListaDeudasTabla(new ArrayList<>());
             setListaDeudasTabla(fasesTrabajos.getListaDeudas());
+            setFaseTrabajoSeleccionada(fasesTrabajos);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
 
+    }
+
+    public void guardarMovimiento() {
+        try {
+            getGestionMovimientosBO().generarMovimiento(this);
+            setListaPlanTrabajo(new ArrayList<>());
+            getGestionMovimientosBO().cargarListadoPlanesTrabajo(this);
+            getGestionMovimientosBO().cargarEtapasPlanTrabajo(this);
+            getGestionMovimientosBO().cargarFasesTrabajo(this);
+//            setListaDeudasTabla(new ArrayList<>());
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
     }
 
     /**
@@ -194,4 +215,33 @@ public class BeanGestionMovimientos implements Serializable {
     public void setListaDeudas(List<Deudas> listaDeudas) {
         this.listaDeudas = listaDeudas;
     }
+
+    /**
+     * @return the faseTrabajoSeleccionada
+     */
+    public FasesTrabajos getFaseTrabajoSeleccionada() {
+        return faseTrabajoSeleccionada;
+    }
+
+    /**
+     * @param faseTrabajoSeleccionada the faseTrabajoSeleccionada to set
+     */
+    public void setFaseTrabajoSeleccionada(FasesTrabajos faseTrabajoSeleccionada) {
+        this.faseTrabajoSeleccionada = faseTrabajoSeleccionada;
+    }
+
+    /**
+     * @return the loginBean
+     */
+    public BeanRequest getLoginBean() {
+        return loginBean;
+    }
+
+    /**
+     * @param loginBean the loginBean to set
+     */
+    public void setLoginBean(BeanRequest loginBean) {
+        this.loginBean = loginBean;
+    }
+
 }
