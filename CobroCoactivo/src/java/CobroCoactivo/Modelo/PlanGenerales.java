@@ -22,6 +22,8 @@ public class PlanGenerales {
 
     private Date Fechaproceso;
     private boolean  selecionado;
+    private Date planTrabajoFechaActo;
+    private String planTrabajoNumeroActo;
 
     public PlanGenerales() {
     }
@@ -122,6 +124,34 @@ public class PlanGenerales {
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * @return the planTrabajoFechaActo
+     */
+    public Date getPlanTrabajoFechaActo() {
+        return planTrabajoFechaActo;
+    }
+
+    /**
+     * @param planTrabajoFechaActo the planTrabajoFechaActo to set
+     */
+    public void setPlanTrabajoFechaActo(Date planTrabajoFechaActo) {
+        this.planTrabajoFechaActo = planTrabajoFechaActo;
+    }
+
+    /**
+     * @return the planTrabajoNumeroActo
+     */
+    public String getPlanTrabajoNumeroActo() {
+        return planTrabajoNumeroActo;
+    }
+
+    /**
+     * @param planTrabajoNumeroActo the planTrabajoNumeroActo to set
+     */
+    public void setPlanTrabajoNumeroActo(String planTrabajoNumeroActo) {
+        this.planTrabajoNumeroActo = planTrabajoNumeroActo;
     }
 
   

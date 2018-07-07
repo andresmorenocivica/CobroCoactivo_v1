@@ -37,23 +37,26 @@
                                             </div>
                                         </div>
                                         <div class="box-body no-padding">
-                                            <ul class="nav nav-pills nav-stacked">
-                                                <ui:repeat value="#{PlanGeneralbean.listadoPlanGeneraleses}" var="listaPlangeneral">
-                                                    <li>
-                                                        <div jsf:id="color" class="col-sm-1" style="background-color: #{listaPlangeneral.color}; padding: 10px; margin: 10px;cursor: pointer">
-                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtapaGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
-                                                        </div>
-                                                        <h:commandLink title="Editar Proceso Juridico" value=" #{listaPlangeneral.descripcion}" class="col-sm-8">
-                                                            <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtapaGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
-                                                        </h:commandLink>
-                                                        <div jsf:id="test" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
-                                                            <i class="fa fa-pencil-square-o center-block"  onclick="$('#planGeneral').modal('show');">
-                                                                <f:ajax event="click" render="formPlanGeneral:modalContent" listener="#{PlanGeneralbean.eventoActualizar(listaPlangeneral)}"/>
-                                                            </i> 
-                                                        </div>
-                                                    </li>  
-                                                </ui:repeat> 
-                                            </ul> 
+                                            <div  style="overflow: auto; max-height: 200px">
+                                                <ul class="nav nav-pills nav-stacked">
+                                                    <ui:repeat value="#{PlanGeneralbean.listadoPlanGeneraleses}" var="listaPlangeneral">
+                                                        <li>
+                                                            <div jsf:id="color" class="col-sm-1" style="background-color: #{listaPlangeneral.color}; padding: 10px; margin: 10px;cursor: pointer">
+                                                                <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtapaGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
+                                                            </div>
+                                                            <h:commandLink title="Editar Proceso Juridico" value=" #{listaPlangeneral.descripcion}" class="col-sm-8">
+                                                                <f:ajax event="click" render="formPlanGeneral:contenedor"  listener="#{PlanGeneralbean.ListarEtapaGeneralesPorIdPlanGeneral(listaPlangeneral)}"/>
+                                                            </h:commandLink>
+                                                            <div jsf:id="test" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
+                                                                <i class="fa fa-pencil-square-o center-block"  onclick="$('#planGeneral').modal('show');">
+                                                                    <f:ajax event="click" render="formPlanGeneral:modalContent" listener="#{PlanGeneralbean.eventoActualizar(listaPlangeneral)}"/>
+                                                                </i> 
+                                                            </div>
+                                                        </li>  
+                                                    </ui:repeat> 
+                                                </ul> 
+                                            </div>
+
                                             <h:commandLink value="Crear" class="btn col-sm-12  btn-success" style="margin-bottom: 4px;margin-top: 4px; " onclick="$('#planGeneral').modal('show');">
                                                 <f:ajax event="click" render="formPlanGeneral:modalContent" listener="#{PlanGeneralbean.eventoGuardar(1)}"/>
 
@@ -82,12 +85,11 @@
                                                         <h:commandLink title="estapa general" value=" #{etapaGeneral.descripcion}" class="col-sm-10" id="btnEtapagene">
                                                             <f:ajax event="click" render="@form"  listener="#{PlanGeneralbean.listarFasesGeneralesPorFases(etapaGeneral)}"/>
                                                         </h:commandLink>
-                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px" >
-                                                            <c:if test="#{etapaGeneral.prioridad !=1 and etapaGeneral.prioridad !=2 and  etapaGeneral.prioridad !=3 }">
-                                                                <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
-                                                                    <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
-                                                                </i>
-                                                            </c:if>
+                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px">
+                                                            <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
+                                                                <f:ajax event="click" render="formPlanGeneral:modalContentEtapageneral" listener="#{PlanGeneralbean.eventoActualizarEtapa(etapaGeneral)}"/>
+                                                            </i>
+
                                                         </div>
 
                                                     </li>
@@ -114,7 +116,7 @@
                                                     #{PlanGeneralbean.etapasGenerales.descripcion.toLowerCase()}
                                                 </span>
                                             </h5>
-                                            
+
                                             <!-- /.box-tools -->
                                             <div class="box-tools">
                                                 <h:commandLink type="button" class="btn btn-box-tool" id="btnAdd" onclick="$('#faseGeneral').modal('show');">
@@ -264,7 +266,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Estado:</label>
-                                                        <h:selectOneMenu id="txtEstadoEtapaGeneral" class="form-control" value="#{PlanGeneralbean.idEstapaGeneral}">
+                                                        <h:selectOneMenu id="txtEstadoEtapaGeneral" class="form-control" value="#{PlanGeneralbean.etapasGenerales.estadoEtapasGenerales.id}"  disabled="#{PlanGeneralbean.etapasGenerales.obligatorio.equals('TRUE')}">
                                                             <f:selectItems value="#{PlanGeneralbean.estadoEtapasGenerales}" var="listadoEstadoEtapasGenerales" itemValue="#{listadoEstadoEtapasGenerales.id}" itemLabel="#{listadoEstadoEtapasGenerales.descripcion}" ></f:selectItems>
                                                         </h:selectOneMenu>
                                                     </div>
@@ -272,10 +274,9 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Obligatorio:</label>
-                                                        <h:selectOneMenu  class="form-control" value="#{PlanGeneralbean.obligatorio}" id="seletObligatorio">
+                                                        <h:selectOneMenu  class="form-control" value="#{PlanGeneralbean.etapasGenerales.obligatorio}" id="seletObligatorio" disabled="#{PlanGeneralbean.etapasGenerales.obligatorio.equals('TRUE')}">
                                                             <f:selectItem  itemLabel="Si" itemValue="TRUE"></f:selectItem>
                                                             <f:selectItem  itemLabel="No" itemValue="FALSE"></f:selectItem>
-
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>

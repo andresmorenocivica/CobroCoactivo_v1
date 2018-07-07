@@ -18,6 +18,8 @@ public class CivPlanTrabajos  implements java.io.Serializable {
      private String platraDescripcion;
      private Date platraFechaproceso;
      private String platraColor;
+     private Date platraFechaActoAdm;
+     private String platraNumeroActoAdm;
      private Set civDeudases = new HashSet(0);
      private Set civEtapasTrabajoses = new HashSet(0);
 
@@ -94,6 +96,34 @@ public class CivPlanTrabajos  implements java.io.Serializable {
      */
     public void setPlatraColor(String platraColor) {
         this.platraColor = platraColor;
+    }
+
+    /**
+     * @return the platraFechaActoAdm
+     */
+    public Date getPlatraFechaActoAdm() {
+        return platraFechaActoAdm;
+    }
+
+    /**
+     * @param platraFechaActoAdm the platraFechaActoAdm to set
+     */
+    public void setPlatraFechaActoAdm(Date platraFechaActoAdm) {
+        this.platraFechaActoAdm = platraFechaActoAdm;
+    }
+
+    /**
+     * @return the platraNumeroActoAdm
+     */
+    public String getPlatraNumeroActoAdm() {
+        return platraNumeroActoAdm;
+    }
+
+    /**
+     * @param platraNumeroActoAdm the platraNumeroActoAdm to set
+     */
+    public void setPlatraNumeroActoAdm(String platraNumeroActoAdm) {
+        this.platraNumeroActoAdm = platraNumeroActoAdm;
     }
 
 

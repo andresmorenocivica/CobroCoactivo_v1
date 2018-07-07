@@ -20,6 +20,8 @@
         <property name="platraFechaproceso" type="date">
             <column name="PLATRA_FECHAPROCESO" length="7" />
         </property>
+        <property name="platraNumeroActoAdm" column="PLATRA_NUMEROACTOADM"></property>
+        <property name="platraFechaActoAdm" column="PLATRA_FECHAANCTOADM"></property>
         <set name="civDeudases" table="CIV_DEUDAS" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="DEU_PLATRA_FK" precision="22" scale="0" not-null="true" />

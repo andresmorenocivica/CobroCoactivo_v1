@@ -81,7 +81,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
     @Override
     public void getListPlanGenaral(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
-        Session session =  HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         beanGestionPlanTrabajo.setListPlanGenerales(new ArrayList<>());
         List<CivPlanGenerales> listCivPlanGenerales = getPlanGeneralDAO().getListPlanGenerales(session);
         for (CivPlanGenerales civPlanGenerale : listCivPlanGenerales) {
@@ -96,7 +96,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                 beanGestionPlanTrabajo.getListPlanGenerales().add(planGenerales);
             }
         }
-        
+
         session.close();
     }
 
@@ -150,12 +150,16 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
             if (beanGestionPlanTrabajo.getListPlanGenerales().get(i).isSelecionado() == true) {
                 CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                 CivEstadoPlanTrabajos civEstadoPlanTrabajos = new CivEstadoPlanTrabajos();
+
                 civEstadoPlanTrabajos.setEstplatraId(new BigDecimal(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getEstadoPlanGenerales().getId()));
                 civPlanTrabajos.setPlatraId(new BigDecimal(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getId()));
                 civPlanTrabajos.setPlatraDescripcion(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getDescripcion());
                 civPlanTrabajos.setCivEstadoPlanTrabajos(civEstadoPlanTrabajos);
                 civPlanTrabajos.setPlatraFechaproceso(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getFechaproceso());
                 civPlanTrabajos.setPlatraColor(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getColor());
+                civPlanTrabajos.setPlatraNumeroActoAdm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoNumeroActo());
+                civPlanTrabajos.setPlatraFechaActoAdm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoFechaActo());
+
                 getPlanTrabajoDAO().create(civPlanTrabajos);
                 List<CivEtapasGenerales> listCivEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, civPlanTrabajos.getPlatraId().intValue());
                 for (CivEtapasGenerales etapaGeneral : listCivEtapasGenerales) {
@@ -249,7 +253,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                 civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
                 civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
                 getFasesTrabajoDAO().create(civFasesTrabajos);
-                
+
             }
         }
 

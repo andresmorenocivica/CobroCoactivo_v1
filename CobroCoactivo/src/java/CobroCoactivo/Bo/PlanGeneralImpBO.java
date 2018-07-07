@@ -115,13 +115,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
-        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getIdEstapaGeneral()));
+        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
 
         civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
         civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
         civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
         civEtapasGenerales.setEtagenFechaproceso(new Date());
-        civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
+        civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         getItEstapaGeneral().create(civEtapasGenerales);
 
@@ -203,7 +203,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         boolean validador = false;
         CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
         CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
-        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getIdEstapaGeneral()));
+        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
 
@@ -211,7 +211,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
         civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
         civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
-        civEtapasGenerales.setEtagenObligatorio(bean.getObligatorio());
+        civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 

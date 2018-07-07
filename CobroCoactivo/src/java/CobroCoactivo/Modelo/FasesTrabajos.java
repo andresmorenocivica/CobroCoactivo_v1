@@ -44,6 +44,11 @@ public class FasesTrabajos implements java.io.Serializable {
         this.Diamax = civFasesTrabajos.getFastraDiamax().intValue();
         this.estadoFasesTrabajos = new EstadoFasesTrabajos(civEstadoFasesTrabajos);
         this.reporteTrabajos = new ReporteTrabajos(civReporteTrabajos);
+        if (civFasesTrabajos.getFastraObligatorio().equals("TRUE")) 
+           this.Obligatorio = "Si"; 
+        else
+            this.Obligatorio = "No";
+        
     }
     
     public FasesTrabajos(CivFasesTrabajos civFasesTrabajos) {

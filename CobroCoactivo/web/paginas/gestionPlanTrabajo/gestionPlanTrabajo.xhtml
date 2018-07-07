@@ -58,7 +58,9 @@
                                     <!-- /. box -->
                                     <div class="box" style="border-top-color:#{gestionPlanTrabajoBean.planTrabajos.color} " jsf:id="etapaTrabajo" jsf:rendered="#{gestionPlanTrabajoBean.renderEtapaTrabajo}">
                                         <div class="box-header with-border">
-                                            <h5 class="box-title">Etapas Trabajos #{gestionPlanTrabajoBean.planTrabajos.descripcion}</h5>
+                                            <h5 class="box-title">Etapas Trabajos 
+                                                <span class="label label-default">#{gestionPlanTrabajoBean.planTrabajos.descripcion}</span>
+                                            </h5>
                                             <div class="box-tools">
                                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                                 </button>
@@ -68,14 +70,9 @@
                                             <ul class="nav nav-pills nav-stacked">
                                                 <ui:repeat value="#{gestionPlanTrabajoBean.listEtapaTrabajos}" var="etapaTrabajo">
                                                     <li>
-                                                        <h:commandLink title="Etapa trabajo" value=" #{etapaTrabajo.descricion}" class="col-sm-10" id="btnEtapaTrabajo">
+                                                        <h:commandLink title="Etapa trabajo" value=" #{etapaTrabajo.descricion}" id="btnEtapaTrabajo">
                                                             <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:contentFasesTrabajos"  listener="#{gestionPlanTrabajoBean.listarFasestrabajo(etapaTrabajo)}"/>
                                                         </h:commandLink>
-                                                        <div jsf:id="conetentEditEtapa" class="col-sm-1" style="padding-bottom:10px;padding-top: 10px" >
-                                                            <!--      <i class="fa fa-pencil-square-o center-block" onclick="$('#etapaGeneral').modal('show');">
-                                                                      <f:ajax event="click" render="formPlanTrabajo:modalAgregarEtapasTrabajo"/>
-                                                                  </i> -->
-                                                        </div>
                                                     </li>
                                                 </ui:repeat> 
                                             </ul>
@@ -91,7 +88,13 @@
                                 <div class="col-md-9" jsf:id="fasesTrabajo" jsf:rendered="#{gestionPlanTrabajoBean.renderFaseTrabajo}">
                                     <div class="box" style="border-top-color: #{gestionPlanTrabajoBean.planTrabajos.color}">
                                         <div class="box-header with-border">
-                                            <h:outputLabel id="tituloDetalleProceso" class="box-title" value="Fases de trabajo #{gestionPlanTrabajoBean.etapasTrabajos.descricion}"></h:outputLabel>
+                                            <label id="tituloDetalleProceso" class="box-title">Fases de trabajo 
+                                                <span class="label label-default"> #{gestionPlanTrabajoBean.etapasTrabajos.descricion}
+                                                </span>
+                                                <span class="label label-default" style="margin-left: 10px;"> #{gestionPlanTrabajoBean.planTrabajos.descripcion}
+                                                </span>
+
+                                            </label>
                                             <!-- /.box-tools -->
                                             <div class="box-tools">
                                                 <h:commandLink type="button" class="btn btn-box-tool" id="btnAdd" onclick="$('#fasesTrabajos').modal('show');" rendered="#{gestionPlanTrabajoBean.renderBotonAdicionatFases()}">
@@ -129,8 +132,8 @@
                                                                 <td>#{fasestrabajos.obligatorio}</td>
                                                                 <td>#{fasestrabajos.reporteTrabajos.reptraDescripcion}</td>
                                                                 <td>
-                                                                    <h:commandLink onclick="$('#faseGeneral').modal('show')">
-                                                                        <f:ajax event="click" render="formPlanGeneral:modalContentFases" listener="#{PlanGeneralbean.modalActualizarFase(fasegeneral)}"></f:ajax>
+                                                                    <h:commandLink onclick="$('#modalEditarFases').modal('show')">
+                                                                        <f:ajax event="click" render="formPlanTrabajo:editarfaseModalBody" listener="#{gestionPlanTrabajoBean.modalActualizarFaseTrabajo(fasestrabajos)}"></f:ajax>
                                                                         <img src="#{request.contextPath}/recursos/images/if_icon-136-document-edit_314834.png" style="width: 24px;height:24px"></img>
                                                                     </h:commandLink>
                                                                 </td>
@@ -155,8 +158,8 @@
 
 
                             <!-- start modal   plan general  -->
-                            <div class="modal fade bd-example-modal-sm"  tabindex="-1" id="planTrabajo"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
-                                <div class="modal-dialog modal-sm">
+                            <div class="modal fade"  tabindex="-1" id="planTrabajo"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="myModalLabel">Planes de trabajo</h4>
@@ -171,18 +174,29 @@
                                             <table class="table table-hover table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th>Seleccionar</th>
                                                         <th>Nombre</th>
-                                                        <th>Estado</th>
+                                                        <th>Acto administractivo</th>
+                                                        <th>Fecha administractiva</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <ui:repeat value="#{gestionPlanTrabajoBean.listPlanGenerales}" var="plangeneral">
+
+                                                    <ui:repeat value="#{gestionPlanTrabajoBean.listPlanGenerales}" var="plangeneral" varStatus="index">
                                                         <tr>
-                                                            <td>#{plangeneral.descripcion}</td>
                                                             <td>
                                                                 <p:selectBooleanCheckbox value="#{plangeneral.selecionado}">
-                                                                    <p:ajax event="change" ></p:ajax>
+                                                                    <f:ajax event="change"  render="formPlanTrabajo:modalPlanTrabajo"></f:ajax>
                                                                 </p:selectBooleanCheckbox>
+                                                            </td>
+                                                            <td>#{plangeneral.descripcion}</td>
+                                                            <td>
+                                                                <h:inputText label="Numero plan #{index.index+1}" value="#{plangeneral.planTrabajoNumeroActo}" rendered="#{plangeneral.selecionado}" required="true"></h:inputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:inputText label="fecha acto #{index.index+1}" value="#{plangeneral.planTrabajoFechaActo}" rendered="#{plangeneral.selecionado}" required="true">
+                                                                    <f:convertDateTime></f:convertDateTime>
+                                                                </h:inputText>
                                                             </td>
                                                         </tr>
                                                     </ui:repeat>
@@ -199,7 +213,7 @@
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <h:commandLink value="Guardar" id="btnGuardarPlanTrabajo" class="btn btn-success">
-                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalPlanTrabajo" listener="#{gestionPlanTrabajoBean.guardarPlanTrabajo()}"/>
+                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalPlanTrabajo" listener="#{gestionPlanTrabajoBean.guardarPlanTrabajo()}" execute="formPlanTrabajo:modalPlanTrabajo"/>
                                                     </h:commandLink>
                                                 </div>
                                             </div>
@@ -304,6 +318,68 @@
                                                 </div>
                                                 <div class="col-lg-1">
                                                     <h:commandLink value="Guardar" id="btnGuardarFase" class="btn btn-success">
+                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:contentFasesTrabajos" listener="#{gestionPlanTrabajoBean.guardarFasesTrabajo()}"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal" id="modalEditarFases">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Editar dias</h4>
+                                        </div>
+                                        <div class="modal-body" jsf:id="editarfaseModalBody">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Descripción</label>
+                                                    <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.descripcion}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.estadoFasesTrabajos.descripcion}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Dia minimo</label>
+                                                    <h:inputText class="form-control" value="#{gestionPlanTrabajoBean.fasesTrabajos.dianim}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Dia maximo</label>
+                                                    <h:inputText class="form-control" value="#{gestionPlanTrabajoBean.fasesTrabajos.diamax}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Obligatorio</label>
+                                                    <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.obligatorio}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Archivo</label>
+                                                    <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.reporteTrabajos.reptraDescripcion}"></h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-7">
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <h:commandLink value="Actualizar" id="btnActualizarFase" class="btn btn-success">
                                                         <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:contentFasesTrabajos" listener="#{gestionPlanTrabajoBean.guardarFasesTrabajo()}"/>
                                                     </h:commandLink>
                                                 </div>

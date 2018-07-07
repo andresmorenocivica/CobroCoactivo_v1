@@ -24,7 +24,7 @@ public class EtapasGenerales implements java.io.Serializable {
     private int prioridad;
     private boolean seleccionado;
     private PlanGenerales planGenerales;
-    private EstadoEtapasGenerales estadoEtapasGenerales;
+    private EstadoEtapasGenerales estadoEtapasGenerales = new EstadoEtapasGenerales();
 
     public EtapasGenerales() {
     }

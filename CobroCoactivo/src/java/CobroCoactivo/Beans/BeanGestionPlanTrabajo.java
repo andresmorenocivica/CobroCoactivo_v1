@@ -48,6 +48,7 @@ public class BeanGestionPlanTrabajo {
     private List<FasesGenerales> listFasesGeneral = new ArrayList<>();
     private boolean renderFaseTrabajo;
     private BeanLogin loginBO;
+    private FasesTrabajos fasesTrabajos =  new FasesTrabajos();
 
     /**
      * metodo que se ejecuta despues de iniciar el bean
@@ -123,6 +124,17 @@ public class BeanGestionPlanTrabajo {
             setRenderFaseTrabajo(true);
             getGestionPlanTrabajoBO().getFases(this);
             getGestionPlanTrabajoBO().getfasesGenerales(this);
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
+        }
+    }
+    public void modalActualizarFaseTrabajo(FasesTrabajos fasesTrabajos) {
+        
+        try {
+            setFasesTrabajos(fasesTrabajos);
+            
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -360,6 +372,20 @@ public class BeanGestionPlanTrabajo {
      */
     public void setListFasesGeneral(List<FasesGenerales> listFasesGeneral) {
         this.listFasesGeneral = listFasesGeneral;
+    }
+
+    /**
+     * @return the fasesTrabajos
+     */
+    public FasesTrabajos getFasesTrabajos() {
+        return fasesTrabajos;
+    }
+
+    /**
+     * @param fasesTrabajos the fasesTrabajos to set
+     */
+    public void setFasesTrabajos(FasesTrabajos fasesTrabajos) {
+        this.fasesTrabajos = fasesTrabajos;
     }
     
 }
