@@ -252,30 +252,23 @@
 
                                 <ul class="sidebar-menu" data-widget="tree">
                                     <li class="header">Navegacion Principal</li>
-                                    <c:set value="0" var="valor"></c:set>
-                                    <c:forEach items="#{loginBean.listUsuarioRecursos}" var="modu">
-                                        <c:if test="${modu.civRecursos.civModulos.modId != valor}">
-                                            <c:set value="${modu.civRecursos.civModulos.modId.intValue()}" var="valor"></c:set>
+                                    <li class="treeview">
+                                        <ui:repeat value="#{loginBean.listModulos}" var="modu">
                                             <li class="treeview">
                                                 <a href="#">
-                                                    <i class="fa #{modu.civRecursos.civModulos.modIcono}"></i> <span>#{modu.civRecursos.civModulos.modNombre}</span>
-                                                    <span class="pull-right-container">
-                                                        <i class="fa fa-angle-left pull-right"></i>
-                                                    </span>
+                                                    <i class="fa #{modu.modIcono}"></i>
+                                                    <span>#{modu.modNombre}</span>
+                                                    <i class="fa fa-angle-left pull-right"></i>
                                                 </a>
 
                                                 <ul class="treeview-menu">
-                                                    <c:forEach items="${loginBean.listUsuarioRecursos}" var="val">
-                                                        <c:if test="${valor == val.civRecursos.civModulos.modId.intValue()}">
-                                                            <li><h:link outcome="${val.civRecursos.recCarperta}${val.civRecursos.recDescripcion}"><i class="fa fa-circle-o"></i> ${val.civRecursos.recNombre} </h:link></li>
-                                                        </c:if>
-                                                    </c:forEach>
+                                                    <ui:repeat value="#{modu.listRecurso}" var="recx">
+                                                        <li><h:link outcome="#{recx.recCarperta}#{recx.recDescripcion}"><i class="fa fa-circle-o"></i> #{recx.recNombre} </h:link></li>
+                                                    </ui:repeat>
                                                 </ul>
-
                                             </li>
-                                        </c:if>
-
-                                    </c:forEach>
+                                        </ui:repeat>
+                                    </li>
 
                                     <!--
                                         <li class="header">LABELS</li>

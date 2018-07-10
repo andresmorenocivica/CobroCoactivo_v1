@@ -37,6 +37,8 @@ public interface ITConfUsuRec {
      * Retorna el listado de los Perfieles de Recursos correspondientes a un
      * formulario de la base de datos.
      *
+     * @param session
+     * @param idusuario
      * @param perfil Perfil del Recurso.
      * @return Lista con los Perfil Recursos resultantes de la consulta. Retorna
      * NULL en caso de no encontrarse resultados.

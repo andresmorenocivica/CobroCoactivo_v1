@@ -76,9 +76,9 @@ public class BeanLogin implements Serializable {
 //            Log_Handler.registrarEvento("Tiempo fuera de lugar del reloj: " + NTPClient.retrasoReloj(), null, Log_Handler.INFO, getClass(),Integer.parseInt(loginBean.getID_Usuario()));
             setNotificationMap(new LinkedHashMap<>());
             getLoginBO().iniciarSesion(this); //Se cargan datos y ejecutan validaciones de usuario.
-            getLoginBO().listarPerfilRecursos(this);
-//            setListModulos(getLoginBO().listarModulos(this)); //Se carga el menu correspondiente al usuario
-//            setListRecursos(getLoginBO().listarRecursos(this)); // Se cargan los recursos correspondientes al usuario
+//            getLoginBO().listarPerfilRecursos(this);
+           setListModulos(getLoginBO().listarModulos(this)); //Se carga el menu correspondiente al usuario
+            setListRecursos(getLoginBO().listarRecursos(this)); // Se cargan los recursos correspondientes al usuario
             AuthSingleton.getInstancia().reesstablecerFuncionario(Integer.parseInt(id_usuario)); //Se reestablecen credenciales de RUNT
             setNombre(getNombre().toUpperCase(Locale.ROOT));
             validarAcceso(); //Revisar Estado del Usuario
