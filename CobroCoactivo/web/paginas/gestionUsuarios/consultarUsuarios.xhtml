@@ -53,7 +53,7 @@
                                                             </div>
                                                             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
                                                                 <div class="input-group margin-5">
-                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" id="txtNombreUsuario" value="#{gestionUsuariosBean.nombreUsuario}" required="true" requiredMessage="Digite el nombre del usuario"></h:inputText>
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" id="txtNombreUsuario" value="#{gestionUsuariosBean.nombreUsuario}" requiredMessage="Digite el nombre del usuario"></h:inputText>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-danger" value="Buscar">
                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.consultarUsuarios(1)}" execute="frmConsultas:txtNombreUsuario" render="frmConsultas:tblUsuario"/>

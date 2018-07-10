@@ -12,7 +12,7 @@
             <div class="content-wrapper">
                 <h:outputText value="#{gestionPersonaBean.encabezadoDetallePersona}" escape="false"></h:outputText>
                 <section class="content">
-                    <p:messages autoUpdate="true" id="mensajeDetallePersona" showIcon="false" closable="true" severity="error"></p:messages>
+                    <p:messages autoUpdate="true" id="mensajeDetallePersona" showIcon="false" closable="true" severity="error,info"></p:messages>
                     <div class="box box-danger">
                         <div class="box-body box-danger">
                             <div class="box-header with-border">
@@ -28,7 +28,7 @@
                                         </h:panelGroup>
                                         <h:panelGroup id="pnlGuardarUsuario" >
                                             <h:commandLink class="fa fa-save col-sm-4" id="guardarUsuario" rendered="#{gestionPersonaBean.detallePersona.editable}"> 
-                                                <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 "   render="frmDetallePersona:editableControladores frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
+                                                <f:ajax event="click" listener="#{gestionPersonaBean.editarPersona()}" execute="frmDetallePersona:selecTipoDocumento frmDetallePersona:txtEstado frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 "   render="frmDetallePersona:editableControladores frmDetallePersona:selecTipoDocumento frmDetallePersona:txtDocumento frmDetallePersona:txtSexo frmDetallePersona:txtEstado frmDetallePersona:txtNombre1 frmDetallePersona:txtNombre2 frmDetallePersona:txtApellido1 frmDetallePersona:txtApellido2 frmDetallePersona:pnlGuardarUsuario frmDetallePersona:pnlEditarUsuario"></f:ajax>
                                             </h:commandLink>
                                         </h:panelGroup>
                                     </div>
@@ -39,7 +39,7 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Primer nombre</label>
-                                            <h:inputText id="txtNombre1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" required="true" requiredMessage="Primer nombre requerido"></h:inputText>
+                                            <h:inputText id="txtNombre1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.nombre1}" class="form-control" disabled="true" required="true" requiredMessage="Primer nombre requerido"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
@@ -51,7 +51,7 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Primer apellido</label>
-                                            <h:inputText id="txtApellido1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" required="true" requiredMessage="Segundo apellido requerido"></h:inputText>
+                                            <h:inputText id="txtApellido1" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido1}" class="form-control" disabled="true" required="true" requiredMessage="Segundo apellido requerido"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
@@ -62,14 +62,14 @@
                                     </div>
                                     <div class="col-sm-1">
                                         <div class="form-group">
-                                            <label>Sexo</label>
-                                            <h:inputText id="txtSexo" style="border-color: black"   value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <label>Genero</label>
+                                            <h:inputText id="txtSexo" style="border-color: black"   value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="true"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Tipo documento</label>
-                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="#{!gestionPersonaBean.detallePersona.editable}">
+                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.tipoDocumentos.id}" class="form-control" id="selecTipoDocumento" disabled="true">
                                                 <f:selectItems id="tipoDocumento" value="#{gestionPersonaBean.listTipoDocumento}" var="documentos" itemLabel="#{documentos.descripcion}" itemValue="#{documentos.id}"></f:selectItems>
                                             </h:selectOneMenu>
                                         </div>
@@ -77,13 +77,15 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>N documento</label>
-                                            <h:inputText id="txtDocumento" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}" required="true" requiredMessage="Numero de documento requerido"></h:inputText>
+                                            <h:inputText id="txtDocumento" maxlength="10" style="border-color: black" value="#{gestionPersonaBean.detallePersona.documento}" class="form-control" disabled="true" required="true" requiredMessage="Numero de documento requerido"></h:inputText>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Estado</label>
-                                            <h:inputText id="txtEstado" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.estadoPersonas.descripcion}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
+                                            <h:selectOneMenu style="border-color: black" value="#{gestionPersonaBean.detallePersona.estadoPersonas.id}" class="form-control" id="txtEstado" disabled="#{!gestionPersonaBean.detallePersona.editable}" >
+                                                <f:selectItems id="estadoPersona" value="#{gestionPersonaBean.listEstadoPersonas}" var="estadoPersonas" itemLabel="#{estadoPersonas.descripcion}" itemValue="#{estadoPersonas.id}"></f:selectItems>
+                                            </h:selectOneMenu>
                                         </div>
                                     </div>
                                 </div>
@@ -188,7 +190,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Plan</th>
-                                                            <th>Fases</th>
+                                                            <th>Etapa</th>
+                                                            <th>Fase</th>
                                                             <th>Referencia</th>
                                                             <th>Fecha movimiento</th>
                                                             <th>Usuario</th>
@@ -199,6 +202,7 @@
                                                         <ui:repeat value="#{gestionPersonaBean.deudaSelecionada.listMovimientos}" var="MovimientoDeuda" >
                                                             <tr>
                                                                 <td>#{MovimientoDeuda.deudas.planTrabajoDeuda.descripcion} </td>
+                                                                <td>#{MovimientoDeuda.fasesTrabajos.etapasTrabajos.descricion} </td>
                                                                 <td>#{MovimientoDeuda.fasesTrabajos.descripcion}</td>
                                                                 <td>#{MovimientoDeuda.deudas.referencia}</td>
                                                                 <td>#{MovimientoDeuda.fechaproceso}</td>

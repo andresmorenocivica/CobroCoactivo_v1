@@ -129,6 +129,9 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
 
         getPersonasDAO().update(civPersonas);
+        if (civPersonas != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo la persona correctamente", null));
+        }
     }
 
     @Override

@@ -61,9 +61,11 @@ public class BeanGestionUsuarios {
                     setDetallePersonaModal(obj_.getPersonas());
                     getGestionUsuariosBO().cargarDatosPersonas(this);
                     getGestionUsuariosBO().cargarTipoDocumento(this);
-                    RequestContext requestContext = RequestContext.getCurrentInstance();
-                    FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
-                    requestContext.execute("$('#modalDetallePersona').modal('show')");
+//                    if (obj_.getPersonas().getApellido1() != null) {
+//                        RequestContext requestContext = RequestContext.getCurrentInstance();
+//                        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
+//                        requestContext.execute("$('#modalDetallePersona').modal('show')");
+//                    }
                 }
             }
         } catch (Exception e) {
@@ -75,6 +77,7 @@ public class BeanGestionUsuarios {
     public void consultarUsuarios(int tipo) {
         try {
             setTipoBusqueda(tipo);
+            setListadoUsuarios(new ArrayList<>());
             getGestionUsuariosBO().consultarUsuario(this);
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));

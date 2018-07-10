@@ -2,6 +2,7 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 import CobroCoactivo.Persistencia.CivEstadoFasesTrabajos;
+import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
 import CobroCoactivo.Persistencia.CivReporteTrabajos;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class FasesTrabajos implements java.io.Serializable {
 
     private int Id;
     private ReporteTrabajos reporteTrabajos;
+    private EtapasTrabajos etapasTrabajos;
     private EstadoFasesTrabajos estadoFasesTrabajos;
     private String Descripcion;
     private Date Fechaproceso;
@@ -48,6 +50,22 @@ public class FasesTrabajos implements java.io.Serializable {
            this.Obligatorio = "Si"; 
         else
             this.Obligatorio = "No";
+        
+    }
+    
+    public FasesTrabajos(CivFasesTrabajos civFasesTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, CivReporteTrabajos civReporteTrabajos, CivEtapasTrabajos civEtapasTrabajos) {
+        this.Id = civFasesTrabajos.getFastraId().intValue();
+        this.Descripcion = civFasesTrabajos.getFastraDescripcion();
+        this.Fechaproceso = civFasesTrabajos.getFastraFechaproceso();
+        this.Dianim = civFasesTrabajos.getFastraDianim().intValue();
+        this.Diamax = civFasesTrabajos.getFastraDiamax().intValue();
+        this.estadoFasesTrabajos = new EstadoFasesTrabajos(civEstadoFasesTrabajos);
+        this.reporteTrabajos = new ReporteTrabajos(civReporteTrabajos);
+        if (civFasesTrabajos.getFastraObligatorio().equals("TRUE")) 
+           this.Obligatorio = "Si"; 
+        else
+            this.Obligatorio = "No";
+        this.etapasTrabajos = new EtapasTrabajos(civEtapasTrabajos);
         
     }
     
@@ -183,6 +201,20 @@ public class FasesTrabajos implements java.io.Serializable {
      */
     public void setListaDeudas(List<Deudas> listaDeudas) {
         this.listaDeudas = listaDeudas;
+    }
+
+    /**
+     * @return the etapasTrabajos
+     */
+    public EtapasTrabajos getEtapasTrabajos() {
+        return etapasTrabajos;
+    }
+
+    /**
+     * @param etapasTrabajos the etapasTrabajos to set
+     */
+    public void setEtapasTrabajos(EtapasTrabajos etapasTrabajos) {
+        this.etapasTrabajos = etapasTrabajos;
     }
 
 }

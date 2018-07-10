@@ -41,6 +41,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import org.hibernate.Session;
 
 /**
@@ -151,6 +153,9 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
             case 2:
                 listCivDeudas = getDeudasDAO().listarDeudasByTipo(bean.getTipoDeudas());
                 break;
+        }
+        if (listCivDeudas == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la refencia", null));
         }
         if (listCivDeudas != null) {
             if (listCivDeudas.size() > 0) {

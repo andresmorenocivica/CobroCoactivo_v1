@@ -72,7 +72,7 @@ public class Movimientos {
         this.Fechaproceso = civMovimientos.getMovFechaproceso();
         this.EstadoMovimientos = new EstadoMovimientos(civEstadoMovimientos);
         this.Deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos());
-        this.FasesTrabajos = new FasesTrabajos(civFasesTrabajos);
+        this.FasesTrabajos = new FasesTrabajos(civFasesTrabajos, civFasesTrabajos.getCivEstadoFasesTrabajos(), civFasesTrabajos.getCivReporteTrabajos(), civFasesTrabajos.getCivEtapasTrabajos());
         this.Personas = new Personas(civPersonas);
         this.Usuarios = new Usuarios(civUsuarios);
     }

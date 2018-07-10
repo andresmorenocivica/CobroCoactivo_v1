@@ -34,7 +34,7 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
         <!--Alert style roymer-->
         <link href="#{request.contextPath}/recursos/dist/css/estiloscss.css" rel="stylesheet" type="text/css"/>
-
+        <link rel="stylesheet" href="#{request.contextPath}/resources/css/bootstrap.css" />
         <link rel="stylesheet" href="#{request.contextPath}/recursos/css/PrimefacesOverride.css" />
 
 
@@ -67,9 +67,6 @@
         <script src="#{request.contextPath}/recursos/js/jquery.validate.min.js" type="text/javascript"></script>
         <style>
             .datepicker{z-index:1051 !important;}
-        </style>
-        <style>
-            .datepicker{z-index:1051 !important;}
             .modal-header{
                 background:#F71C06;
             }
@@ -92,14 +89,12 @@
     </h:head>
 
     <h:body class="hold-transition skin-red sidebar-mini" onload="bloquear()">
+        <p:ajaxStatus style="z-index: 5000;" onstart="PF('statusDialog').show()"  onsuccess="PF('statusDialog').hide()" oncomplete="load_complete()" onerror="window.location.replace('#{request.contextPath}/inicio.xhtml')"/>
 
-       <!-- <p:ajaxStatus style="z-index: 5000;" onstart="PF('statusDialog').show()"  onsuccess="PF('statusDialog').hide();" oncomplete="load_complete()" onerror="window.location.replace('#{request.contextPath}/content/home.civ')"/>
-
-        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" >
-            <p:graphicImage url="#{request.contextPath}/recursos/images/loading.gif" style="width: 25px;"/> Espere...
-        </p:dialog> -->
+        <p:dialog position="center center" widgetVar="statusDialog" modal="true" draggable="false" resizable="false" >
+            <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px; "/><p>Espere...</p> <br></br>Espere
+        </p:dialog>        
         <div class="wrapper">
-
             <div id="top" class="top">
                 <ui:insert name="top">
                     <header class="main-header">
@@ -830,6 +825,30 @@
                             <div class="modal-body">
                                 <p:messages autoUpdate="true" id="mensajeModalAgregarPersona" showIcon="false" closable="true" severity="error"></p:messages>
                                 <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Primer Nombre:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Segundo Nombre:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Primer Apellido:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Primer apellido requerido"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Segundo Apellido:</label> 
+                                            <h:inputText class="form-control text-uppercase" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="input-group ">
                                             <label>Tipo de documento</label>
@@ -841,37 +860,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>N Documento:</label> 
-                                            <input type="number" class="form-control" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
+                                            <input type="text" class="form-control text-uppercase" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Primer Nombre:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Segundo Nombre:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Primer Apellido:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Segundo apellido Requerido"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Segundo Apellido:</label> 
-                                            <h:inputText class="form-control " id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
-                                        </div>
-                                    </div>
+
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label>Sexo:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtSexo" value="#{gestionPersonaBean.detallePersona.sexo}" required="true" requiredMessage="Sexo requerido" />
+                                            <label>Genero:</label> 
+                                            <h:selectOneMenu id="txtGenero" class="form-control" required="true" value="#{gestionPersonaBean.detallePersona.sexo}">
+                                                <f:selectItem itemValue="2" itemLabel="MASCULINO"/>
+                                                <f:selectItem itemValue="5" itemLabel="FEMENINO"/>
+                                            </h:selectOneMenu>
                                         </div>
                                     </div>
                                 </div>
@@ -887,7 +886,7 @@
                                         <h:panelGrid id="pnlGuardar">
                                             <h:panelGroup >
                                                 <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtSexo frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
+                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtGenero frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
                                                 </h:commandLink>
                                             </h:panelGroup>
                                         </h:panelGrid>
@@ -911,31 +910,31 @@
                         </div>
                         <h:panelGroup id="pnlModalDetallePersona">
                             <div class="modal-body">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Primer Nombre:</label> 
+                                        <label>Primer nombre:</label> 
                                         <h:inputText class="form-control" id="DetPerNombre1" value="#{detallePersonasBean.detallePersonasModal.nombre1}" disabled="true" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Segundo Nombre:</label> 
+                                        <label>Segundo nombre:</label> 
                                         <h:inputText class="form-control" id="DetPerNombre2" value="#{detallePersonasBean.detallePersonasModal.nombre2}" disabled="true" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Primer Apellido:</label> 
+                                        <label>Primer apellido:</label> 
                                         <h:inputText class="form-control" id="DetPerApellido1" value="#{detallePersonasBean.detallePersonasModal.apellido1}" disabled="true" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Segundo Apellido:</label> 
+                                        <label>Segundo apellido:</label> 
                                         <h:inputText class="form-control" id="DetPerApellido2" value="#{detallePersonasBean.detallePersonasModal.apellido2}" disabled="true" />
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     <div class="input-group ">
                                         <label>Tipo de documento</label>
                                         <h:selectOneMenu  id="DetPerSelectDocumentos" class="form-control" value="#{detallePersonasBean}" disabled="true" converter="javax.faces.Integer">
@@ -943,20 +942,20 @@
                                         </h:selectOneMenu>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     <div class="form-group">
-                                        <label>N Documento:</label> 
+                                        <label>N documento:</label> 
                                         <h:inputText class="form-control" id="DetPerNumDocumento" value="#{detallePersonasBean.detallePersonasModal.documento}"  disabled="true" />
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label>Sexo:</label> 
-                                        <h:inputText class="form-control" id="DetPerSexo" value="#{detallePersonasBean.detallePersonasModal.sexo}" disabled="true" />
+                                        <label>Genero:</label> 
+                                        <h:inputText class="form-control" id="DetPerGenero" value="#{detallePersonasBean.detallePersonasModal.sexo}" disabled="true" />
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <h4>Personas Datos Adicionales</h4>
+                                    <h4>Personas datos adicionales</h4>
                                 </div>
                                 <table class="table table-bordered center">
                                     <thead>

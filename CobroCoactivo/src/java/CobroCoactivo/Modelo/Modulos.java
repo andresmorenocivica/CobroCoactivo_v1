@@ -49,7 +49,7 @@ public class Modulos implements java.io.Serializable {
         this.estadoModulos = new EstadoModulos(civEstadoModulos);
         for (CivRecursos civRecurso : listCivRecursos) {
             Recursos recursos = new Recursos(civRecurso);
-            this.getListRecurso().add(recursos);
+            this.listRecurso.add(recursos);
         }
         
     }
