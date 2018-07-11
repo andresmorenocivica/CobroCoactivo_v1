@@ -6,8 +6,7 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionPlanTrabajo;
-import CobroCoactivo.Persistencia.CivEtapasTrabajos;
-import java.util.List;
+
 
 /**
  *

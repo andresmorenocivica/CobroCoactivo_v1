@@ -115,7 +115,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
-        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
+        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(1));
 
         civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
         civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
@@ -156,13 +156,13 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         boolean flag = false;
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
-        civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getIdEstadoGeneral()));
+        civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getPlanGenerales().getEstadoPlanGenerales().getId()));
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
         civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion());
         civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
         civPlanGenerales.setPlagenFechaproceso(new Date());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
-        if (bean.getIdEstadoGeneral() != 1) {
+        if (bean.getPlanGenerales().getEstadoPlanGenerales().getId() != 1) {
             List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanGenerales.getPlagenId().intValue());
             if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
                 for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
@@ -292,43 +292,61 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     @Override
     public void GuardarPlanGeneral(BeanPlanGeneral bean) throws Exception {
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
-        CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
-        civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getIdEstadoGeneral()));
-        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
-        civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
-        civPlanGenerales.setPlagenFechaproceso(new Date());
-        civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
-        getiTPlanGeneral().create(civPlanGenerales);
-        List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
-        CivEtapasGenerales persuasiva = new CivEtapasGenerales();
-        persuasiva.setCivPlanGenerales(civPlanGenerales);
-        persuasiva.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
-        persuasiva.setEtagenDescripcion("Persuasiva");
-        persuasiva.setEtagenFechaproceso(new Date());
-        persuasiva.setEtagenObligatorio("FALSE");
-        persuasiva.setEtagenPrioridad(new BigDecimal(1));
-        CivEtapasGenerales juridica = new CivEtapasGenerales();
-        juridica.setCivPlanGenerales(civPlanGenerales);
-        juridica.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
-        juridica.setEtagenDescripcion("Juridica");
-        juridica.setEtagenFechaproceso(new Date());
-        juridica.setEtagenObligatorio("TRUE");
-        juridica.setEtagenPrioridad(new BigDecimal(2));
-        CivEtapasGenerales embargo = new CivEtapasGenerales();
-        embargo.setCivPlanGenerales(civPlanGenerales);
-        embargo.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
-        embargo.setEtagenDescripcion("Embargo");
-        embargo.setEtagenFechaproceso(new Date());
-        embargo.setEtagenObligatorio("TRUE");
-        embargo.setEtagenPrioridad(new BigDecimal(3));
-        civEtapaGeneralesPorDefecto.add(persuasiva);
-        civEtapaGeneralesPorDefecto.add(juridica);
-        civEtapaGeneralesPorDefecto.add(embargo);
-        for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
-            getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
-        }
-        bean.init();
+        CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(bean.getPlanGenerales().getColor());
+        CivPlanGenerales civPlanGeneralesDescripcion = getiTPlanGeneral().getCivPlanGeneralByDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
+        if (civPlanGeneralesColor != null || civPlanGeneralesDescripcion != null) {
+            if (civPlanGeneralesColor != null) {
+                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "El color ya existe en el sistema", "Plan General Creado exitosamente"));
+            }
+            if (civPlanGeneralesDescripcion != null) {
+                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "La descripcion ya existe en el sistema", "Plan General Creado exitosamente"));
+            }
 
+        } else {
+            CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
+            civEstadoPlanGenerales.setEstplagenId(new BigDecimal(1));
+            civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
+            civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
+            civPlanGenerales.setPlagenFechaproceso(new Date());
+            civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
+            getiTPlanGeneral().create(civPlanGenerales);
+            List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
+            CivEtapasGenerales persuasiva = new CivEtapasGenerales();
+            persuasiva.setCivPlanGenerales(civPlanGenerales);
+            persuasiva.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            persuasiva.setEtagenDescripcion("Persuasiva");
+            persuasiva.setEtagenFechaproceso(new Date());
+            persuasiva.setEtagenObligatorio("FALSE");
+            persuasiva.setEtagenPrioridad(new BigDecimal(1));
+            CivEtapasGenerales juridica = new CivEtapasGenerales();
+            juridica.setCivPlanGenerales(civPlanGenerales);
+            juridica.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            juridica.setEtagenDescripcion("Juridica");
+            juridica.setEtagenFechaproceso(new Date());
+            juridica.setEtagenObligatorio("TRUE");
+            juridica.setEtagenPrioridad(new BigDecimal(2));
+            CivEtapasGenerales embargo = new CivEtapasGenerales();
+            embargo.setCivPlanGenerales(civPlanGenerales);
+            embargo.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            embargo.setEtagenDescripcion("Embargo");
+            embargo.setEtagenFechaproceso(new Date());
+            embargo.setEtagenObligatorio("TRUE");
+            embargo.setEtagenPrioridad(new BigDecimal(3));
+            civEtapaGeneralesPorDefecto.add(persuasiva);
+            civEtapaGeneralesPorDefecto.add(juridica);
+            civEtapaGeneralesPorDefecto.add(embargo);
+            for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
+                getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
+            }
+            bean.init();
+            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Plan general creado exitosamente", "Plan General Creado exitosamente"));
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#planGeneral').modal('hide')");
+
+        }
     }
 
     @Override
@@ -345,7 +363,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         if (bean.getFasesGenerales().getDianim() < bean.getFasesGenerales().getDiamax()) {
             CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
             CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
-            civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(bean.getIdEStadoFasesGeneral()));
+            civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(1));
             CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
             civEtapasGenerales.setEtagenId(new BigDecimal(bean.getEtapasGenerales().getId()));
             CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();

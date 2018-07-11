@@ -80,6 +80,20 @@
             #collapse{
                 cursor: pointer
             }
+            
+            #j_idt6{
+                width: 150px !important;
+                left: 50% !important;
+                top: 50% !important; 
+                position: absolute !important;
+                text-align: center !important;
+            }
+
+            #j_idt6 img{
+                text-align: center;
+            }
+
+
         </style>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"></link>
         <link rel="stylesheet" href="#{request.contextPath}/recursos/css/floatingButton.css" />
@@ -90,11 +104,10 @@
     </h:head>
 
     <h:body class="hold-transition skin-red sidebar-mini" onload="bloquear()">
-        <p:ajaxStatus style="z-index: 5000;" onstart="PF('statusDialog').show()"  onsuccess="PF('statusDialog').hide()" oncomplete="load_complete()" onerror="window.location.replace('#{request.contextPath}/inicio.xhtml')"/>
-
-        <p:dialog position="center center" widgetVar="statusDialog" modal="true" draggable="false" resizable="false" >
-            <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px; "/><p>Espere...</p> <br></br>Espere
-        </p:dialog>        
+        <p:ajaxStatus  onstart="PF('statusDialog').show()"   onsuccess="PF('statusDialog').hide()"/> 
+        <p:dialog position="center,center" showHeader="false"  widgetVar="statusDialog" modal="true" closable="false"  draggable="false" resizable="false">
+            <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px;"/><p>Espere...</p>
+        </p:dialog>    
         <div class="wrapper">
             <div id="top" class="top">
                 <ui:insert name="top">

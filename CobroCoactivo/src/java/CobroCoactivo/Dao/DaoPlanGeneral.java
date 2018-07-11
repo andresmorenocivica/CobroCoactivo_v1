@@ -18,18 +18,16 @@ import org.hibernate.Session;
  *
  * @author jvergara
  */
-public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales,Integer> implements ITPlanGeneral{
+public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Integer> implements ITPlanGeneral {
 
-   
-    public List<CivPlanGenerales> findCivPlanGeneral(Session session,int id) throws Exception {
-       
+    public List<CivPlanGenerales> findCivPlanGeneral(Session session, int id) throws Exception {
         String sql = "SELECT * FROM CivPlanGenerales WHERE plagenId =:id";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivPlanGenerales.class);
         query.setInteger("id", id);
         return query.list();
     }
-    
+
     @Override
     public CivPlanGenerales getCivPlanGeneral(int idPlangeneral) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -39,15 +37,41 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales,Integ
         query.setInteger("idPlangeneral", idPlangeneral);
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);
-        }   
+        }
         session.close();
         return null;
     }
-    
+
     @Override
     public List<CivPlanGenerales> getListPlanGenerales(Session session) throws Exception {
         String hql = "from CivPlanGenerales where civEstadoPlanGenerales.estplagenId=1";
         Query query = session.createQuery(hql);
         return query.list();
+    }
+
+    @Override
+    public CivPlanGenerales getCivPlanGeneralByColor(String color) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "from CivPlanGenerales where color=:color";
+        Query query =  session.createQuery(sql);
+        query.setString("color", color);
+        if (query.list().size() > 0) {
+            return (CivPlanGenerales) query.list().get(0);
+        }
+        session.close();
+        return null;
+    }
+
+    @Override
+    public CivPlanGenerales getCivPlanGeneralByDescripcion(String descripcion) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "FROM CivPlanGenerales WHERE plagenDescripcion = :descripcion";
+        Query query = session.createQuery(sql);
+        query.setString("descripcion", descripcion);
+        if (query.list().size() > 0) {
+            return (CivPlanGenerales) query.list().get(0);
+        }
+        session.close();
+        return null;
     }
 }

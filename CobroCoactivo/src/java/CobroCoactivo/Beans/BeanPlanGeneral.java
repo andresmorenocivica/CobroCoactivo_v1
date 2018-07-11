@@ -58,7 +58,7 @@ public class BeanPlanGeneral {
     //termina  lista de objectos beanplangeneral
 
     // variables primitivas utiliza en el beanPlangenearal
-    private int idEstadoGeneral;
+   
     private int idEstapaGeneral;
     private int idEStadoFasesGeneral;
 
@@ -125,11 +125,6 @@ public class BeanPlanGeneral {
 
         try {
             getPlanGeneralBO().GuardarPlanGeneral(this);
-            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Plan general creado exitosamente", "Plan General Creado exitosamente"));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#planGeneral').modal('hide')");
-
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
@@ -367,19 +362,6 @@ public class BeanPlanGeneral {
         this.ListadoEStadoPlanesGenerales = ListadoEStadoPlanesGenerales;
     }
 
-    /**
-     * @return the idEstadoGeneral
-     */
-    public int getIdEstadoGeneral() {
-        return idEstadoGeneral;
-    }
-
-    /**
-     * @param idEstadoGeneral the idEstadoGeneral to set
-     */
-    public void setIdEstadoGeneral(int idEstadoGeneral) {
-        this.idEstadoGeneral = idEstadoGeneral;
-    }
 
     /**
      * @return the estadoButton

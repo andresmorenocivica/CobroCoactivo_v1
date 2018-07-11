@@ -43,7 +43,7 @@
                                                         <div class="col-sm-1" style="background-color: #{planTrabajo.color}; padding: 10px; margin: 10px"></div>
 
                                                         <h:commandLink title="Plan trabajo" value=" #{planTrabajo.descripcion}" class="col-sm-10">
-                                                            <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalAgregarEtapasTrabajo"  listener="#{gestionPlanTrabajoBean.listaEtapaTrabajo(planTrabajo)}"/>
+                                                            <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalAgregarEtapasTrabajo"   listener="#{gestionPlanTrabajoBean.listaEtapaTrabajo(planTrabajo)}"/>
                                                         </h:commandLink>
 
                                                     </li>  
@@ -334,37 +334,37 @@
                                             <h4 class="modal-title">Editar dias</h4>
                                         </div>
                                         <div class="modal-body" jsf:id="editarfaseModalBody">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Descripción</label>
                                                     <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.descripcion}"></h:inputText>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Estado</label>
                                                     <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.estadoFasesTrabajos.descripcion}"></h:inputText>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Dia minimo</label>
                                                     <h:inputText class="form-control" value="#{gestionPlanTrabajoBean.fasesTrabajos.dianim}"></h:inputText>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Dia maximo</label>
                                                     <h:inputText class="form-control" value="#{gestionPlanTrabajoBean.fasesTrabajos.diamax}"></h:inputText>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Obligatorio</label>
                                                     <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.obligatorio}"></h:inputText>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Archivo</label>
                                                     <h:inputText class="form-control" disabled="true" value="#{gestionPlanTrabajoBean.fasesTrabajos.reporteTrabajos.reptraDescripcion}"></h:inputText>

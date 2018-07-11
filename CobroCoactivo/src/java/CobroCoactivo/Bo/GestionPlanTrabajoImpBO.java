@@ -53,7 +53,7 @@ import org.primefaces.context.RequestContext;
  * @author jvergara
  * @version 1.0, 27/06/2008
  */
-public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
+public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO{
 
     private ITPlanGeneral planGeneralDAO;
     private ITPlanTrabajo PlanTrabajoDAO;

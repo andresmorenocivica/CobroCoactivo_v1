@@ -199,18 +199,18 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.planGenerales.descripcion}" />
+                                                        <h:inputText class="form-control" id="txtDescriptionRecurso" required="true" requiredMessage="La descripción no puede estar vacio" value="#{PlanGeneralbean.planGenerales.descripcion}" maxlength="40" />
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-6" jsf:rendered="#{!PlanGeneralbean.estadoButton}">
                                                     <div class="form-group">
                                                         <label>Estado:</label>
-                                                        <h:selectOneMenu id="txtEstado" class="form-control" value="#{PlanGeneralbean.idEstadoGeneral}">
+                                                        <h:selectOneMenu id="txtEstado" class="form-control" value="#{PlanGeneralbean.planGenerales.estadoPlanGenerales.id}">
                                                             <f:selectItems value="#{PlanGeneralbean.listadoEStadoPlanesGenerales}" var="listadoEstadoPlanesGenerales" itemValue="#{listadoEstadoPlanesGenerales.id}" itemLabel="#{listadoEstadoPlanesGenerales.descripcion}" ></f:selectItems>
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-12">
+                                                <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Color:</label>
                                                         <input type="color" class="form-control my-colorpicker1" jsf:id="color" jsf:value="#{PlanGeneralbean.planGenerales.color}" jsf:required="true" jsf:label="color" jsf:requiredMessage="El color es requerido"/>
@@ -260,10 +260,10 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText label="Descripción" class="form-control" id="txtEtapaGeneralDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.etapasGenerales.descripcion}" />
+                                                        <h:inputText label="Descripción" class="form-control" id="txtEtapaGeneralDescriptionRecurso" required="true" requiredMessage="No puede estar vacio" value="#{PlanGeneralbean.etapasGenerales.descripcion}"  maxlength="30"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-6" jsf:id="divEtapaEstadoModal" jsf:rendered="#{!PlanGeneralbean.estadoButton}">
                                                     <div class="form-group">
                                                         <label>Estado:</label>
                                                         <h:selectOneMenu id="txtEstadoEtapaGeneral" class="form-control" value="#{PlanGeneralbean.etapasGenerales.estadoEtapasGenerales.id}"  disabled="#{PlanGeneralbean.etapasGenerales.obligatorio.equals('TRUE')}">
@@ -283,7 +283,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Orden</label>
-                                                        <h:inputText label="orden" class="form-control" id="txtEtapaGeneral" required="true" requiredMessage="Deber ingresar el orden" value="#{PlanGeneralbean.etapasGenerales.prioridad}"></h:inputText>
+                                                        <h:inputText label="orden" class="form-control" id="txtEtapaGeneral" required="true" requiredMessage="Deber ingresar el orden" value="#{PlanGeneralbean.etapasGenerales.prioridad}" maxlength="2"></h:inputText>
                                                     </div>
 
                                                 </div>
@@ -331,10 +331,22 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Descripción:</label>
-                                                        <h:inputText class="form-control" id="txtDescriptionFase" label="Descrición" value="#{PlanGeneralbean.fasesGenerales.descripcion}" required="true" requiredMessage="Descripción es requerido"/>
+                                                        <h:inputText class="form-control" id="txtDescriptionFase" label="Descrición" value="#{PlanGeneralbean.fasesGenerales.descripcion}" required="true" requiredMessage="Descripción es requerido" maxlength="40"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label>Dia Minimo:</label>
+                                                        <h:inputText class="form-control" label="Dia Minimo" value="#{PlanGeneralbean.fasesGenerales.dianim}" id="txtDiaMinimoFase" required="true" requiredMessage="Dia minimo es requerido" maxlength="3"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label>Dia Maximo:</label>
+                                                        <h:inputText class="form-control" label="Dia Maximo" value="#{PlanGeneralbean.fasesGenerales.diamax}" id="txtDiaMaximoFase" required="true" requiredMessage="Dia maximo es requerido" maxlength="3"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6" jsf:id="divFasesGeneralesModal" jsf:rendered="#{!PlanGeneralbean.estadoButton}">
                                                     <div class="form-group">
                                                         <label>Estado:</label>
                                                         <h:selectOneMenu id="txtEstadoFase" class="form-control" value="#{PlanGeneralbean.idEStadoFasesGeneral}">
@@ -342,19 +354,7 @@
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <label>Dia Minimo:</label>
-                                                        <h:inputText class="form-control" label="Dia Minimo" value="#{PlanGeneralbean.fasesGenerales.dianim}" id="txtDiaMinimoFase" required="true" requiredMessage="Dia minimo es requerido" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <label>Dia Maximo:</label>
-                                                        <h:inputText class="form-control" label="Dia Maximo" value="#{PlanGeneralbean.fasesGenerales.diamax}" id="txtDiaMaximoFase" required="true" requiredMessage="Dia maximo es requerido" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <label>Obligatorio:</label>
                                                         <h:selectOneMenu class="form-control" value="#{PlanGeneralbean.fasesGenerales.obligatorio}" id="selectObligatorioFase">
@@ -371,7 +371,7 @@
                                                         </p:selectBooleanCheckbox>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12" jsf:id="divArchivo" jsf:rendered="#{!PlanGeneralbean.renderDivCambiarArchivo}">
+                                                <div class="col-sm-10" jsf:id="divArchivo" jsf:rendered="#{!PlanGeneralbean.renderDivCambiarArchivo}">
                                                     <div class="form-group">
                                                         <label> Agregar Archivo</label>
                                                         <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{PlanGeneralbean.file}" jsf:required="true" jsf:requiredMessage="Debe seleccionar un archivo"/>
