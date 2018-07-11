@@ -35,4 +35,8 @@ public interface GestionPersonasBO {
 
     void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception;
 
+    void cargarTipoDatosPersonas(BeanGestionPersonas bean) throws Exception;
+
+    void cargarEstadoTipoDatosPersonas(BeanGestionPersonas bean) throws Exception;
+
 }

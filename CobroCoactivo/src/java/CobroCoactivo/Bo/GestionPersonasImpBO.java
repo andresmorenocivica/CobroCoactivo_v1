@@ -6,15 +6,20 @@ import CobroCoactivo.Dao.*;
 import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.EstadoTipoDatosPersonas;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.TipoDatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivDeudas;
+import CobroCoactivo.Persistencia.CivEstadoDatosPersonas;
 import CobroCoactivo.Persistencia.CivEstadoPersonas;
+import CobroCoactivo.Persistencia.CivEstadoTipoDatosPersonas;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
 import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,6 +42,9 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     private ITEstadoPersonas estadoPersonasDAO;
     private ITFasesTrabajo fasesTrabajoDAO;
     private ITPlanTrabajo planTrabajoDAO;
+    private ITTipoDatosPersonas tipoDatosPersonasDAO;
+    private ITEstadoTipoDatosPersonas estadoTipoDatosPersonasDAO;
+    private ITEstadoDatosPersonas estadoDatosPersonasDAO;
 
     public GestionPersonasImpBO() {
         deudasDAO = new DaoDeudas();
@@ -47,7 +55,9 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         datosPersonasDAO = new DaoDatosPersonas();
         estadoPersonasDAO = new DaoEstadoPersonas();
         planTrabajoDAO = new DaoPlanTrabajo();
-
+        tipoDatosPersonasDAO = new DaoTipoDatosPersonas();
+        estadoTipoDatosPersonasDAO = new DaoEstadoTipoDatosPersonas();
+        estadoDatosPersonasDAO = new DaoEstadoDatosPersonas();
     }
 
     @Override
@@ -65,6 +75,24 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         for (CivEstadoPersonas civEstadoPersona : listCivEstadoPersonas) {
             EstadoPersonas estadoPersonas = new EstadoPersonas(civEstadoPersona);
             bean.getListEstadoPersonas().add(estadoPersonas);
+        }
+    }
+
+    @Override
+    public void cargarTipoDatosPersonas(BeanGestionPersonas bean) throws Exception {
+        List<CivTipoDatosPersonas> listCivTipoDatosPersonas = getTipoDatosPersonasDAO().findAll();
+        for (CivTipoDatosPersonas civTipoDatosPersona : listCivTipoDatosPersonas) {
+            TipoDatosPersonas tipoDatosPersonas = new TipoDatosPersonas(civTipoDatosPersona, civTipoDatosPersona.getCivEstadoTipoDatosPersonas());
+            bean.getListTipoDatosPersonas().add(tipoDatosPersonas);
+        }
+    }
+
+    @Override
+    public void cargarEstadoTipoDatosPersonas(BeanGestionPersonas bean) throws Exception {
+        List<CivEstadoTipoDatosPersonas> listCivEstadoTipoDatosPersonas = getEstadoTipoDatosPersonasDAO().findAll();
+        for (CivEstadoTipoDatosPersonas civEstadoTipoDatosPersona : listCivEstadoTipoDatosPersonas) {
+            EstadoTipoDatosPersonas estadoTipoDatosPersonas = new EstadoTipoDatosPersonas(civEstadoTipoDatosPersona);
+            bean.getListEstadoTipoDatosPersonas().add(estadoTipoDatosPersonas);
         }
     }
 
@@ -179,9 +207,37 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civPersonas.setPerFechaproceso(new Date());
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
         getPersonasDAO().create(civPersonas);
-        if (civPersonas != null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
+        int registro = -1;
+        for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {
+            registro++;
+            if (bean.getListTipoDatosPersonas().get(i).isSelecionado() == true) {
+
+                if (registro == i) {
+
+                    CivTipoDatosPersonas civTipoDatosPersonas = new CivTipoDatosPersonas();
+                    CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas = new CivEstadoTipoDatosPersonas();
+
+                    civEstadoTipoDatosPersonas.setEsttipdatId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getEstadoTipoDatosPersonas().getId()));
+                    civTipoDatosPersonas.setTipdatperId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getId()));
+                    civTipoDatosPersonas.setTipdatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcion());
+                    civTipoDatosPersonas.setTipdatperNombrecorto(bean.getListTipoDatosPersonas().get(i).getNombrecorto());
+                    civTipoDatosPersonas.setTipdatperCodigo(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getCodigo()));
+                    civTipoDatosPersonas.setTipdatperFechainicial(bean.getListTipoDatosPersonas().get(i).getFechainicial());
+                    civTipoDatosPersonas.setTipdatperFechafinal(bean.getListTipoDatosPersonas().get(i).getFechafinal());
+                    civTipoDatosPersonas.setCivEstadoTipoDatosPersonas(civEstadoTipoDatosPersonas);
+                    CivDatosPersonas civDatosPersonas = new CivDatosPersonas();
+                    CivEstadoDatosPersonas civEstadoDatosPersonas = getEstadoDatosPersonasDAO().getEstadoDatosPersonas(BigDecimal.valueOf(1));
+                    civDatosPersonas.setDatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcionDatosPersonas());
+                    civDatosPersonas.setDatperFechaproceso(new Date());
+                    civDatosPersonas.setCivPersonas(civPersonas);
+                    civDatosPersonas.setCivTipoDatosPersonas(civTipoDatosPersonas);
+                    civDatosPersonas.setCivEstadoDatosPersonas(civEstadoDatosPersonas);
+                    getDatosPersonasDAO().create(civDatosPersonas);
+                }
+            }
+
         }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
     }
 
     /**
@@ -294,6 +350,48 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
      */
     public void setPlanTrabajoDAO(ITPlanTrabajo planTrabajoDAO) {
         this.planTrabajoDAO = planTrabajoDAO;
+    }
+
+    /**
+     * @return the tipoDatosPersonasDAO
+     */
+    public ITTipoDatosPersonas getTipoDatosPersonasDAO() {
+        return tipoDatosPersonasDAO;
+    }
+
+    /**
+     * @param tipoDatosPersonasDAO the tipoDatosPersonasDAO to set
+     */
+    public void setTipoDatosPersonasDAO(ITTipoDatosPersonas tipoDatosPersonasDAO) {
+        this.tipoDatosPersonasDAO = tipoDatosPersonasDAO;
+    }
+
+    /**
+     * @return the estadoTipoDatosPersonasDAO
+     */
+    public ITEstadoTipoDatosPersonas getEstadoTipoDatosPersonasDAO() {
+        return estadoTipoDatosPersonasDAO;
+    }
+
+    /**
+     * @param estadoTipoDatosPersonasDAO the estadoTipoDatosPersonasDAO to set
+     */
+    public void setEstadoTipoDatosPersonasDAO(ITEstadoTipoDatosPersonas estadoTipoDatosPersonasDAO) {
+        this.estadoTipoDatosPersonasDAO = estadoTipoDatosPersonasDAO;
+    }
+
+    /**
+     * @return the estadoDatosPersonasDAO
+     */
+    public ITEstadoDatosPersonas getEstadoDatosPersonasDAO() {
+        return estadoDatosPersonasDAO;
+    }
+
+    /**
+     * @param estadoDatosPersonasDAO the estadoDatosPersonasDAO to set
+     */
+    public void setEstadoDatosPersonasDAO(ITEstadoDatosPersonas estadoDatosPersonasDAO) {
+        this.estadoDatosPersonasDAO = estadoDatosPersonasDAO;
     }
 
 }

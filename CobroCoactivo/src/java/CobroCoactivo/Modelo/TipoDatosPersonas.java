@@ -7,7 +7,9 @@ package CobroCoactivo.Modelo;
 
 import CobroCoactivo.Persistencia.CivEstadoTipoDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -17,11 +19,13 @@ public class TipoDatosPersonas implements java.io.Serializable {
 
     private int Id;
     private String Descripcion;
-    private EstadoTipoDatosPersonas estadoTipoDatosPersonas;
+    private EstadoTipoDatosPersonas estadoTipoDatosPersonas = new EstadoTipoDatosPersonas();
     private Date Fechainicial;
     private Date Fechafinal;
     private String Nombrecorto;
     private int Codigo;
+    private boolean selecionado;
+    private String descripcionDatosPersonas;
 
     public TipoDatosPersonas() {
     }
@@ -34,18 +38,18 @@ public class TipoDatosPersonas implements java.io.Serializable {
         this.Nombrecorto = civTipoDatosPersonas.getTipdatperNombrecorto();
         this.Codigo = civTipoDatosPersonas.getTipdatperCodigo().intValue();
     }
- public TipoDatosPersonas (CivTipoDatosPersonas civTipoDatosPersonas, CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas){
- 
+
+    public TipoDatosPersonas(CivTipoDatosPersonas civTipoDatosPersonas, CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas) {
+
         this.Id = civTipoDatosPersonas.getTipdatperId().intValue();
         this.Descripcion = civTipoDatosPersonas.getTipdatperDescripcion();
         this.Fechainicial = civTipoDatosPersonas.getTipdatperFechainicial();
         this.Fechafinal = civTipoDatosPersonas.getTipdatperFechafinal();
         this.Nombrecorto = civTipoDatosPersonas.getTipdatperNombrecorto();
         this.Codigo = civTipoDatosPersonas.getTipdatperCodigo().intValue();
-        this.estadoTipoDatosPersonas = new EstadoTipoDatosPersonas();
- }
-    
-    
+        this.estadoTipoDatosPersonas = new EstadoTipoDatosPersonas(civEstadoTipoDatosPersonas);
+    }
+
     /**
      * @return the Id
      */
@@ -142,6 +146,34 @@ public class TipoDatosPersonas implements java.io.Serializable {
      */
     public void setCodigo(int Codigo) {
         this.Codigo = Codigo;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
+    }
+
+    /**
+     * @return the descripcionDatosPersonas
+     */
+    public String getDescripcionDatosPersonas() {
+        return descripcionDatosPersonas;
+    }
+
+    /**
+     * @param descripcionDatosPersonas the descripcionDatosPersonas to set
+     */
+    public void setDescripcionDatosPersonas(String descripcionDatosPersonas) {
+        this.descripcionDatosPersonas = descripcionDatosPersonas;
     }
 
 }

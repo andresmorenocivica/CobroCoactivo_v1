@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ import org.hibernate.Session;
  *
  * @author emadrid
  */
-public class DaoDatosPersonas implements ITDatosPersonas {
+public class DaoDatosPersonas extends ImpGeneryHibernateDao<CivDatosPersonas, Integer> implements ITDatosPersonas {
 
     @Override
     public List<CivDatosPersonas> listarDatosPersonas(int Id_personas) throws Exception {

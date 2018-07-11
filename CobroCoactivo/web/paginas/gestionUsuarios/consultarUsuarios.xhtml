@@ -5,7 +5,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
@@ -53,7 +54,7 @@
                                                             </div>
                                                             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
                                                                 <div class="input-group margin-5">
-                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" id="txtNombreUsuario" value="#{gestionUsuariosBean.nombreUsuario}" requiredMessage="Digite el nombre del usuario"></h:inputText>
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Ingrese nombre del usuario" id="txtNombreUsuario" value="#{gestionUsuariosBean.nombreUsuario}" requiredMessage="Digite el nombre del usuario"></h:inputText>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-danger" value="Buscar">
                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.consultarUsuarios(1)}" execute="frmConsultas:txtNombreUsuario" render="frmConsultas:tblUsuario"/>

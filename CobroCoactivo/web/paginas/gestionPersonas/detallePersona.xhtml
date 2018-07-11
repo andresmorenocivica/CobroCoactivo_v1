@@ -60,10 +60,13 @@
                                             <h:inputText id="txtApellido2" style="border-color: black"  value="#{gestionPersonaBean.detallePersona.apellido2}" class="form-control" disabled="#{!gestionPersonaBean.detallePersona.editable}"></h:inputText>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>Genero</label>
-                                            <h:inputText id="txtSexo" style="border-color: black"   value="#{gestionPersonaBean.detallePersona.sexo}" class="form-control" disabled="true"></h:inputText>
+                                            <h:selectOneMenu style="border-color: black" id="txtSexo" class="form-control" required="true" value="#{gestionPersonaBean.detallePersona.sexo}" disabled="true">
+                                                <f:selectItem itemValue="MASCULINO" itemLabel="MASCULINO"/>
+                                                <f:selectItem itemValue="FEMENINO" itemLabel="FEMENINO"/>
+                                            </h:selectOneMenu>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
@@ -105,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="box-body">
-                                <table class="table table-bordered center">
+                                <table class="table table-hover center">
                                     <thead>
                                         <tr>
                                             <th>Tipo</th>
@@ -137,7 +140,7 @@
                                 </div>
                             </div>
                             <h:panelGroup id="tblDeudas">
-                                <table class="table table-bordered ">
+                                <table class="table table-hover ">
                                     <thead>
                                         <tr>
                                             <th>Tipo de deudas</th>
@@ -159,7 +162,7 @@
                                                 <td>#{deudas.saldo}</td>
                                                 <td>#{deudas.valor}</td>
                                                 <td>#{deudas.fechaDeudas}</td>
-                                                <td>#{deudas.personas.nombre1}</td>
+                                                <td>#{deudas.personas.nombre1} #{deudas.personas.apellido1}</td>
                                                 <td>
                                                     <h:commandLink class="fa fa-eye col-sm-4" >
                                                         <f:ajax event="click" listener="#{gestionPersonaBean.cargarMovimientosDeuda(deudas)}" ></f:ajax>
@@ -183,10 +186,10 @@
                                     <div class="modal-body">
                                         <c:choose>
                                             <c:when test="#{gestionPersonaBean.deudaSelecionada.listMovimientos.size() eq 0}">
-                                                <p:messages autoUpdate="true" id="mensajeConsultarPersona" showIcon="false" closable="true" severity="error,warn"></p:messages>
+                                                <p:messages autoUpdate="true" id="mensajeModalMovimientos" showIcon="false" closable="true" severity="error,warn"></p:messages>
                                             </c:when>
                                             <c:otherwise>
-                                                <table class="table table-bordered">
+                                                <table class="table table-hover">
                                                     <thead>
                                                         <tr>
                                                             <th>Plan</th>

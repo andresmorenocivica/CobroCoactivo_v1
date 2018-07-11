@@ -6,6 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <h:head>
@@ -809,40 +810,40 @@
             <h:form id="frmModalAgregarPersona">
                 <!-- Comienza Modal Agregar Persona -->
                 <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog " style="width:60%">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title" id="myModalLabel">Guardar Persona</h4>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" jsf:id="modalBodyAgregar">
                                 <p:messages autoUpdate="true" id="mensajeModalAgregarPersona" showIcon="false" closable="true" severity="error"></p:messages>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Primer Nombre:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
+                                            <h:inputText a:placeholder="Digite el primer nombre" class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Segundo Nombre:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
+                                            <h:inputText a:placeholder="Digite el segundo nombre" class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Primer Apellido:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Primer apellido requerido"/>
+                                            <h:inputText a:placeholder="Digite el primer apellido" class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Primer apellido requerido"/>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Segundo Apellido:</label> 
-                                            <h:inputText class="form-control text-uppercase" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
+                                            <h:inputText a:placeholder="Digite el segundo apellido" class="form-control text-uppercase" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="input-group ">
                                             <label>Tipo de documento</label>
                                             <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">
@@ -850,21 +851,50 @@
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>N Documento:</label> 
-                                            <input type="text" class="form-control text-uppercase" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
+                                            <input type="text" placeholder="Digite el n° de documento" class="form-control text-uppercase" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Genero:</label> 
                                             <h:selectOneMenu id="txtGenero" class="form-control" required="true" value="#{gestionPersonaBean.detallePersona.sexo}">
-                                                <f:selectItem itemValue="2" itemLabel="MASCULINO"/>
-                                                <f:selectItem itemValue="5" itemLabel="FEMENINO"/>
+                                                <f:selectItem itemValue="MASCULINO" itemLabel="MASCULINO"/>
+                                                <f:selectItem itemValue="FEMENINO" itemLabel="FEMENINO"/>
                                             </h:selectOneMenu>
                                         </div>
+                                    </div>
+                                    <br></br>
+                                    <div class="col-md-12">
+                                        <h3>Datos Adicionales</h3>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <table jsf:id="tablaDatosAdicionales" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-4">Seleccionar</th>
+                                                    <th class="col-md-4">Nombre</th>
+                                                    <th class="col-md-4">Valor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody >
+                                                <ui:repeat value="#{gestionPersonaBean.listTipoDatosPersonas}" var="listTipoDatosPersonas">
+                                                    <tr>
+                                                        <td>
+                                                            <p:selectBooleanCheckbox value="#{listTipoDatosPersonas.selecionado}">
+                                                                <f:ajax event="change"  render="frmModalAgregarPersona:tablaDatosAdicionales"></f:ajax>
+                                                            </p:selectBooleanCheckbox>
+                                                        </td>
+                                                        <td>#{listTipoDatosPersonas.descripcion}</td>
+                                                        <td>
+                                                            <h:inputText id="txtDatosPersonasDescripcion" value="#{listTipoDatosPersonas.descripcionDatosPersonas}" rendered="#{listTipoDatosPersonas.selecionado}" required="true"></h:inputText>
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -879,7 +909,7 @@
                                         <h:panelGrid id="pnlGuardar">
                                             <h:panelGroup >
                                                 <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:txtNombre1 frmModalAgregarPersona:txtNombre2 frmModalAgregarPersona:txtApellido1 frmModalAgregarPersona:txtApellido2 frmModalAgregarPersona:txtGenero frmModalAgregarPersona:selectEstados frmModalAgregarPersona:selectDocumentos frmModalAgregarPersona:NumDocumento" />
+                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:modalBodyAgregar" />
                                                 </h:commandLink>
                                             </h:panelGroup>
                                         </h:panelGrid>

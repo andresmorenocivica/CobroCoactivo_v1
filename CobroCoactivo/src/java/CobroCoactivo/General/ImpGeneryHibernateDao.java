@@ -13,6 +13,7 @@ import CobroCoactivo.Persistencia.CivModulos;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivRecursos;
+import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -89,6 +90,11 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
             if (getEntityClass().getName().contains("CivPlanGeneral")) {
                 for (CivPlanGenerales entity : (List<CivPlanGenerales>) entities) {
                     Hibernate.initialize(entity.getCivEstadoPlanGenerales());
+                }
+            }
+            if (getEntityClass().getName().contains("CivTipoDatosPersonas")) {
+                for (CivTipoDatosPersonas entity : (List<CivTipoDatosPersonas>) entities) {
+                    Hibernate.initialize(entity.getCivEstadoTipoDatosPersonas());
                 }
             }
 

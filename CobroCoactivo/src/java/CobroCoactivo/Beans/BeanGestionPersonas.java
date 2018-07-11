@@ -7,10 +7,13 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionPersonasBO;
 import CobroCoactivo.Bo.GestionPersonasImpBO;
+import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.EstadoTipoDatosPersonas;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.TipoDatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.Serializable;
@@ -43,6 +46,8 @@ public class BeanGestionPersonas implements Serializable {
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     // lista que se utilizara para cargar la tabla de resultado de la busqueda
     private List<Personas> listPersonas = new ArrayList<>();
+    private List<TipoDatosPersonas> listTipoDatosPersonas = new ArrayList<>();
+    private List<EstadoTipoDatosPersonas> listEstadoTipoDatosPersonas = new ArrayList<>();
 
     // Objeto que se utiliza para captura la deuda que seleccione para mostrar sus movimientos
     private Deudas deudaSelecionada;
@@ -79,6 +84,8 @@ public class BeanGestionPersonas implements Serializable {
             if (getListTipoDocumento() != null && getListTipoDocumento().size() == 0) {
                 getGestionPersonasBO().cargarTipoDocumento(this);
                 getGestionPersonasBO().cargarEstadoPersonas(this);
+                getGestionPersonasBO().cargarTipoDatosPersonas(this);
+                getGestionPersonasBO().cargarEstadoTipoDatosPersonas(this);
             }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -378,6 +385,34 @@ public class BeanGestionPersonas implements Serializable {
      */
     public void setDetalleMovimientos(Movimientos detalleMovimientos) {
         this.detalleMovimientos = detalleMovimientos;
+    }
+
+    /**
+     * @return the listTipoDatosPersonas
+     */
+    public List<TipoDatosPersonas> getListTipoDatosPersonas() {
+        return listTipoDatosPersonas;
+    }
+
+    /**
+     * @param listTipoDatosPersonas the listTipoDatosPersonas to set
+     */
+    public void setListTipoDatosPersonas(List<TipoDatosPersonas> listTipoDatosPersonas) {
+        this.listTipoDatosPersonas = listTipoDatosPersonas;
+    }
+
+    /**
+     * @return the listEstadoTipoDatosPersonas
+     */
+    public List<EstadoTipoDatosPersonas> getListEstadoTipoDatosPersonas() {
+        return listEstadoTipoDatosPersonas;
+    }
+
+    /**
+     * @param listEstadoTipoDatosPersonas the listEstadoTipoDatosPersonas to set
+     */
+    public void setListEstadoTipoDatosPersonas(List<EstadoTipoDatosPersonas> listEstadoTipoDatosPersonas) {
+        this.listEstadoTipoDatosPersonas = listEstadoTipoDatosPersonas;
     }
 
 }
