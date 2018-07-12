@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *

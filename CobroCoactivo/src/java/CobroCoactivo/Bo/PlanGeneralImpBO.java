@@ -6,8 +6,10 @@ import CobroCoactivo.Dao.DaoEstadoEtapaGeneral;
 import CobroCoactivo.Dao.DaoEstadoFasesGenerales;
 import CobroCoactivo.Dao.DaoEstadoPlanGeneral;
 import CobroCoactivo.Dao.DaoEstapaGeneral;
+import CobroCoactivo.Dao.DaoEtapasTrabajo;
 import CobroCoactivo.Dao.DaoFasesGenerales;
 import CobroCoactivo.Dao.DaoPlanGeneral;
+import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.ITDocumentoGenerales;
 import CobroCoactivo.Dao.ITEstadoEtapageneral;
 import CobroCoactivo.Dao.ITEstadoFasesGenerales;
@@ -19,7 +21,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import CobroCoactivo.Dao.ITEstadoPlanGeneral;
 import CobroCoactivo.Dao.ITEstapaGeneral;
+import CobroCoactivo.Dao.ITEtapasTrabajo;
 import CobroCoactivo.Dao.ITFasesGenerales;
+import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Modelo.EstadoEtapasGenerales;
 import CobroCoactivo.Modelo.EstadoFasesGenerales;
 import CobroCoactivo.Modelo.EstadoPlanGenerales;
@@ -30,7 +34,9 @@ import CobroCoactivo.Persistencia.CivEstadoDocumengenerales;
 import CobroCoactivo.Persistencia.CivEstadoEtapasGenerales;
 import CobroCoactivo.Persistencia.CivEstadoFasesGenerales;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
+import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Persistencia.CivFasesGenerales;
+import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.File;
 import java.io.InputStream;
@@ -54,6 +60,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     private ITFasesGenerales faseGeneralDAO;
     private ITEstadoFasesGenerales estadoFaseGeneralesDAO;
     private ITDocumentoGenerales documentosGeneralesDAO;
+    private ITPlanTrabajo planTrabajoDao;
+    private ITEtapasTrabajo etapaTrabajoDao;
 
     public PlanGeneralImpBO() {
         planGeneralDAO = new DaoPlanGeneral();
@@ -63,6 +71,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         faseGeneralDAO = new DaoFasesGenerales();
         estadoFaseGeneralesDAO = new DaoEstadoFasesGenerales();
         documentosGeneralesDAO = new DaoDocumentosGenerales();
+        planTrabajoDao = new DaoPlanTrabajo();
+        etapaTrabajoDao = new DaoEtapasTrabajo();
+
     }
 
     @Override
@@ -110,7 +121,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     }
 
     @Override
-    public void GuardarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
+    public void guardarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
         CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
         CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
@@ -151,18 +162,19 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     }
 
     @Override
-    public void ActualizarPlanGeneral(BeanPlanGeneral bean) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public void actualizarPlanGeneral(BeanPlanGeneral bean) throws Exception {
         boolean flag = false;
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
         civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getPlanGenerales().getEstadoPlanGenerales().getId()));
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
-        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion());
+        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
         civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
         civPlanGenerales.setPlagenFechaproceso(new Date());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
+
         if (bean.getPlanGenerales().getEstadoPlanGenerales().getId() != 1) {
+            Session session = HibernateUtil.getSessionFactory().openSession();
             List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanGenerales.getPlagenId().intValue());
             if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
                 for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
@@ -173,32 +185,53 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 if (flag) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Debe desactivar las etapas generales", null));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#planGeneral').modal('hide')");
 
                 } else {
                     getiTPlanGeneral().update(civPlanGenerales);
                     bean.init();
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Plan actualizado correctamnete", null));
+                            "Plan actualizado correctamente", null));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#planGeneral').modal('hide')");
+
                 }
             } else {
                 getiTPlanGeneral().update(civPlanGenerales);
                 bean.init();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Plan actualizado correctamente", null));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#planGeneral').modal('hide')");
+            }
+            session.close();
+        } else {
+            CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().getPlanTrabajo(civPlanGenerales.getPlagenId().intValue());
+            CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(civPlanGenerales.getColor());
+            if (civPlanGeneralesColor == null || civPlanGeneralesColor.getPlagenId().intValue() == civPlanGenerales.getPlagenId().intValue()) {
+                if (civPlanTrabajos != null) {
+                    civPlanTrabajos.setPlatraDescripcion(civPlanGenerales.getPlagenDescripcion());
+                    civPlanTrabajos.setPlatraColor(civPlanGenerales.getColor());
+                    getPlanTrabajoDao().update(civPlanTrabajos);
+                }
+                getiTPlanGeneral().update(civPlanGenerales);
+                bean.init();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Plan actualizado correctamente", null));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#planGeneral').modal('hide')");
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "El color ya existe en el sistema", null));
             }
 
-        } else {
-            getiTPlanGeneral().update(civPlanGenerales);
-            bean.init();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Plan actualizado correctamente", null));
         }
 
-        session.close();
     }
 
     @Override
-    public void ActualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
+    public void actualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         boolean validador = false;
         CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
@@ -215,7 +248,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         civEtapasGenerales.setEtagenFechaproceso(new Date());
 
-        if (bean.getIdEstapaGeneral() != 1) {
+        if (bean.getEtapasGenerales().getEstadoEtapasGenerales().getId() != 1) {
             List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
             if (listCivFasesGenerales != null && listCivFasesGenerales.size() > 0) {
                 for (CivFasesGenerales civFasesGenerales : listCivFasesGenerales) {
@@ -232,29 +265,45 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Etapa actualizado Correctamente", null));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#etapaGeneral').modal('hide')");
                 }
 
             } else {
+
                 getItEstapaGeneral().update(civEtapasGenerales);
                 bean.init();
                 bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Etapa actualizado correctamente", null));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#etapaGeneral').modal('hide')");
             }
 
         } else {
+
+            CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(civEtapasGenerales.getEtagenId().intValue());
+            if (civEtapasTrabajos != null) {
+                civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
+                civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
+                civEtapasGenerales.setEtagenPrioridad(civEtapasGenerales.getEtagenPrioridad());
+                getEtapaTrabajoDao().update(civEtapasTrabajos);
+
+            }
             getItEstapaGeneral().update(civEtapasGenerales);
             bean.init();
             bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "etapa Actualizado Correctamente", null));
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#etapaGeneral').modal('hide')");
         }
 
         session.close();
     }
 
     @Override
-    public void ListarPlanesGenerales(BeanPlanGeneral bean) throws Exception {
+    public void listarPlanesGenerales(BeanPlanGeneral bean) throws Exception {
         bean.setListadoPlanGeneraleses(new ArrayList<>());
         List<CivPlanGenerales> listcivPlanGeneral = getiTPlanGeneral().findAll();
         if (listcivPlanGeneral != null && listcivPlanGeneral.size() > 0) {
@@ -272,7 +321,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     }
 
     @Override
-    public void ListarEstadoGenerales(BeanPlanGeneral bean) throws Exception {
+    public void listarEstadoGenerales(BeanPlanGeneral bean) throws Exception {
         List<CivEstadoPlanGenerales> listEstadoPlanGeneraleses = getiTEstado().findAll();
         for (CivEstadoPlanGenerales listEstadoPlanGeneralese : listEstadoPlanGeneraleses) {
             EstadoPlanGenerales estadoPlanGenerales = new EstadoPlanGenerales(listEstadoPlanGeneralese);
@@ -281,7 +330,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     }
 
     @Override
-    public void ListarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception {
+    public void listarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception {
         List<CivEstadoEtapasGenerales> listEstadoEtapageneral = getEstadoEtapageneral().findAll();
         for (CivEstadoEtapasGenerales EstadoEtapasGenerales : listEstadoEtapageneral) {
             EstadoEtapasGenerales estadoEtapasGenerales = new EstadoEtapasGenerales(EstadoEtapasGenerales);
@@ -290,7 +339,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     }
 
     @Override
-    public void GuardarPlanGeneral(BeanPlanGeneral bean) throws Exception {
+    public void guardarPlanGeneral(BeanPlanGeneral bean) throws Exception {
         CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
         CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(bean.getPlanGenerales().getColor());
         CivPlanGenerales civPlanGeneralesDescripcion = getiTPlanGeneral().getCivPlanGeneralByDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
@@ -525,6 +574,34 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
      */
     public void setFaseGeneralDAO(ITFasesGenerales faseGeneralDAO) {
         this.faseGeneralDAO = faseGeneralDAO;
+    }
+
+    /**
+     * @return the planTrabajoDao
+     */
+    public ITPlanTrabajo getPlanTrabajoDao() {
+        return planTrabajoDao;
+    }
+
+    /**
+     * @param planTrabajoDao the planTrabajoDao to set
+     */
+    public void setPlanTrabajoDao(ITPlanTrabajo planTrabajoDao) {
+        this.planTrabajoDao = planTrabajoDao;
+    }
+
+    /**
+     * @return the etapaTrabajoDao
+     */
+    public ITEtapasTrabajo getEtapaTrabajoDao() {
+        return etapaTrabajoDao;
+    }
+
+    /**
+     * @param etapaTrabajoDao the etapaTrabajoDao to set
+     */
+    public void setEtapaTrabajoDao(ITEtapasTrabajo etapaTrabajoDao) {
+        this.etapaTrabajoDao = etapaTrabajoDao;
     }
 
 }

@@ -13,21 +13,21 @@ import CobroCoactivo.Beans.BeanPlanGeneral;
  */
 public interface PlanGeneralBO {
 
-    void GuardarPlanGeneral(BeanPlanGeneral obj) throws Exception;
+    void guardarPlanGeneral(BeanPlanGeneral obj) throws Exception;
 
-    void ActualizarPlanGeneral(BeanPlanGeneral bean) throws Exception;
+    void actualizarPlanGeneral(BeanPlanGeneral bean) throws Exception;
 
-    void ListarPlanesGenerales(BeanPlanGeneral bean) throws Exception;
+    void listarPlanesGenerales(BeanPlanGeneral bean) throws Exception;
 
-    void ListarEstadoGenerales(BeanPlanGeneral bean) throws Exception;
+    void listarEstadoGenerales(BeanPlanGeneral bean) throws Exception;
 
     void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception;
 
-    void ListarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception;
+    void listarEstadoEtapasGenerales(BeanPlanGeneral bean) throws Exception;
 
-    void GuardarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
+    void guardarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
 
-    void ActualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
+    void actualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception;
 
     void guardarFasesGeneral(BeanPlanGeneral bean) throws Exception;
 

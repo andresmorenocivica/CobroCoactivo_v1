@@ -16,4 +16,6 @@ import java.util.List;
 public interface ITEtapasTrabajo extends ITGeneryHibernateDao<CivEtapasTrabajos,Integer>{
  
      public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(int idPlanTrabajo) throws Exception;
+     
+     CivEtapasTrabajos find(int id) throws Exception;
 }

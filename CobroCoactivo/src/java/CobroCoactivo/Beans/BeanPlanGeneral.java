@@ -59,7 +59,6 @@ public class BeanPlanGeneral {
 
     // variables primitivas utiliza en el beanPlangenearal
    
-    private int idEstapaGeneral;
     private int idEStadoFasesGeneral;
 
     private Boolean estadoButton = true;
@@ -87,13 +86,13 @@ public class BeanPlanGeneral {
             setLoginBO((BeanLogin) session.getAttribute("loginBean"));
 
             setPlanGeneralBO(new PlanGeneralImpBO());
-            getPlanGeneralBO().ListarPlanesGenerales(this);
+            getPlanGeneralBO().listarPlanesGenerales(this);
             if (getListadoEStadoPlanesGenerales().size() == 0) {
-                getPlanGeneralBO().ListarEstadoGenerales(this);
+                getPlanGeneralBO().listarEstadoGenerales(this);
             }
 
             if (getEstadoEtapasGenerales().size() == 0) {
-                getPlanGeneralBO().ListarEstadoEtapasGenerales(this);
+                getPlanGeneralBO().listarEstadoEtapasGenerales(this);
             }
             if (getListCivEstadoFasesGeneraleses().size() == 0) {
                 getPlanGeneralBO().listarEstadoFasesGenerales(this);
@@ -124,7 +123,7 @@ public class BeanPlanGeneral {
     public void guardarPlanGeneral() {
 
         try {
-            getPlanGeneralBO().GuardarPlanGeneral(this);
+            getPlanGeneralBO().guardarPlanGeneral(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
@@ -134,10 +133,7 @@ public class BeanPlanGeneral {
 
     public void actualizarPlanGeneral() {
         try {
-            getPlanGeneralBO().ActualizarPlanGeneral(this);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#planGeneral').modal('hide')");
-
+            getPlanGeneralBO().actualizarPlanGeneral(this);
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -148,7 +144,7 @@ public class BeanPlanGeneral {
 
     public void guardarEtapaGeneral() {
         try {
-            getPlanGeneralBO().GuardarEtapaGeneral(this);
+            getPlanGeneralBO().guardarEtapaGeneral(this);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Etapa general creada exitosamente", null));
             RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -164,9 +160,7 @@ public class BeanPlanGeneral {
 
     public void actualizarEtapaGeneral() {
         try {
-            getPlanGeneralBO().ActualizarEtapaGeneral(this);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#etapaGeneral').modal('hide')");
+            getPlanGeneralBO().actualizarEtapaGeneral(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -316,7 +310,14 @@ public class BeanPlanGeneral {
      * @param planGenerales the planGenerales to set
      */
     public void setPlanGenerales(PlanGenerales planGenerales) {
-        this.planGenerales = planGenerales;
+        this.planGenerales.setId(planGenerales.getId());
+        this.planGenerales.setDescripcion(planGenerales.getDescripcion());
+        this.planGenerales.setColor(planGenerales.getColor());
+        this.planGenerales.setEstadoPlanGenerales(planGenerales.getEstadoPlanGenerales());
+        this.planGenerales.setFechaproceso(planGenerales.getFechaproceso());
+        this.planGenerales.setPlanTrabajoFechaActo(planGenerales.getPlanTrabajoFechaActo());
+        this.planGenerales.setPlanTrabajoNumeroActo(planGenerales.getPlanTrabajoNumeroActo());
+        this.planGenerales.setSelecionado(planGenerales.isSelecionado());
     }
 
     /**
@@ -361,7 +362,6 @@ public class BeanPlanGeneral {
     public void setListadoEStadoPlanesGenerales(List<EstadoPlanGenerales> ListadoEStadoPlanesGenerales) {
         this.ListadoEStadoPlanesGenerales = ListadoEStadoPlanesGenerales;
     }
-
 
     /**
      * @return the estadoButton
@@ -459,20 +459,6 @@ public class BeanPlanGeneral {
      */
     public void setObligatorio(String obligatorio) {
         this.obligatorio = obligatorio;
-    }
-
-    /**
-     * @return the idEstapaGeneral
-     */
-    public int getIdEstapaGeneral() {
-        return idEstapaGeneral;
-    }
-
-    /**
-     * @param idEstapaGeneral the idEstapaGeneral to set
-     */
-    public void setIdEstapaGeneral(int idEstapaGeneral) {
-        this.idEstapaGeneral = idEstapaGeneral;
     }
 
     /**

@@ -27,6 +27,8 @@ public class PlanGenerales {
 
     public PlanGenerales() {
     }
+    
+    
 
     public PlanGenerales(CivPlanGenerales civPlanGenerales) {
         this.Id = civPlanGenerales.getPlagenId().intValue();
