@@ -80,7 +80,7 @@
             #collapse{
                 cursor: pointer
             }
-            
+
             #j_idt6{
                 width: 150px !important;
                 left: 50% !important;
@@ -879,6 +879,14 @@
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Fecha:</label>
+                                            <div class="input-group date">
+                                                <p:calendar placeholder="Digite fecha" id="datepicker" class="form-control pull-right" value="#{gestionPersonaBean.detallePersona.fechaproceso}" pattern="dd-MMM-yyyy" />
+                                            </div>
+                                        </div>
+                                    </div>
                                     <br></br>
                                     <div class="col-md-12">
                                         <h3>Datos Adicionales</h3>
@@ -902,7 +910,7 @@
                                                         </td>
                                                         <td>#{listTipoDatosPersonas.descripcion}</td>
                                                         <td>
-                                                            <h:inputText id="txtDatosPersonasDescripcion" value="#{listTipoDatosPersonas.descripcionDatosPersonas}" rendered="#{listTipoDatosPersonas.selecionado}" required="true"></h:inputText>
+                                                            <h:inputText id="txtDatosPersonasDescripcion" value="#{listTipoDatosPersonas.descripcionDatosPersonas}" requiredMessage="Escriba el valor" rendered="#{listTipoDatosPersonas.selecionado}" required="true"></h:inputText>
                                                         </td>
                                                     </tr>
                                                 </ui:repeat>
@@ -1025,8 +1033,8 @@
             </div>
         </div>
         <!-- jQuery 2.1.4 -->        
-        <!--<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
-        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" /> -->
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+        <!--<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" /> -->
         <script>
             $.widget.bridge('uibutton', $.ui.button);
         </script>
@@ -1104,11 +1112,6 @@
                     }
                 })
             }
-        </script>
-        <script>
-            $(function () {
-                $('.my-colorpicker1').colorpicker();
-            })
         </script>
     </h:body>
 

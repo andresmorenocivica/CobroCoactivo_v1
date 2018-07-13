@@ -22,6 +22,7 @@ public class Recursos implements java.io.Serializable {
     private Date recFechaproceso;
     private String recCarperta;
     private Set confUsuRecs = new HashSet(0);
+    private boolean selecionado;
 
     public Recursos() {
     }
@@ -134,6 +135,20 @@ public class Recursos implements java.io.Serializable {
 
     public void setConfUsuRecs(Set confUsuRecs) {
         this.confUsuRecs = confUsuRecs;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
     }
 
 }

@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -189,6 +190,8 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         }
         if (civPersonas == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalAgregarPersona').modal('show')");
         }
     }
 

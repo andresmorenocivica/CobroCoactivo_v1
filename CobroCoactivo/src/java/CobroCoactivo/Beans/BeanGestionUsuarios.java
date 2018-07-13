@@ -7,9 +7,11 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionUsuariosBO;
 import CobroCoactivo.Bo.GestionUsuariosImplBO;
+import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Utility.Log_Handler;
@@ -40,11 +42,14 @@ public class BeanGestionUsuarios {
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
     private List<Modulos> listModulos = new ArrayList<>();
+    private List<Modulos> listTodosModulos = new ArrayList<>();
+    private List<Recursos> listRecursos = new ArrayList<>();
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
     private String contraseñaActual;
     private String contraseñaNueva;
     private String contraseñaConfirmacion;
+    private int idModuloSelecionado;
 
     @PostConstruct
     public void init() {
@@ -55,7 +60,8 @@ public class BeanGestionUsuarios {
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             if (obj_ != null) {
                 setDetalleUsuario(obj_.getUsuario());
-                getGestionUsuariosBO().cargarModulos(this);
+                getGestionUsuariosBO().cargarModulosByUsuario(this);
+                getGestionUsuariosBO().cargarTodosModulos(this);
                 if (obj_.getPersonas() != null) {
                     setEncabezadoDetalleUsuario(obj_.getRuta());
                     setDetallePersonaModal(obj_.getPersonas());
@@ -68,6 +74,15 @@ public class BeanGestionUsuarios {
 //                    }
                 }
             }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void cargarModulosByUsuario() {
+        try {
+            getGestionUsuariosBO().cargarModulosByUsuario(this);
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -102,6 +117,27 @@ public class BeanGestionUsuarios {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
                 }
             }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void cargarRecursoByModulo(int idModulos) {
+        try {
+            setIdModuloSelecionado(idModulos);
+            getGestionUsuariosBO().cargarRecursoByModulo(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void guardarRecursoUsuario() {
+        try {
+            getGestionUsuariosBO().guardarRecursoUsuario(this);
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalRecursoModulos').modal('hide')");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -288,5 +324,47 @@ public class BeanGestionUsuarios {
      */
     public void setListModulos(List<Modulos> listModulos) {
         this.listModulos = listModulos;
+    }
+
+    /**
+     * @return the listTodosModulos
+     */
+    public List<Modulos> getListTodosModulos() {
+        return listTodosModulos;
+    }
+
+    /**
+     * @param listTodosModulos the listTodosModulos to set
+     */
+    public void setListTodosModulos(List<Modulos> listTodosModulos) {
+        this.listTodosModulos = listTodosModulos;
+    }
+
+    /**
+     * @return the idModuloSelecionado
+     */
+    public int getIdModuloSelecionado() {
+        return idModuloSelecionado;
+    }
+
+    /**
+     * @param idModuloSelecionado the idModuloSelecionado to set
+     */
+    public void setIdModuloSelecionado(int idModuloSelecionado) {
+        this.idModuloSelecionado = idModuloSelecionado;
+    }
+
+    /**
+     * @return the listRecursos
+     */
+    public List<Recursos> getListRecursos() {
+        return listRecursos;
+    }
+
+    /**
+     * @param listRecursos the listRecursos to set
+     */
+    public void setListRecursos(List<Recursos> listRecursos) {
+        this.listRecursos = listRecursos;
     }
 }

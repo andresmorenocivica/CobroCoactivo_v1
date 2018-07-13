@@ -6,14 +6,15 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivModulos;
-import java.util.List;
+import CobroCoactivo.Persistencia.CivEstadoConfusurec;
+import java.math.BigDecimal;
 
 /**
  *
  * @author emadrid
  */
-public interface ITModulos extends ITGeneryHibernateDao<CivModulos, Integer> {
-    
-    public List<CivModulos> getModulosByUsuario(int idUsuario) throws Exception;
+public interface ITEstadoConfUsuRec extends ITGeneryHibernateDao<CivEstadoConfusurec, Integer> {
+
+    public CivEstadoConfusurec getEstadoConfUsuRec(BigDecimal idEstado) throws Exception;
+
 }

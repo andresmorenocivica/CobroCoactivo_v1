@@ -22,6 +22,7 @@ public class Modulos implements java.io.Serializable {
     private String modIcono;
     private Date modFechaproceso;
     private List<Recursos> listRecurso = new ArrayList<>();
+    private boolean selecionado;
 
     public Modulos() {
     }
@@ -102,6 +103,20 @@ public class Modulos implements java.io.Serializable {
      */
     public void setListRecurso(List<Recursos> listRecurso) {
         this.listRecurso = listRecurso;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
     }
 
 

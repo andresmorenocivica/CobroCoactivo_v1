@@ -13,8 +13,12 @@ import java.util.List;
  *
  * @author emadrid
  */
-public interface ITRecursos extends ITGeneryHibernateDao<CivRecursos, Integer>{
+public interface ITRecursos extends ITGeneryHibernateDao<CivRecursos, Integer> {
+
+    public List<CivRecursos> getRecursos(int idModulo, int idUsuario) throws Exception;
+
+    public List<CivRecursos> getListCivRecursos(int idModulo, int idUsuario) throws Exception;
     
-    public List<CivRecursos> getRecursos(int idRecursos) throws Exception;
-    
+    public CivRecursos getRecursos(int idRecurso) throws Exception;
+
 }

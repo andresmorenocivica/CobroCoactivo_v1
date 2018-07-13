@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import java.util.List;
 import org.hibernate.Session;
@@ -13,16 +14,18 @@ import org.hibernate.Session;
  *
  * @author ing_jefreypadilla
  */
-public interface ITConfUsuRec {
+public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Integer> {
 
     /**
      * Método para insertar un Perfil Recursos a la base de datos.
      *
+     * @param session
+     * @param civConfUsuRec
      * @param perfilrecurso El Objeto Perfil Recursos a insertar.
      * @return ID único del elemento insertado.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public int insert(Session session,CivConfUsuRec civConfUsuRec) throws Exception;
+    public int insert(Session session, CivConfUsuRec civConfUsuRec) throws Exception;
 
     /**
      * Método para actualizar un Perfil Recursos a la base de datos.
@@ -31,7 +34,7 @@ public interface ITConfUsuRec {
      * @return Retorna verdadero si la actualización fue correcta.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public boolean update(Session session,CivConfUsuRec civConfUsuRec) throws Exception;
+    public boolean update(Session session, CivConfUsuRec civConfUsuRec) throws Exception;
 
     /**
      * Retorna el listado de los Perfieles de Recursos correspondientes a un
@@ -44,9 +47,9 @@ public interface ITConfUsuRec {
      * NULL en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    
-    public List<CivConfUsuRec> listPerfilRecursoByIDUsuario(Session session,long idusuario) throws Exception;
-    
-    
+    public List<CivConfUsuRec> listPerfilRecursoByIDUsuario(Session session, long idusuario) throws Exception;
+
     public List<CivConfUsuRec> listPerfilRecurso(Session session) throws Exception;
+
+    public List<CivConfUsuRec> getConfUsuRec(int id) throws Exception;
 }

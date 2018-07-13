@@ -26,5 +26,11 @@ public interface GestionUsuariosBO {
 
     void cargarTipoDocumento(BeanGestionUsuarios bean) throws Exception;
 
-    void cargarModulos(BeanGestionUsuarios bean) throws Exception;
+    void cargarModulosByUsuario(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarTodosModulos(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarRecursoByModulo(BeanGestionUsuarios bean) throws Exception;
+    
+    void guardarRecursoUsuario(BeanGestionUsuarios bean) throws Exception;
 }

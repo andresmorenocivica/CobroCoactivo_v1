@@ -15,6 +15,7 @@ import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
+import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.Serializable;
 import java.util.ArrayList;
