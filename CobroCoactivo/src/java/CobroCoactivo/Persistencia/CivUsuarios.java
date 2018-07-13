@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -24,6 +24,7 @@ public class CivUsuarios  implements java.io.Serializable {
      private Set civUspHistorias = new HashSet(0);
      private Set logEventoses = new HashSet(0);
      private Set civMovimientoses = new HashSet(0);
+     private Set civArchivosPlanoses = new HashSet(0);
 
     public CivUsuarios() {
     }
@@ -36,7 +37,7 @@ public class CivUsuarios  implements java.io.Serializable {
         this.usuNombre = usuNombre;
         this.usuPass = usuPass;
     }
-    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civUspHistorias, Set logEventoses, Set civMovimientoses) {
+    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses) {
        this.usuId = usuId;
        this.civPersonas = civPersonas;
        this.civEstadoUsuarios = civEstadoUsuarios;
@@ -48,6 +49,7 @@ public class CivUsuarios  implements java.io.Serializable {
        this.civUspHistorias = civUspHistorias;
        this.logEventoses = logEventoses;
        this.civMovimientoses = civMovimientoses;
+       this.civArchivosPlanoses = civArchivosPlanoses;
     }
    
     public BigDecimal getUsuId() {
@@ -126,6 +128,13 @@ public class CivUsuarios  implements java.io.Serializable {
     
     public void setCivMovimientoses(Set civMovimientoses) {
         this.civMovimientoses = civMovimientoses;
+    }
+    public Set getCivArchivosPlanoses() {
+        return this.civArchivosPlanoses;
+    }
+    
+    public void setCivArchivosPlanoses(Set civArchivosPlanoses) {
+        this.civArchivosPlanoses = civArchivosPlanoses;
     }
 
 

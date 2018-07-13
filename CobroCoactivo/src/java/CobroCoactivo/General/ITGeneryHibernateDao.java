@@ -16,7 +16,7 @@ import java.util.List;
 public interface ITGeneryHibernateDao<T, ID extends Serializable> {
 
     public void create(T entity) throws Exception;
-
+    
     public void update(T entity) throws Exception;
 
     public T find(BigDecimal id) throws Exception;

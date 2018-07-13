@@ -268,7 +268,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getPlanGenerales().getEstadoPlanGenerales().getId()));
         civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
         civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
-        civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
+        civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
         civPlanGenerales.setPlagenFechaproceso(new Date());
         civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
 
@@ -307,11 +307,11 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             session.close();
         } else {
             CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().getPlanTrabajo(civPlanGenerales.getPlagenId().intValue());
-            CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(civPlanGenerales.getColor());
+            CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(civPlanGenerales.getPlagenColor());
             if (civPlanGeneralesColor == null || civPlanGeneralesColor.getPlagenId().intValue() == civPlanGenerales.getPlagenId().intValue()) {
                 if (civPlanTrabajos != null) {
                     civPlanTrabajos.setPlatraDescripcion(civPlanGenerales.getPlagenDescripcion());
-                    civPlanTrabajos.setPlatraColor(civPlanGenerales.getColor());
+                    civPlanTrabajos.setPlatraColor(civPlanGenerales.getPlagenColor());
                     getPlanTrabajoDao().update(civPlanTrabajos);
                 }
                 getiTPlanGeneral().update(civPlanGenerales);
@@ -454,26 +454,26 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
             civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
             civPlanGenerales.setPlagenFechaproceso(new Date());
-            civPlanGenerales.setColor(bean.getPlanGenerales().getColor());
+            civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
             getiTPlanGeneral().create(civPlanGenerales);
             List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
             CivEtapasGenerales persuasiva = new CivEtapasGenerales();
             persuasiva.setCivPlanGenerales(civPlanGenerales);
-            persuasiva.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            persuasiva.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
             persuasiva.setEtagenDescripcion("Persuasiva");
             persuasiva.setEtagenFechaproceso(new Date());
             persuasiva.setEtagenObligatorio("FALSE");
             persuasiva.setEtagenPrioridad(new BigDecimal(1));
             CivEtapasGenerales juridica = new CivEtapasGenerales();
             juridica.setCivPlanGenerales(civPlanGenerales);
-            juridica.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            juridica.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
             juridica.setEtagenDescripcion("Juridica");
             juridica.setEtagenFechaproceso(new Date());
             juridica.setEtagenObligatorio("TRUE");
             juridica.setEtagenPrioridad(new BigDecimal(2));
             CivEtapasGenerales embargo = new CivEtapasGenerales();
             embargo.setCivPlanGenerales(civPlanGenerales);
-            embargo.setCivEstadoEtapasGenerales(new CivEstadoEtapasGenerales(new BigDecimal(1)));
+            embargo.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
             embargo.setEtagenDescripcion("Embargo");
             embargo.setEtagenFechaproceso(new Date());
             embargo.setEtagenObligatorio("TRUE");

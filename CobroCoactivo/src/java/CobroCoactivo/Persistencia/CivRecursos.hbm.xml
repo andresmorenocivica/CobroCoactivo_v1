@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 13/07/2018 10:45:26 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivRecursos" table="CIV_RECURSOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara los recurso que existan en el sistema.</comment>
@@ -9,18 +9,18 @@
             <column name="REC_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
+        <many-to-one name="civTipoRecursos" class="CobroCoactivo.Persistencia.CivTipoRecursos" fetch="select">
+            <column name="REC_TIPREC_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
         <many-to-one name="civPerfiles" class="CobroCoactivo.Persistencia.CivPerfiles" fetch="select">
             <column name="REC_PERFIL_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que almacena el perfil al cual pertence el recurso, hace refencia a la tabla CIV_PERFILES</comment>
             </column>
         </many-to-one>
-        <many-to-one name="civModulos" class="CobroCoactivo.Persistencia.CivModulos" fetch="select" lazy="false">
+        <many-to-one name="civModulos" class="CobroCoactivo.Persistencia.CivModulos" fetch="select">
             <column name="REC_MODULOS_FK" precision="22" scale="0" not-null="true">
                 <comment>Campo que guarda el modulo al cual pertenece el recurso, hace refencia a la tabla CIV_MODULOS.</comment>
             </column>
-        </many-to-one>
-        <many-to-one name="civTipoRecursos" class="CobroCoactivo.Persistencia.CivTipoRecursos" fetch="select">
-            <column name="REC_TIPREC_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="civEstadoRecursos" class="CobroCoactivo.Persistencia.CivEstadoRecursos" fetch="select">
             <column name="REC_ESTADO_FK" precision="22" scale="0" not-null="true">

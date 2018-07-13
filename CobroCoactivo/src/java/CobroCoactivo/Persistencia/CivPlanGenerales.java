@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,24 +17,25 @@ public class CivPlanGenerales  implements java.io.Serializable {
      private CivEstadoPlanGenerales civEstadoPlanGenerales;
      private String plagenDescripcion;
      private Date plagenFechaproceso;
-     private String color; 
-            
+     private String plagenColor;
      private Set civEtapasGeneraleses = new HashSet(0);
 
     public CivPlanGenerales() {
     }
 
 	
-    public CivPlanGenerales(BigDecimal plagenId, CivEstadoPlanGenerales civEstadoPlanGenerales, String plagenDescripcion) {
+    public CivPlanGenerales(BigDecimal plagenId, CivEstadoPlanGenerales civEstadoPlanGenerales, String plagenDescripcion, String plagenColor) {
         this.plagenId = plagenId;
         this.civEstadoPlanGenerales = civEstadoPlanGenerales;
         this.plagenDescripcion = plagenDescripcion;
+        this.plagenColor = plagenColor;
     }
-    public CivPlanGenerales(BigDecimal plagenId, CivEstadoPlanGenerales civEstadoPlanGenerales, String plagenDescripcion, Date plagenFechaproceso, Set civEtapasGeneraleses) {
+    public CivPlanGenerales(BigDecimal plagenId, CivEstadoPlanGenerales civEstadoPlanGenerales, String plagenDescripcion, Date plagenFechaproceso, String plagenColor, Set civEtapasGeneraleses) {
        this.plagenId = plagenId;
        this.civEstadoPlanGenerales = civEstadoPlanGenerales;
        this.plagenDescripcion = plagenDescripcion;
        this.plagenFechaproceso = plagenFechaproceso;
+       this.plagenColor = plagenColor;
        this.civEtapasGeneraleses = civEtapasGeneraleses;
     }
    
@@ -66,26 +67,19 @@ public class CivPlanGenerales  implements java.io.Serializable {
     public void setPlagenFechaproceso(Date plagenFechaproceso) {
         this.plagenFechaproceso = plagenFechaproceso;
     }
+    public String getPlagenColor() {
+        return this.plagenColor;
+    }
+    
+    public void setPlagenColor(String plagenColor) {
+        this.plagenColor = plagenColor;
+    }
     public Set getCivEtapasGeneraleses() {
         return this.civEtapasGeneraleses;
     }
     
     public void setCivEtapasGeneraleses(Set civEtapasGeneraleses) {
         this.civEtapasGeneraleses = civEtapasGeneraleses;
-    }
-
-    /**
-     * @return the color
-     */
-    public String getColor() {
-        return color;
-    }
-
-    /**
-     * @param color the color to set
-     */
-    public void setColor(String color) {
-        this.color = color;
     }
 
 

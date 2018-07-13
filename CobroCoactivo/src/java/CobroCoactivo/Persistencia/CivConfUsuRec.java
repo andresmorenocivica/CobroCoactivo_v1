@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,26 +12,26 @@ public class CivConfUsuRec  implements java.io.Serializable {
 
 
      private BigDecimal confusurecId;
-     private CivEstadoConfusurec civEstadoConfusurec;
      private CivUsuarios civUsuarios;
      private CivRecursos civRecursos;
+     private CivEstadoConfusurec civEstadoConfusurec;
      private Date confusurecFechaproceso;
 
     public CivConfUsuRec() {
     }
 
 	
-    public CivConfUsuRec(BigDecimal confusurecId, CivEstadoConfusurec civEstadoConfusurec, CivUsuarios civUsuarios, CivRecursos civRecursos) {
+    public CivConfUsuRec(BigDecimal confusurecId, CivUsuarios civUsuarios, CivRecursos civRecursos, CivEstadoConfusurec civEstadoConfusurec) {
         this.confusurecId = confusurecId;
-        this.civEstadoConfusurec = civEstadoConfusurec;
         this.civUsuarios = civUsuarios;
         this.civRecursos = civRecursos;
+        this.civEstadoConfusurec = civEstadoConfusurec;
     }
-    public CivConfUsuRec(BigDecimal confusurecId, CivEstadoConfusurec civEstadoConfusurec, CivUsuarios civUsuarios, CivRecursos civRecursos, Date confusurecFechaproceso) {
+    public CivConfUsuRec(BigDecimal confusurecId, CivUsuarios civUsuarios, CivRecursos civRecursos, CivEstadoConfusurec civEstadoConfusurec, Date confusurecFechaproceso) {
        this.confusurecId = confusurecId;
-       this.civEstadoConfusurec = civEstadoConfusurec;
        this.civUsuarios = civUsuarios;
        this.civRecursos = civRecursos;
+       this.civEstadoConfusurec = civEstadoConfusurec;
        this.confusurecFechaproceso = confusurecFechaproceso;
     }
    
@@ -41,13 +41,6 @@ public class CivConfUsuRec  implements java.io.Serializable {
     
     public void setConfusurecId(BigDecimal confusurecId) {
         this.confusurecId = confusurecId;
-    }
-    public CivEstadoConfusurec getCivEstadoConfusurec() {
-        return this.civEstadoConfusurec;
-    }
-    
-    public void setCivEstadoConfusurec(CivEstadoConfusurec civEstadoConfusurec) {
-        this.civEstadoConfusurec = civEstadoConfusurec;
     }
     public CivUsuarios getCivUsuarios() {
         return this.civUsuarios;
@@ -62,6 +55,13 @@ public class CivConfUsuRec  implements java.io.Serializable {
     
     public void setCivRecursos(CivRecursos civRecursos) {
         this.civRecursos = civRecursos;
+    }
+    public CivEstadoConfusurec getCivEstadoConfusurec() {
+        return this.civEstadoConfusurec;
+    }
+    
+    public void setCivEstadoConfusurec(CivEstadoConfusurec civEstadoConfusurec) {
+        this.civEstadoConfusurec = civEstadoConfusurec;
     }
     public Date getConfusurecFechaproceso() {
         return this.confusurecFechaproceso;

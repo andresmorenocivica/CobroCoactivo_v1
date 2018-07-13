@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,9 +12,9 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
 
 
      private BigDecimal detexpId;
+     private CivTipoDetalleExpedientes civTipoDetalleExpedientes;
      private CivExpedientes civExpedientes;
      private CivEstadoDetalleExpedientes civEstadoDetalleExpedientes;
-     private CivTipoDetalleExpedientes civTipoDetalleExpedientes;
      private String detexpDescripcion;
      private Date detexpFechaproceso;
 
@@ -22,18 +22,18 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     }
 
 	
-    public CivDetalleExpedientes(BigDecimal detexpId, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivTipoDetalleExpedientes civTipoDetalleExpedientes, String detexpDescripcion) {
+    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, String detexpDescripcion) {
         this.detexpId = detexpId;
+        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
         this.civExpedientes = civExpedientes;
         this.civEstadoDetalleExpedientes = civEstadoDetalleExpedientes;
-        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
         this.detexpDescripcion = detexpDescripcion;
     }
-    public CivDetalleExpedientes(BigDecimal detexpId, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivTipoDetalleExpedientes civTipoDetalleExpedientes, String detexpDescripcion, Date detexpFechaproceso) {
+    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, String detexpDescripcion, Date detexpFechaproceso) {
        this.detexpId = detexpId;
+       this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
        this.civExpedientes = civExpedientes;
        this.civEstadoDetalleExpedientes = civEstadoDetalleExpedientes;
-       this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
        this.detexpDescripcion = detexpDescripcion;
        this.detexpFechaproceso = detexpFechaproceso;
     }
@@ -44,6 +44,13 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     
     public void setDetexpId(BigDecimal detexpId) {
         this.detexpId = detexpId;
+    }
+    public CivTipoDetalleExpedientes getCivTipoDetalleExpedientes() {
+        return this.civTipoDetalleExpedientes;
+    }
+    
+    public void setCivTipoDetalleExpedientes(CivTipoDetalleExpedientes civTipoDetalleExpedientes) {
+        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
     }
     public CivExpedientes getCivExpedientes() {
         return this.civExpedientes;
@@ -58,13 +65,6 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     
     public void setCivEstadoDetalleExpedientes(CivEstadoDetalleExpedientes civEstadoDetalleExpedientes) {
         this.civEstadoDetalleExpedientes = civEstadoDetalleExpedientes;
-    }
-    public CivTipoDetalleExpedientes getCivTipoDetalleExpedientes() {
-        return this.civTipoDetalleExpedientes;
-    }
-    
-    public void setCivTipoDetalleExpedientes(CivTipoDetalleExpedientes civTipoDetalleExpedientes) {
-        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
     }
     public String getDetexpDescripcion() {
         return this.detexpDescripcion;

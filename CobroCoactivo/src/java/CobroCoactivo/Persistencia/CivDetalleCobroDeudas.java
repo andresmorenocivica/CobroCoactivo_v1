@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,26 +12,26 @@ public class CivDetalleCobroDeudas  implements java.io.Serializable {
 
 
      private BigDecimal detcobdeuId;
-     private CivCobroDeudas civCobroDeudas;
      private CivValorTipoDetalleCobro civValorTipoDetalleCobro;
      private CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda;
+     private CivCobroDeudas civCobroDeudas;
      private Date detcobdeuFechaproceso;
 
     public CivDetalleCobroDeudas() {
     }
 
 	
-    public CivDetalleCobroDeudas(BigDecimal detcobdeuId, CivCobroDeudas civCobroDeudas, CivValorTipoDetalleCobro civValorTipoDetalleCobro, CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda) {
+    public CivDetalleCobroDeudas(BigDecimal detcobdeuId, CivValorTipoDetalleCobro civValorTipoDetalleCobro, CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda, CivCobroDeudas civCobroDeudas) {
         this.detcobdeuId = detcobdeuId;
-        this.civCobroDeudas = civCobroDeudas;
         this.civValorTipoDetalleCobro = civValorTipoDetalleCobro;
         this.civEstadoDetalleCobroDeuda = civEstadoDetalleCobroDeuda;
+        this.civCobroDeudas = civCobroDeudas;
     }
-    public CivDetalleCobroDeudas(BigDecimal detcobdeuId, CivCobroDeudas civCobroDeudas, CivValorTipoDetalleCobro civValorTipoDetalleCobro, CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda, Date detcobdeuFechaproceso) {
+    public CivDetalleCobroDeudas(BigDecimal detcobdeuId, CivValorTipoDetalleCobro civValorTipoDetalleCobro, CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda, CivCobroDeudas civCobroDeudas, Date detcobdeuFechaproceso) {
        this.detcobdeuId = detcobdeuId;
-       this.civCobroDeudas = civCobroDeudas;
        this.civValorTipoDetalleCobro = civValorTipoDetalleCobro;
        this.civEstadoDetalleCobroDeuda = civEstadoDetalleCobroDeuda;
+       this.civCobroDeudas = civCobroDeudas;
        this.detcobdeuFechaproceso = detcobdeuFechaproceso;
     }
    
@@ -41,13 +41,6 @@ public class CivDetalleCobroDeudas  implements java.io.Serializable {
     
     public void setDetcobdeuId(BigDecimal detcobdeuId) {
         this.detcobdeuId = detcobdeuId;
-    }
-    public CivCobroDeudas getCivCobroDeudas() {
-        return this.civCobroDeudas;
-    }
-    
-    public void setCivCobroDeudas(CivCobroDeudas civCobroDeudas) {
-        this.civCobroDeudas = civCobroDeudas;
     }
     public CivValorTipoDetalleCobro getCivValorTipoDetalleCobro() {
         return this.civValorTipoDetalleCobro;
@@ -62,6 +55,13 @@ public class CivDetalleCobroDeudas  implements java.io.Serializable {
     
     public void setCivEstadoDetalleCobroDeuda(CivEstadoDetalleCobroDeuda civEstadoDetalleCobroDeuda) {
         this.civEstadoDetalleCobroDeuda = civEstadoDetalleCobroDeuda;
+    }
+    public CivCobroDeudas getCivCobroDeudas() {
+        return this.civCobroDeudas;
+    }
+    
+    public void setCivCobroDeudas(CivCobroDeudas civCobroDeudas) {
+        this.civCobroDeudas = civCobroDeudas;
     }
     public Date getDetcobdeuFechaproceso() {
         return this.detcobdeuFechaproceso;

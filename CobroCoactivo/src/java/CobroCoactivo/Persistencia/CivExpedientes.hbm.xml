@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 13/07/2018 10:45:26 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivExpedientes" table="CIV_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="expId" type="big_decimal">
             <column name="EXP_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
-        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
-            <column name="EXP_DEUDA_FK" precision="22" scale="0" not-null="true" />
-        </many-to-one>
         <many-to-one name="civTipoExpedientes" class="CobroCoactivo.Persistencia.CivTipoExpedientes" fetch="select">
             <column name="EXP_TIPEXP_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="civEstadoExpedientes" class="CobroCoactivo.Persistencia.CivEstadoExpedientes" fetch="select">
             <column name="EXP_ESTEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
+            <column name="EXP_DEUDA_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="expRefencia" type="string">
             <column name="EXP_REFENCIA" length="100" not-null="true" />

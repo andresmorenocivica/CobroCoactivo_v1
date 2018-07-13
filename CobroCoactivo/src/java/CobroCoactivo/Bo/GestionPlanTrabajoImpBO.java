@@ -159,8 +159,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                 civPlanTrabajos.setCivEstadoPlanTrabajos(civEstadoPlanTrabajos);
                 civPlanTrabajos.setPlatraFechaproceso(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getFechaproceso());
                 civPlanTrabajos.setPlatraColor(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getColor());
-                civPlanTrabajos.setPlatraNumeroActoAdm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoNumeroActo());
-                civPlanTrabajos.setPlatraFechaActoAdm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoFechaActo());
+                civPlanTrabajos.setPlatraNumeroactoadm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoNumeroActo());
+                civPlanTrabajos.setPlatraFechaanctoadm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoFechaActo());
 
                 getPlanTrabajoDAO().create(civPlanTrabajos);
                 List<CivEtapasGenerales> listCivEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, civPlanTrabajos.getPlatraId().intValue());

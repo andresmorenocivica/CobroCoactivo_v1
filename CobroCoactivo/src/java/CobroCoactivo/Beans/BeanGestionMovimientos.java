@@ -68,6 +68,7 @@ public class BeanGestionMovimientos implements Serializable {
             setPlanTrabajoSeleccionado(planTrabajos);
             getPlanTrabajoSeleccionado().setListaEtapasTrabajo(new ArrayList<>());
             getGestionMovimientosBO().cargarEtapasPlanTrabajo(this);
+            setListaDeudasTabla(new ArrayList<>());
             setListaDeudasTabla(planTrabajos.getListaDeudas());
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));

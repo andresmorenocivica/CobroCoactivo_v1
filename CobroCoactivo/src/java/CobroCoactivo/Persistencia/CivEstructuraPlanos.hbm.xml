@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/07/2018 10:45:26 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstructuraPlanos" table="CIV_ESTRUCTURA_PLANOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estplaId" type="big_decimal">
+            <column name="ESTPLA_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estplaNombreCampo" type="string">
+            <column name="ESTPLA_NOMBRE_CAMPO" length="50" />
+        </property>
+        <property name="estplaIndice" type="big_decimal">
+            <column name="ESTPLA_INDICE" precision="22" scale="0" />
+        </property>
+        <property name="estplaDescripcion" type="string">
+            <column name="ESTPLA_DESCRIPCION" length="100" />
+        </property>
+        <property name="estplaLongitudMin" type="big_decimal">
+            <column name="ESTPLA_LONGITUD_MIN" precision="22" scale="0" />
+        </property>
+        <property name="estplaLongitudMax" type="big_decimal">
+            <column name="ESTPLA_LONGITUD_MAX" precision="22" scale="0" />
+        </property>
+        <property name="estplaTipoDato" type="string">
+            <column name="ESTPLA_TIPO_DATO" length="20" />
+        </property>
+        <property name="estplaObligatorio" type="string">
+            <column name="ESTPLA_OBLIGATORIO" length="1" />
+        </property>
+        <property name="estplaObservaciones" type="string">
+            <column name="ESTPLA_OBSERVACIONES" length="200" />
+        </property>
+        <property name="estplaTipo" type="big_decimal">
+            <column name="ESTPLA_TIPO" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

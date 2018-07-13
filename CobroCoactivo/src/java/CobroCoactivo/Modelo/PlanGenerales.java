@@ -41,7 +41,7 @@ public class PlanGenerales {
         this.descripcion = civPlanGenerales.getPlagenDescripcion();
         this.Fechaproceso = civPlanGenerales.getPlagenFechaproceso();
         this.estadoPlanGenerales = new EstadoPlanGenerales(civEstadoPlanGenerales);
-        this.color = civPlanGenerales.getColor();
+        this.color = civPlanGenerales.getPlagenColor();
     }
 
     /**

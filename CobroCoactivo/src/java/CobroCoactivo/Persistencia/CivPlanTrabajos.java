@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -18,8 +18,8 @@ public class CivPlanTrabajos  implements java.io.Serializable {
      private String platraDescripcion;
      private Date platraFechaproceso;
      private String platraColor;
-     private Date platraFechaActoAdm;
-     private String platraNumeroActoAdm;
+     private String platraNumeroactoadm;
+     private Date platraFechaanctoadm;
      private Set civDeudases = new HashSet(0);
      private Set civEtapasTrabajoses = new HashSet(0);
 
@@ -32,11 +32,14 @@ public class CivPlanTrabajos  implements java.io.Serializable {
         this.civEstadoPlanTrabajos = civEstadoPlanTrabajos;
         this.platraDescripcion = platraDescripcion;
     }
-    public CivPlanTrabajos(BigDecimal platraId, CivEstadoPlanTrabajos civEstadoPlanTrabajos, String platraDescripcion, Date platraFechaproceso, Set civDeudases, Set civEtapasTrabajoses) {
+    public CivPlanTrabajos(BigDecimal platraId, CivEstadoPlanTrabajos civEstadoPlanTrabajos, String platraDescripcion, Date platraFechaproceso, String platraColor, String platraNumeroactoadm, Date platraFechaanctoadm, Set civDeudases, Set civEtapasTrabajoses) {
        this.platraId = platraId;
        this.civEstadoPlanTrabajos = civEstadoPlanTrabajos;
        this.platraDescripcion = platraDescripcion;
        this.platraFechaproceso = platraFechaproceso;
+       this.platraColor = platraColor;
+       this.platraNumeroactoadm = platraNumeroactoadm;
+       this.platraFechaanctoadm = platraFechaanctoadm;
        this.civDeudases = civDeudases;
        this.civEtapasTrabajoses = civEtapasTrabajoses;
     }
@@ -69,6 +72,27 @@ public class CivPlanTrabajos  implements java.io.Serializable {
     public void setPlatraFechaproceso(Date platraFechaproceso) {
         this.platraFechaproceso = platraFechaproceso;
     }
+    public String getPlatraColor() {
+        return this.platraColor;
+    }
+    
+    public void setPlatraColor(String platraColor) {
+        this.platraColor = platraColor;
+    }
+    public String getPlatraNumeroactoadm() {
+        return this.platraNumeroactoadm;
+    }
+    
+    public void setPlatraNumeroactoadm(String platraNumeroactoadm) {
+        this.platraNumeroactoadm = platraNumeroactoadm;
+    }
+    public Date getPlatraFechaanctoadm() {
+        return this.platraFechaanctoadm;
+    }
+    
+    public void setPlatraFechaanctoadm(Date platraFechaanctoadm) {
+        this.platraFechaanctoadm = platraFechaanctoadm;
+    }
     public Set getCivDeudases() {
         return this.civDeudases;
     }
@@ -82,48 +106,6 @@ public class CivPlanTrabajos  implements java.io.Serializable {
     
     public void setCivEtapasTrabajoses(Set civEtapasTrabajoses) {
         this.civEtapasTrabajoses = civEtapasTrabajoses;
-    }
-
-    /**
-     * @return the platraColor
-     */
-    public String getPlatraColor() {
-        return platraColor;
-    }
-
-    /**
-     * @param platraColor the platraColor to set
-     */
-    public void setPlatraColor(String platraColor) {
-        this.platraColor = platraColor;
-    }
-
-    /**
-     * @return the platraFechaActoAdm
-     */
-    public Date getPlatraFechaActoAdm() {
-        return platraFechaActoAdm;
-    }
-
-    /**
-     * @param platraFechaActoAdm the platraFechaActoAdm to set
-     */
-    public void setPlatraFechaActoAdm(Date platraFechaActoAdm) {
-        this.platraFechaActoAdm = platraFechaActoAdm;
-    }
-
-    /**
-     * @return the platraNumeroActoAdm
-     */
-    public String getPlatraNumeroActoAdm() {
-        return platraNumeroActoAdm;
-    }
-
-    /**
-     * @param platraNumeroActoAdm the platraNumeroActoAdm to set
-     */
-    public void setPlatraNumeroActoAdm(String platraNumeroActoAdm) {
-        this.platraNumeroActoAdm = platraNumeroActoAdm;
     }
 
 

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content" >
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <h1>
+                            Consultas
+                            <small>guia formulario para consultas</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li><a href="#"><i class="fa fa-dashboard"></i>Inicio</a></li>
+                            <li><a href="#">Example</a></li>
+                            <li class="active">Consultas</li>
+                        </ol>
+                    </section>
+                    <section class="content">
+                        <h:form id="frmCargueArchivoDeudas" enctype="multipart/form-data">
+                            <div class="row" jsf:id="contenedor">
+                                <p:messages severity="info,warn"  closable="true" id="cargueDeudas" autoUpdate="true" showDetail="false"  showIcon="false" />
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label> Agregar Archivo</label>
+                                                <input type="file" accept=".txt" class="form-control-file" jsf:id="archivoDeuda" jsf:value="#{cargueArchivoDeudasBean.archivoCague}" jsf:required="true" jsf:requiredMessage="Debe seleccionar un archivo"/>
+                                                <p class="help-block">.txt</p>
+
+
+
+                                                <!--<div class="input-group input-file" name="Fichier1">
+                                                    <input type="text" accept=".txt" class="form-control" jsf:requiredMessage="Debe seleccionar un archivo" placeholder='Selecionar Archivo' jsf:required="true" jsf:id="archivoDeuda" jsf:value="#{cargueArchivoDeudasBean.archivoCague}"/>			
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-primary btn-choose" type="button">Cargar</button>
+                                                    </span>
+                                                </div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h:commandLink value="Procesar" id="btnCargar" class="btn btn-primary col-lg-12">
+                                                <f:ajax event="click" execute="frmCargueArchivoDeudas:archivoDeuda frmCargueArchivoDeudas:cantidadCargados frmCargueArchivoDeudas:cantidadSinCargar frmCargueArchivoDeudas:deudasCargar" render="frmCargueArchivoDeudas:contenedor" listener="#{cargueArchivoDeudasBean.cargarArchivoDeudas()}"/>
+                                            </h:commandLink>
+                                        </div>
+                                    </div>
+                                    <br></br>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box box-primary">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Información Cargue</h3>
+                                                    <div class="box-tools">
+                                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body no-padding">
+                                                    <ul class="nav nav-pills nav-stacked">
+                                                        <li>
+                                                            <h:commandLink >
+                                                                <h:panelGroup id="cantidadCargados">
+                                                                    <i class="fa fa-circle-o text-green"></i>Cargados
+                                                                    <span class="label label-success pull-right">#{cargueArchivoDeudasBean.cargados}</span>
+                                                                    
+                                                                </h:panelGroup>
+                                                                <f:ajax event="click" listener="#{cargueArchivoDeudasBean.mostarTabla(false)}" render="frmCargueArchivoDeudas:cantidadSinCargar frmCargueArchivoDeudas:deudasCargar frmCargueArchivoDeudas:contenedor"/>
+                                                            </h:commandLink>
+                                                        </li>
+                                                        <li>
+                                                            <h:commandLink >
+                                                                <h:panelGroup id="cantidadSinCargar">
+                                                                    <i class="fa fa-circle-o text-red"></i>Sin Cargar
+                                                                    <span class="label label-danger pull-right">#{cargueArchivoDeudasBean.sinCargar}</span>
+                                                                    
+                                                                </h:panelGroup>
+                                                                <f:ajax event="click" listener="#{cargueArchivoDeudasBean.mostarTabla(true)}" render="frmCargueArchivoDeudas:cantidadSinCargar frmCargueArchivoDeudas:deudasCargar frmCargueArchivoDeudas:contenedor"/>
+                                                            </h:commandLink>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9" jsf:id="deudasCargar" jsf:rendered="#{!cargueArchivoDeudasBean.visibleTablaDeudasCorrectas}">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <label id="tituloDetalleProceso" class="box-title">Listado De Deudas</label>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <div class="table-responsive mailbox-messages">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Registro</th>
+                                                            <th>Fecha</th>
+                                                            <th>Tipo</th>
+                                                            <th>Referencia</th>
+                                                            <th>Persona</th>
+                                                            <th>Valor</th>
+                                                            <th>Accion</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{cargueArchivoDeudasBean.listaDeudasImpuestoCorrectas}" var="deudasImpuesto">
+                                                            <tr>
+                                                                <td>#{deudasImpuesto.consecutivo}</td>
+                                                                <td>#{deudasImpuesto.fecha}</td>
+                                                                <td>#{deudasImpuesto.tipo}</td>
+                                                                <td>#{deudasImpuesto.fererencia}</td>
+                                                                <td>#{deudasImpuesto.nombre1} #{deudasImpuesto.apellido1}</td>
+                                                                <td>#{deudasImpuesto.valor}</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-9" jsf:id="deudasSinCargar" jsf:rendered="#{cargueArchivoDeudasBean.visibleTablaDeudasCorrectas}">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <label id="tituloDetalleProceso" class="box-title">Listado De Errores</label>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <div class="table-responsive mailbox-messages">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Campo</th>
+                                                            <th>Motivo</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{cargueArchivoDeudasBean.listaDeudasImpuestoIncorrectas}" var="deudasincorrectas">
+                                                            <tr>
+                                                                <td>#{deudasincorrectas.campo}</td>
+                                                                <td>#{deudasincorrectas.msg}</td>
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </section>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -20,6 +20,7 @@ public class CivTipoDatosPersonas  implements java.io.Serializable {
      private Date tipdatperFechafinal;
      private String tipdatperNombrecorto;
      private BigDecimal tipdatperCodigo;
+     private String tipdatperObligatorio;
      private Set civDatosPersonases = new HashSet(0);
 
     public CivTipoDatosPersonas() {
@@ -32,7 +33,7 @@ public class CivTipoDatosPersonas  implements java.io.Serializable {
         this.tipdatperDescripcion = tipdatperDescripcion;
         this.tipdatperFechainicial = tipdatperFechainicial;
     }
-    public CivTipoDatosPersonas(BigDecimal tipdatperId, CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas, String tipdatperDescripcion, Date tipdatperFechainicial, Date tipdatperFechafinal, String tipdatperNombrecorto, BigDecimal tipdatperCodigo, Set civDatosPersonases) {
+    public CivTipoDatosPersonas(BigDecimal tipdatperId, CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas, String tipdatperDescripcion, Date tipdatperFechainicial, Date tipdatperFechafinal, String tipdatperNombrecorto, BigDecimal tipdatperCodigo, String tipdatperObligatorio, Set civDatosPersonases) {
        this.tipdatperId = tipdatperId;
        this.civEstadoTipoDatosPersonas = civEstadoTipoDatosPersonas;
        this.tipdatperDescripcion = tipdatperDescripcion;
@@ -40,6 +41,7 @@ public class CivTipoDatosPersonas  implements java.io.Serializable {
        this.tipdatperFechafinal = tipdatperFechafinal;
        this.tipdatperNombrecorto = tipdatperNombrecorto;
        this.tipdatperCodigo = tipdatperCodigo;
+       this.tipdatperObligatorio = tipdatperObligatorio;
        this.civDatosPersonases = civDatosPersonases;
     }
    
@@ -91,6 +93,13 @@ public class CivTipoDatosPersonas  implements java.io.Serializable {
     
     public void setTipdatperCodigo(BigDecimal tipdatperCodigo) {
         this.tipdatperCodigo = tipdatperCodigo;
+    }
+    public String getTipdatperObligatorio() {
+        return this.tipdatperObligatorio;
+    }
+    
+    public void setTipdatperObligatorio(String tipdatperObligatorio) {
+        this.tipdatperObligatorio = tipdatperObligatorio;
     }
     public Set getCivDatosPersonases() {
         return this.civDatosPersonases;

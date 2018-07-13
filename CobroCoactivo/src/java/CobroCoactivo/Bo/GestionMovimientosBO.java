@@ -6,8 +6,6 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionMovimientos;
-import CobroCoactivo.Beans.viejo_BeanGestionMovimientos;
-import CobroCoactivo.Modelo.Deudas;
 import java.util.List;
 
 /**

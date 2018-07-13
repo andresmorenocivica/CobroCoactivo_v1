@@ -42,6 +42,7 @@ Contributor(s):
 <hibernate-reverse-engineering>
     <schema-selection match-schema="COBROCOACTIVO_V1"/>
     <table-filter match-name="CIV_ABOGADOS"/>
+    <table-filter match-name="CIV_ARCHIVOS_PLANOS"/>
     <table-filter match-name="CIV_ATTEMPTS"/>
     <table-filter match-name="CIV_COBRO_DEUDAS"/>
     <table-filter match-name="CIV_CONCEPTOS"/>
@@ -52,6 +53,7 @@ Contributor(s):
     <table-filter match-name="CIV_DETALLE_EXPEDIENTES"/>
     <table-filter match-name="CIV_DETALLE_INGRESO_DEUDAS"/>
     <table-filter match-name="CIV_DEUDAS"/>
+    <table-filter match-name="CIV_DEUDAS_IMPUESTO"/>
     <table-filter match-name="CIV_DOCUMEN_GENERALES"/>
     <table-filter match-name="CIV_ENTIDADES"/>
     <table-filter match-name="CIV_ERRORES"/>
@@ -86,6 +88,7 @@ Contributor(s):
     <table-filter match-name="CIV_ESTADOUSP_HISTORIA"/>
     <table-filter match-name="CIV_ESTADO_USUARIOS"/>
     <table-filter match-name="CIV_ESTADO_VALOR_TIPO_DETCOBRO"/>
+    <table-filter match-name="CIV_ESTRUCTURA_PLANOS"/>
     <table-filter match-name="CIV_ETAPAS_GENERALES"/>
     <table-filter match-name="CIV_ETAPAS_TRABAJOS"/>
     <table-filter match-name="CIV_EXPEDIENTES"/>

@@ -5,15 +5,21 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
  *
  * @author emadrid
  */
-public interface ITTipoDeudas {
+public interface ITTipoDeudas extends ITGeneryHibernateDao<CivTipoDeudas,Integer>{
     
     public List<CivTipoDeudas> listAll() throws Exception;
+    
+    
+    public CivTipoDeudas getTipoDeuda(BigDecimal tipdeuId) throws Exception ;
+      
     
 }

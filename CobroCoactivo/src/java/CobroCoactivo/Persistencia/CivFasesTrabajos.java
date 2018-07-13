@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -14,8 +14,8 @@ public class CivFasesTrabajos  implements java.io.Serializable {
 
 
      private BigDecimal fastraId;
-     private CivEtapasTrabajos civEtapasTrabajos;
      private CivReporteTrabajos civReporteTrabajos;
+     private CivEtapasTrabajos civEtapasTrabajos;
      private CivEstadoFasesTrabajos civEstadoFasesTrabajos;
      private String fastraDescripcion;
      private Date fastraFechaproceso;
@@ -38,10 +38,10 @@ public class CivFasesTrabajos  implements java.io.Serializable {
         this.fastraDiamax = fastraDiamax;
         this.fastraObligatorio = fastraObligatorio;
     }
-    public CivFasesTrabajos(BigDecimal fastraId, CivEtapasTrabajos civEtapasTrabajos, CivReporteTrabajos civReporteTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, String fastraDescripcion, Date fastraFechaproceso, BigDecimal fastraDianim, BigDecimal fastraDiamax, String fastraObligatorio, Set civMovimientoses) {
+    public CivFasesTrabajos(BigDecimal fastraId, CivReporteTrabajos civReporteTrabajos, CivEtapasTrabajos civEtapasTrabajos, CivEstadoFasesTrabajos civEstadoFasesTrabajos, String fastraDescripcion, Date fastraFechaproceso, BigDecimal fastraDianim, BigDecimal fastraDiamax, String fastraObligatorio, Set civMovimientoses) {
        this.fastraId = fastraId;
-       this.civEtapasTrabajos = civEtapasTrabajos;
        this.civReporteTrabajos = civReporteTrabajos;
+       this.civEtapasTrabajos = civEtapasTrabajos;
        this.civEstadoFasesTrabajos = civEstadoFasesTrabajos;
        this.fastraDescripcion = fastraDescripcion;
        this.fastraFechaproceso = fastraFechaproceso;
@@ -58,19 +58,19 @@ public class CivFasesTrabajos  implements java.io.Serializable {
     public void setFastraId(BigDecimal fastraId) {
         this.fastraId = fastraId;
     }
-    public CivEtapasTrabajos getCivEtapasTrabajos() {
-        return this.civEtapasTrabajos;
-    }
-    
-    public void setCivEtapasTrabajos(CivEtapasTrabajos civEtapasTrabajos) {
-        this.civEtapasTrabajos = civEtapasTrabajos;
-    }
     public CivReporteTrabajos getCivReporteTrabajos() {
         return this.civReporteTrabajos;
     }
     
     public void setCivReporteTrabajos(CivReporteTrabajos civReporteTrabajos) {
         this.civReporteTrabajos = civReporteTrabajos;
+    }
+    public CivEtapasTrabajos getCivEtapasTrabajos() {
+        return this.civEtapasTrabajos;
+    }
+    
+    public void setCivEtapasTrabajos(CivEtapasTrabajos civEtapasTrabajos) {
+        this.civEtapasTrabajos = civEtapasTrabajos;
     }
     public CivEstadoFasesTrabajos getCivEstadoFasesTrabajos() {
         return this.civEstadoFasesTrabajos;

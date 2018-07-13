@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/07/2018 10:45:26 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDeudasImpuesto" table="CIV_DEUDAS_IMPUESTO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="deuimpId" type="big_decimal">
+            <column name="DEUIMP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="deuimpConsecutivo" type="string">
+            <column name="DEUIMP_CONSECUTIVO" length="200" />
+        </property>
+        <property name="deuimpFecha" type="string">
+            <column name="DEUIMP_FECHA" length="200" />
+        </property>
+        <property name="deuimpTipo" type="string">
+            <column name="DEUIMP_TIPO" length="200" />
+        </property>
+        <property name="deuimpValor" type="string">
+            <column name="DEUIMP_VALOR" length="200" />
+        </property>
+        <property name="deuimpMotivo" type="string">
+            <column name="DEUIMP_MOTIVO" length="200" />
+        </property>
+        <property name="deuimpReferencia" type="string">
+            <column name="DEUIMP_REFERENCIA" length="200" />
+        </property>
+        <property name="deuimpNombre1" type="string">
+            <column name="DEUIMP_NOMBRE1" length="200" />
+        </property>
+        <property name="deuimpNombre2" type="string">
+            <column name="DEUIMP_NOMBRE2" length="200" />
+        </property>
+        <property name="deuimpApellido1" type="string">
+            <column name="DEUIMP_APELLIDO1" length="200" />
+        </property>
+        <property name="deuimpApellido2" type="string">
+            <column name="DEUIMP_APELLIDO2" length="200" />
+        </property>
+        <property name="deuimpTipodocumento" type="string">
+            <column name="DEUIMP_TIPODOCUMENTO" length="200" />
+        </property>
+        <property name="deuimpDocumento" type="string">
+            <column name="DEUIMP_DOCUMENTO" length="200" />
+        </property>
+        <property name="deuimpSexo" type="string">
+            <column name="DEUIMP_SEXO" length="200" />
+        </property>
+        <property name="deuimpDireccion1" type="string">
+            <column name="DEUIMP_DIRECCION1" length="200" />
+        </property>
+        <property name="deuimpDireccion2" type="string">
+            <column name="DEUIMP_DIRECCION2" length="200" />
+        </property>
+        <property name="deuimpCelular" type="string">
+            <column name="DEUIMP_CELULAR" length="200" />
+        </property>
+        <property name="deuimpTelefono" type="string">
+            <column name="DEUIMP_TELEFONO" length="200" />
+        </property>
+        <property name="deuimpCorreoelectronico" type="string">
+            <column name="DEUIMP_CORREOELECTRONICO" length="200" />
+        </property>
+        <property name="deuimpPlaca" type="string">
+            <column name="DEUIMP_PLACA" length="200" />
+        </property>
+        <property name="deuimpServiciovehiculo" type="string">
+            <column name="DEUIMP_SERVICIOVEHICULO" length="200" />
+        </property>
+        <property name="deuimpClasevehiculo" type="string">
+            <column name="DEUIMP_CLASEVEHICULO" length="200" />
+        </property>
+        <property name="deuimpAvaluo" type="string">
+            <column name="DEUIMP_AVALUO" length="200" />
+        </property>
+        <property name="deuimpLiquidacionoficial" type="string">
+            <column name="DEUIMP_LIQUIDACIONOFICIAL" length="200" />
+        </property>
+        <property name="deuimpFechaliquidacion" type="string">
+            <column name="DEUIMP_FECHALIQUIDACION" length="200" />
+        </property>
+        <property name="deuimpFechamatricula" type="string">
+            <column name="DEUIMP_FECHAMATRICULA" length="200" />
+        </property>
+        <property name="deuimpArchivoFk" type="big_decimal">
+            <column name="DEUIMP_ARCHIVO_FK" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

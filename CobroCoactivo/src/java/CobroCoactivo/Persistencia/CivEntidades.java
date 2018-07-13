@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 28/06/2018 06:29:52 PM by Hibernate Tools 4.3.1
+// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -14,8 +14,8 @@ public class CivEntidades  implements java.io.Serializable {
 
 
      private BigDecimal entId;
-     private CivEstadoEntidades civEstadoEntidades;
      private CivPersonas civPersonas;
+     private CivEstadoEntidades civEstadoEntidades;
      private Date entFechaproceso;
      private Set civAbogadoses = new HashSet(0);
 
@@ -23,15 +23,15 @@ public class CivEntidades  implements java.io.Serializable {
     }
 
 	
-    public CivEntidades(BigDecimal entId, CivEstadoEntidades civEstadoEntidades, CivPersonas civPersonas) {
+    public CivEntidades(BigDecimal entId, CivPersonas civPersonas, CivEstadoEntidades civEstadoEntidades) {
         this.entId = entId;
-        this.civEstadoEntidades = civEstadoEntidades;
         this.civPersonas = civPersonas;
+        this.civEstadoEntidades = civEstadoEntidades;
     }
-    public CivEntidades(BigDecimal entId, CivEstadoEntidades civEstadoEntidades, CivPersonas civPersonas, Date entFechaproceso, Set civAbogadoses) {
+    public CivEntidades(BigDecimal entId, CivPersonas civPersonas, CivEstadoEntidades civEstadoEntidades, Date entFechaproceso, Set civAbogadoses) {
        this.entId = entId;
-       this.civEstadoEntidades = civEstadoEntidades;
        this.civPersonas = civPersonas;
+       this.civEstadoEntidades = civEstadoEntidades;
        this.entFechaproceso = entFechaproceso;
        this.civAbogadoses = civAbogadoses;
     }
@@ -43,19 +43,19 @@ public class CivEntidades  implements java.io.Serializable {
     public void setEntId(BigDecimal entId) {
         this.entId = entId;
     }
-    public CivEstadoEntidades getCivEstadoEntidades() {
-        return this.civEstadoEntidades;
-    }
-    
-    public void setCivEstadoEntidades(CivEstadoEntidades civEstadoEntidades) {
-        this.civEstadoEntidades = civEstadoEntidades;
-    }
     public CivPersonas getCivPersonas() {
         return this.civPersonas;
     }
     
     public void setCivPersonas(CivPersonas civPersonas) {
         this.civPersonas = civPersonas;
+    }
+    public CivEstadoEntidades getCivEstadoEntidades() {
+        return this.civEstadoEntidades;
+    }
+    
+    public void setCivEstadoEntidades(CivEstadoEntidades civEstadoEntidades) {
+        this.civEstadoEntidades = civEstadoEntidades;
     }
     public Date getEntFechaproceso() {
         return this.entFechaproceso;

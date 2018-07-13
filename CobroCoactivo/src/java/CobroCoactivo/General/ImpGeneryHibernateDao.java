@@ -48,7 +48,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
         session.close();
 
     }
-
+    
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(T entity) {
@@ -166,5 +166,7 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
+    
 
 }
