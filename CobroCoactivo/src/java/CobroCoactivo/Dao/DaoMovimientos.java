@@ -20,6 +20,21 @@ import org.hibernate.Session;
 public class DaoMovimientos extends ImpGeneryHibernateDao<CivMovimientos, Integer> implements ITMovimientos {
 
     @Override
+    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_MOVIMIENTOS WHERE MOV_DEUDA_FK = :deuId AND MOV_FASTRA_FK = :faseTrabajo";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivMovimientos.class);
+        query.setInteger("deuId", deuId);
+        query.setInteger("faseTrabajo", faseTrabajo);
+        if (query.list().size() > 0) {
+            return (CivMovimientos) query.list().get(0);
+        }
+        session.close();
+        return null;
+    }
+
+    @Override
     public List<CivMovimientos> listMovimientos(int idDeudaMovimientos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivMovimientos where civDeudas.deuId=:idDeudaMovimientos";
@@ -34,17 +49,21 @@ public class DaoMovimientos extends ImpGeneryHibernateDao<CivMovimientos, Intege
     }
 
     @Override
-    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception {
+    public List<CivMovimientos> listMovimiento(int fase) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_MOVIMIENTOS WHERE MOV_DEUDA_FK = :deuId AND MOV_FASTRA_FK = :faseTrabajo";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivMovimientos.class);
-        query.setInteger("deuId", deuId);
-        query.setInteger("faseTrabajo", faseTrabajo);
-        if (query.list().size() > 0) {
-            return (CivMovimientos) query.list().get(0);
+        try {
+            String hql = "from CivMovimientos where civFasesTrabajos.fastraId=:fase";
+            Query query = session.createQuery(hql);
+            query.setInteger("fase", fase);
+            if (query.list().size() > 0)
+                return query.list();
+            
+            return null;
+
+        } finally {
+            session.close();
         }
-        session.close();
-        return null;
+
     }
+
 }

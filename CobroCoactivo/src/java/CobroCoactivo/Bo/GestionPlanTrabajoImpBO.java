@@ -53,30 +53,32 @@ import org.primefaces.context.RequestContext;
  * @author jvergara
  * @version 1.0, 27/06/2008
  */
-public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO{
+public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
-    private ITPlanGeneral planGeneralDAO;
-    private ITPlanTrabajo PlanTrabajoDAO;
-    private ITEtapasTrabajo EtapasTrabajoDAO;
     private ITEstapaGeneral EtapaGeneralDAO;
+    private ITEtapasTrabajo EtapasTrabajoDAO;
+    private ITEstadoEtapasTrabajo estadoEtapasTrabajoDAO;
     private ITFasesGenerales FasesGeneralesDAO;
     private ITFasesTrabajo FasesTrabajoDAO;
+    private ITPlanGeneral planGeneralDAO;
+    private ITPlanTrabajo PlanTrabajoDAO;
+
     private ITReporteTrabajos ReporteTrabajosDAO;
-    private ITEstadoEtapasTrabajo estadoEtapasTrabajoDAO;
 
     /**
      * contructor e inicializador Dao
      *
      */
     public GestionPlanTrabajoImpBO() {
-        planGeneralDAO = new DaoPlanGeneral();
-        PlanTrabajoDAO = new DaoPlanTrabajo();
-        EtapasTrabajoDAO = new DaoEtapasTrabajo();
         EtapaGeneralDAO = new DaoEstapaGeneral();
+        EtapasTrabajoDAO = new DaoEtapasTrabajo();
+        estadoEtapasTrabajoDAO = new DaoEstadoEtapasTrabajo();
         FasesGeneralesDAO = new DaoFasesGenerales();
         FasesTrabajoDAO = new DaoFasesTrabajo();
+        planGeneralDAO = new DaoPlanGeneral();
+        PlanTrabajoDAO = new DaoPlanTrabajo();
         ReporteTrabajosDAO = new DaoReporteTrabajos();
-        estadoEtapasTrabajoDAO = new DaoEstadoEtapasTrabajo();
+
     }
 
     @Override
@@ -239,8 +241,15 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO{
                 CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
                 CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
                 civEtapasTrabajos.setEtatraId(new BigDecimal(beanGestionPlanTrabajo.getEtapasTrabajos().getId()));
+                CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                civEstadoReporteTrabajos.setEstreptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getEstadoDocumengenerales().getId()));
                 CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
                 civReporteTrabajos.setReptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getId()));
+                civReporteTrabajos.setReptraArchivo(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getArchivo());
+                civReporteTrabajos.setReptraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getDescripcion());
+                civReporteTrabajos.setReptraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getFechaproceso());
+                civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                getReporteTrabajosDAO().create(civReporteTrabajos);
                 CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
                 civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getEstadoFasesGenerales().getId()));
                 civFasesTrabajos.setFastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getId()));

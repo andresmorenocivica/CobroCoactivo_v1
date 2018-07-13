@@ -6,7 +6,6 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ public class DaoEtapasTrabajo extends ImpGeneryHibernateDao<CivEtapasTrabajos, I
     @Override
     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(int idPlanTrabajo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_ETAPAS_TRABAJOS WHERE ETATRA_PLATRA_FK =:idPlanTrabajo ORDER BY ETATRA_PRIORIDAD";
+        String sql = "SELECT * FROM CIV_ETAPAS_TRABAJOS WHERE ETATRA_PLATRA_FK =:idPlanTrabajo and ETATRA_ESTETATRA_FK=1 ORDER BY ETATRA_PRIORIDAD";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivEtapasTrabajos.class);
         query.setInteger("idPlanTrabajo", idPlanTrabajo);

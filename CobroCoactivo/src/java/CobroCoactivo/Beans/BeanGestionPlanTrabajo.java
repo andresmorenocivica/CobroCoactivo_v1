@@ -85,6 +85,7 @@ public class BeanGestionPlanTrabajo {
         try {
             getGestionPlanTrabajoBO().guardarFaseTrabajo(this);
         } catch (Exception e) {
+            e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionPlanTrabajo" + "messageGeneral");
