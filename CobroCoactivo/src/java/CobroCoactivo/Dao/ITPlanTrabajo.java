@@ -15,8 +15,12 @@ import org.hibernate.Session;
  * @author AMORENO
  */
 public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos, Integer> {
+    
+     public CivPlanTrabajos find(int id) throws Exception;
 
     public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo) throws Exception;
     
     public List<CivPlanTrabajos> getAllPlanTrabajo()throws Exception;
+    
+    
 }

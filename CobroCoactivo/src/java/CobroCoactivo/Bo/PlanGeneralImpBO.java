@@ -159,7 +159,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 if (bean.getFile() == null) {
                     civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
                 } else {
-                    CivEstadoReporteTrabajos civEstadoReporteTrabajos =  new CivEstadoReporteTrabajos();
+                    CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
                     civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
                     civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
                     civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
@@ -343,23 +343,22 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
         civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
         civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
         getItEstapaGeneral().create(civEtapasGenerales);
-        if (civEtapasGenerales.getEtagenObligatorio().equals("TRUE")) {
-            CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
-            civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(1));
-            CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
-            civPlanTrabajos.setPlatraId(new BigDecimal(bean.getPlanGenerales().getId()));
-            CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
-            civEtapasTrabajos.setEtatraId(civEtapasGenerales.getEtagenId());
-            civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
-            civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
-            civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
-            civEtapasTrabajos.setEtatraFechaproceso(civEtapasGenerales.getEtagenFechaproceso());
-            civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
-            civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
-            getEtapaTrabajoDao().create(civEtapasTrabajos);
-
+        CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().find(bean.getPlanGenerales().getId());
+        if (civPlanTrabajos != null) {
+            if (civEtapasGenerales.getEtagenObligatorio().equals("TRUE")) {
+                CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
+                civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(1));
+                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                civEtapasTrabajos.setEtatraId(civEtapasGenerales.getEtagenId());
+                civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
+                civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
+                civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
+                civEtapasTrabajos.setEtatraFechaproceso(civEtapasGenerales.getEtagenFechaproceso());
+                civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
+                civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
+                getEtapaTrabajoDao().create(civEtapasTrabajos);
+            }
         }
-
         bean.init();
         bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
     }
@@ -390,32 +389,33 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
                 civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
                 getiTFasesGenerales().create(civFasesGenerales);
-                if (bean.getFasesGenerales().getObligatorio().equals("TRUE")) {
-                    CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
-                    CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
-                    civEtapasTrabajos.setEtatraId(new BigDecimal(bean.getEtapasGenerales().getId()));
-                    CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
-                    civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
-                    CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
-                    civReporteTrabajos.setReptraId(civDocumenGenerales.getDocgenId());
-                    civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
-                    civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
-                    civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
-                    civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                    getReporteTrabajoDao().create(civReporteTrabajos);
-                    CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
-                    civEstadoFasesTrabajos.setEstfastraId(BigDecimal.valueOf(1));
-                    civFasesTrabajos.setFastraId(civFasesGenerales.getFasgenId());
-                    civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
-                    civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
-                    civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
-                    civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
-                    civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
-                    civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
-                    civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
-                    civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
-                    getFasesTrabajoDao().create(civFasesTrabajos);
 
+                CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(bean.getEtapasGenerales().getId());
+                if (civEtapasTrabajos != null) {
+                    if (bean.getFasesGenerales().getObligatorio().equals("TRUE")) {
+                        CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
+                        CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                        civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
+                        CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
+                        civReporteTrabajos.setReptraId(civDocumenGenerales.getDocgenId());
+                        civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
+                        civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
+                        civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
+                        civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                        getReporteTrabajoDao().create(civReporteTrabajos);
+                        CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
+                        civEstadoFasesTrabajos.setEstfastraId(BigDecimal.valueOf(1));
+                        civFasesTrabajos.setFastraId(civFasesGenerales.getFasgenId());
+                        civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
+                        civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
+                        civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
+                        civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
+                        civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
+                        civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
+                        civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
+                        civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
+                        getFasesTrabajoDao().create(civFasesTrabajos);
+                    }
                 }
                 InputStream stream = bean.getFile().getInputStream();
                 Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);

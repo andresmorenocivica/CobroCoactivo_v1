@@ -52,7 +52,7 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
     @Override
     public CivPlanGenerales getCivPlanGeneralByColor(String color) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "from CivPlanGenerales where color=:color";
+        String sql = "from CivPlanGenerales where plagenColor=:color";
         Query query =  session.createQuery(sql);
         query.setString("color", color);
         if (query.list().size() > 0) {

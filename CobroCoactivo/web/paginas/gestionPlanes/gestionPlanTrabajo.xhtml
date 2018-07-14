@@ -119,7 +119,7 @@
                                                             <th>Dia Max</th>
                                                             <th>Obligatorio</th>
                                                             <th>Archivo</th>
-                                                            <th>Accion</th>
+                                                            <!--  <th>Accion</th> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -131,12 +131,12 @@
                                                                 <td>#{fasestrabajos.diamax}</td>
                                                                 <td>#{fasestrabajos.obligatorio}</td>
                                                                 <td>#{fasestrabajos.reporteTrabajos.reptraDescripcion}</td>
-                                                                <td>
-                                                                    <h:commandLink onclick="$('#modalEditarFases').modal('show')">
-                                                                        <f:ajax event="click" render="formPlanTrabajo:editarfaseModalBody" listener="#{gestionPlanTrabajoBean.modalActualizarFaseTrabajo(fasestrabajos)}"></f:ajax>
-                                                                        <img src="#{request.contextPath}/recursos/images/if_icon-136-document-edit_314834.png" style="width: 24px;height:24px"></img>
-                                                                    </h:commandLink>
-                                                                </td>
+                                                                <!--   <td>
+                                                                       <h:commandLink onclick="$('#modalEditarFases').modal('show')">
+                                                                           <f:ajax event="click" render="formPlanTrabajo:editarfaseModalBody" listener="#//{gestionPlanTrabajoBean.modalActualizarFaseTrabajo(fasestrabajos)}"></f:ajax>
+                                                                           <img src="#//{request.contextPath}/recursos/images/if_icon-136-document-edit_314834.png" style="width: 24px;height:24px"></img>
+                                                                       </h:commandLink>
+                                                                   </td>  -->
 
                                                             </tr>
                                                         </ui:repeat>

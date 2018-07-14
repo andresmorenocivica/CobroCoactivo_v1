@@ -8,7 +8,9 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -28,11 +30,10 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
             query.addEntity(CivPlanTrabajos.class);
             query.setInteger("idPlanTrabajo", idPlanTrabajo);
             if (query.list().size() > 0) {
-                CivPlanTrabajos object =(CivPlanTrabajos) query.list().get(0);
+                CivPlanTrabajos object = (CivPlanTrabajos) query.list().get(0);
                 System.out.println(object.getCivDeudases());
                 System.out.println(object.getCivEtapasTrabajoses());
-                    
-                
+
                 return object;
             }
 
@@ -55,6 +56,29 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
         }
         session.close();
         return null;
+    }
+
+    @Override
+    public CivPlanTrabajos find(int id) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+
+            String sql = "FROM CivPlanTrabajos WHERE platraId = :id";
+            Query query = session.createQuery(sql);
+            query.setBigDecimal("id", BigDecimal.valueOf(id));
+            if (query.list().size() > 0) {
+                CivPlanTrabajos civEtapasTrabajos = (CivPlanTrabajos) query.list().get(0);
+                System.out.println(civEtapasTrabajos.getCivEstadoPlanTrabajos());
+                System.out.println(civEtapasTrabajos.getCivEtapasTrabajoses());
+                return civEtapasTrabajos;
+            }
+
+            return null;
+        } finally {
+            session.close();
+
+        }
+
     }
 
 }
