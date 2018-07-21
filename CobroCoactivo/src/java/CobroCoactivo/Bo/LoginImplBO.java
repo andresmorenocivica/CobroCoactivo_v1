@@ -15,6 +15,7 @@ import CobroCoactivo.Exception.LoginException;
 import CobroCoactivo.Dao.DaoLogin;
 import CobroCoactivo.Dao.ITLogin;
 import CobroCoactivo.Beans.BeanLogin;
+import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Dao.DaoAttempts;
 import CobroCoactivo.Dao.DaoConfUsuRec;
 import CobroCoactivo.Dao.DaoEstadoUsuarios;
@@ -39,8 +40,12 @@ import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Dao.ITConfUsuRec;
+import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Utility.HibernateUtil;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.primefaces.context.RequestContext;
 
 public class LoginImplBO implements LoginBO {
 
@@ -77,6 +82,8 @@ public class LoginImplBO implements LoginBO {
         login.setUsuNombre(obj.getUser().trim().toUpperCase(Locale.ROOT));
         login.setUsuPass(obj.getPassword());
         CivUsuarios usu = getLoginDAO().getUsuario(session, login.getUsuNombre()); //Esta variable se llena solamente cuando coincide el usuario. Esto es para el registro de intentos
+        Usuarios usuarios = new Usuarios(usu);
+        obj.setUsuarios(usuarios);
         if (usu != null) {
             obj.setID_Usuario(usu.getUsuId() + "");
             this.registrarIntento(usu.getUsuId().intValue()); //Registro de intentos
@@ -85,10 +92,12 @@ public class LoginImplBO implements LoginBO {
         obj.setPassword("");
         if (login != null) {
             if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 2) { //En caso de que el usuario no se encuentre activo 
-                throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.", null));
+                //throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
             }
             if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 4) { //(Revalidación)En caso de que el usuario no se encuentre activo por bloqueo de intentos
-                throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.", null));
+                //throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
             }
             reestablecerIntentosUsuario(login.getUsuId().intValue());
             Date fecha_pass = getUsuariosDAO().consultarFechaUltimoPassword(session, login.getUsuId().intValue());
@@ -145,18 +154,17 @@ public class LoginImplBO implements LoginBO {
             aut.setCivUsuarios(usu);
             aut.setTppUltimoIntento(new Date());
             aut.setTtpIntentos(new BigDecimal(1L));
-            aut.setTtpId(BigDecimal.valueOf(
-                    getAttemptsDAO().insert(session, aut)));
+            getAttemptsDAO().create(aut);
         } else {
             Long horas = DateUtility.getDateDiff(aut.getTppUltimoIntento(), new Date(), TimeUnit.HOURS);
             CivUsuarios obj_usuario = getUsuariosDAO().consultarUsuarioBy(session, usuario);
-            if (horas >= getTIEMPO_RESTABLECER_HORAS()) {
+            if (horas >= TIEMPO_RESTABLECER_HORAS) {
                 aut.setTtpIntentos(new BigDecimal(0L));
                 if (obj_usuario.getCivEstadoUsuarios().getEstusuId().intValue() == 4) {
                     CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
                     obj_usuario.setCivEstadoUsuarios(civEstadousuarios);
                     getUsuariosDAO().update(session, obj_usuario);
-                    Log_Handler.registrarEvento("El usuario ID:" + usuario + " debe reestablecer su contraseña ya que hace mas de " + getTIEMPO_RESTABLECER_HORAS() + " horas se registró un bloqueo por intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
+                    Log_Handler.registrarEvento("El usuario ID:" + usuario + " debe reestablecer su contraseña ya que hace mas de " + TIEMPO_RESTABLECER_HORAS + " horas se registró un bloqueo por intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
                 }
             } else if (aut.getTtpIntentos().intValue() >= 6) {
                 CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 4);
@@ -168,9 +176,9 @@ public class LoginImplBO implements LoginBO {
                 Log_Handler.registrarEvento("El usuario ID:" + usuario + " ha sido bloqueado por superar el número de intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
                 throw new LoginException("Ha superado el máximo número de intentos de inicio de sesión. Contáctese con el administrador del sistema.");
             }
-            aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
-            aut.setTppUltimoIntento(new Date());
-            getAttemptsDAO().update(session, aut);
+            //aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
+            // aut.setTppUltimoIntento(new Date());
+            // getAttemptsDAO().update(aut);
         }
         session.close();
     }
@@ -202,7 +210,7 @@ public class LoginImplBO implements LoginBO {
         Modulos mod;
 
         if (listR == null) {
-            throw new LoginException("El usuario no tiene ningún perfil asignado. Por favor contáctese con el administrador del sistema.");
+            throw new LoginException("El usuario no tiene ningún modulo asignado. Por favor contáctese con el administrador del sistema.");
         }
 
         for (int x = 0; x < listR.size(); x++) {
@@ -372,6 +380,18 @@ public class LoginImplBO implements LoginBO {
         obj.setNombrePersonaUsuario(new ValidacionDatos().letraMayuscula(obj.getNombrePersonaUsuario()));
         obj.setCedulaPersonaUsuario(persona.getPerDocumento());
         obj.setFechaInicioPersonaUsuario(persona.getPerFechaproceso());
+    }
+
+    @Override
+    public void actualizarContraseña(BeanLogin obj) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CivEstadoUsuarios civEstadoUsuarios = getEstadosUsuariosDAO().consultarModuloById(session, 1);
+        CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(obj.getUsuarios().getId()));
+        civUsuarios.setUsuPass(DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion()));
+        civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+        obj.setUserEstado(1);
+        getUsuariosDAO().update(civUsuarios);
+        session.close();
     }
 
     public ITPersonas getPersonasDAO() {

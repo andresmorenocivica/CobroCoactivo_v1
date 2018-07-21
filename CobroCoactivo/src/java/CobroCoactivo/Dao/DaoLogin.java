@@ -28,7 +28,7 @@ public class DaoLogin extends ImpGeneryHibernateDao<Object, Serializable> implem
     @Override
     public CivUsuarios validarLogin(Session session, CivUsuarios obj) throws Exception {
         return (CivUsuarios) session.createCriteria(CivUsuarios.class)
-                .add(Restrictions.eq("usuPass", obj.getUsuPass()))
+                .add(Restrictions.eq("usuPass",DigestHandler.encryptSHA2(obj.getUsuPass())))
                 .uniqueResult();
     }
 

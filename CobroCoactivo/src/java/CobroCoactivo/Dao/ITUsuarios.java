@@ -18,6 +18,8 @@ import org.hibernate.Session;
  * @author JefreySistemas
  */
 public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
+    
+    public CivUsuarios getCivUsuario (int idpersona) throws Exception;
 
     /**
      * Valida el usuario y la contraseña. Usado para el inicio de sesión

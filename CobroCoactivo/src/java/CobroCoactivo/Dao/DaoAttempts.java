@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Roymer Camacho
  */
-public class DaoAttempts implements ITAttempts {
+public class DaoAttempts extends ImpGeneryHibernateDao<CivAttempts, Integer> implements ITAttempts {
 
     /**
      *

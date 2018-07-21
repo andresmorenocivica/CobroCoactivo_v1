@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Reestablecer Contraseña</title>
+        <link rel="shortcut icon" href="#{request.contextPath}/recursos/images/favicon.png" type="image/x-icon"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Bootstrap 3.3.5 -->
+        <link rel="stylesheet" href="#{request.contextPath}/recursos/css/bootstrap.min.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="#{request.contextPath}/recursos/css/font-awesome.min.css" />
+        <style type="text/css">
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+            body {
+                /* Margin bottom by footer height */
+                margin-bottom: 60px;
+            }
+            .footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                /* Set the fixed height of the footer here */
+                height: 60px;
+                background-color: #f5f5f5;
+            }
+            /* Custom page CSS
+            -------------------------------------------------- */
+            /* Not required for template or sticky footer method. */
+            .container .text-muted {
+                margin: 20px 0;
+            }
+        </style>
+    </h:head>
+    <body>
+        <h:form id="formRestaurar">
+            <p:messages autoUpdate="true" id="restablecer" showSummary="true" showDetail="true" closable="true" severity="error"/>
+            <div class="row" style="margin-top: 50px">
+                <div class="col-xs-12">
+                    <div class="page-header">
+                        <h1 class="text-center">Renovar Contraseña</h1>
+                    </div>
+                    <h5 class="text-center">Su credenciales necesitan ser restablecidas para continuar.</h5>
+                </div><!-- /.col -->
+            </div><!--/.row-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Usuario:</label> 
+                                    <h:inputText value="#{loginBean.user}"  autocomplete="false" id="userLogin" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                    </h:inputText>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Contraseña Actual:</label> 
+                                    <h:inputSecret value="#{loginBean.password}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                    </h:inputSecret>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Nueva contraseña:</label> 
+                                <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
+                                </h:inputSecret>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Confirme contraseña:</label> 
+                                <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
+                                </h:inputSecret>
+                            </div>
+                        </div>
+                    </div>
+                    <center>
+                        
+                        <h:commandButton class="btn btn-success form-control" action="#{loginBean.actualizarContraseña()}" value="Renovar">
+                        </h:commandButton>
+                    </center>
+                </div>
+            </div>
+        </h:form>
+        <footer class="footer">
+            <p align="center" class="text-muted"> &copy; La Civica Impresores SAS</p>
+        </footer>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <script src="#{request.contextPath}/resources/js/paste.js"></script>
+        <!-- Bootstrap 3.3.5 -->
+        <script src="#{request.contextPath}/resources/js/bootstrap.min.js"></script>
+    </body>
+</html>

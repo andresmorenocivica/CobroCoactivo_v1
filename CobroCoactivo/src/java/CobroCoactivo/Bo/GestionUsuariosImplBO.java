@@ -6,25 +6,33 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionUsuarios;
+import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Dao.DaoConfUsuRec;
 import CobroCoactivo.Dao.DaoDatosPersonas;
 import CobroCoactivo.Dao.DaoEstadoConfUsuRec;
+import CobroCoactivo.Dao.DaoEstadoUspHistoria;
+import CobroCoactivo.Dao.DaoEstadoUsuarios;
 import CobroCoactivo.Dao.DaoModulos;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoRecursos;
 import CobroCoactivo.Dao.DaoTipoDocumento;
+import CobroCoactivo.Dao.DaoUspHistoria;
 import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITConfUsuRec;
 import CobroCoactivo.Dao.ITDatosPersonas;
 import CobroCoactivo.Dao.ITEstadoConfUsuRec;
+import CobroCoactivo.Dao.ITEstadoUspHistoria;
+import CobroCoactivo.Dao.ITEstadoUsuarios;
 import CobroCoactivo.Dao.ITModulos;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITRecursos;
 import CobroCoactivo.Dao.ITTipoDocumento;
+import CobroCoactivo.Dao.ITUspHistoria;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Modulos;
+import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivUsuarios;
@@ -34,14 +42,22 @@ import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivEstadoConfusurec;
+import CobroCoactivo.Persistencia.CivEstadoUsuarios;
+import CobroCoactivo.Persistencia.CivEstadouspHistoria;
 import CobroCoactivo.Persistencia.CivModulos;
+import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import CobroCoactivo.Persistencia.CivUspHistoria;
+import static CobroCoactivo.Utility.HibernateUtil.getSessionFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.hibernate.Session;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -57,6 +73,9 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     private ITRecursos recursosDAO;
     private ITConfUsuRec confUsuRecDAO;
     private ITEstadoConfUsuRec estadoConfUsuRecDAO;
+    private ITEstadoUsuarios estadoUsuariosDAO;
+    private ITEstadoUspHistoria estadoUspHistoriaDAO;
+    private ITUspHistoria uspHistoriaDAO;
 
     public GestionUsuariosImplBO() {
         usuariosDAO = new DaoUsuarios();
@@ -67,7 +86,9 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
         recursosDAO = new DaoRecursos();
         confUsuRecDAO = new DaoConfUsuRec();
         estadoConfUsuRecDAO = new DaoEstadoConfUsuRec();
-
+        estadoUsuariosDAO = new DaoEstadoUsuarios();
+        estadoUspHistoriaDAO = new DaoEstadoUspHistoria();
+        uspHistoriaDAO = new DaoUspHistoria();
     }
 
     @Override
@@ -93,8 +114,10 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     @Override
     public void actualizarContraseña(BeanGestionUsuarios bean) throws Exception {
         CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
-        civUsuarios.setUsuPass(bean.getContraseñaConfirmacion());
+        civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion()));
         getUsuariosDAO().update(civUsuarios);
+        RequestContext requestContexts = RequestContext.getCurrentInstance();
+        requestContexts.execute("$('#modalRestablecerContraseña').modal('hide')");
     }
 
     @Override
@@ -136,7 +159,23 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     }
 
     @Override
+    public void cargarConfUsuRec(BeanGestionUsuarios bean) throws Exception {
+        bean.setListConfUsuRec(new ArrayList<>());
+        List<CivRecursos> listRecursos = getRecursosDAO().getRecursos(bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
+        if (listRecursos != null) {
+            for (CivRecursos civRecurso : listRecursos) {
+                List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRec(civRecurso.getRecId().intValue(), bean.getDetalleUsuario().getId());
+                for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
+                    ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
+                    bean.getListConfUsuRec().add(confUsuRec);
+                }
+            }
+        }
+    }
+
+    @Override
     public void cargarTodosModulos(BeanGestionUsuarios bean) throws Exception {
+        bean.setListTodosModulos(new ArrayList<>());
         List<CivModulos> listCivModulos = getModulosDAO().findAll();
         if (listCivModulos != null) {
             for (CivModulos civModulo : listCivModulos) {
@@ -145,7 +184,6 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 if (listCivRecursos != null) {
                     for (CivRecursos CivRecurso : listCivRecursos) {
                         List<CivConfUsuRec> civConfUsuRec = getConfUsuRecDAO().getConfUsuRec(CivRecurso.getRecId().intValue());
-
                         Recursos recurso = new Recursos(CivRecurso);
                         recurso.setSelecionado(civConfUsuRec != null ? true : false);
                         modulos.getListRecurso().add(recurso);
@@ -158,6 +196,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void cargarRecursoByModulo(BeanGestionUsuarios bean) throws Exception {
+        bean.setListRecursos(new ArrayList<>());
         List<CivRecursos> listRecursos = getRecursosDAO().getListCivRecursos(bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
         if (listRecursos != null) {
             for (CivRecursos civRecurso : listRecursos) {
@@ -165,6 +204,29 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 bean.getListRecursos().add(recursos);
             }
         }
+    }
+
+    @Override
+    public void updateRecursoUsuario(BeanGestionUsuarios bean) throws Exception {
+        int increment = -1;
+        for (int i = 0; i < bean.getListConfUsuRec().size(); i++) {
+            increment++;
+            ConfUsuRec temporal = bean.getListConfUsuRec().get(i);
+            if (temporal.isSelecionado() == true) {
+                if (increment == i) {
+                    CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(BigDecimal.valueOf(temporal.getConfusurecId()));
+
+                    CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(2));
+                    CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
+
+                    civConfUsuRec.setCivUsuarios(civUsuarios);
+                    civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
+                    getConfUsuRecDAO().update(civConfUsuRec);
+                }
+            }
+        }
+        cargarTodosModulos(bean);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion fue realizada con exito.", null));
     }
 
     @Override
@@ -186,8 +248,82 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                     getConfUsuRecDAO().create(civConfUsuRec);
                 }
             }
+
         }
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente", null));
+        cargarTodosModulos(bean);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente", null));
+    }
+
+    public String generarNombreUsuario(String nombre, String apellido) {
+        String userName = "";
+        String ap = "";
+        Random random = new Random();
+        int x = random.nextInt(99);
+        String apellido1 = apellido.toUpperCase();
+        for (int i = 0; i < apellido1.length(); i++) {
+            if (apellido1.charAt(i) != ' ') {
+                ap += apellido1.charAt(i);
+            }
+        }
+        String nombre1 = nombre.toUpperCase();
+        userName = nombre1.charAt(0) + ap + x;
+        return userName;
+    }
+
+    @Override
+    public void consultarPersona(BeanGestionUsuarios bean) throws Exception {
+        bean.setListPersonas(new ArrayList<>());
+        CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+        if (civPersonas != null) {
+            Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+            bean.getListPersonas().add(persona);
+            bean.setNombreUsuarioNuevo(generarNombreUsuario(civPersonas.getPerNombre1(), civPersonas.getPerApellido1()));
+        }
+        if (civPersonas == null) {
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalAgregarPersona').modal('show')");
+            RequestContext requestContexts = RequestContext.getCurrentInstance();
+            requestContexts.execute("$('#modalRegistrarUser').modal('hide')");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+        }
+    }
+
+    @Override
+    public void registrarUsuario(BeanGestionUsuarios bean) throws Exception {
+        Session session = getSessionFactory().openSession();
+        CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+        CivUsuarios user = getUsuariosDAO().consultarUsuarioByNombre(session, bean.getNombreUsuarioNuevo().toUpperCase());
+        if (user != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ya se existe un usuario con este nombre", null));
+        }
+
+        int idPersona = civPersonas.getPerId().intValue();
+        CivUsuarios cu = getUsuariosDAO().getCivUsuario(idPersona);
+
+        if (cu != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ya existe un usuario registrado a esta persona", null));
+        } else {
+            CivUsuarios civUsuarios = new CivUsuarios();
+
+            CivEstadoUsuarios civEstadoUsuarios = getEstadoUsuariosDAO().consultarModuloById(session, 3);
+            civUsuarios.setUsuNombre(bean.getNombreUsuarioNuevo().toUpperCase());
+            civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
+            civUsuarios.setUsuFechaproceso(new Date());
+            civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+            civUsuarios.setCivPersonas(civPersonas);
+            getUsuariosDAO().create(civUsuarios);
+
+            CivUspHistoria civUspHistoria = new CivUspHistoria();
+            CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.valueOf(1));
+
+            civUspHistoria.setPData(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
+            civUspHistoria.setFechaProceso(new Date());
+            civUspHistoria.setCivUsuarios(civUsuarios);
+            civUspHistoria.setCivEstadouspHistoria(civEstadouspHistoria);
+            getUspHistoriaDAO().create(civUspHistoria);
+            session.close();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña por defecto es el numero del documento", null));
+        }
     }
 
     /**
@@ -300,6 +436,48 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
      */
     public void setEstadoConfUsuRecDAO(ITEstadoConfUsuRec estadoConfUsuRecDAO) {
         this.estadoConfUsuRecDAO = estadoConfUsuRecDAO;
+    }
+
+    /**
+     * @return the estadoUsuariosDAO
+     */
+    public ITEstadoUsuarios getEstadoUsuariosDAO() {
+        return estadoUsuariosDAO;
+    }
+
+    /**
+     * @param estadoUsuariosDAO the estadoUsuariosDAO to set
+     */
+    public void setEstadoUsuariosDAO(ITEstadoUsuarios estadoUsuariosDAO) {
+        this.estadoUsuariosDAO = estadoUsuariosDAO;
+    }
+
+    /**
+     * @return the uspHistoriaDAO
+     */
+    public ITUspHistoria getUspHistoriaDAO() {
+        return uspHistoriaDAO;
+    }
+
+    /**
+     * @param uspHistoriaDAO the uspHistoriaDAO to set
+     */
+    public void setUspHistoriaDAO(ITUspHistoria uspHistoriaDAO) {
+        this.uspHistoriaDAO = uspHistoriaDAO;
+    }
+
+    /**
+     * @return the estadoUspHistoriaDAO
+     */
+    public ITEstadoUspHistoria getEstadoUspHistoriaDAO() {
+        return estadoUspHistoriaDAO;
+    }
+
+    /**
+     * @param estadoUspHistoriaDAO the estadoUspHistoriaDAO to set
+     */
+    public void setEstadoUspHistoriaDAO(ITEstadoUspHistoria estadoUspHistoriaDAO) {
+        this.estadoUspHistoriaDAO = estadoUspHistoriaDAO;
     }
 
 }

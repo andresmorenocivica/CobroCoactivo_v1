@@ -20,6 +20,8 @@ public interface GestionUsuariosBO {
      */
     void consultarUsuario(BeanGestionUsuarios bean) throws Exception;
 
+    void consultarPersona(BeanGestionUsuarios bean) throws Exception;
+
     void actualizarContraseña(BeanGestionUsuarios bean) throws Exception;
 
     void cargarDatosPersonas(BeanGestionUsuarios bean) throws Exception;
@@ -31,6 +33,12 @@ public interface GestionUsuariosBO {
     void cargarTodosModulos(BeanGestionUsuarios bean) throws Exception;
 
     void cargarRecursoByModulo(BeanGestionUsuarios bean) throws Exception;
-    
+
     void guardarRecursoUsuario(BeanGestionUsuarios bean) throws Exception;
+
+    void registrarUsuario(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarConfUsuRec(BeanGestionUsuarios bean) throws Exception;
+
+    void updateRecursoUsuario(BeanGestionUsuarios bean) throws Exception;
 }

@@ -34,6 +34,11 @@ public class BeanRequest implements Serializable {
         setPersonas(p);
     }
 
+    public void ejempoUsuario(Usuarios u) {
+        u.getId();
+        setUsuario(u);
+    }
+
     /**
      * @return the serialVersionUID
      */

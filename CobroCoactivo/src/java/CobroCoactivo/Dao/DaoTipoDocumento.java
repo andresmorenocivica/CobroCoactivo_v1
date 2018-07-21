@@ -53,7 +53,7 @@ public class DaoTipoDocumento implements ITTipoDocumento {
     @Override
     public CivTipoDocumentos getTipoDocumento(BigDecimal codigoDocumento) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "from CivTipoDocumentos where tipdocId=:codigoDocumento";
+        String hql = "from CivTipoDocumentos where tipdocCodigo=:codigoDocumento";
         Query query = session.createQuery(hql);
         query.setParameter("codigoDocumento",codigoDocumento);
         if (query.list().size() > 0) {

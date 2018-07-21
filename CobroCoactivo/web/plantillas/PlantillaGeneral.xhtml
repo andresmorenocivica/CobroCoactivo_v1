@@ -879,14 +879,14 @@
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <!--<div class="col-md-3">
                                         <div class="form-group">
                                             <label>Fecha:</label>
                                             <div class="input-group date">
                                                 <p:calendar placeholder="Digite fecha" id="datepicker" class="form-control pull-right" value="#{gestionPersonaBean.detallePersona.fechaproceso}" pattern="dd-MMM-yyyy" />
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <br></br>
                                     <div class="col-md-12">
                                         <h3>Datos Adicionales</h3>
@@ -941,6 +941,84 @@
                     </div>
                 </div>
                 <!-- Final Modal Agregar Persona -->
+            </h:form>
+            <h:form id="frmModalRegistrarUser">
+                <div class="modal fade" id="modalRegistrarUser" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Registrar usuario</h4>
+                            </div>
+                            <div class="modal-body" jsf:id="modalBodyUser">
+                                <p:messages autoUpdate="true" id="mensajeModalCrearUsuarios" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
+                                <h4><center> Consultar Persona</center></h4>
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-4">
+                                        <div class="input-group margin-2">
+                                            <h:selectOneMenu  id="sltDocumentos" class="form-control" value="#{gestionUsuariosBean.tipoDocumentoPersona}">
+                                                <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="tipoDocumento" itemValue="#{tipoDocumento.codigo}" itemLabel="#{tipoDocumento.descripcion}"></f:selectItems>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group margin-5">
+                                            <h:inputText a:placeholder="Ingrese el documento" class="form-control text-uppercase" maxlength="10" id="txtNumero" value="#{gestionUsuariosBean.documentoPersona}" required="true" requiredMessage="Digite el numero de documento"></h:inputText>
+                                            <span class="input-group-btn">
+                                                <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
+                                                    <f:ajax event="click" execute="frmModalRegistrarUser:sltDocumentos frmModalRegistrarUser:txtNumero" listener="#{gestionUsuariosBean.buscarPersona(1)}" render="frmModalRegistrarUser:tblPersona" ></f:ajax>
+                                                </h:commandLink>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="border-color:red; width:80%;"/>
+                                <h:panelGroup id="tblPersona">
+                                    <table class="table table-hover">
+                                        <div class="row">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Nombre</th>
+                                                    <th class="col-md-3">Genero</th>
+                                                    <th class="col-md-3">Estado</th>
+                                                    <th class="col-md-2">Usuario Asig</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="#{gestionUsuariosBean.listPersonas}" var="persona">
+                                                    <tr>
+                                                        <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.apellido1}</td>
+                                                        <td>#{persona.sexo}</td>
+                                                        <td>
+                                                            <span class="#{persona.estadoPersonas.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                #{persona.estadoPersonas.descripcion}
+                                                            </span>
+                                                        </td>
+
+                                                        <td>#{gestionUsuariosBean.nombreUsuarioNuevo}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </div>
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row"> 
+                                    <div class="col-lg-8"></div>
+                                    <div class="col-lg-2">        
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                    </div> 
+                                    <div class="col-lg-2">
+                                        <h:commandLink value="Guardar" id="btnGuardarUsuario" class="btn btn-success">
+                                            <f:ajax event="click" listener="#{gestionUsuariosBean.registrarUser()}" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </h:form>
             <div class="modal fade" id="modalDetallePersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg ">

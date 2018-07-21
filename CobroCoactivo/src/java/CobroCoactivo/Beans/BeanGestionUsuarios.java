@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionUsuariosBO;
 import CobroCoactivo.Bo.GestionUsuariosImplBO;
+import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Modulos;
@@ -15,6 +16,7 @@ import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Utility.Log_Handler;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -34,22 +36,28 @@ import org.primefaces.context.RequestContext;
 public class BeanGestionUsuarios {
 
     private GestionUsuariosBO gestionUsuariosBO;
-    private String NombreUsuario;
+    private String NombreUsuario; // Variable que es usada para busqueda de user
+    private String nombreUsuarioNuevo; // Usuario genereado 
     private List<Usuarios> listadoUsuarios = new ArrayList<>();
     private int tipoBusqueda;
-
+    private List<Personas> listPersonas = new ArrayList<>();
     private Personas detallePersonaModal = new Personas(); //Objeto que se utilizara para mostrar la persona del usuario
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
     private List<Modulos> listModulos = new ArrayList<>();
     private List<Modulos> listTodosModulos = new ArrayList<>();
     private List<Recursos> listRecursos = new ArrayList<>();
+    private List<ConfUsuRec> listConfUsuRec = new ArrayList<>();
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
     private String contraseñaActual;
     private String contraseñaNueva;
     private String contraseñaConfirmacion;
     private int idModuloSelecionado;
+    private String documentoPersona;
+    private int tipoDocumentoPersona;
+    private BigDecimal idRecurso;
+    private boolean selecionado;
 
     @PostConstruct
     public void init() {
@@ -58,6 +66,7 @@ public class BeanGestionUsuarios {
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
+            getGestionUsuariosBO().cargarTipoDocumento(this);
             if (obj_ != null) {
                 setDetalleUsuario(obj_.getUsuario());
                 getGestionUsuariosBO().cargarModulosByUsuario(this);
@@ -66,7 +75,6 @@ public class BeanGestionUsuarios {
                     setEncabezadoDetalleUsuario(obj_.getRuta());
                     setDetallePersonaModal(obj_.getPersonas());
                     getGestionUsuariosBO().cargarDatosPersonas(this);
-                    getGestionUsuariosBO().cargarTipoDocumento(this);
 //                    if (obj_.getPersonas().getApellido1() != null) {
 //                        RequestContext requestContext = RequestContext.getCurrentInstance();
 //                        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
@@ -102,19 +110,21 @@ public class BeanGestionUsuarios {
 
     public void actualizarContraseña() {
         try {
-            if (!getDetalleUsuario().getPass().equals(contraseñaActual)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
-            }
-            if (getDetalleUsuario().getPass().equals(contraseñaActual) && !getContraseñaNueva().equals(contraseñaConfirmacion)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
-            }
+            if (getDetalleUsuario() != null) {
+                if (!getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual))) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
+                }
+                if (getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual)) && !DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
+                }
 
-            if (getDetalleUsuario().getPass().equals(contraseñaActual) && getContraseñaNueva().equals(contraseñaConfirmacion)) {
-                if (getContraseñaNueva().equals(contraseñaActual)) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
-                } else {
-                    getGestionUsuariosBO().actualizarContraseña(this);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
+                if (getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual)) && DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
+                    if (DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaActual))) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
+                    } else {
+                        getGestionUsuariosBO().actualizarContraseña(this);
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
+                    }
                 }
             }
         } catch (Exception e) {
@@ -133,11 +143,58 @@ public class BeanGestionUsuarios {
         }
     }
 
+    public void cargarConfUsuRec(int idModulo) {
+        try {
+            setIdModuloSelecionado(idModulo);
+            getGestionUsuariosBO().cargarConfUsuRec(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
     public void guardarRecursoUsuario() {
         try {
             getGestionUsuariosBO().guardarRecursoUsuario(this);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalRecursoModulos').modal('hide')");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void updateRecursoUsuario() {
+        try {
+            getGestionUsuariosBO().updateRecursoUsuario(this);
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalQuitarRecursoModulos').modal('hide')");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void registrarUser() {
+        try {
+            getGestionUsuariosBO().registrarUsuario(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void buscarPersona(int tipo) {
+        try {
+            // casos para los tipos de busqueda
+            switch (tipo) {
+                // busqueda por tipo documento y documento
+                case 1:
+                    getGestionUsuariosBO().consultarPersona(this);
+                    break;
+                case 2:
+                    break;
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -366,5 +423,103 @@ public class BeanGestionUsuarios {
      */
     public void setListRecursos(List<Recursos> listRecursos) {
         this.listRecursos = listRecursos;
+    }
+
+    /**
+     * @return the documentoPersona
+     */
+    public String getDocumentoPersona() {
+        return documentoPersona;
+    }
+
+    /**
+     * @param documentoPersona the documentoPersona to set
+     */
+    public void setDocumentoPersona(String documentoPersona) {
+        this.documentoPersona = documentoPersona;
+    }
+
+    /**
+     * @return the tipoDocumentoPersona
+     */
+    public int getTipoDocumentoPersona() {
+        return tipoDocumentoPersona;
+    }
+
+    /**
+     * @param tipoDocumentoPersona the tipoDocumentoPersona to set
+     */
+    public void setTipoDocumentoPersona(int tipoDocumentoPersona) {
+        this.tipoDocumentoPersona = tipoDocumentoPersona;
+    }
+
+    /**
+     * @return the nombreUsuarioNuevo
+     */
+    public String getNombreUsuarioNuevo() {
+        return nombreUsuarioNuevo;
+    }
+
+    /**
+     * @param nombreUsuarioNuevo the nombreUsuarioNuevo to set
+     */
+    public void setNombreUsuarioNuevo(String nombreUsuarioNuevo) {
+        this.nombreUsuarioNuevo = nombreUsuarioNuevo;
+    }
+
+    /**
+     * @return the listPersonas
+     */
+    public List<Personas> getListPersonas() {
+        return listPersonas;
+    }
+
+    /**
+     * @param listPersonas the listPersonas to set
+     */
+    public void setListPersonas(List<Personas> listPersonas) {
+        this.listPersonas = listPersonas;
+    }
+
+    /**
+     * @return the idRecurso
+     */
+    public BigDecimal getIdRecurso() {
+        return idRecurso;
+    }
+
+    /**
+     * @param idRecurso the idRecurso to set
+     */
+    public void setIdRecurso(BigDecimal idRecurso) {
+        this.idRecurso = idRecurso;
+    }
+
+    /**
+     * @return the listConfUsuRec
+     */
+    public List<ConfUsuRec> getListConfUsuRec() {
+        return listConfUsuRec;
+    }
+
+    /**
+     * @param listConfUsuRec the listConfUsuRec to set
+     */
+    public void setListConfUsuRec(List<ConfUsuRec> listConfUsuRec) {
+        this.listConfUsuRec = listConfUsuRec;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
     }
 }

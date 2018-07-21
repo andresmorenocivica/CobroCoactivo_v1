@@ -5,8 +5,11 @@ import CobroCoactivo.Exception.LoginException;
 import CobroCoactivo.Singleton.AuthSingleton;
 import CobroCoactivo.Bo.LoginBO;
 import CobroCoactivo.Bo.LoginImplBO;
+import CobroCoactivo.Crypto.DigestHandler;
+import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Utility.Log_Handler;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -18,6 +21,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -52,11 +57,13 @@ public class BeanLogin implements Serializable {
     private List<String> listRecursos;
     private int userEstado;
     private boolean hasAccess;
-
+    private Usuarios usuarios;
     private int idPersonaUsuario;
     private String nombrePersonaUsuario;
     private String cedulaPersonaUsuario;
     private Date fechaInicioPersonaUsuario;
+    private String contraseñaConfirmacion;
+    private String contraseñaNueva;
 
     private boolean Ad = false;
     private boolean Op = false;
@@ -76,17 +83,18 @@ public class BeanLogin implements Serializable {
 //            Log_Handler.registrarEvento("Tiempo fuera de lugar del reloj: " + NTPClient.retrasoReloj(), null, Log_Handler.INFO, getClass(),Integer.parseInt(loginBean.getID_Usuario()));
             setNotificationMap(new LinkedHashMap<>());
             getLoginBO().iniciarSesion(this); //Se cargan datos y ejecutan validaciones de usuario.
+            //setUsuarios();
 //            getLoginBO().listarPerfilRecursos(this);
-           setListModulos(getLoginBO().listarModulos(this)); //Se carga el menu correspondiente al usuario
+            setListModulos(getLoginBO().listarModulos(this)); //Se carga el menu correspondiente al usuario
             setListRecursos(getLoginBO().listarRecursos(this)); // Se cargan los recursos correspondientes al usuario
-            AuthSingleton.getInstancia().reesstablecerFuncionario(Integer.parseInt(id_usuario)); //Se reestablecen credenciales de RUNT
+            //         AuthSingleton.getInstancia().reesstablecerFuncionario(Integer.parseInt(id_usuario)); //Se reestablecen credenciales de RUNT
             setNombre(getNombre().toUpperCase(Locale.ROOT));
             validarAcceso(); //Revisar Estado del Usuario
             getLoginBO().consultarDatosUsuario(this);
 
             // setRoot("/resources/dist/img/" + (getID_Usuario().equals("5") ? "avatar3.png" : "user2-160x160.jpg"));
             // setRoot("/resources/images/transito_avatar.png");
-            return "/inicio?faces-redirect=true";
+            return ejecutarDestino();
         } catch (LoginException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", e.getMessage()));
             return "";
@@ -94,6 +102,14 @@ public class BeanLogin implements Serializable {
             Log_Handler.registrarEvento("Error iniciando sesion: ", e, Log_Handler.ERROR, getClass(), (getID_Usuario() != null) ? Integer.parseInt(getID_Usuario()) : 0);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             return "";
+        }
+    }
+
+    private String ejecutarDestino() throws IOException {
+        if (getUserEstado() == 3) { //Usuario Por reestablecer credenciales
+            return "/reestablecer?faces-redirect=true";
+        } else {
+            return "/inicio?faces-redirect=true"; //Redirect=true obligatorio para validaciones de filtro
         }
     }
 
@@ -113,6 +129,32 @@ public class BeanLogin implements Serializable {
                 this.hasAccess = false;
                 break;
         }
+    }
+
+    public String actualizarContraseña() {
+        try {
+            if (!getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password))) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
+            }
+            if (getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password)) && !DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
+            }
+            if (getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password)) && DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(getContraseñaConfirmacion()))) {
+                if (DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(password))) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
+                } else {
+                    getLoginBO().actualizarContraseña(this);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
+                    validarAcceso();
+                    return "/inicio?faces-redirect=true";
+                }
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+            return "";
+        }
+        return "";
     }
 
     public String getCedulaPersonaUsuario() {
@@ -513,6 +555,48 @@ public class BeanLogin implements Serializable {
      */
     public void setListModulos(List<Modulos> listModulos) {
         this.listModulos = listModulos;
+    }
+
+    /**
+     * @return the usuarios
+     */
+    public Usuarios getUsuarios() {
+        return usuarios;
+    }
+
+    /**
+     * @param usuarios the usuarios to set
+     */
+    public void setUsuarios(Usuarios usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    /**
+     * @return the contraseñaConfirmacion
+     */
+    public String getContraseñaConfirmacion() {
+        return contraseñaConfirmacion;
+    }
+
+    /**
+     * @param contraseñaConfirmacion the contraseñaConfirmacion to set
+     */
+    public void setContraseñaConfirmacion(String contraseñaConfirmacion) {
+        this.contraseñaConfirmacion = contraseñaConfirmacion;
+    }
+
+    /**
+     * @return the contraseñaNueva
+     */
+    public String getContraseñaNueva() {
+        return contraseñaNueva;
+    }
+
+    /**
+     * @param contraseñaNueva the contraseñaNueva to set
+     */
+    public void setContraseñaNueva(String contraseñaNueva) {
+        this.contraseñaNueva = contraseñaNueva;
     }
 
 }

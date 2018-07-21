@@ -7,14 +7,13 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivAttempts;
-import java.io.Serializable;
 import org.hibernate.Session;
 
 /**
  *
  * @author Roymer Camacho
  */
-public interface ITAttempts {
+public interface ITAttempts extends ITGeneryHibernateDao<CivAttempts, Integer>{
 
     /**
      *

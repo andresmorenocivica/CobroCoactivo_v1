@@ -62,4 +62,6 @@ public interface LoginBO {
 
     void consultarDatosUsuario(BeanLogin obj) throws Exception;
 
+    void actualizarContraseña(BeanLogin obj) throws Exception;
+
 }

@@ -11,6 +11,7 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.*;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -32,6 +33,19 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
 //        }
 //        return null;
 //    }
+    @Override
+    public CivUsuarios getCivUsuario(int idpersona) throws Exception {
+        Session session = getSessionFactory().openSession();
+        String hql = "from CivUsuarios where civPersonas.perId =:perId";
+        Query query = session.createQuery(hql);
+        query.setParameter("perId", new BigDecimal(idpersona));
+        if (query.list().size() > 0) {
+            return (CivUsuarios) query.list().get(0);
+        }
+        session.close();
+        return null;
+    }
+
     @Override
 
     public List<CivUsuarios> getAll(Session session) throws Exception {
