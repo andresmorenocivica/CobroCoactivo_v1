@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/07/2018 02:21:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDeudasComparendo" table="CIV_DEUDAS_COMPARENDO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="deucomId" type="big_decimal">
+            <column name="DEUCOM_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="deucomConsecutivo" type="string">
+            <column name="DEUCOM_CONSECUTIVO" length="200" />
+        </property>
+        <property name="deucomFecha" type="string">
+            <column name="DEUCOM_FECHA" length="200" />
+        </property>
+        <property name="deucomTipo" type="string">
+            <column name="DEUCOM_TIPO" length="200" />
+        </property>
+        <property name="deucomValor" type="string">
+            <column name="DEUCOM_VALOR" length="200" />
+        </property>
+        <property name="deucomMotivo" type="string">
+            <column name="DEUCOM_MOTIVO" length="200" />
+        </property>
+        <property name="deucomReferencia" type="string">
+            <column name="DEUCOM_REFERENCIA" length="200" />
+        </property>
+        <property name="deucomNombre1" type="string">
+            <column name="DEUCOM_NOMBRE1" length="200" />
+        </property>
+        <property name="deucomNombre2" type="string">
+            <column name="DEUCOM_NOMBRE2" length="200" />
+        </property>
+        <property name="deucomApellido1" type="string">
+            <column name="DEUCOM_APELLIDO1" length="200" />
+        </property>
+        <property name="deucomApellido2" type="string">
+            <column name="DEUCOM_APELLIDO2" length="200" />
+        </property>
+        <property name="deucomTipodocumento" type="string">
+            <column name="DEUCOM_TIPODOCUMENTO" length="200" />
+        </property>
+        <property name="deucomDocumento" type="string">
+            <column name="DEUCOM_DOCUMENTO" length="200" />
+        </property>
+        <property name="deucomSexo" type="string">
+            <column name="DEUCOM_SEXO" length="200" />
+        </property>
+        <property name="deucomDireccion1" type="string">
+            <column name="DEUCOM_DIRECCION1" length="200" />
+        </property>
+        <property name="deucomDireccion2" type="string">
+            <column name="DEUCOM_DIRECCION2" length="200" />
+        </property>
+        <property name="deucomCelular" type="string">
+            <column name="DEUCOM_CELULAR" length="200" />
+        </property>
+        <property name="deucomTelefono" type="string">
+            <column name="DEUCOM_TELEFONO" length="200" />
+        </property>
+        <property name="deucomCorreoelectronico" type="string">
+            <column name="DEUCOM_CORREOELECTRONICO" length="200" />
+        </property>
+        <property name="deucomNumerocomparendo" type="string">
+            <column name="DEUCOM_NUMEROCOMPARENDO" length="200" />
+        </property>
+        <property name="deucomInfraccion" type="string">
+            <column name="DEUCOM_INFRACCION" length="200" />
+        </property>
+        <property name="deucomDescripcioninfraccion" type="string">
+            <column name="DEUCOM_DESCRIPCIONINFRACCION" length="200" />
+        </property>
+        <property name="deucomFechaComparendo" type="string">
+            <column name="DEUCOM_FECHA_COMPARENDO" length="200" />
+        </property>
+        <property name="deucomNumerosancion" type="string">
+            <column name="DEUCOM_NUMEROSANCION" length="200" />
+        </property>
+        <property name="deucomFechasancion" type="string">
+            <column name="DEUCOM_FECHASANCION" length="200" />
+        </property>
+        <property name="deucomValorsancion" type="string">
+            <column name="DEUCOM_VALORSANCION" length="200" />
+        </property>
+        <property name="deucomArchivoFk" type="big_decimal">
+            <column name="DEUCOM_ARCHIVO_FK" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>
