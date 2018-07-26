@@ -54,4 +54,6 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
     public List<CivConfUsuRec> getConfUsuRec(int id) throws Exception;
 
     public List<CivConfUsuRec> getConfUsuRec(int idRecurso, int idUsuario) throws Exception;
+
+    public List<CivConfUsuRec> getConfUsuRecByUser(int idUsuario) throws Exception;
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/07/2018 05:27:40 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivArchivoDetExpedientes" table="CIV_ARCHIVO_DET_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="arcdetexpId" type="big_decimal">
+            <column name="ARCDETEXP_ID" precision="22" scale="0" />
+            <generator class="foreign">
+                <param name="property">civEstadoArchDetExp</param>
+            </generator>
+        </id>
+        <one-to-one name="civEstadoArchDetExp" class="CobroCoactivo.Persistencia.CivEstadoArchDetExp" constrained="true"></one-to-one>
+        <one-to-one name="civDetalleExpedientes" class="CobroCoactivo.Persistencia.CivDetalleExpedientes" constrained="true"></one-to-one>
+        <property name="arcdetexpNombre" type="string">
+            <column name="ARCDETEXP_NOMBRE" length="100" not-null="true" />
+        </property>
+        <property name="arcdetexpFechaproceso" type="date">
+            <column name="ARCDETEXP_FECHAPROCESO" length="7" />
+        </property>
+        <property name="arcdetexpDetExpFk" type="big_decimal">
+            <column name="ARCDETEXP_DET_EXP_FK" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="arcdetexpUbicacion" type="string">
+            <column name="ARCDETEXP_UBICACION" length="1000" />
+        </property>
+        <property name="arcdetexpEstArcdetexpFk" type="big_decimal">
+            <column name="ARCDETEXP_EST_ARCDETEXP_FK" precision="22" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

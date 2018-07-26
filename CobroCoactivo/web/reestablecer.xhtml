@@ -42,7 +42,9 @@
     </h:head>
     <body>
         <h:form id="formRestaurar">
-            <p:messages autoUpdate="true" id="restablecer" showSummary="true" showDetail="true" closable="true" severity="error"/>
+            <center>
+                <p:messages autoUpdate="true" id="restablecer" showSummary="true" showDetail="true" closable="true" severity="error, info, warn"/>
+            </center>
             <div class="row" style="margin-top: 50px">
                 <div class="col-xs-12">
                     <div class="page-header">
@@ -60,7 +62,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Usuario:</label> 
-                                    <h:inputText value="#{loginBean.user}"  autocomplete="false" id="userLogin" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                    <h:inputText value="#{loginBean.user}"  autocomplete="false" id="userLogin" class="form-control text-uppercase" disabled="true">
                                     </h:inputText>
                                 </div>
                             </div>
@@ -96,8 +98,7 @@
                         </div>
                     </div>
                     <center>
-                        
-                        <h:commandButton class="btn btn-success form-control" action="#{loginBean.actualizarContraseña()}" value="Renovar">
+                        <h:commandButton  style="width:10%" class="btn btn-success form-control" action="#{loginBean.actualizarContraseña()}" value="Renovar">
                         </h:commandButton>
                     </center>
                 </div>

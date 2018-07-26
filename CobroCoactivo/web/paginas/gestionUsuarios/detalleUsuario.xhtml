@@ -142,9 +142,17 @@
                                 <div class="col-md-9">
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
-                                            <!-- <li class="active"> <a href="#activity" data-toggle="tab">Permisos</a></li>
-                                             <li ><a href="#timeline" data-toggle="tab">Actividad</a></li> -->
+                                            <!-- <li class="active"> <a href="#activity" data-toggle="tab">Permisos</a></li>-->
                                             <li><a href="#Modulos" data-toggle="tab">Modulos</a></li> 
+                                            <h:commandButton>
+                                                <li> 
+                                                    <f:ajax event="click" onevent="test"/>
+                                                    <a href="#HistorialRecuso" data-toggle="tab"> 
+                                                        Historial Recursos
+                                                    </a>
+                                                </li> 
+                                            </h:commandButton>
+                                            <li><a href="#Movimientos" data-toggle="tab">Historial de movimiento</a></li> 
                                         </ul>
                                         <div class="tab-content">
                                             <div class="tab-pane" id="activity">
@@ -197,15 +205,88 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="timeline">
-                                                <!-- The timeline -->
+                                            <div class="tab-pane" id="HistorialRecuso">
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border">
+                                                        <h:outputLabel id="titulo" class="box-title" value="Historial de recursos"></h:outputLabel>
+                                                    </div>
+                                                    <div class="box-body no-padding">
+                                                        <div class="mailbox-controls">
+                                                        </div>
+                                                        <!-- corte codigo fuente tabla  -->
+                                                        <div class="table-responsive">
+                                                            <h:panelGroup id="pnlTablaConfUsuRec">
+                                                                <table id="dataTableDetalle" class="table table-bordered table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="col-md-3">Recurso</th>
+                                                                            <th class="col-md-3">Usuario</th>
+                                                                            <th class="col-md-3">Estado</th>
+                                                                            <th class="col-md-3">Fecha proceso</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ui:repeat value="#{gestionUsuariosBean.listConfUsuRecByUser}" var="confUsuRec">
+                                                                            <tr>
+                                                                                <td>#{confUsuRec.recursos.recNombre} </td>
+                                                                                <td>#{confUsuRec.usuarios.nombre}</td>
+                                                                                <td>
+                                                                                    <span class="#{confUsuRec.estadoConfusurec.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                                        #{confUsuRec.estadoConfusurec.descripcion}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>#{confUsuRec.confusurecFechaproceso}</td>
+                                                                            </tr>
+                                                                        </ui:repeat>
+                                                                    </tbody>
+                                                                </table>
+                                                            </h:panelGroup>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <!-- /.tab-pane -->
+                                            <div class="tab-pane" id="Movimientos">
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border">
+                                                        <h:outputLabel id="tituloMovimiento" class="box-title" value="Historial de movimientos"></h:outputLabel>
+                                                    </div>
+                                                    <div class="box-body no-padding">
+                                                        <div class="mailbox-controls">
+                                                        </div>
+                                                        <!-- corte codigo fuente tabla  -->
+                                                        <div class="table-responsive">
+                                                            <h:panelGroup id="pnlTablaMovimiento">
+                                                                <table id="dataTable" class="table table-bordered table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="col-md-3">Deudas</th>
+                                                                            <th class="col-md-3">Fases</th>
+                                                                            <th class="col-md-3">Estado</th>
+                                                                            <th class="col-md-3">Fecha proceso</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ui:repeat value="#{gestionUsuariosBean.listMovimientosByUser}" var="listMovimientos">
+                                                                            <tr>
+                                                                                <td>#{listMovimientos.deudas.referencia} </td>
+                                                                                <td>#{listMovimientos.fasesTrabajos.descripcion}</td>
+                                                                                <td>
+                                                                                    <span class="#{listMovimientos.estadoMovimientos.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                                        #{listMovimientos.estadoMovimientos.descripcion}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>#{listMovimientos.fechaproceso}</td>
+                                                                            </tr>
+                                                                        </ui:repeat>
+                                                                    </tbody>
+                                                                </table>
+                                                            </h:panelGroup>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- /.tab-content -->
                                     </div>
-                                    <!-- /.nav-tabs-custom -->
                                 </div>
                             </div>
                             <div class="modal fade" id="modalRestablecerContraseña" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -55,15 +56,29 @@ public class DaoMovimientos extends ImpGeneryHibernateDao<CivMovimientos, Intege
             String hql = "from CivMovimientos where civFasesTrabajos.fastraId=:fase";
             Query query = session.createQuery(hql);
             query.setInteger("fase", fase);
-            if (query.list().size() > 0)
+            if (query.list().size() > 0) {
                 return query.list();
-            
+            }
+
             return null;
 
         } finally {
             session.close();
         }
 
+    }
+
+    @Override
+    public List<CivMovimientos> getMovimientoByUser(int idUsuario) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "from CivMovimientos where civUsuarios.usuId =:idUsuario";
+        Query query = session.createQuery(hql);
+        query.setParameter("idUsuario", new BigDecimal(idUsuario));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
     }
 
 }

@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmExpedientes">
+                    <div  class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Consultar Expedientes 
+                                <small>Formulario para consultar expedientes</small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <p:messages autoUpdate="true" id="mensajeExpediente" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Busquedas</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="nav-tabs-custom" >
+                                                <ul class="nav nav-tabs" >
+                                                    <li class="active" ><a href="#nombre" data-toggle="tab">Expediente</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="nombre">
+                                                        <br></br>
+                                                        <div class="row">
+                                                            <div class="col-md-2"></div>
+                                                            <div class="col-lg-2 visible-lg visible-md">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Expediente:</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 visible-xs visible-sm" style="width: 13%">
+                                                                <div class="input-group margin-2">
+                                                                    <label class="control-label align-left">Nombre</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                <div class="input-group margin-5">
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Ingrese la referencia del expediente" id="txtReferencia" value="#{gestionExpedientesBean.referenciaExpediente}" requiredMessage="Digite el nombre del expediente"></h:inputText>
+                                                                    <span class="input-group-btn">
+                                                                        <h:commandLink class="btn btn-danger" value="Buscar">
+                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarExpedientes()}" execute="frmExpedientes:txtReferencia" render="frmExpedientes:pnlCarpeta frmExpedientes:pnlArchivo"/>
+                                                                        </h:commandLink>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br></br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h:panelGrid id="pnlCarpeta">
+                                    <h:panelGroup  rendered="#{gestionExpedientesBean.pnlCarpeta}">
+                                        <c:forEach items="#{gestionExpedientesBean.listExpedientes}" var="listaExpedientes">
+                                            <h:commandLink>
+                                                <p:graphicImage url="/recursos/images/folder(1).png"/>
+                                                #{listaExpedientes.referencia}
+                                                <f:ajax event="click" listener="#{gestionExpedientesBean.abrirCarpeta(listaExpedientes.id)}" render="frmExpedientes:pnlCarpeta frmExpedientes:pnlSubCarpetas"/>
+                                            </h:commandLink>
+                                        </c:forEach>
+                                    </h:panelGroup>
+                                    <a href="#{listaExpedientes.id}"> #{listaExpedientes.referencia}</a>
+                                </h:panelGrid>
+                                <h:panelGrid id="pnlSubCarpetas" class="col-lg-12">
+                                    <h:panelGroup rendered="#{gestionExpedientesBean.pnlSubcarpetas}" >
+                                        <table class="table table-hover">
+                                            <div class="row">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-lg-3">Expediente</th>
+                                                        <th class="col-lg-3">Nombre carpeta</th>
+                                                        <th class="col-lg-3">Estado</th>
+                                                        <th class="col-lg-3">Ver</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="#{gestionExpedientesBean.listDetalleExpedientes}" var="listaDetalleExpediente">
+                                                        <tr>
+                                                            <td>#{listaDetalleExpediente.expedientes.referencia}</td>
+                                                            <td>#{listaDetalleExpediente.detexpDescripcion}</td>
+                                                            <td>
+                                                                <span class="#{listaDetalleExpediente.estadoDetalleExpedientes.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                    #{listaDetalleExpediente.estadoDetalleExpedientes.descripcion}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <h:commandLink class="fa fa-eye col-sm-2">
+                                                                    <f:ajax event="click" listener="#{gestionExpedientesBean.buscarArchivo(listaDetalleExpediente.detexpId)}" render="frmExpedientes:pnlSubCarpetas frmExpedientes:pnlArchivo"/>
+                                                                </h:commandLink>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </div>
+                                        </table>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                                <h:panelGrid id="pnlArchivo" class="col-lg-12">
+                                    <h:panelGroup rendered="#{gestionExpedientesBean.pnlArchivo}">
+                                        <table class="table table-hover">
+                                            <div class="row">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-lg-2">Expediente</th>
+                                                        <th class="col-lg-2">Nombre carpeta</th>
+                                                        <th class="col-lg-2">Nombre archivo</th>
+                                                        <th class="col-lg-2">Estado</th>
+                                                        <th class="col-lg-2">Ver</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="#{gestionExpedientesBean.listArchivoDetExpedientes}" var="listaArchivoDetExpedientes">
+                                                        <tr>
+                                                            <td>#{listaArchivoDetExpedientes.detalleExpedientes.expedientes.referencia}</td>
+                                                            <td>#{listaArchivoDetExpedientes.detalleExpedientes.detexpDescripcion}</td>
+                                                            <td>#{listaArchivoDetExpedientes.nombre}</td>
+                                                            <td>
+                                                                <span class="#{listaArchivoDetExpedientes.estadoArchDetExp.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                    #{listaArchivoDetExpedientes.estadoArchDetExp.descripcion}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <h:commandLink class="fa fa-eye col-sm-2">
+                                                                    <f:ajax event="click"/>
+                                                                </h:commandLink>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </div>
+                                        </table>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

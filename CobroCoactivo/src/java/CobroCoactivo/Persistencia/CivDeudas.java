@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
+// Generated 25/07/2018 05:27:39 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -34,12 +34,11 @@ public class CivDeudas  implements java.io.Serializable {
     }
 
 	
-    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas) {
+    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas) {
         this.deuId = deuId;
         this.civTipoDeudas = civTipoDeudas;
         this.civPersonas = civPersonas;
         this.civEstadoDeudas = civEstadoDeudas;
-        this.civCobroDeudas = civCobroDeudas;
     }
     public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, String deuMotivo, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civMovimientoses, Set civExpedienteses) {
        this.deuId = deuId;

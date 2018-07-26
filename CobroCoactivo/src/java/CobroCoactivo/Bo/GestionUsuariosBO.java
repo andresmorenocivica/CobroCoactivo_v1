@@ -41,4 +41,8 @@ public interface GestionUsuariosBO {
     void cargarConfUsuRec(BeanGestionUsuarios bean) throws Exception;
 
     void updateRecursoUsuario(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarHistorialConfUsuRec(BeanGestionUsuarios bean) throws Exception;
+
+    void cargarMovimientoByUser(BeanGestionUsuarios bean) throws Exception;
 }

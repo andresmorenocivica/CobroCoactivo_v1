@@ -13,6 +13,7 @@ import CobroCoactivo.Dao.DaoEstadoConfUsuRec;
 import CobroCoactivo.Dao.DaoEstadoUspHistoria;
 import CobroCoactivo.Dao.DaoEstadoUsuarios;
 import CobroCoactivo.Dao.DaoModulos;
+import CobroCoactivo.Dao.DaoMovimientos;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoRecursos;
 import CobroCoactivo.Dao.DaoTipoDocumento;
@@ -24,6 +25,7 @@ import CobroCoactivo.Dao.ITEstadoConfUsuRec;
 import CobroCoactivo.Dao.ITEstadoUspHistoria;
 import CobroCoactivo.Dao.ITEstadoUsuarios;
 import CobroCoactivo.Dao.ITModulos;
+import CobroCoactivo.Dao.ITMovimientos;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITRecursos;
 import CobroCoactivo.Dao.ITTipoDocumento;
@@ -32,6 +34,7 @@ import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Modulos;
+import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
@@ -45,6 +48,7 @@ import CobroCoactivo.Persistencia.CivEstadoConfusurec;
 import CobroCoactivo.Persistencia.CivEstadoUsuarios;
 import CobroCoactivo.Persistencia.CivEstadouspHistoria;
 import CobroCoactivo.Persistencia.CivModulos;
+import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
@@ -76,6 +80,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     private ITEstadoUsuarios estadoUsuariosDAO;
     private ITEstadoUspHistoria estadoUspHistoriaDAO;
     private ITUspHistoria uspHistoriaDAO;
+    private ITMovimientos movimientosDAO;
 
     public GestionUsuariosImplBO() {
         usuariosDAO = new DaoUsuarios();
@@ -89,6 +94,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
         estadoUsuariosDAO = new DaoEstadoUsuarios();
         estadoUspHistoriaDAO = new DaoEstadoUspHistoria();
         uspHistoriaDAO = new DaoUspHistoria();
+        movimientosDAO = new DaoMovimientos();
     }
 
     @Override
@@ -113,11 +119,18 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void actualizarContraseña(BeanGestionUsuarios bean) throws Exception {
+        Session session = getSessionFactory().openSession();
+        List list = getUsuariosDAO().consultar_HPAS(session, bean.getDetalleUsuario().getId());
+        String passCifrada = DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion());
+        if (list.contains(passCifrada)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.", null));
+        }
         CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
         civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion()));
         getUsuariosDAO().update(civUsuarios);
         RequestContext requestContexts = RequestContext.getCurrentInstance();
         requestContexts.execute("$('#modalRestablecerContraseña').modal('hide')");
+        session.close();
     }
 
     @Override
@@ -169,6 +182,28 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                     ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
                     bean.getListConfUsuRec().add(confUsuRec);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void cargarHistorialConfUsuRec(BeanGestionUsuarios bean) throws Exception {
+        List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRecByUser(bean.getDetalleUsuario().getId());
+        if (listCivConfUsuRec != null) {
+            for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
+                ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
+                bean.getListConfUsuRecByUser().add(confUsuRec);
+            }
+        }
+    }
+
+    @Override
+    public void cargarMovimientoByUser(BeanGestionUsuarios bean) throws Exception {
+        List<CivMovimientos> listCivMovimientos = getMovimientosDAO().getMovimientoByUser(bean.getDetalleUsuario().getId());
+        if (listCivMovimientos != null) {
+            for (CivMovimientos civMovimiento : listCivMovimientos) {
+                Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civMovimiento.getCivFasesTrabajos(), civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
+                bean.getListMovimientosByUser().add(movimientos);
             }
         }
     }
@@ -251,7 +286,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
         }
         cargarTodosModulos(bean);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente, el usuario debe iniciar sesion pa ver los cambios", null));
     }
 
     public String generarNombreUsuario(String nombre, String apellido) {
@@ -478,6 +513,20 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
      */
     public void setEstadoUspHistoriaDAO(ITEstadoUspHistoria estadoUspHistoriaDAO) {
         this.estadoUspHistoriaDAO = estadoUspHistoriaDAO;
+    }
+
+    /**
+     * @return the movimientosDAO
+     */
+    public ITMovimientos getMovimientosDAO() {
+        return movimientosDAO;
+    }
+
+    /**
+     * @param movimientosDAO the movimientosDAO to set
+     */
+    public void setMovimientosDAO(ITMovimientos movimientosDAO) {
+        this.movimientosDAO = movimientosDAO;
     }
 
 }

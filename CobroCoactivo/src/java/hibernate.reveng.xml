@@ -116,4 +116,6 @@ Contributor(s):
     <table-filter match-name="CIV_USUARIOS"/>
     <table-filter match-name="CIV_VALOR_TIPO_DETALLE_COBRO"/>
     <table-filter match-name="LOG_EVENTOS"/>
+    <table-filter match-name="CIV_ARCHIVO_DET_EXPEDIENTES"/>
+    <table-filter match-name="CIV_ESTADO_ARCH_DET_EXP"/>
 </hibernate-reverse-engineering>
