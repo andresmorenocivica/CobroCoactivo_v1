@@ -6,6 +6,7 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanPlanGeneral;
+import org.hibernate.Session;
 
 /**
  *

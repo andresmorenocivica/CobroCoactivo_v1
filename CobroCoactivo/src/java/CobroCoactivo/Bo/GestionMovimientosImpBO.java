@@ -37,6 +37,7 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.DateUtility;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,44 +72,43 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
 
     @Override
     public void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-        List<Deudas> listDeudas = beanGestionMovimientos.getListaDeudas();
+        //List<Deudas> listDeudas = beanGestionMovimientos.getListaDeudas();
         List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().getAllPlanTrabajo();
         for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
             PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
+            planTrabajos.setCountDeudas((int) getDeudasDAO().countDeudas(planTrabajos.getId()));
             List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(planTrabajos.getId());
             if (listCivEtapasTrabajos != null) {
-                if (listCivEtapasTrabajos != null) {
-                    for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
-                        EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
-                        planTrabajos.getListaEtapasTrabajo().add(etapasTrabajos);
-                    }
-                }
-            }
-            List<Deudas> listaDeudarRemovidas = new ArrayList<>();
-            if (listCivEtapasTrabajos != null) {
                 for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
-                    List<CivFasesTrabajos> listcivCivFasesTrabajos = getFasesTrabajoDAO().listarFasesTrabajo(civEtapasTrabajo.getEtatraId().intValue());
-                    if (listcivCivFasesTrabajos != null) {
-                        for (CivFasesTrabajos civCivFasesTrabajo : listcivCivFasesTrabajos) {
-                            if (listDeudas != null) {
-                                for (Deudas deudas : listDeudas) {
-                                    CivMovimientos civMovimientos = getMovimientoDAO().getMovimientoByDeudaByFaseTrabajo(deudas.getId(), civCivFasesTrabajo.getFastraId().intValue());
-                                    if (civMovimientos == null) {
-                                        if (deudas.getPlanTrabajoDeuda().getId() == civPlanTrabajos.getPlatraId().intValue()) {
-                                            planTrabajos.getListaDeudas().add(deudas);
-                                            listaDeudarRemovidas.add(deudas);
-                                        }
-                                    }
-                                }
-                                for (Deudas deudarRemovida : listaDeudarRemovidas) {
-                                    listDeudas.remove(deudarRemovida);
-                                }
-                            }
-                        }
-                    }
-
+                    EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
+                    planTrabajos.getListaEtapasTrabajo().add(etapasTrabajos);
                 }
             }
+//            List<Deudas> listaDeudarRemovidas = new ArrayList<>();
+//            if (listCivEtapasTrabajos != null) {
+//                for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
+//                    List<CivFasesTrabajos> listcivCivFasesTrabajos = getFasesTrabajoDAO().listarFasesTrabajo(civEtapasTrabajo.getEtatraId().intValue());
+//                    if (listcivCivFasesTrabajos != null) {
+//                        for (CivFasesTrabajos civCivFasesTrabajo : listcivCivFasesTrabajos) {
+////                            if (listDeudas != null) {
+////                                for (Deudas deudas : listDeudas) {
+////                                    CivMovimientos civMovimientos = getMovimientoDAO().getMovimientoByDeudaByFaseTrabajo(deudas.getId(), civCivFasesTrabajo.getFastraId().intValue());
+////                                    if (civMovimientos == null) {
+////                                        if (deudas.getPlanTrabajoDeuda().getId() == civPlanTrabajos.getPlatraId().intValue()) {
+////                                            planTrabajos.getListaDeudas().add(deudas);
+////                                            listaDeudarRemovidas.add(deudas);
+////                                        }
+////                                    }
+////                                }
+////                                for (Deudas deudarRemovida : listaDeudarRemovidas) {
+////                                    listDeudas.remove(deudarRemovida);
+////                                }
+////                            }
+//                        }
+//                    }
+//
+//                }
+//            }
             beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
         }
     }
@@ -116,7 +116,8 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     @Override
     public void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         List<CivDeudas> listaCivDeudas = new ArrayList<>();
-        listaCivDeudas = getDeudasDAO().findAll();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        listaCivDeudas = getDeudasDAO().listarDeudasByFechaDeuda(format.parse("01/06/2018"), format.parse("01/06/2018"));
         if (listaCivDeudas != null) {
             for (CivDeudas civDeuda : listaCivDeudas) {
 
@@ -134,7 +135,20 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     @Override
     public void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         List<Deudas> listaDeudarRemovidas = new ArrayList<>();
-        List<Deudas> listDeudas = beanGestionMovimientos.getPlanTrabajoSeleccionado().getListaDeudas();
+        //int cantidadDeudasPlanTrabajo = beanGestionMovimientos.getPlanTrabajoSeleccionado().getCountDeudas();
+        List<Deudas> listDeudas = new ArrayList<>();
+        List<CivDeudas> listCivDeudas = getDeudasDAO().listarDeudasByPlanTrabajo(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId());
+        if (listCivDeudas != null) {
+            for (CivDeudas civDeuda : listCivDeudas) {
+                CivPersonas civPersonas = getPersonaDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
+                CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
+                Deudas deudas = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas);
+                int diasDeuda = DateUtility.fechasDiferenciaEnDias(deudas.getFechaproceso(), new Date());
+                deudas.setDiasHabilesDeuda(diasDeuda);
+                listDeudas.add(deudas);
+            }
+
+        }
         beanGestionMovimientos.getPlanTrabajoSeleccionado().setListaEtapasTrabajo(new ArrayList<>());
         List listDeudasEtapas = new ArrayList<>();
         List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId());
@@ -142,6 +156,14 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
             for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
                 EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
                 List<CivFasesTrabajos> listcivCivFasesTrabajos = getFasesTrabajoDAO().listarFasesTrabajo(etapasTrabajos.getId());
+//                if (cantidadDeudasPlanTrabajo == 0) {
+//                    etapasTrabajos.setCantidadDeudas(0);
+//                } else {
+//                    int cantidadDeudasMovimientos = (int) getDeudasDAO().countDeudasEtapa(beanGestionMovimientos.getPlanTrabajoSeleccionado().getId(), etapasTrabajos.getId());
+//                    etapasTrabajos.setCantidadDeudas(cantidadDeudasPlanTrabajo - cantidadDeudasMovimientos);
+//                    cantidadDeudasPlanTrabajo = cantidadDeudasMovimientos;
+//                }
+
                 if (listcivCivFasesTrabajos != null) {
                     for (CivFasesTrabajos civCivFasesTrabajo : listcivCivFasesTrabajos) {
                         FasesTrabajos fasesTrabajos = new FasesTrabajos(civCivFasesTrabajo, civCivFasesTrabajo.getCivEstadoFasesTrabajos());

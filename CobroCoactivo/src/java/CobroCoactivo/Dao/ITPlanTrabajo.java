@@ -19,6 +19,7 @@ public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos, Int
      public CivPlanTrabajos find(int id) throws Exception;
 
     public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo) throws Exception;
+    public CivPlanTrabajos getPlanTrabajo(String nombrePlanTrabajo) throws Exception;
     
     public List<CivPlanTrabajos> getAllPlanTrabajo()throws Exception;
     

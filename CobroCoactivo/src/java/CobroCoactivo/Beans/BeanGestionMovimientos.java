@@ -48,7 +48,7 @@ public class BeanGestionMovimientos implements Serializable {
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             setLoginBO((BeanLogin) session.getAttribute("loginBean"));
             setGestionMovimientosBO(new GestionMovimientosImpBO());
-            getGestionMovimientosBO().cargarListadoDeudas(this);
+            //getGestionMovimientosBO().cargarListadoDeudas(this);
             getGestionMovimientosBO().cargarListadoPlanesTrabajo(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));

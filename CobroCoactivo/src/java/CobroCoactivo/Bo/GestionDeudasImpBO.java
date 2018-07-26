@@ -151,11 +151,18 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                 listCivDeudas = getDeudasDAO().listarDeudasByRefencia(bean.getReferenciaDeuda().toUpperCase());
                 break;
             case 2:
+                listCivDeudas = getDeudasDAO().listarDeudasByFechaAdquisicion(bean.getFechaCargueInicial(), bean.getFechaCargueFinal());
+                break;
+
+            case 3:
+                listCivDeudas = getDeudasDAO().listarDeudasByFechaDeuda(bean.getFechaDeudaInicial(), bean.getFechaDeudaFinal());
+                break;
+            case 4:
                 listCivDeudas = getDeudasDAO().listarDeudasByTipo(bean.getTipoDeudas());
                 break;
         }
         if (listCivDeudas == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la refencia", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro niguna informaciòn.", null));
         }
         if (listCivDeudas != null) {
             if (listCivDeudas.size() > 0) {
@@ -164,7 +171,25 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
                     CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
                     CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(civDeuda.getCivEstadoDeudas().getEstdeuId());
-                    Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas);
+                    CivCobroDeudas civCobroDeudas = null;
+                    if (civDeuda.getCivCobroDeudas() != null) {
+                        civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(civDeuda.getCivCobroDeudas().getCobdeuId().intValue());
+
+                    }
+                    Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas, civCobroDeudas);
+                    if (civCobroDeudas != null) {
+                        switch (deudas.getCobroDeudas().getDescripcion()) {
+                            case "FACIL":
+                                deudas.getCobroDeudas().setColorDificultad("label label-primary");
+                                break;
+                            case "MEDIANO":
+                                deudas.getCobroDeudas().setColorDificultad("label label-warning");
+                                break;
+                            case "DIFICIL":
+                                deudas.getCobroDeudas().setColorDificultad("label label-danger");
+                                break;
+                        }
+                    }
                     bean.getListDeudas().add(deudas);
                     i++;
                 }
@@ -174,38 +199,31 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
 
     @Override
     public void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception {
-        CivDeudas civDeudas = new CivDeudas();
-
+        CivDeudas civDeudas = getDeudasDAO().find(new BigDecimal(bean.getDeudaSeleccionada().getId()));
         CivCobroDeudas civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(bean.getCobroDeudasSeleccionado().getId());
-        civCobroDeudas.setCobdeuId(civCobroDeudas.getCobdeuId());
-        civCobroDeudas.setCobdeuDescripcion(civCobroDeudas.getCobdeuDescripcion());
-        civCobroDeudas.setCobdeuFechaproceso(civCobroDeudas.getCobdeuFechaproceso());
-
-        CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
-        civTipoDeudas.setTipdeuId(new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
-        civTipoDeudas.setTipdeuDescripcion(bean.getDeudaSeleccionada().getTipoDeudas().getDescripcion());
-        civTipoDeudas.setTipdeuCodigo(new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getCodigo()));
-        civTipoDeudas.setTipdeuFechainicial(bean.getDeudaSeleccionada().getTipoDeudas().getFechainicial());
-        civTipoDeudas.setTipdeuFechafinal(bean.getDeudaSeleccionada().getTipoDeudas().getFechafinal());
-        civTipoDeudas.setTipdeuNombrecorto(bean.getDeudaSeleccionada().getTipoDeudas().getNombrecorto());
-
+        CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
         CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(new BigDecimal(bean.getDeudaSeleccionada().getEstadoDeudas().getId()));
         CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(bean.getDeudaSeleccionada().getPlanTrabajoDeuda().getId());
         CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(bean.getDeudaSeleccionada().getPersonas().getId());
-
-        civDeudas.setDeuId(new BigDecimal(bean.getDeudaSeleccionada().getId()));
-        civDeudas.setDeuRefencia(bean.getDeudaSeleccionada().getReferencia());
-        civDeudas.setDeuValor(BigDecimal.valueOf(bean.getDeudaSeleccionada().getValor()));
-        civDeudas.setDeuFechadeuda(bean.getDeudaSeleccionada().getFechaDeudas());
-        civDeudas.setDeuFechaproceso(bean.getDeudaSeleccionada().getFechaproceso());
-        civDeudas.setDeuSaldo(BigDecimal.valueOf(bean.getDeudaSeleccionada().getSaldo()));
         civDeudas.setCivPlanTrabajos(civPlanTrabajos);
         civDeudas.setCivPersonas(civPersonas);
         civDeudas.setCivEstadoDeudas(civEstadoDeudas);
         civDeudas.setCivTipoDeudas(civTipoDeudas);
         civDeudas.setCivCobroDeudas(civCobroDeudas);
-
         getDeudasDAO().update(civDeudas);
+        CobroDeudas cobroDeudas = new CobroDeudas(civCobroDeudas);
+        bean.getDeudaSeleccionada().setCobroDeudas(cobroDeudas);
+        switch (civCobroDeudas.getCobdeuDescripcion()) {
+            case "FACIL":
+                bean.getDeudaSeleccionada().getCobroDeudas().setColorDificultad("label label-primary");
+                break;
+            case "MEDIANO":
+                bean.getDeudaSeleccionada().getCobroDeudas().setColorDificultad("label label-warning");
+                break;
+            case "DIFICIL":
+                bean.getDeudaSeleccionada().getCobroDeudas().setColorDificultad("label label-danger");
+                break;
+        }
 
     }
 

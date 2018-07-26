@@ -9,6 +9,8 @@ import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -63,14 +65,14 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByFechaAdquisicion(String fechaInicial, String fechaFinal) throws Exception {
+    public List<CivDeudas> listarDeudasByFechaAdquisicion(Date fechaInicial, Date fechaFinal) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Session session = HibernateUtil.getSessionFactory().openSession();
-        //String sql = "from CivDeudas where to_char(deuFechaproceso,'DD/MM/YYYY') between '01/01/2018' and '01/06/2018'";
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHAPROCESO,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN '01/01/2018' AND '31/12/2018'";
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHAPROCESO,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN :fechaInicial AND :fechaFinal";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDeudas.class);
-        //query.setDate("fechaInicial", fechaInicial);
-        //query.setDate("fechaFinal", fechaFinal);
+        query.setDate("fechaInicial",format.parse(format.format(fechaInicial)));
+        query.setDate("fechaFinal",format.parse(format.format(fechaFinal)));
         if (query.list().size() > 0) {
             return query.list();
         }
@@ -81,7 +83,7 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     @Override
     public long countDeudas(long idPlanTrabajo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "Select count(*) from CivDeudas where civPlanTrabajos.platraId = :idPlanTrabajo";
+        String hql = "Select count(*) from CivDeudas where civPlanTrabajos.platraId = :idPlanTrabajo and civEstadoDeudas.estdeuId = 1";
         Query query = session.createQuery(hql);
         query.setParameter("idPlanTrabajo", new BigDecimal(idPlanTrabajo));
         long cantidad = (long) query.list().get(0);
@@ -102,4 +104,61 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         session.close();
         return null;
     }
+
+    @Override
+    public long countDeudasEtapa(int idPlanTrabajo, int idEtapaTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        long cantidad = 0;
+        String sql = "SELECT COUNT(M.MOV_DEUDA_FK)\n"
+                + "FROM CIV_MOVIMIENTOS M\n"
+                + "INNER JOIN CIV_FASES_TRABAJOS FT ON FT.FASTRA_ID = M.MOV_FASTRA_FK\n"
+                + "INNER JOIN CIV_ETAPAS_TRABAJOS ET ON ET.ETATRA_ID = FT.FASTRA_ETATRA_FK AND ET.ETATRA_ID = :idEtapaTrabajo\n"
+                + "INNER JOIN CIV_PLAN_TRABAJOS PT ON PT.PLATRA_ID = ET.ETATRA_PLATRA_FK AND PT.PLATRA_ID = :idPlanTrabajo";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.setInteger("idEtapaTrabajo", idEtapaTrabajo);
+        query.setInteger("idPlanTrabajo", idPlanTrabajo);
+        if (query.list().size() > 0) {
+            cantidad = Long.parseLong(query.list().get(0).toString());
+        }
+        session.close();
+        return cantidad;
+    }
+    
+    @Override
+    public long countDeudasEtapaFases(int idPlanTrabajo, int idEtapaTrabajo, int idFaseTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        long cantidad = 0;
+        String sql = "SELECT COUNT(M.MOV_DEUDA_FK)\n"
+                + "FROM CIV_MOVIMIENTOS M\n"
+                + "INNER JOIN CIV_FASES_TRABAJOS FT ON FT.FASTRA_ID = M.MOV_FASTRA_FK AND FT.FASTRA_ID = :idFaseTrabajo\n"
+                + "INNER JOIN CIV_ETAPAS_TRABAJOS ET ON ET.ETATRA_ID = FT.FASTRA_ETATRA_FK AND ET.ETATRA_ID = :idEtapaTrabajo\n"
+                + "INNER JOIN CIV_PLAN_TRABAJOS PT ON PT.PLATRA_ID = ET.ETATRA_PLATRA_FK AND PT.PLATRA_ID = :idPlanTrabajo";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.setInteger("idFaseTrabajo", idFaseTrabajo);
+        query.setInteger("idEtapaTrabajo", idEtapaTrabajo);
+        query.setInteger("idPlanTrabajo", idPlanTrabajo);
+        if (query.list().size() > 0) {
+            cantidad = Long.parseLong(query.list().get(0).toString());
+        }
+        session.close();
+        return cantidad;
+    }
+
+    @Override
+    public List<CivDeudas> listarDeudasByFechaDeuda(Date fechaInicial, Date fechaFinal) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHADEUDA,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN :fechaInicial AND :fechaFinal";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        query.setDate("fechaInicial",format.parse(format.format(fechaInicial)));
+        query.setDate("fechaFinal",format.parse(format.format(fechaFinal)));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
+    }
+
+    
 }

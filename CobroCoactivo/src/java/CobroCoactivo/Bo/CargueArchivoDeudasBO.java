@@ -6,8 +6,10 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanCargueArchivoDeudas;
+import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Persistencia.CivDeudasImpuesto;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
+import java.math.BigDecimal;
 
 /**
  *
@@ -15,6 +17,6 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
  */
 public interface CargueArchivoDeudasBO {
     void procesarCargueArchivoDeudas(BeanCargueArchivoDeudas beanCargueArchivoDeudas)throws Exception;
-    boolean cargarDatosDeudasImpuesto(CivDeudasImpuesto  civDeudasImpuesto,CivPlanTrabajos civPlanTrabajos) throws Exception;
     
+    boolean cargarDatosDeudas(Personas personas, String valor,String referencia, String motivo,String fecha,CivPlanTrabajos civPlanTrabajos,BigDecimal concepto) throws Exception;
 }

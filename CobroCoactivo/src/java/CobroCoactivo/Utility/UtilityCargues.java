@@ -28,21 +28,22 @@ public class UtilityCargues {
     private boolean error;
     private CargueDeudasImpuesto cargueDeudasImpuesto = new CargueDeudasImpuesto();
 
-    public List<UtilityCargues> validarlineaImpuesto(List listaCampos, ITEstructuraPlanos estructuraPlanos) throws SQLException, Exception {
+    public List<UtilityCargues> validarlineaImpuesto(List listaCampos, ITEstructuraPlanos estructuraPlanos,int tipo) throws SQLException, Exception {
         int numeroCampo = 0;
+        List<CivEstructuraPlanos> listaEstructuraPlanos= estructuraPlanos.getListEstructuraPlano(tipo);
         String nombreCampo = "";
         String registro = " Registro " + (listaCampos.get(0).toString() != null ? listaCampos.get(0).toString() : "") + " - " + (listaCampos.get(5).toString() != null ? listaCampos.get(5).toString() : " Sin Referencia");
         int cantidadCampos = listaCampos.size();
 
         List<UtilityCargues> listaValidados = new ArrayList();
 
-        if (listaCampos.size() < 25) {
+        if (listaCampos.size() < listaEstructuraPlanos.size()) {
             setMsg(registro + " linea no cumple con los campos minimos. valor Minimo(24) valor Obtenido (" + listaCampos.size() + ")");
             setError(false);
             return null;
         }
 
-        if (listaCampos.size() > 25) {
+        if (listaCampos.size() > listaEstructuraPlanos.size()) {
             setMsg(registro + " linea no cumple con los campos minimos. valor Maximo(24) valor Obtenido (" + listaCampos.size() + ")");
             setError(false);
             return null;

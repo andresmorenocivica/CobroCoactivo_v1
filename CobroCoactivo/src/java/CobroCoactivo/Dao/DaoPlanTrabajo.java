@@ -81,4 +81,22 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
 
     }
 
+    @Override
+    public CivPlanTrabajos getPlanTrabajo(String nombrePlanTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT * FROM CIV_PLAN_TRABAJOS WHERE PLATRA_DESCRIPCION =:nombrePlanTrabajo";
+            SQLQuery query = session.createSQLQuery(sql);
+            query.addEntity(CivPlanTrabajos.class);
+            query.setString("nombrePlanTrabajo", nombrePlanTrabajo);
+            if (query.list().size() > 0) {
+                CivPlanTrabajos object = (CivPlanTrabajos) query.list().get(0);
+                return object;
+            }
+            return null;
+        } finally {
+            session.close();
+        }
+    }
+
 }

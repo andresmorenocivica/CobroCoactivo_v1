@@ -24,6 +24,7 @@ public class FasesTrabajos implements java.io.Serializable {
     private int Diamax;
     private String Obligatorio;
     private List<Deudas> listaDeudas = new ArrayList<>();
+    private int cantidadDeudas;
 
     public FasesTrabajos() {
     }
@@ -215,6 +216,20 @@ public class FasesTrabajos implements java.io.Serializable {
      */
     public void setEtapasTrabajos(EtapasTrabajos etapasTrabajos) {
         this.etapasTrabajos = etapasTrabajos;
+    }
+
+    /**
+     * @return the cantidadDeudas
+     */
+    public int getCantidadDeudas() {
+        return cantidadDeudas;
+    }
+
+    /**
+     * @param cantidadDeudas the cantidadDeudas to set
+     */
+    public void setCantidadDeudas(int cantidadDeudas) {
+        this.cantidadDeudas = cantidadDeudas;
     }
 
 }

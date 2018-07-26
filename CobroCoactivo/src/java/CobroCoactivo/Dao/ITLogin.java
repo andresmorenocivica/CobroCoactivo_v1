@@ -13,6 +13,7 @@ public interface ITLogin {
 
     /**
      *
+     * @param session
      * @param obj
      * @return
      * @throws java.lang.Exception

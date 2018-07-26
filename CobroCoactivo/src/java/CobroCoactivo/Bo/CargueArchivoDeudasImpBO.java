@@ -10,6 +10,7 @@ import CobroCoactivo.Dao.DaoArchivosPlanos;
 import CobroCoactivo.Dao.DaoConceptos;
 import CobroCoactivo.Dao.DaoDetalleDeudas;
 import CobroCoactivo.Dao.DaoDeudas;
+import CobroCoactivo.Dao.DaoDeudasComparendo;
 import CobroCoactivo.Dao.DaoDeudasImpuesto;
 import CobroCoactivo.Dao.DaoEstadoDetalleDeudas;
 import CobroCoactivo.Dao.DaoEstadoDeudas;
@@ -23,6 +24,7 @@ import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITArchivosPlanos;
 import CobroCoactivo.Dao.ITConceptos;
 import CobroCoactivo.Dao.ITDetalleDeudas;
+import CobroCoactivo.Dao.ITDeudaComparendo;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITDeudasImpuesto;
 import CobroCoactivo.Dao.ITEstadoDetalleDeudas;
@@ -34,10 +36,15 @@ import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDeudas;
 import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITUsuarios;
+import CobroCoactivo.Modelo.CargueDeudasComparendo;
 import CobroCoactivo.Modelo.CargueDeudasImpuesto;
+import CobroCoactivo.Modelo.Deudas;
+import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivArchivosPlanos;
 import CobroCoactivo.Persistencia.CivDetalleDeudas;
 import CobroCoactivo.Persistencia.CivDeudas;
+import CobroCoactivo.Persistencia.CivDeudasComparendo;
 import CobroCoactivo.Persistencia.CivDeudasImpuesto;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
@@ -76,6 +83,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     private ITConceptos conceptosDAO;
     private ITEstadoDetalleDeudas estadoDetalleDeudasDAO;
     private ITDetalleDeudas detalleDeudasDAO;
+    private ITDeudaComparendo deudaComparendoDAO;
 
     public CargueArchivoDeudasImpBO() {
         archivosPlanosDAO = new DaoArchivosPlanos();
@@ -92,104 +100,102 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         estadoDetalleDeudasDAO = new DaoEstadoDetalleDeudas();
         detalleDeudasDAO = new DaoDetalleDeudas();
         conceptosDAO = new DaoConceptos();
-
+        deudaComparendoDAO = new DaoDeudasComparendo();
     }
 
     @Override
     public void procesarCargueArchivoDeudas(BeanCargueArchivoDeudas beanCargueArchivoDeudas) throws Exception {
         if (Paths.get(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName()).getFileName().toString().endsWith(".txt")) {
-            CivPlanTrabajos civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(1);//plan de trabajo impuesto
-            boolean datosGuardados = false;
-            if (civPlanTrabajos != null) {
-                String linea, nombreArchivo;
-                Utility utility = new Utility();
-                org.apache.commons.fileupload.FileItem fileItem = null;
-                String folder = "D:/Archivo/archivos_planos/";
-                File folders = new File(folder);
-                if (!folders.exists()) {
-                    folders.mkdirs();
+            String nombreArchivo = beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName().replace(".txt", "");
+            if (nombreArchivo.endsWith("PlanoDeudasImpuesto") || nombreArchivo.endsWith("PlanoDeudasComparendos")) {
+                int tipoPlano = nombreArchivo.equals("PlanoDeudasImpuesto") ? 1 : (nombreArchivo.equals("PlanoDeudasComparendo") ? 2 : 0);
+                CivPlanTrabajos civPlanTrabajos = null;
+                if (tipoPlano != 0) {
+                    civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(tipoPlano == 1 ? "DERECHO DE TRANSITO" : (tipoPlano == 2 ? "COMPARENDO" : ""));//plan de trabajo impuesto
                 }
-
-                nombreArchivo = folder + beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName();
-                File saveTo = new File(nombreArchivo);
-                //fileItem.write(saveTo);
-                java.io.FileInputStream fis = new java.io.FileInputStream(saveTo);
-                java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+                boolean datosGuardados = false;
+                if (civPlanTrabajos != null) {
+                    String linea;
+                    Utility utility = new Utility();
+                    org.apache.commons.fileupload.FileItem fileItem = null;
+                    String folder = "D:/Archivo/archivos_planos/";
+                    File folders = new File(folder);
+                    if (!folders.exists()) {
+                        folders.mkdirs();
+                    }
+                    nombreArchivo = folder + beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName();
+                    File saveTo = new File(nombreArchivo);
+                    //fileItem.write(saveTo);
+                    java.io.FileInputStream fis = new java.io.FileInputStream(saveTo);
+                    java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
 //        
 //        InputStream stream = beanCargueArchivoDeudas.getArchivoCague().getInputStream();
 //        File file = new File(nombreArchivo);
 //        file.c
 //        Files.copy(stream, new File(folder + Paths.get(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-//        
-                while ((linea = reader.readLine()) != null) {
-                    java.util.List listaCampos = utility.obtenerCampos(linea);
-                    UtilityCargues utilityCargues = new UtilityCargues();
-                    List<UtilityCargues> listCamposDeudasImpuestos = utilityCargues.validarlineaImpuesto(listaCampos, getEstructuraPlanosDAO());
-                    if (utilityCargues.isError()) {
-                        CargueDeudasImpuesto cargueDeudasImpuesto = new CargueDeudasImpuesto(listCamposDeudasImpuestos);
-                        beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas().add(cargueDeudasImpuesto);
-                        beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
-                    } else {
-                        beanCargueArchivoDeudas.getListaDeudasImpuestoIncorrectas().add(utilityCargues);
-                        beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
-                    }
-                }
+//          
+                    while ((linea = reader.readLine()) != null) {
+                        java.util.List listaCampos = utility.obtenerCampos(linea);
+                        UtilityCargues utilityCargues = new UtilityCargues();
+                        List<UtilityCargues> listaCamposDeudas = utilityCargues.validarlineaImpuesto(listaCampos, getEstructuraPlanosDAO(), tipoPlano);
+                        switch (tipoPlano) {
+                            case 1:
+                                if (utilityCargues.isError()) {
+                                    CargueDeudasImpuesto cargueDeudasImpuesto = new CargueDeudasImpuesto(listaCamposDeudas);
+                                    beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas().add(cargueDeudasImpuesto);
+                                    beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
+                                } else {
+                                    beanCargueArchivoDeudas.getListaDeudasImpuestoIncorrectas().add(utilityCargues);
+                                    beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
+                                }
+                                break;
+                            case 2:
+                                if (utilityCargues.isError()) {
+                                    CargueDeudasComparendo cargueDeudasComparendo = new CargueDeudasComparendo(listaCamposDeudas);
+                                    beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas().add(cargueDeudasComparendo);
+                                    beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
+                                } else {
+                                    beanCargueArchivoDeudas.getListaDeudasComparendoIncorrectas().add(utilityCargues);
+                                    beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
+                                }
+                                break;
+                        }
 
-                if (beanCargueArchivoDeudas.getCargados() > 0) {
-                    CivArchivosPlanos civArchivosPlanos = new CivArchivosPlanos();
-                    civArchivosPlanos.setArcNombre(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName());
-                    civArchivosPlanos.setArcFecha(new Date());
-                    civArchivosPlanos.setArcEstadoFk(BigDecimal.ONE);
-                    CivUsuarios civUsuarios = getUsuarioDAO().find(new BigDecimal(beanCargueArchivoDeudas.getLoginBO().getID_Usuario()));
-                    civArchivosPlanos.setCivUsuarios(civUsuarios);
-                    getArchivosPlanosDAO().create(civArchivosPlanos);
-                    for (CargueDeudasImpuesto cargueDeudasImpuesto : beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas()) {
-                        CivDeudasImpuesto civDeudasImpuesto = new CivDeudasImpuesto();
-                        civDeudasImpuesto.setDeuimpConsecutivo(cargueDeudasImpuesto.getConsecutivo());
-                        civDeudasImpuesto.setDeuimpFecha(cargueDeudasImpuesto.getFecha());
-                        civDeudasImpuesto.setDeuimpTipo(cargueDeudasImpuesto.getTipo());
-                        civDeudasImpuesto.setDeuimpValor(cargueDeudasImpuesto.getValor());
-                        civDeudasImpuesto.setDeuimpMotivo(cargueDeudasImpuesto.getMotivo());
-                        civDeudasImpuesto.setDeuimpReferencia(cargueDeudasImpuesto.getFererencia());
-                        civDeudasImpuesto.setDeuimpNombre1(cargueDeudasImpuesto.getNombre1());
-                        civDeudasImpuesto.setDeuimpNombre2(cargueDeudasImpuesto.getNombre2());
-                        civDeudasImpuesto.setDeuimpApellido1(cargueDeudasImpuesto.getApellido1());
-                        civDeudasImpuesto.setDeuimpApellido2(cargueDeudasImpuesto.getApellido2());
-                        civDeudasImpuesto.setDeuimpTipodocumento(cargueDeudasImpuesto.getTipoDocumento());
-                        civDeudasImpuesto.setDeuimpDocumento(cargueDeudasImpuesto.getDocumento());
-                        civDeudasImpuesto.setDeuimpSexo(cargueDeudasImpuesto.getSexo());
-                        civDeudasImpuesto.setDeuimpDireccion1(cargueDeudasImpuesto.getDireccion1());
-                        civDeudasImpuesto.setDeuimpDireccion2(cargueDeudasImpuesto.getDireccion2());
-                        civDeudasImpuesto.setDeuimpCelular(cargueDeudasImpuesto.getCelular());
-                        civDeudasImpuesto.setDeuimpTelefono(cargueDeudasImpuesto.getTelefono());
-                        civDeudasImpuesto.setDeuimpCorreoelectronico(cargueDeudasImpuesto.getCorreo());
-                        civDeudasImpuesto.setDeuimpPlaca(cargueDeudasImpuesto.getPlaca());
-                        civDeudasImpuesto.setDeuimpServiciovehiculo(cargueDeudasImpuesto.getServicioVehiculo());
-                        civDeudasImpuesto.setDeuimpClasevehiculo(cargueDeudasImpuesto.getClaseVehiculo());
-                        civDeudasImpuesto.setDeuimpAvaluo(cargueDeudasImpuesto.getAvaluo());
-                        civDeudasImpuesto.setDeuimpLiquidacionoficial(cargueDeudasImpuesto.getLiquidacionOficial());
-                        civDeudasImpuesto.setDeuimpFechaliquidacion(cargueDeudasImpuesto.getFechaLiquidacion());
-                        civDeudasImpuesto.setDeuimpFechamatricula(cargueDeudasImpuesto.getFechamatricula());
-                        civDeudasImpuesto.setDeuimpArchivoFk(civArchivosPlanos.getArcId());
-                        getDeudasImpuestoDAO().create(civDeudasImpuesto);
-                        datosGuardados = cargarDatosDeudasImpuesto(civDeudasImpuesto, civPlanTrabajos);
                     }
-                    if (datosGuardados) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                "Datos CargadosCorrectamente", null));
+                    if (beanCargueArchivoDeudas.getCargados() > 0) {
+                        CivArchivosPlanos civArchivosPlanos = new CivArchivosPlanos();
+                        civArchivosPlanos.setArcNombre(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName());
+                        civArchivosPlanos.setArcFecha(new Date());
+                        civArchivosPlanos.setArcEstadoFk(BigDecimal.ONE);
+                        CivUsuarios civUsuarios = getUsuarioDAO().find(new BigDecimal(beanCargueArchivoDeudas.getLoginBO().getID_Usuario()));
+                        civArchivosPlanos.setCivUsuarios(civUsuarios);
+                        getArchivosPlanosDAO().create(civArchivosPlanos);
+                        if (tipoPlano == 1) {
+                            datosGuardados = guardarCarqueImpuesto(beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas(), civArchivosPlanos, civPlanTrabajos);
+                        } else if (tipoPlano == 2) {
+                            datosGuardados = guardarCarqueComparendo(beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas(), civArchivosPlanos, civPlanTrabajos);
+                        }
+
+                        if (datosGuardados) {
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                    "Datos CargadosCorrectamente", null));
+                        } else {
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                    "Ocurrio un problema al guardar los datos", null));
+                        }
+
                     } else {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                "Ocurrio un problema al guardar los datos", null));
+                                "El Archivo no pudo ser cargado", null));
                     }
-
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "El Archivo no pudo ser cargado", null));
+                            "No se encontro ningun plan de trabajo para el archivo :" + nombreArchivo, null));
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        "No Existe un plan de trabajo para las deudas de tipo impuesto", null));
+                        "Nombre del archivo no corresponde al requerido", null));
             }
 
         } else {
@@ -200,19 +206,20 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     }
 
     @Override
-    public boolean cargarDatosDeudasImpuesto(CivDeudasImpuesto civDeudasImpuesto, CivPlanTrabajos civPlanTrabajos) throws Exception {
-        CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(Integer.parseInt(civDeudasImpuesto.getDeuimpTipodocumento()), civDeudasImpuesto.getDeuimpDocumento());
+    public boolean cargarDatosDeudas(Personas personas, String valor,String referencia, String motivo,String fecha,CivPlanTrabajos civPlanTrabajos,BigDecimal concepto) throws Exception {
+        CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
         if (civPersonas == null) {
             civPersonas = new CivPersonas();
-            civPersonas.setPerNombre1(civDeudasImpuesto.getDeuimpNombre1());
-            civPersonas.setPerNombre2(civDeudasImpuesto.getDeuimpNombre2());
-            civPersonas.setPerApellido1(civDeudasImpuesto.getDeuimpApellido1());
-            civPersonas.setPerApellido2(civDeudasImpuesto.getDeuimpApellido2());
-            CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(new BigDecimal(civDeudasImpuesto.getDeuimpTipodocumento()));
-            if (civDeudasImpuesto != null) {
+            civPersonas.setPerNombre1(personas.getNombre1());
+            civPersonas.setPerNombre2(personas.getNombre2());
+            civPersonas.setPerApellido1(personas.getApellido1());
+            civPersonas.setPerApellido2(personas.getApellido1());
+           
+            if (personas != null) {
+                 CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(new BigDecimal(personas.getTipoDocumentos().getCodigo()));
                 civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-                civPersonas.setPerDocumento(civDeudasImpuesto.getDeuimpDocumento());
-                civPersonas.setPerSexo(civDeudasImpuesto.getDeuimpSexo());
+                civPersonas.setPerDocumento(personas.getDocumento());
+                civPersonas.setPerSexo(personas.getSexo());
                 civPersonas.setPerFechaproceso(new Date());
                 civPersonas.setCivEstadoPersonas(getEstadoPersonaDAO().getEstadoPersona(BigDecimal.ONE));
                 getPersonaDAO().create(civPersonas);
@@ -220,13 +227,13 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         }
 
         CivDeudas civDeudas = new CivDeudas();
-        civDeudas.setDeuRefencia(civDeudasImpuesto.getDeuimpPlaca());
+        civDeudas.setDeuRefencia(referencia);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        civDeudas.setDeuFechadeuda(formatter.parse(civDeudasImpuesto.getDeuimpFecha()));
+        civDeudas.setDeuFechadeuda(formatter.parse(fecha));
         civDeudas.setDeuFechaproceso(new Date());
-        civDeudas.setDeuMotivo(civDeudasImpuesto.getDeuimpMotivo());
-        civDeudas.setDeuValor(new BigDecimal(civDeudasImpuesto.getDeuimpValor()));
-        civDeudas.setDeuSaldo(new BigDecimal(civDeudasImpuesto.getDeuimpValor()));
+        civDeudas.setDeuMotivo(motivo);
+        civDeudas.setDeuValor(new BigDecimal(valor));
+        civDeudas.setDeuSaldo(new BigDecimal(valor));
         civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(BigDecimal.ONE));
         civDeudas.setCivPersonas(civPersonas);
         civDeudas.setCivPlanTrabajos(civPlanTrabajos);
@@ -235,13 +242,103 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
 
         CivDetalleDeudas civDetalleDeudas = new CivDetalleDeudas();
         civDetalleDeudas.setCivDeudas(civDeudas);
-        civDetalleDeudas.setCivConceptos(getConceptosDAO().find(BigDecimal.ONE));
+        civDetalleDeudas.setCivConceptos(getConceptosDAO().find(concepto));
         civDetalleDeudas.setCivEstadoDetalleDeudas(getEstadoDetalleDeudasDAO().find(BigDecimal.ONE));
         civDetalleDeudas.setDeuFechaproceso(new Date());
         civDetalleDeudas.setDeuValor(civDeudas.getDeuValor());
         getDetalleDeudasDAO().create(civDetalleDeudas);
 
         return true;
+    }
+
+    private boolean guardarCarqueImpuesto(List<CargueDeudasImpuesto> listacargueDeudasImpuesto, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
+        for (CargueDeudasImpuesto cargueDeudasImpuesto : listacargueDeudasImpuesto) {
+            CivDeudasImpuesto civDeudasImpuesto = new CivDeudasImpuesto();
+            civDeudasImpuesto.setDeuimpConsecutivo(cargueDeudasImpuesto.getConsecutivo());
+            civDeudasImpuesto.setDeuimpFecha(cargueDeudasImpuesto.getFecha());
+            civDeudasImpuesto.setDeuimpTipo(cargueDeudasImpuesto.getTipo());
+            civDeudasImpuesto.setDeuimpValor(cargueDeudasImpuesto.getValor());
+            civDeudasImpuesto.setDeuimpMotivo(cargueDeudasImpuesto.getMotivo());
+            civDeudasImpuesto.setDeuimpReferencia(cargueDeudasImpuesto.getFererencia());
+            civDeudasImpuesto.setDeuimpNombre1(cargueDeudasImpuesto.getNombre1());
+            civDeudasImpuesto.setDeuimpNombre2(cargueDeudasImpuesto.getNombre2());
+            civDeudasImpuesto.setDeuimpApellido1(cargueDeudasImpuesto.getApellido1());
+            civDeudasImpuesto.setDeuimpApellido2(cargueDeudasImpuesto.getApellido2());
+            civDeudasImpuesto.setDeuimpTipodocumento(cargueDeudasImpuesto.getTipoDocumento());
+            civDeudasImpuesto.setDeuimpDocumento(cargueDeudasImpuesto.getDocumento());
+            civDeudasImpuesto.setDeuimpSexo(cargueDeudasImpuesto.getSexo());
+            civDeudasImpuesto.setDeuimpDireccion1(cargueDeudasImpuesto.getDireccion1());
+            civDeudasImpuesto.setDeuimpDireccion2(cargueDeudasImpuesto.getDireccion2());
+            civDeudasImpuesto.setDeuimpCelular(cargueDeudasImpuesto.getCelular());
+            civDeudasImpuesto.setDeuimpTelefono(cargueDeudasImpuesto.getTelefono());
+            civDeudasImpuesto.setDeuimpCorreoelectronico(cargueDeudasImpuesto.getCorreo());
+            civDeudasImpuesto.setDeuimpPlaca(cargueDeudasImpuesto.getPlaca());
+            civDeudasImpuesto.setDeuimpServiciovehiculo(cargueDeudasImpuesto.getServicioVehiculo());
+            civDeudasImpuesto.setDeuimpClasevehiculo(cargueDeudasImpuesto.getClaseVehiculo());
+            civDeudasImpuesto.setDeuimpAvaluo(cargueDeudasImpuesto.getAvaluo());
+            civDeudasImpuesto.setDeuimpLiquidacionoficial(cargueDeudasImpuesto.getLiquidacionOficial());
+            civDeudasImpuesto.setDeuimpFechaliquidacion(cargueDeudasImpuesto.getFechaLiquidacion());
+            civDeudasImpuesto.setDeuimpFechamatricula(cargueDeudasImpuesto.getFechamatricula());
+            civDeudasImpuesto.setDeuimpArchivoFk(civArchivosPlanos.getArcId());
+            getDeudasImpuestoDAO().create(civDeudasImpuesto);
+            Personas persona = new Personas();
+            persona.setNombre1(cargueDeudasImpuesto.getNombre1());
+            persona.setNombre2(cargueDeudasImpuesto.getNombre2());
+            persona.setApellido1(cargueDeudasImpuesto.getApellido1());
+            persona.setApellido2(cargueDeudasImpuesto.getApellido2());
+            persona.setDocumento(cargueDeudasImpuesto.getDocumento());
+            TipoDocumentos tipoDocumento = new TipoDocumentos();
+            tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasImpuesto.getTipoDocumento()));
+            persona.setTipoDocumentos(tipoDocumento);
+            persona.setSexo(cargueDeudasImpuesto.getSexo());
+            return  cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos,new BigDecimal(1));
+        }
+        return false;
+    }
+    
+    private boolean guardarCarqueComparendo(List<CargueDeudasComparendo> listacargueDeudasComparendos, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
+        for (CargueDeudasComparendo cargueDeudasComparendo : listacargueDeudasComparendos) {
+            CivDeudasComparendo civDeudasComparendo = new CivDeudasComparendo();
+            civDeudasComparendo.setDeucomConsecutivo(cargueDeudasComparendo.getConsecutivo());
+            civDeudasComparendo.setDeucomFecha(cargueDeudasComparendo.getFecha());
+            civDeudasComparendo.setDeucomTipo(cargueDeudasComparendo.getTipo());
+            civDeudasComparendo.setDeucomValor(cargueDeudasComparendo.getValor());
+            civDeudasComparendo.setDeucomMotivo(cargueDeudasComparendo.getMotivo());
+            civDeudasComparendo.setDeucomReferencia(cargueDeudasComparendo.getReferencia());
+            civDeudasComparendo.setDeucomNombre1(cargueDeudasComparendo.getNombre1());
+            civDeudasComparendo.setDeucomNombre2(cargueDeudasComparendo.getNombre2());
+            civDeudasComparendo.setDeucomApellido1(cargueDeudasComparendo.getApellido1());
+            civDeudasComparendo.setDeucomApellido2(cargueDeudasComparendo.getApellido2());
+            civDeudasComparendo.setDeucomTipodocumento(cargueDeudasComparendo.getTipoDocumento());
+            civDeudasComparendo.setDeucomDocumento(cargueDeudasComparendo.getDocumento());
+            civDeudasComparendo.setDeucomSexo(cargueDeudasComparendo.getSexo());
+            civDeudasComparendo.setDeucomDireccion1(cargueDeudasComparendo.getDireccion1());
+            civDeudasComparendo.setDeucomDireccion2(cargueDeudasComparendo.getDireccion2());
+            civDeudasComparendo.setDeucomCelular(cargueDeudasComparendo.getCelular());
+            civDeudasComparendo.setDeucomTelefono(cargueDeudasComparendo.getTelefono());
+            civDeudasComparendo.setDeucomCorreoelectronico(cargueDeudasComparendo.getCorreo());
+            civDeudasComparendo.setDeucomNumerocomparendo(cargueDeudasComparendo.getNumeroComparendo());
+            civDeudasComparendo.setDeucomInfraccion(cargueDeudasComparendo.getInfraccion());
+            civDeudasComparendo.setDeucomDescripcioninfraccion(cargueDeudasComparendo.getDescripcionInfraccion());
+            civDeudasComparendo.setDeucomFechaComparendo(cargueDeudasComparendo.getFechaComparendo());
+            civDeudasComparendo.setDeucomNumerosancion(cargueDeudasComparendo.getNumeroSancion());
+            civDeudasComparendo.setDeucomFechasancion(cargueDeudasComparendo.getFechaSancion());
+            civDeudasComparendo.setDeucomValorsancion(cargueDeudasComparendo.getValorSancion());
+            civDeudasComparendo.setDeucomArchivoFk(civArchivosPlanos.getArcId());
+            getDeudaComparendoDAO().create(civDeudasComparendo);
+            Personas persona = new Personas();
+            persona.setNombre1(cargueDeudasComparendo.getNombre1());
+            persona.setNombre2(cargueDeudasComparendo.getNombre2());
+            persona.setApellido1(cargueDeudasComparendo.getApellido1());
+            persona.setApellido2(cargueDeudasComparendo.getApellido2());
+            persona.setDocumento(cargueDeudasComparendo.getDocumento());
+            TipoDocumentos tipoDocumento = new TipoDocumentos();
+            tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasComparendo.getTipoDocumento()));
+            persona.setTipoDocumentos(tipoDocumento);
+            persona.setSexo(cargueDeudasComparendo.getSexo());
+            return  cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos,new BigDecimal(2));
+        }
+        return false;
     }
 
     /**
@@ -438,6 +535,20 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
      */
     public void setDetalleDeudasDAO(ITDetalleDeudas detalleDeudasDAO) {
         this.detalleDeudasDAO = detalleDeudasDAO;
+    }
+
+    /**
+     * @return the deudaComparendoDAO
+     */
+    public ITDeudaComparendo getDeudaComparendoDAO() {
+        return deudaComparendoDAO;
+    }
+
+    /**
+     * @param deudaComparendoDAO the deudaComparendoDAO to set
+     */
+    public void setDeudaComparendoDAO(ITDeudaComparendo deudaComparendoDAO) {
+        this.deudaComparendoDAO = deudaComparendoDAO;
     }
 
 }

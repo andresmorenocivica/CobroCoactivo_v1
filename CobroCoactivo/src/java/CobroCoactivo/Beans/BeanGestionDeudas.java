@@ -13,10 +13,12 @@ import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDeudas;
 import CobroCoactivo.Utility.Log_Handler;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -24,6 +26,7 @@ import javax.faces.context.FacesContext;
  * @author emadrid
  */
 @ManagedBean(name = "gestionDeudasBean", eager = true)
+@ViewScoped
 public class BeanGestionDeudas {
 
     private GestionDeudasBO gestionDeudasBO;
@@ -32,6 +35,12 @@ public class BeanGestionDeudas {
     private int tipoDeudas;
     private int estadoDeudas;
     private String referenciaDeuda;
+    private Date fechaCargueInicial;
+    private Date fechaCargueFinal;
+    private Date fechaDeudaInicial;
+    private Date fechaDeudaFinal;
+    
+    
     private List<TipoDeudas> listTipoDeudas = new ArrayList<>();
     private List<Deudas> listDeudas = new ArrayList<>();
     private Personas personas = new Personas();
@@ -50,7 +59,7 @@ public class BeanGestionDeudas {
             setLoginBO(new BeanLogin());
             getGestionDeudasBO().cargarListaTipoDeudas(this);
             getGestionDeudasBO().cargarListaCobroDeudas(this);
-            getGestionDeudasBO().clasificacionDeudas(this);
+            //getGestionDeudasBO().clasificacionDeudas(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -63,7 +72,11 @@ public class BeanGestionDeudas {
         try {
             setTipoBusqueda(tipo);
             getGestionDeudasBO().buscarDeudas(this);
-
+            if(getListDeudas().size() > 0){
+                setBusquedaVisible(false);
+            }else{
+            
+            }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -307,5 +320,65 @@ public class BeanGestionDeudas {
     public void setPnlTablaClasificacionDeudas(boolean pnlTablaClasificacionDeudas) {
         this.pnlTablaClasificacionDeudas = pnlTablaClasificacionDeudas;
     }
+
+    /**
+     * @return the fechaCargueInicial
+     */
+    public Date getFechaCargueInicial() {
+        return fechaCargueInicial;
+    }
+
+    /**
+     * @param fechaCargueInicial the fechaCargueInicial to set
+     */
+    public void setFechaCargueInicial(Date fechaCargueInicial) {
+        this.fechaCargueInicial = fechaCargueInicial;
+    }
+
+    /**
+     * @return the fechaCargueFinal
+     */
+    public Date getFechaCargueFinal() {
+        return fechaCargueFinal;
+    }
+
+    /**
+     * @param fechaCargueFinal the fechaCargueFinal to set
+     */
+    public void setFechaCargueFinal(Date fechaCargueFinal) {
+        this.fechaCargueFinal = fechaCargueFinal;
+    }
+
+    /**
+     * @return the fechaDeudaInicial
+     */
+    public Date getFechaDeudaInicial() {
+        return fechaDeudaInicial;
+    }
+
+    /**
+     * @param fechaDeudaInicial the fechaDeudaInicial to set
+     */
+    public void setFechaDeudaInicial(Date fechaDeudaInicial) {
+        this.fechaDeudaInicial = fechaDeudaInicial;
+    }
+
+    /**
+     * @return the fechaDeudaFinal
+     */
+    public Date getFechaDeudaFinal() {
+        return fechaDeudaFinal;
+    }
+
+    /**
+     * @param fechaDeudaFinal the fechaDeudaFinal to set
+     */
+    public void setFechaDeudaFinal(Date fechaDeudaFinal) {
+        this.fechaDeudaFinal = fechaDeudaFinal;
+    }
+
+  
+
+    
 
 }

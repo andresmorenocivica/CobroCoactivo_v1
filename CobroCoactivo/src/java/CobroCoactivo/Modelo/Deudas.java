@@ -96,6 +96,7 @@ public class Deudas implements java.io.Serializable {
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas);
     }
+  
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivPlanTrabajos civPlanTrabajos, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas) {
         this.Id = civDeudas.getDeuId().intValue();
@@ -107,6 +108,10 @@ public class Deudas implements java.io.Serializable {
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas);
+        this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
+        if(civCobroDeudas !=null){
+            this.cobroDeudas = new CobroDeudas(civCobroDeudas);
+        }
     }
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivPlanTrabajos civPlanTrabajos, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas, List<CivMovimientos> listCivMovimientos) {

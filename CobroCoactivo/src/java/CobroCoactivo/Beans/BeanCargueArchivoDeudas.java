@@ -7,13 +7,12 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.CargueArchivoDeudasBO;
 import CobroCoactivo.Bo.CargueArchivoDeudasImpBO;
+import CobroCoactivo.Modelo.CargueDeudasComparendo;
 import CobroCoactivo.Modelo.CargueDeudasImpuesto;
 import CobroCoactivo.Utility.Log_Handler;
 import CobroCoactivo.Utility.UtilityCargues;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,7 +34,9 @@ public class BeanCargueArchivoDeudas {
     private Part archivoCague;
     private int cargados,sinCargar;
     private List<CargueDeudasImpuesto>listaDeudasImpuestoCorrectas = new ArrayList<>();
+    private List<CargueDeudasComparendo>listaDeudasComparendoCorrectas = new ArrayList<>();
     private List<UtilityCargues> listaDeudasImpuestoIncorrectas =  new ArrayList<>();
+    private List<UtilityCargues> listaDeudasComparendoIncorrectas =  new ArrayList<>();
     private boolean visibleTablaDeudasCorrectas = false;
 
     @PostConstruct
@@ -53,6 +54,8 @@ public class BeanCargueArchivoDeudas {
 
     public void cargarArchivoDeudas() {
         try {
+            setCargados(0);
+            setSinCargar(0);
             setListaDeudasImpuestoCorrectas(new ArrayList<>());
             setListaDeudasImpuestoIncorrectas(new ArrayList<>());
             getCargueArchivoDeudasBO().procesarCargueArchivoDeudas(this);
@@ -182,6 +185,34 @@ public class BeanCargueArchivoDeudas {
      */
     public void setVisibleTablaDeudasCorrectas(boolean visibleTablaDeudasCorrectas) {
         this.visibleTablaDeudasCorrectas = visibleTablaDeudasCorrectas;
+    }
+
+    /**
+     * @return the listaDeudasComparendoCorrectas
+     */
+    public List<CargueDeudasComparendo> getListaDeudasComparendoCorrectas() {
+        return listaDeudasComparendoCorrectas;
+    }
+
+    /**
+     * @param listaDeudasComparendoCorrectas the listaDeudasComparendoCorrectas to set
+     */
+    public void setListaDeudasComparendoCorrectas(List<CargueDeudasComparendo> listaDeudasComparendoCorrectas) {
+        this.listaDeudasComparendoCorrectas = listaDeudasComparendoCorrectas;
+    }
+
+    /**
+     * @return the listaDeudasComparendoIncorrectas
+     */
+    public List<UtilityCargues> getListaDeudasComparendoIncorrectas() {
+        return listaDeudasComparendoIncorrectas;
+    }
+
+    /**
+     * @param listaDeudasComparendoIncorrectas the listaDeudasComparendoIncorrectas to set
+     */
+    public void setListaDeudasComparendoIncorrectas(List<UtilityCargues> listaDeudasComparendoIncorrectas) {
+        this.listaDeudasComparendoIncorrectas = listaDeudasComparendoIncorrectas;
     }
 
  

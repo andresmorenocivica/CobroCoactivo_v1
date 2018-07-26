@@ -7,6 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstructuraPlanos;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,5 @@ import CobroCoactivo.Persistencia.CivEstructuraPlanos;
  */
 public interface ITEstructuraPlanos extends ITGeneryHibernateDao<CivEstructuraPlanos, Integer>{
     CivEstructuraPlanos getEstructuraPlano(int tipo,int indiceCampo) throws Exception;
+    List<CivEstructuraPlanos>getListEstructuraPlano(int tipo)throws Exception;
 }
