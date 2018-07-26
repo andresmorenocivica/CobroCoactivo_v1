@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
+// Generated 25/07/2018 05:27:39 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,6 +17,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
      private CivEstadoDetalleExpedientes civEstadoDetalleExpedientes;
      private String detexpDescripcion;
      private Date detexpFechaproceso;
+     private CivArchivoDetExpedientes civArchivoDetExpedientes;
 
     public CivDetalleExpedientes() {
     }
@@ -29,13 +30,14 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
         this.civEstadoDetalleExpedientes = civEstadoDetalleExpedientes;
         this.detexpDescripcion = detexpDescripcion;
     }
-    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, String detexpDescripcion, Date detexpFechaproceso) {
+    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, String detexpDescripcion, Date detexpFechaproceso, CivArchivoDetExpedientes civArchivoDetExpedientes) {
        this.detexpId = detexpId;
        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
        this.civExpedientes = civExpedientes;
        this.civEstadoDetalleExpedientes = civEstadoDetalleExpedientes;
        this.detexpDescripcion = detexpDescripcion;
        this.detexpFechaproceso = detexpFechaproceso;
+       this.civArchivoDetExpedientes = civArchivoDetExpedientes;
     }
    
     public BigDecimal getDetexpId() {
@@ -79,6 +81,13 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     
     public void setDetexpFechaproceso(Date detexpFechaproceso) {
         this.detexpFechaproceso = detexpFechaproceso;
+    }
+    public CivArchivoDetExpedientes getCivArchivoDetExpedientes() {
+        return this.civArchivoDetExpedientes;
+    }
+    
+    public void setCivArchivoDetExpedientes(CivArchivoDetExpedientes civArchivoDetExpedientes) {
+        this.civArchivoDetExpedientes = civArchivoDetExpedientes;
     }
 
 

@@ -18,8 +18,10 @@ import CobroCoactivo.Beans.BeanLogin;
 import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Dao.DaoAttempts;
 import CobroCoactivo.Dao.DaoConfUsuRec;
+import CobroCoactivo.Dao.DaoEstadoUspHistoria;
 import CobroCoactivo.Dao.DaoEstadoUsuarios;
 import CobroCoactivo.Dao.DaoPersonas;
+import CobroCoactivo.Dao.DaoUspHistoria;
 import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Utility.DateUtility;
 import CobroCoactivo.Utility.Log_Handler;
@@ -40,7 +42,11 @@ import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Dao.ITConfUsuRec;
+import CobroCoactivo.Dao.ITEstadoUspHistoria;
+import CobroCoactivo.Dao.ITUspHistoria;
 import CobroCoactivo.Modelo.Usuarios;
+import CobroCoactivo.Persistencia.CivEstadouspHistoria;
+import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Utility.HibernateUtil;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -57,6 +63,8 @@ public class LoginImplBO implements LoginBO {
     private ITUsuarios usuariosDAO;
     private ITConfUsuRec confUsuRecDAO;
     private ITEstadoUsuarios estadosUsuariosDAO;
+    private ITEstadoUspHistoria estadoUspHistoriaDAO;
+    private ITUspHistoria uspHistoriaDAO;
 
     /**
      *
@@ -69,6 +77,8 @@ public class LoginImplBO implements LoginBO {
         usuariosDAO = new DaoUsuarios();
         confUsuRecDAO = new DaoConfUsuRec();
         estadosUsuariosDAO = new DaoEstadoUsuarios();
+        estadoUspHistoriaDAO = new DaoEstadoUspHistoria();
+        uspHistoriaDAO = new DaoUspHistoria();
 
     }
 
@@ -385,11 +395,33 @@ public class LoginImplBO implements LoginBO {
     @Override
     public void actualizarContraseña(BeanLogin obj) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        List list = getUsuariosDAO().consultar_HPAS(session, obj.getUsuarios().getId());
+        String passCifrada = DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion());
+        if (list.contains(passCifrada)) {
+            throw new LoginException("Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.");
+        }
         CivEstadoUsuarios civEstadoUsuarios = getEstadosUsuariosDAO().consultarModuloById(session, 1);
         CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(obj.getUsuarios().getId()));
         civUsuarios.setUsuPass(DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion()));
         civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
         obj.setUserEstado(1);
+
+        CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.ONE);
+        CivUspHistoria civUspHistoria = new CivUspHistoria(null, civUsuarios, civEstadouspHistoria, passCifrada, new Date());
+        // SE ACTULIZAN TODAS LAS CONTRASEÑA QUE A TENIDO EL USUARIO A ESTADO 2 (INACTIVO)
+        List<CivUspHistoria> listCivUspHistoria = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
+        if (listCivUspHistoria != null) {
+            List<CivUspHistoria> listCivUspHistorias = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
+            for (CivUspHistoria cuh : listCivUspHistorias) {
+                if (cuh.getCivEstadouspHistoria().getEstuspId().intValue() == 1) {
+                    CivEstadouspHistoria civEstadoHistoria = getEstadoUspHistoriaDAO().find(new BigDecimal(2));
+                    cuh.setCivEstadouspHistoria(civEstadoHistoria);
+                    getUsuariosDAO().updateHisPass(session, cuh);
+                }
+            }
+        }
+        //////////////////
+        getUspHistoriaDAO().create(civUspHistoria);
         getUsuariosDAO().update(civUsuarios);
         session.close();
     }
@@ -484,6 +516,34 @@ public class LoginImplBO implements LoginBO {
      */
     public void setConfUsuRecDAO(ITConfUsuRec confUsuRecDAO) {
         this.confUsuRecDAO = confUsuRecDAO;
+    }
+
+    /**
+     * @return the estadoUspHistoriaDAO
+     */
+    public ITEstadoUspHistoria getEstadoUspHistoriaDAO() {
+        return estadoUspHistoriaDAO;
+    }
+
+    /**
+     * @param estadoUspHistoriaDAO the estadoUspHistoriaDAO to set
+     */
+    public void setEstadoUspHistoriaDAO(ITEstadoUspHistoria estadoUspHistoriaDAO) {
+        this.estadoUspHistoriaDAO = estadoUspHistoriaDAO;
+    }
+
+    /**
+     * @return the uspHistoriaDAO
+     */
+    public ITUspHistoria getUspHistoriaDAO() {
+        return uspHistoriaDAO;
+    }
+
+    /**
+     * @param uspHistoriaDAO the uspHistoriaDAO to set
+     */
+    public void setUspHistoriaDAO(ITUspHistoria uspHistoriaDAO) {
+        this.uspHistoriaDAO = uspHistoriaDAO;
     }
 
 }

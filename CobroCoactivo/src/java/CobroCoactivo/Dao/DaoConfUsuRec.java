@@ -84,4 +84,17 @@ public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer>
         return null;
     }
 
+    @Override
+    public List<CivConfUsuRec> getConfUsuRecByUser(int idUsuario) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_USUARIOS_FK =:idUsuario";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivConfUsuRec.class);
+        query.setBigDecimal("idUsuario", new BigDecimal(idUsuario));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        session.close();
+        return null;
+    }
 }

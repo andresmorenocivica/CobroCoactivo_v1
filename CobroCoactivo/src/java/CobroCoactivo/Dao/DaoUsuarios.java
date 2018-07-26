@@ -113,10 +113,9 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
     @Override
     public List<CivUspHistoria> consultarEstado_HPAS(Session session, int id_usuario) throws Exception {
 
-        String hql = "from CivUspHistoria where USU_ID =:id_usuario";
-        SQLQuery query = session.createSQLQuery(hql);
-        query.addEntity(CivUsuarios.class);
-        query.setInteger("id_usuario", id_usuario);
+        String hql = "from CivUspHistoria where civUsuarios.usuId =:id_usuario";
+        Query query = session.createQuery(hql);
+        query.setParameter("id_usuario",new BigDecimal(id_usuario));
         if (query.list().size() > 0) {
             return query.list();
         }

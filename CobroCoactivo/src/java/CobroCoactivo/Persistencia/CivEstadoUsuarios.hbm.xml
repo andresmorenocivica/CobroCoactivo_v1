@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 13/07/2018 10:45:26 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 25/07/2018 05:27:40 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoUsuarios" table="CIV_ESTADO_USUARIOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estusuId" type="big_decimal">
@@ -9,7 +9,7 @@
             <generator class="increment" />
         </id>
         <property name="estusuDescripcion" type="string">
-            <column name="ESTUSU_DESCRIPCION" length="10" not-null="true">
+            <column name="ESTUSU_DESCRIPCION" length="50" not-null="true">
                 <comment>Campo que guardara la descripcion de cada registro.</comment>
             </column>
         </property>

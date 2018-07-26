@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 13/07/2018 10:45:24 AM by Hibernate Tools 4.3.1
+// Generated 25/07/2018 05:27:39 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,28 +17,30 @@ public class CivExpedientes  implements java.io.Serializable {
      private CivTipoExpedientes civTipoExpedientes;
      private CivEstadoExpedientes civEstadoExpedientes;
      private CivDeudas civDeudas;
-     private String expRefencia;
+     private String expReferencia;
      private Date expFechaproceso;
+     private String expUbicacion;
      private Set civDetalleExpedienteses = new HashSet(0);
 
     public CivExpedientes() {
     }
 
 	
-    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expRefencia) {
+    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expReferencia) {
         this.expId = expId;
         this.civTipoExpedientes = civTipoExpedientes;
         this.civEstadoExpedientes = civEstadoExpedientes;
         this.civDeudas = civDeudas;
-        this.expRefencia = expRefencia;
+        this.expReferencia = expReferencia;
     }
-    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expRefencia, Date expFechaproceso, Set civDetalleExpedienteses) {
+    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expReferencia, Date expFechaproceso, String expUbicacion, Set civDetalleExpedienteses) {
        this.expId = expId;
        this.civTipoExpedientes = civTipoExpedientes;
        this.civEstadoExpedientes = civEstadoExpedientes;
        this.civDeudas = civDeudas;
-       this.expRefencia = expRefencia;
+       this.expReferencia = expReferencia;
        this.expFechaproceso = expFechaproceso;
+       this.expUbicacion = expUbicacion;
        this.civDetalleExpedienteses = civDetalleExpedienteses;
     }
    
@@ -70,12 +72,12 @@ public class CivExpedientes  implements java.io.Serializable {
     public void setCivDeudas(CivDeudas civDeudas) {
         this.civDeudas = civDeudas;
     }
-    public String getExpRefencia() {
-        return this.expRefencia;
+    public String getExpReferencia() {
+        return this.expReferencia;
     }
     
-    public void setExpRefencia(String expRefencia) {
-        this.expRefencia = expRefencia;
+    public void setExpReferencia(String expReferencia) {
+        this.expReferencia = expReferencia;
     }
     public Date getExpFechaproceso() {
         return this.expFechaproceso;
@@ -83,6 +85,13 @@ public class CivExpedientes  implements java.io.Serializable {
     
     public void setExpFechaproceso(Date expFechaproceso) {
         this.expFechaproceso = expFechaproceso;
+    }
+    public String getExpUbicacion() {
+        return this.expUbicacion;
+    }
+    
+    public void setExpUbicacion(String expUbicacion) {
+        this.expUbicacion = expUbicacion;
     }
     public Set getCivDetalleExpedienteses() {
         return this.civDetalleExpedienteses;

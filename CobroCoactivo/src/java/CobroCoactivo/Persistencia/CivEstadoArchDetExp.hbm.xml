@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/07/2018 05:27:40 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoArchDetExp" table="CIV_ESTADO_ARCH_DET_EXP" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estarcdetexpId" type="big_decimal">
+            <column name="ESTARCDETEXP_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estarcdetexpDescripcion" type="string">
+            <column name="ESTARCDETEXP_DESCRIPCION" length="50" not-null="true" />
+        </property>
+        <property name="estarcdetexpFechainicial" type="date">
+            <column name="ESTARCDETEXP_FECHAINICIAL" length="7" not-null="true" />
+        </property>
+        <property name="estarcdetexpFechafinal" type="date">
+            <column name="ESTARCDETEXP_FECHAFINAL" length="7" />
+        </property>
+        <property name="estarcdetexpFechaproceso" type="date">
+            <column name="ESTARCDETEXP_FECHAPROCESO" length="7" />
+        </property>
+        <one-to-one name="civArchivoDetExpedientes" class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes"></one-to-one>
+    </class>
+</hibernate-mapping>

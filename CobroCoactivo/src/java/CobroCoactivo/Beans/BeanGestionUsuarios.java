@@ -11,6 +11,7 @@ import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Modulos;
+import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
@@ -48,6 +49,8 @@ public class BeanGestionUsuarios {
     private List<Modulos> listTodosModulos = new ArrayList<>();
     private List<Recursos> listRecursos = new ArrayList<>();
     private List<ConfUsuRec> listConfUsuRec = new ArrayList<>();
+    private List<ConfUsuRec> listConfUsuRecByUser = new ArrayList<>(); // ESTA LISTA SE LLENARA CON LOS RECURSO QUE TIENE UN USUARIO
+    private List<Movimientos> listMovimientosByUser = new ArrayList<>();      // ESTA LISTA SE LLENARA CON LOS MOVIMIENTOS QUE A HECHO UN USUARIO
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
     private String contraseñaActual;
@@ -71,6 +74,8 @@ public class BeanGestionUsuarios {
                 setDetalleUsuario(obj_.getUsuario());
                 getGestionUsuariosBO().cargarModulosByUsuario(this);
                 getGestionUsuariosBO().cargarTodosModulos(this);
+                getGestionUsuariosBO().cargarHistorialConfUsuRec(this);
+                getGestionUsuariosBO().cargarMovimientoByUser(this);
                 if (obj_.getPersonas() != null) {
                     setEncabezadoDetalleUsuario(obj_.getRuta());
                     setDetallePersonaModal(obj_.getPersonas());
@@ -522,4 +527,33 @@ public class BeanGestionUsuarios {
     public void setSelecionado(boolean selecionado) {
         this.selecionado = selecionado;
     }
+
+    /**
+     * @return the listConfUsuRecByUser
+     */
+    public List<ConfUsuRec> getListConfUsuRecByUser() {
+        return listConfUsuRecByUser;
+    }
+
+    /**
+     * @param listConfUsuRecByUser the listConfUsuRecByUser to set
+     */
+    public void setListConfUsuRecByUser(List<ConfUsuRec> listConfUsuRecByUser) {
+        this.listConfUsuRecByUser = listConfUsuRecByUser;
+    }
+
+    /**
+     * @return the listMovimientosByUser
+     */
+    public List<Movimientos> getListMovimientosByUser() {
+        return listMovimientosByUser;
+    }
+
+    /**
+     * @param listMovimientosByUser the listMovimientosByUser to set
+     */
+    public void setListMovimientosByUser(List<Movimientos> listMovimientosByUser) {
+        this.listMovimientosByUser = listMovimientosByUser;
+    }
+
 }

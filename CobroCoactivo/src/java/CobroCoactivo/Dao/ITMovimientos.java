@@ -20,11 +20,13 @@ public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Inte
     public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception;
 
     /**
-     * 
+     *
      * @param fase
      * @return lista movimiento por fase
-     * @throws Exception 
+     * @throws Exception
      */
     List<CivMovimientos> listMovimiento(int fase) throws Exception;
+
+    public List<CivMovimientos> getMovimientoByUser(int idUsuario) throws Exception;
 
 }
