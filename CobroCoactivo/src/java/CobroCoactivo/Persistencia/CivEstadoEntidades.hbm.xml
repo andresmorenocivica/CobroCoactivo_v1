@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 26/07/2018 02:21:39 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 27/07/2018 01:43:21 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoEntidades" table="CIV_ESTADO_ENTIDADES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estentId" type="big_decimal">
             <column name="ESTENT_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="estentDescripcion" type="string">
             <column name="ESTENT_DESCRIPCION" length="100" not-null="true">

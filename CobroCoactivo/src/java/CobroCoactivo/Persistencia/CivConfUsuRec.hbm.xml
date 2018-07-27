@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 26/07/2018 02:21:39 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 27/07/2018 01:43:21 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivConfUsuRec" table="CIV_CONF_USU_REC" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara las configuraciones que se hagan</comment>
         <id name="confusurecId" type="big_decimal">
             <column name="CONFUSUREC_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="CONFUSUREC_USUARIOS_FK" precision="22" scale="0" not-null="true">

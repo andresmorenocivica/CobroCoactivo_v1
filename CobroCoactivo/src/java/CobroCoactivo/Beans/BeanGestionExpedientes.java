@@ -14,9 +14,8 @@ import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +29,12 @@ import javax.faces.context.FacesContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-
-
 /**
  *
  * @author emadrid
  *
  */
-@ManagedBean(name = "gestionExpedientesBean")
+@ManagedBean(name = "gestionExpedientesBean", eager = true)
 @RequestScoped
 public class BeanGestionExpedientes {
 
@@ -104,17 +101,10 @@ public class BeanGestionExpedientes {
         }
     }
 
-    public StreamedContent visualizarPDF(){
-        try {
-            File file = new File("C:/Users/EMADRID/Documents/1-1143463269/deuda1/test.pdf");
-            FileInputStream archivo = new FileInputStream(file);
-            return new DefaultStreamedContent(archivo, "application/pdf");
-        } catch (IOException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
-            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
-            return null;
-        }
-
+    public StreamedContent visualizarPDF() throws FileNotFoundException {
+        File file = new File("C:\\Users\\EMADRID\\Documents\\1-1143463269\\deuda1\\test.pdf");
+        FileInputStream archivo = new FileInputStream(file);
+        return new DefaultStreamedContent(archivo, "application/pdf");
     }
 
     /**

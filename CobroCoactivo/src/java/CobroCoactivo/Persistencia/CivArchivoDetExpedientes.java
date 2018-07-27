@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 26/07/2018 02:21:37 PM by Hibernate Tools 4.3.1
+// Generated 27/07/2018 01:43:20 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -16,29 +16,25 @@ public class CivArchivoDetExpedientes  implements java.io.Serializable {
      private CivDetalleExpedientes civDetalleExpedientes;
      private String arcdetexpNombre;
      private Date arcdetexpFechaproceso;
-     private BigDecimal arcdetexpDetExpFk;
      private String arcdetexpUbicacion;
-     private BigDecimal arcdetexpEstArcdetexpFk;
 
     public CivArchivoDetExpedientes() {
     }
 
 	
-    public CivArchivoDetExpedientes(CivEstadoArchDetExp civEstadoArchDetExp, CivDetalleExpedientes civDetalleExpedientes, String arcdetexpNombre, BigDecimal arcdetexpDetExpFk, BigDecimal arcdetexpEstArcdetexpFk) {
+    public CivArchivoDetExpedientes(BigDecimal arcdetexpId, CivEstadoArchDetExp civEstadoArchDetExp, CivDetalleExpedientes civDetalleExpedientes, String arcdetexpNombre) {
+        this.arcdetexpId = arcdetexpId;
         this.civEstadoArchDetExp = civEstadoArchDetExp;
         this.civDetalleExpedientes = civDetalleExpedientes;
         this.arcdetexpNombre = arcdetexpNombre;
-        this.arcdetexpDetExpFk = arcdetexpDetExpFk;
-        this.arcdetexpEstArcdetexpFk = arcdetexpEstArcdetexpFk;
     }
-    public CivArchivoDetExpedientes(CivEstadoArchDetExp civEstadoArchDetExp, CivDetalleExpedientes civDetalleExpedientes, String arcdetexpNombre, Date arcdetexpFechaproceso, BigDecimal arcdetexpDetExpFk, String arcdetexpUbicacion, BigDecimal arcdetexpEstArcdetexpFk) {
+    public CivArchivoDetExpedientes(BigDecimal arcdetexpId, CivEstadoArchDetExp civEstadoArchDetExp, CivDetalleExpedientes civDetalleExpedientes, String arcdetexpNombre, Date arcdetexpFechaproceso, String arcdetexpUbicacion) {
+       this.arcdetexpId = arcdetexpId;
        this.civEstadoArchDetExp = civEstadoArchDetExp;
        this.civDetalleExpedientes = civDetalleExpedientes;
        this.arcdetexpNombre = arcdetexpNombre;
        this.arcdetexpFechaproceso = arcdetexpFechaproceso;
-       this.arcdetexpDetExpFk = arcdetexpDetExpFk;
        this.arcdetexpUbicacion = arcdetexpUbicacion;
-       this.arcdetexpEstArcdetexpFk = arcdetexpEstArcdetexpFk;
     }
    
     public BigDecimal getArcdetexpId() {
@@ -76,26 +72,12 @@ public class CivArchivoDetExpedientes  implements java.io.Serializable {
     public void setArcdetexpFechaproceso(Date arcdetexpFechaproceso) {
         this.arcdetexpFechaproceso = arcdetexpFechaproceso;
     }
-    public BigDecimal getArcdetexpDetExpFk() {
-        return this.arcdetexpDetExpFk;
-    }
-    
-    public void setArcdetexpDetExpFk(BigDecimal arcdetexpDetExpFk) {
-        this.arcdetexpDetExpFk = arcdetexpDetExpFk;
-    }
     public String getArcdetexpUbicacion() {
         return this.arcdetexpUbicacion;
     }
     
     public void setArcdetexpUbicacion(String arcdetexpUbicacion) {
         this.arcdetexpUbicacion = arcdetexpUbicacion;
-    }
-    public BigDecimal getArcdetexpEstArcdetexpFk() {
-        return this.arcdetexpEstArcdetexpFk;
-    }
-    
-    public void setArcdetexpEstArcdetexpFk(BigDecimal arcdetexpEstArcdetexpFk) {
-        this.arcdetexpEstArcdetexpFk = arcdetexpEstArcdetexpFk;
     }
 
 

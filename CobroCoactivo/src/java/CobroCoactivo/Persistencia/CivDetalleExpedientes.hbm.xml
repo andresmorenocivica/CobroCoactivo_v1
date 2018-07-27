@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 26/07/2018 02:21:39 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 27/07/2018 01:43:21 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDetalleExpedientes" table="CIV_DETALLE_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detexpId" type="big_decimal">
             <column name="DETEXP_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civTipoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivTipoDetalleExpedientes" fetch="select">
             <column name="DETEXP_TIPDETEXP_FK" precision="22" scale="0" not-null="true" />
@@ -23,6 +23,11 @@
         <property name="detexpFechaproceso" type="date">
             <column name="DETEXP_FECHAPROCESO" length="7" />
         </property>
-        <one-to-one name="civArchivoDetExpedientes" class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes"></one-to-one>
+        <set name="civArchivoDetExpedienteses" table="CIV_ARCHIVO_DET_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ARCDETEXP_DET_EXP_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes" />
+        </set>
     </class>
 </hibernate-mapping>
