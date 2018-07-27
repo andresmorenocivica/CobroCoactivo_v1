@@ -12,21 +12,33 @@ import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Utility.Log_Handler;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
+
 import javax.faces.context.FacesContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+
 
 /**
  *
  * @author emadrid
  *
  */
-@ManagedBean(name = "gestionExpedientesBean", eager = true)
-@ViewScoped
+@ManagedBean(name = "gestionExpedientesBean")
+@RequestScoped
 public class BeanGestionExpedientes {
 
     private int idExpediente;
@@ -92,10 +104,15 @@ public class BeanGestionExpedientes {
         }
     }
 
-    public void visualizarPDF() {
+    public StreamedContent visualizarPDF(){
         try {
-            
-        } catch (Exception e) {
+            File file = new File("C:/Users/EMADRID/Documents/1-1143463269/deuda1/test.pdf");
+            FileInputStream archivo = new FileInputStream(file);
+            return new DefaultStreamedContent(archivo, "application/pdf");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+            return null;
         }
 
     }

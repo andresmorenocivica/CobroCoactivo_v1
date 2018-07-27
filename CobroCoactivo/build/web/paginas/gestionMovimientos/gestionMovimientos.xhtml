@@ -45,7 +45,7 @@
                                                             <h:commandLink class="col-lg-12">
                                                                 <i class="fa fa-briefcase"></i>  
                                                                 #{PlanesTrabajo.descripcion}   
-                                                                <span title="Deudas" class="label label-warning pull-right">#{PlanesTrabajo.listaDeudas.size()}</span>  
+                                                                <span title="Deudas" class="label label-warning pull-right">#{PlanesTrabajo.countDeudas}</span>  
                                                                 <span title="Etapas" class="label label-default pull-right" style="margin-right:10px">#{PlanesTrabajo.listaEtapasTrabajo.size()}</span>
                                                                 <f:ajax event="click" listener="#{gestionMovimientoBean.buscarEtapasByPlanTrabajo(PlanesTrabajo)}" render="frmGestionMovimientos:pnlEtapas frmGestionMovimientos:pnlNombreEtapas frmGestionMovimientos:pnlFases frmGestionMovimientos:pnlNombreFases"/>
                                                             </h:commandLink>

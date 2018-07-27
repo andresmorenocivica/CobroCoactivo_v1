@@ -16,6 +16,6 @@ public interface GestionExpedientesBO {
     void buscarExpediente(BeanGestionExpedientes bean) throws Exception;
 
     void abrirExpediente(BeanGestionExpedientes bean) throws Exception;
-    
+
     void buscarArchivo(BeanGestionExpedientes bean) throws Exception;
 }

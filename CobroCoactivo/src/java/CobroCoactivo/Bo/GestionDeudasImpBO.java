@@ -14,6 +14,7 @@ import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoTipoDetalleCobro;
 import CobroCoactivo.Dao.DaoTipoDeudas;
+import CobroCoactivo.Dao.DaoTipoDocumento;
 import CobroCoactivo.Dao.DaoValorTipoDetalleCobro;
 import CobroCoactivo.Dao.ITCobroDeudas;
 import CobroCoactivo.Dao.ITDetalleCobroDeudas;
@@ -23,6 +24,7 @@ import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDetalleCobro;
 import CobroCoactivo.Dao.ITTipoDeudas;
+import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITValorTipoDetalleCobro;
 import CobroCoactivo.Modelo.CobroDeudas;
 import CobroCoactivo.Persistencia.CivDeudas;
@@ -35,6 +37,7 @@ import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDetalleCobro;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
+import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivValorTipoDetalleCobro;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
@@ -60,6 +63,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     private ITValorTipoDetalleCobro valorTipoDetalleCobroDAO;
     private ITEstadoDeudas estadoDeudasDAO;
     private ITPlanTrabajo planTrabajoDAO;
+    private ITTipoDocumento tipoDocumentoDAO;
 
     public GestionDeudasImpBO() {
         deudasDAO = new DaoDeudas();
@@ -71,7 +75,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
         valorTipoDetalleCobroDAO = new DaoValorTipoDetalleCobro();
         estadoDeudasDAO = new DaoEstadoDeudas();
         planTrabajoDAO = new DaoPlanTrabajo();
-
+        tipoDocumentoDAO = new DaoTipoDocumento();
     }
 
     @Override
@@ -169,6 +173,8 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                 int i = 0;
                 for (CivDeudas civDeuda : listCivDeudas) {
                     CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(civDeuda.getCivPersonas().getPerId().intValue());
+                    CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(civPersonas.getCivTipoDocumentos().getTipdocId());
+                    civPersonas.setCivTipoDocumentos(civTipoDocumentos);
                     CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
                     CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(civDeuda.getCivEstadoDeudas().getEstdeuId());
                     CivCobroDeudas civCobroDeudas = null;
@@ -176,7 +182,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                         civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(civDeuda.getCivCobroDeudas().getCobdeuId().intValue());
 
                     }
-                    Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas, civCobroDeudas);
+                    Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas, civCobroDeudas );
                     if (civCobroDeudas != null) {
                         switch (deudas.getCobroDeudas().getDescripcion()) {
                             case "FACIL":
@@ -374,6 +380,20 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
      */
     public void setPlanTrabajoDAO(ITPlanTrabajo planTrabajoDAO) {
         this.planTrabajoDAO = planTrabajoDAO;
+    }
+
+    /**
+     * @return the tipoDocumentoDAO
+     */
+    public ITTipoDocumento getTipoDocumentoDAO() {
+        return tipoDocumentoDAO;
+    }
+
+    /**
+     * @param tipoDocumentoDAO the tipoDocumentoDAO to set
+     */
+    public void setTipoDocumentoDAO(ITTipoDocumento tipoDocumentoDAO) {
+        this.tipoDocumentoDAO = tipoDocumentoDAO;
     }
 
 }

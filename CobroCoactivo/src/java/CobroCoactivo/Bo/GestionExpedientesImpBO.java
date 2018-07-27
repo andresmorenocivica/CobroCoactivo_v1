@@ -29,6 +29,7 @@ import java.util.List;
  *
  * @author emadrid
  */
+
 public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializable {
 
     private ITExpedientes expedientesDAO;
