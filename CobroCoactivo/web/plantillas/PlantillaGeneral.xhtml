@@ -128,12 +128,23 @@
                             <div class="navbar-custom-menu">
                                 <ul class="nav navbar-nav">
                                     <!-- Messages: style can be found in dropdown.less-->
-                                     <li class="dropdown messages-menu">
-                                        <a href="#{request.contextPath}/faces/paginas/gestionServicios/gestionCargarPersonas.xhtml" class="dropdown-toggle">
-                                            <i class="fa fa-cloud"></i>
-                                            <span class="label label-success">#{loginBean.numeroDeudas()}</span>
-                                        </a>
-                                    </li>
+
+                                    <c:set var="val" value="false"/>
+                                    <c:forEach items="${loginBean.listRecursos}" var="rec">
+                                        <c:if  test="#{rec eq 'cargueDeudasComparendo'}">
+                                            <c:set var="val" value="true"/>
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:if  test="#{val eq true}">
+                                        <li class="dropdown messages-menu">
+                                            <a href="#{request.contextPath}/faces/paginas/gestionServicios/gestionCargarPersonas.xhtml" class="dropdown-toggle">
+                                                <i class="fa fa-cloud"></i>
+                                                <span class="label label-success">#{loginBean.numeroDeudas()}</span>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+
                                     <!-- Notifications: style can be found in dropdown.less -->
                                     <li class="dropdown notifications-menu">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -252,10 +263,11 @@
                                                     <span>#{modu.modNombre}</span>
                                                     <i class="fa fa-angle-left pull-right"></i>
                                                 </a>
-
                                                 <ul class="treeview-menu">
-                                                    <ui:repeat value="#{modu.listRecurso}" var="recx">
-                                                        <li><h:link outcome="#{recx.recCarperta}#{recx.recDescripcion}"><i class="fa fa-circle-o"></i> #{recx.recNombre} </h:link></li>
+                                                    <ui:repeat  value="#{modu.listRecurso}" var="recx">
+                                                        <h:panelGroup rendered="#{recx.tipoRecursos.codigo == '1'}">
+                                                            <li><h:link outcome="#{recx.recCarperta}#{recx.recDescripcion}"><i class="fa fa-circle-o"></i> #{recx.recNombre}  </h:link></li>
+                                                        </h:panelGroup>
                                                     </ui:repeat>
                                                 </ul>
                                             </li>

@@ -13,79 +13,111 @@ import java.util.Set;
 public class TipoRecursos  implements java.io.Serializable {
 
 
-     private int Id;
-     private String Descripcion;
-     private String Nombrecorto;
-     private Date Fechainicial;
-     private Date Fechafinal;
-     private int Codigo;
-     private Set recursoses = new HashSet(0);
+     private int id;
+     private String descripcion;
+     private String nombrecorto;
+     private Date fechainicial;
+     private Date fechafinal;
+     private int codigo;
 
     public TipoRecursos() {
     }
 
     public TipoRecursos(CivTipoRecursos civTipoRecursos) {
-        this.Id = civTipoRecursos.getTiprecId().intValue();
-        this.Descripcion = civTipoRecursos.getTiprecDescripcion();
-        this.Nombrecorto = civTipoRecursos.getTiprecNombrecorto();
-        this.Fechainicial = civTipoRecursos.getTiprecFechainicial();
-        this.Fechafinal = civTipoRecursos.getTiprecFechafinal();
-        this.Codigo = civTipoRecursos.getTiprecCodigo().intValue();
+        this.id = civTipoRecursos.getTiprecId().intValue();
+        this.descripcion = civTipoRecursos.getTiprecDescripcion();
+        this.nombrecorto = civTipoRecursos.getTiprecNombrecorto();
+        this.fechainicial = civTipoRecursos.getTiprecFechainicial();
+        this.fechafinal = civTipoRecursos.getTiprecFechafinal();
+        this.codigo = civTipoRecursos.getTiprecCodigo().intValue();
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the descripcion
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * @param descripcion the descripcion to set
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    /**
+     * @return the nombrecorto
+     */
+    public String getNombrecorto() {
+        return nombrecorto;
+    }
+
+    /**
+     * @param nombrecorto the nombrecorto to set
+     */
+    public void setNombrecorto(String nombrecorto) {
+        this.nombrecorto = nombrecorto;
+    }
+
+    /**
+     * @return the fechainicial
+     */
+    public Date getFechainicial() {
+        return fechainicial;
+    }
+
+    /**
+     * @param fechainicial the fechainicial to set
+     */
+    public void setFechainicial(Date fechainicial) {
+        this.fechainicial = fechainicial;
+    }
+
+    /**
+     * @return the fechafinal
+     */
+    public Date getFechafinal() {
+        return fechafinal;
+    }
+
+    /**
+     * @param fechafinal the fechafinal to set
+     */
+    public void setFechafinal(Date fechafinal) {
+        this.fechafinal = fechafinal;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public int getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
 
    
-    public int getTiprecId() {
-        return this.Id;
-    }
-    
-    public void setTiprecId(int Id) {
-        this.Id = Id;
-    }
-    public String getTiprecDescripcion() {
-        return this.Descripcion;
-    }
-    
-    public void setTiprecDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
-    }
-    public String getTiprecNombrecorto() {
-        return this.Nombrecorto;
-    }
-    
-    public void setTiprecNombrecorto(String Nombrecorto) {
-        this.Nombrecorto = Nombrecorto;
-    }
-    public Date getTiprecFechainicial() {
-        return this.Fechainicial;
-    }
-    
-    public void setTiprecFechainicial(Date Fechainicial) {
-        this.Fechainicial = Fechainicial;
-    }
-    public Date getTiprecFechafinal() {
-        return this.Fechafinal;
-    }
-    
-    public void setTiprecFechafinal(Date Fechafinal) {
-        this.Fechafinal = Fechafinal;
-    }
-    public int getTiprecCodigo() {
-        return this.Codigo;
-    }
-    
-    public void setTiprecCodigo(int Codigo) {
-        this.Codigo = Codigo;
-    }
-    public Set getRecursoses() {
-        return this.recursoses;
-    }
-    
-    public void setRecursoses(Set recursoses) {
-        this.recursoses = recursoses;
-    }
-
-
 
 
 }

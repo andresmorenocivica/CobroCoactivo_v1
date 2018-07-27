@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivErrores" table="CIV_ERRORES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="errId" type="big_decimal">
             <column name="ERR_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="errException" type="string">
             <column name="ERR_EXCEPTION" length="100" />

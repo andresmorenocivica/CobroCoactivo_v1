@@ -16,7 +16,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Roymer Camacho
  */
-public class DaoLogin extends ImpGeneryHibernateDao<Object, Serializable> implements ITLogin, Serializable {
+public class DaoLogin extends ImpGeneryHibernateDao<CivUsuarios, Serializable> implements ITLogin, Serializable {
 
     private static final long serialVersionUID = 7526472295622776147L;
 

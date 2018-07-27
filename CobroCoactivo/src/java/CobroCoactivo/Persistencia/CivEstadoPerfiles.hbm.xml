@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los estados que existen en el sistema referente a la tabla CIV_PERFILES</comment>
         <id name="estperfId" type="big_decimal">
             <column name="ESTPERF_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estperfDescripcion" type="string">
             <column name="ESTPERF_DESCRIPCION" length="10" not-null="true">

@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivConceptos" table="CIV_CONCEPTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="conId" type="big_decimal">
             <column name="CON_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civTipoConceptos" class="CobroCoactivo.Persistencia.CivTipoConceptos" fetch="select">
             <column name="CON_TIPOCON_FK" precision="22" scale="0" not-null="true">

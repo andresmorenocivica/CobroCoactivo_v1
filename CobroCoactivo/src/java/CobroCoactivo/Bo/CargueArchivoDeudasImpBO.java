@@ -252,6 +252,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     }
 
     private boolean guardarCarqueImpuesto(List<CargueDeudasImpuesto> listacargueDeudasImpuesto, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
+        boolean sw = false;
         for (CargueDeudasImpuesto cargueDeudasImpuesto : listacargueDeudasImpuesto) {
             CivDeudasImpuesto civDeudasImpuesto = new CivDeudasImpuesto();
             civDeudasImpuesto.setDeuimpConsecutivo(cargueDeudasImpuesto.getConsecutivo());
@@ -291,12 +292,13 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasImpuesto.getTipoDocumento()));
             persona.setTipoDocumentos(tipoDocumento);
             persona.setSexo(cargueDeudasImpuesto.getSexo());
-            return  cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos,new BigDecimal(1));
+            sw=  cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos,new BigDecimal(1));
         }
-        return false;
+        return sw;
     }
     
     private boolean guardarCarqueComparendo(List<CargueDeudasComparendo> listacargueDeudasComparendos, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
+        boolean sw = false;
         for (CargueDeudasComparendo cargueDeudasComparendo : listacargueDeudasComparendos) {
             CivDeudasComparendo civDeudasComparendo = new CivDeudasComparendo();
             civDeudasComparendo.setDeucomConsecutivo(cargueDeudasComparendo.getConsecutivo());
@@ -336,9 +338,9 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasComparendo.getTipoDocumento()));
             persona.setTipoDocumentos(tipoDocumento);
             persona.setSexo(cargueDeudasComparendo.getSexo());
-            return  cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos,new BigDecimal(2));
+            sw = cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos,new BigDecimal(2));
         }
-        return false;
+        return sw;
     }
 
     /**

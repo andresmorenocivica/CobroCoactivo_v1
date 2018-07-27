@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los registro de estado referente al tabla CIV_RECURSO.</comment>
         <id name="estrecId" type="big_decimal">
             <column name="ESTREC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estrecDescripcion" type="string">
             <column name="ESTREC_DESCRIPCION" length="10" not-null="true">

@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivDeudasComparendo" table="CIV_DEUDAS_COMPARENDO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="deucomId" type="big_decimal">
             <column name="DEUCOM_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="deucomConsecutivo" type="string">
             <column name="DEUCOM_CONSECUTIVO" length="200" />

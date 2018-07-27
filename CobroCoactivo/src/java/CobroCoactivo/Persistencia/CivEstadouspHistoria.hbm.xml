@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadouspHistoria" table="CIV_ESTADOUSP_HISTORIA" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estuspId" type="big_decimal">
             <column name="ESTUSP_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estuspDescripcion" type="string">
             <column name="ESTUSP_DESCRIPCION" length="100" not-null="true">

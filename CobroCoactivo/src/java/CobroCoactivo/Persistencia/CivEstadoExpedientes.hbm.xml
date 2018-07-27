@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoExpedientes" table="CIV_ESTADO_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estexpId" type="big_decimal">
             <column name="ESTEXP_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estexpDescripcion" type="string">
             <column name="ESTEXP_DESCRIPCION" length="100" not-null="true">

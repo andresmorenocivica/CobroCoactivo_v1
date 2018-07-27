@@ -7,7 +7,7 @@
         <comment>Tabla que guardara las configuraciones que se hagan</comment>
         <id name="confusurecId" type="big_decimal">
             <column name="CONFUSUREC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="CONFUSUREC_USUARIOS_FK" precision="22" scale="0" not-null="true">

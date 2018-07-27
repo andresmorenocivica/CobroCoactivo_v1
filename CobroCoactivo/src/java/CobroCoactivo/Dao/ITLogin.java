@@ -1,7 +1,9 @@
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivUsuarios;
+import java.io.Serializable;
 import java.util.List;
 import org.hibernate.Session;
 
@@ -9,7 +11,7 @@ import org.hibernate.Session;
  *
  * @author Roymer Camacho
  */
-public interface ITLogin {
+public interface ITLogin extends ITGeneryHibernateDao<CivUsuarios, Serializable>{
 
     /**
      *

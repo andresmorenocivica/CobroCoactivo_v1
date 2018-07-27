@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoIngresoDeudas" table="CIV_ESTADO_INGRESO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estingdeuId" type="big_decimal">
             <column name="ESTINGDEU_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estingdeuDescripcion" type="string">
             <column name="ESTINGDEU_DESCRIPCION" length="100" not-null="true">
