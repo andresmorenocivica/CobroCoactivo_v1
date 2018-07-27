@@ -55,11 +55,20 @@ public class DaoTipoDocumento implements ITTipoDocumento {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivTipoDocumentos where tipdocCodigo=:codigoDocumento";
         Query query = session.createQuery(hql);
-        query.setParameter("codigoDocumento",codigoDocumento);
+        query.setParameter("codigoDocumento", codigoDocumento);
         if (query.list().size() > 0) {
             return (CivTipoDocumentos) query.list().get(0);
         }
         session.close();
         return null;
+    }
+
+    @Override
+    @Transactional
+    public CivTipoDocumentos find(BigDecimal id) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CivTipoDocumentos entity =  (CivTipoDocumentos) session.get(CivTipoDocumentos.class, id);
+        session.close();
+        return entity;
     }
 }

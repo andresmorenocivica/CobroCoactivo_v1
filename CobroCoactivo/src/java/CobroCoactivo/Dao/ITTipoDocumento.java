@@ -42,5 +42,7 @@ public interface ITTipoDocumento {
     public List<CivTipoDocumentos> listAll() throws Exception;
 
     public CivTipoDocumentos getTipoDocumento(BigDecimal tipoDocumento) throws Exception;
-
+    
+    
+    CivTipoDocumentos find(BigDecimal id) throws Exception;
 }

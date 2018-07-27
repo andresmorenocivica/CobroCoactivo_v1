@@ -22,7 +22,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import org.primefaces.context.RequestContext;
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -69,6 +75,7 @@ public class BeanLogin implements Serializable {
     private boolean Op = false;
     private int tipo;
     private String plantilla;
+    private Client client;
 
     private List<CivConfUsuRec> listUsuarioRecursos;
     private List<CivConfUsuRec> listRedireccion;
@@ -159,6 +166,23 @@ public class BeanLogin implements Serializable {
             return "";
         }
         return "";
+    }
+    
+    public String numeroDeudas() throws JSONException {
+        client = ClientBuilder.newClient();
+
+        WebTarget baTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/cartera/numero");
+        if (baTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
+            String data = baTarget.request(MediaType.APPLICATION_JSON).get(String.class);
+            JSONObject jSONObject = new JSONObject(data);
+            if (!jSONObject.isNull("numero")) {
+                return jSONObject.getString("numero");
+            }
+
+        }
+
+        return "";
+
     }
 
     public String getCedulaPersonaUsuario() {
@@ -601,6 +625,20 @@ public class BeanLogin implements Serializable {
      */
     public void setContraseñaNueva(String contraseñaNueva) {
         this.contraseñaNueva = contraseñaNueva;
+    }
+
+    /**
+     * @return the client
+     */
+    public Client getClient() {
+        return client;
+    }
+
+    /**
+     * @param client the client to set
+     */
+    public void setClient(Client client) {
+        this.client = client;
     }
 
 }

@@ -544,9 +544,14 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     @Override
     public void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        boolean faseObligatoria = false;
         bean.setListFasesGenerales(new ArrayList<>());
         List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
         for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
+            if (civFasesGenerale.getFasgenObligatorio().equals("TRUE")) {
+                faseObligatoria = true;
+            }
+            //  faseObligatoria =  civFasesGenerale.getFasgenObligatorio().equals("TRUE") ? true : false;
             CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().getCivEtapaGeneral(civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
             CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().getCivDocumentoGeneral(civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
             FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale, civFasesGenerale.getCivEstadoFasesGenerales(), civEtapasGenerales, civDocumenGenerales);
@@ -557,6 +562,12 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             }
             bean.getListFasesGenerales().add(fasesGenerales);
         }
+
+        if (!faseObligatoria) {
+            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "La etapa " + bean.getEtapasGenerales().getDescripcion() + " debe contener por lo menos una fases obligatoria" , "Plan General Creado exitosamente"));
+        }
+
         session.close();
     }
 

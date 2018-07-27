@@ -58,7 +58,6 @@ public class BeanPlanGeneral {
     //termina  lista de objectos beanplangeneral
 
     // variables primitivas utiliza en el beanPlangenearal
-   
     private int idEStadoFasesGeneral;
 
     private Boolean estadoButton = true;
@@ -108,7 +107,7 @@ public class BeanPlanGeneral {
         try {
 
             getPlanGeneralBO().actualizarFase(this);
-            getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
+             getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -222,6 +221,12 @@ public class BeanPlanGeneral {
             setFile(null);
             setRenderDivCambiarArchivo(true);
             setEstadoButton(false);
+            if (fasesGenerales.getObligatorio().equals("Si")) {
+                fasesGenerales.setObligatorio("TRUE");
+            } else {
+                fasesGenerales.setObligatorio("FALSE");
+            }
+
             setFasesGenerales(fasesGenerales);
 
         } catch (Exception e) {

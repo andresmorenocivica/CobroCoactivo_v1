@@ -13,6 +13,9 @@ import CobroCoactivo.Beans.BeanGestionPlanTrabajo;
  * @author jvergara
  */
 public interface GestionPlanTrabajoBO {
+    
+    
+    public void actualizarFases(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws  Exception;
 
     /**
      * devuelve lista con plan general
@@ -75,6 +78,8 @@ public interface GestionPlanTrabajoBO {
      * @throws Exception 
      */
     void getfasesGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception;
+
+    
     
 
 }

@@ -25,6 +25,7 @@ public class FasesTrabajos implements java.io.Serializable {
     private String Obligatorio;
     private List<Deudas> listaDeudas = new ArrayList<>();
     private int cantidadDeudas;
+    private boolean updateFase = false;
 
     public FasesTrabajos() {
     }
@@ -230,6 +231,20 @@ public class FasesTrabajos implements java.io.Serializable {
      */
     public void setCantidadDeudas(int cantidadDeudas) {
         this.cantidadDeudas = cantidadDeudas;
+    }
+
+    /**
+     * @return the updateFase
+     */
+    public boolean isUpdateFase() {
+        return updateFase;
+    }
+
+    /**
+     * @param updateFase the updateFase to set
+     */
+    public void setUpdateFase(boolean updateFase) {
+        this.updateFase = updateFase;
     }
 
 }

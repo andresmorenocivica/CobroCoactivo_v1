@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmCargarPersonas">
+                    <div class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Consultas y adicionar personas
+                                <!-- <small>guia formulario para consultas</small> -->
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <p:messages autoUpdate="true" id="mensajeConsultarPersona" showIcon="false" closable="true" severity="warn,info"></p:messages>
+                            <!-- Default box -->
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <div class="box-title">
+                                        <h3 class="">Personas </h3>
+                                    </div>
+                                   <!-- <button class="btn btn-success center-block" style="float: right ">Sincronizar todos</button> -->
+                                </div>
+                                <h:panelGroup id="tblPersona">
+                                    <table class="table table-bordered table-hover" id="dataTableDetalle">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Mostrar deudas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ui:repeat value="#{gestionCargarPersonasBean.listPersonas}" var="persona">
+                                                <tr>
+                                                    <td>
+                                                        #{persona.nombre1} #{persona.nombre2} 
+                                                    </td>
+                                                    <td> #{persona.apellido1} #{persona.apellido2}</td>
+                                                    <td>
+                                                        <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalDeuda').modal('show')">
+                                                            <f:ajax event="click" listener="#{gestionCargarPersonasBean.verDeudas(persona)}" render="frmCargarPersonas:modalDeudaContent">
+
+                                                            </f:ajax>
+                                                        </h:commandLink>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </tbody>
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                            <div class="modal fade"  tabindex="-1" id="modalDeuda"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content" jsf:id="modalDeudaContent">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">Deudas #{gestionCargarPersonasBean.personas.nombre1} #{gestionCargarPersonasBean.personas.apellido1}</h4>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p:messages id="messageCargarPersona" autoUpdate="true" closable="true" showDetail="false" showIcon="false"></p:messages>
+                                            <table class="table table-hover table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Valor</th>
+                                                        <th>Tipo</th>
+                                                        <th>Fecha</th>
+                                                        <th>Referencia</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <ui:repeat value="#{gestionCargarPersonasBean.listDeudas}" var="deuda">
+                                                        <tr>
+                                                            <td>
+                                                                #{deuda.valor}
+                                                            </td>
+                                                            <td>#{deuda.tipoDeudas.codigo}</td>
+                                                            <td>
+                                                                <h:outputText value="#{deuda.fechaDeudas}">
+                                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                                </h:outputText>
+
+                                                            </td>
+                                                            <td>
+                                                                #{deuda.referencia}
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <h:commandLink value="Sincronizar" id="btnGuardarPlanTrabajo" class="btn btn-success">
+                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalPlanTrabajo" listener="#{gestionCargarPersonasBean.sincronizarDeuda()}" execute="formPlanTrabajo:modalPlanTrabajo"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

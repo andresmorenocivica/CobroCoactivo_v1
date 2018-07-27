@@ -82,6 +82,49 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     }
 
     @Override
+    public void actualizarFases(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        for (FasesTrabajos fasesTrabajos : beanGestionPlanTrabajo.getListFasesTrabajoses()) {
+            CivFasesGenerales civFasesGenerales = getFasesGeneralesDAO().find(BigDecimal.valueOf(fasesTrabajos.getId()));
+            if (fasesTrabajos.isUpdateFase()) {
+                if (civFasesGenerales.getFasgenDiamax().intValue() >= fasesTrabajos.getDiamax()) {
+                    CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(BigDecimal.valueOf(fasesTrabajos.getId()));
+                    civFasesTrabajos.setFastraDianim(BigDecimal.valueOf(fasesTrabajos.getDianim()));
+                    civFasesTrabajos.setFastraDiamax(BigDecimal.valueOf(fasesTrabajos.getDiamax()));
+                    getFasesTrabajoDAO().update(civFasesTrabajos);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Fase de trabajo actualizada correctamente", "Etapa De trabajo exitosamente"));
+                    fasesTrabajos.setUpdateFase(false);
+
+                }else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                            "Fase de trabajo el dia maximo no puede ser mayor a " +  civFasesGenerales.getFasgenDiamax() , "Etapa De trabajo exitosamente"));
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void getListEtapaGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        beanGestionPlanTrabajo.setListEtapaGenerales(new ArrayList<>());
+        List<CivEtapasGenerales> listEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, beanGestionPlanTrabajo.getPlanTrabajos().getId());
+        for (CivEtapasGenerales civEtapasGeneral : listEtapasGenerales) {
+            boolean sw = true;
+            for (EtapasTrabajos etapasTrabajo : beanGestionPlanTrabajo.getListEtapaTrabajos()) {
+                if (etapasTrabajo.getDescricion().equals(civEtapasGeneral.getEtagenDescripcion())) {
+                    sw = false;
+                }
+            }
+            if (sw) {
+                EtapasGenerales etapasGenerales = new EtapasGenerales(civEtapasGeneral, civEtapasGeneral.getCivEstadoEtapasGenerales());
+                beanGestionPlanTrabajo.getListEtapaGenerales().add(etapasGenerales);
+            }
+        }
+        session.close();
+    }
+
+    @Override
     public void getListPlanGenaral(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         beanGestionPlanTrabajo.setListPlanGenerales(new ArrayList<>());
@@ -111,26 +154,6 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
             beanGestionPlanTrabajo.getListPlanTrabajos().add(planTrabajos);
         }
 
-    }
-
-    @Override
-    public void getListEtapaGenerales(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        beanGestionPlanTrabajo.setListEtapaGenerales(new ArrayList<>());
-        List<CivEtapasGenerales> listEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, beanGestionPlanTrabajo.getPlanTrabajos().getId());
-        for (CivEtapasGenerales civEtapasGeneral : listEtapasGenerales) {
-            boolean sw = true;
-            for (EtapasTrabajos etapasTrabajo : beanGestionPlanTrabajo.getListEtapaTrabajos()) {
-                if (etapasTrabajo.getDescricion().equals(civEtapasGeneral.getEtagenDescripcion())) {
-                    sw = false;
-                }
-            }
-            if (sw) {
-                EtapasGenerales etapasGenerales = new EtapasGenerales(civEtapasGeneral, civEtapasGeneral.getCivEstadoEtapasGenerales());
-                beanGestionPlanTrabajo.getListEtapaGenerales().add(etapasGenerales);
-            }
-        }
-        session.close();
     }
 
     @Override
@@ -444,5 +467,4 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
     public void setEstadoEtapasTrabajoDAO(ITEstadoEtapasTrabajo estadoEtapasTrabajoDAO) {
         this.estadoEtapasTrabajoDAO = estadoEtapasTrabajoDAO;
     }
-
 }
