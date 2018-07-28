@@ -31,8 +31,8 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
             query.setInteger("idPlanTrabajo", idPlanTrabajo);
             if (query.list().size() > 0) {
                 CivPlanTrabajos object = (CivPlanTrabajos) query.list().get(0);
-                System.out.println(object.getCivDeudases());
-                System.out.println(object.getCivEtapasTrabajoses());
+                object.getCivDeudases().size();
+                object.getCivEtapasTrabajoses().size();
 
                 return object;
             }

@@ -19,13 +19,17 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -34,8 +38,8 @@ import org.primefaces.model.StreamedContent;
  * @author emadrid
  *
  */
-@ManagedBean(name = "gestionExpedientesBean", eager = true)
-@RequestScoped
+@ManagedBean(name = "gestionExpedientesBean")
+@ViewScoped
 public class BeanGestionExpedientes {
 
     private int idExpediente;
@@ -49,6 +53,7 @@ public class BeanGestionExpedientes {
     private List<DetalleExpedientes> listDetalleExpedientes = new ArrayList<>();
     private GestionExpedientesBO gestionExpedientesBO;
     private LoginBO loginBO;
+   
 
     @PostConstruct
     public void init() {
@@ -94,18 +99,50 @@ public class BeanGestionExpedientes {
             if (listArchivoDetExpedientes.size() > 0) {
                 setPnlSubcarpetas(false);
                 setPnlArchivo(true);
+                
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
+    
+    
+     public void mostrarPdf(String data1) {
+        try {
+           
+           
+            File ficheroXLS = new File(data1);
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            FileInputStream fis = new FileInputStream(ficheroXLS);
+            byte[] bytes = new byte[1000];
+            int read = 0;
+            if (!ctx.getResponseComplete()) {
+                String fileName = ficheroXLS.getName();
+                String contentType = "application/pdf";
+                HttpServletResponse response
+                        = (HttpServletResponse) ctx.getExternalContext().getResponse();
+                response.setContentType(contentType);
+                response.setHeader("Content-Disposition",
+                        "attachment;filename=\"" + fileName + "\"");
+                ServletOutputStream out = response.getOutputStream();
+                while ((read = fis.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                out.flush();
+                out.close();
+                ctx.responseComplete();
+            }
 
-    public StreamedContent visualizarPDF() throws FileNotFoundException {
-        File file = new File("C:\\Users\\EMADRID\\Documents\\1-1143463269\\deuda1\\test.pdf");
-        FileInputStream archivo = new FileInputStream(file);
-        return new DefaultStreamedContent(archivo, "application/pdf");
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
     }
+    
+
+
 
     /**
      * @return the gestionExpedientesBO

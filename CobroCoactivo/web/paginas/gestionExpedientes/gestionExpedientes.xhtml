@@ -6,7 +6,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
@@ -30,7 +31,7 @@
                                     <h3 class="box-title">Busquedas</h3>
                                 </div>
                                 <div class="box-body">
-                                    <p:media value="#{gestionExpedientesBean.visualizarPDF()}" width="500px" height="500px" player="pdf"></p:media>
+                                   
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="nav-tabs-custom" >
@@ -142,10 +143,20 @@
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <h:commandLink class="fa fa-eye col-sm-2">
-                                                                    <f:ajax event="click"/>
+                                                                <a jsf:id="pdf" jsf:actionListener="#{visorPdfBean.ruta(listaArchivoDetExpedientes.ubicacion)}"  href="#{request.contextPath}/faces/paginas/gestionExpedientes/" target="blank"> 
+                                                                </a>
+                                                                
+                                                                <h:commandLink class="fa fa-eye col-sm-2" actionListener="#{gestionExpedientesBean.mostrarPdf(listaArchivoDetExpedientes.ubicacion)}" immediate="true">
+                                                                  
                                                                 </h:commandLink>
+
+                                                              <!--  <h:outputLink value="pdf.xhtml" target="_blank" class="fa fa-eye col-sm-2">
+
+                                                                    <f:param name="para1" value="#//{listaArchivoDetExpedientes.ubicacion}"></f:param> 
+                                                                </h:outputLink>  -->
+
                                                             </td>
+
                                                         </tr>
 
                                                     </c:forEach>

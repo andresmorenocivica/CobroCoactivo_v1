@@ -168,7 +168,7 @@ public class BeanLogin implements Serializable {
         return "";
     }
     
-    public String numeroDeudas() throws JSONException {
+    public Long numeroDeudas() throws JSONException {
         client = ClientBuilder.newClient();
 
         WebTarget baTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/cartera/numero");
@@ -176,12 +176,12 @@ public class BeanLogin implements Serializable {
             String data = baTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONObject jSONObject = new JSONObject(data);
             if (!jSONObject.isNull("numero")) {
-                return jSONObject.getString("numero");
+                return jSONObject.getLong("numero");
             }
 
         }
 
-        return "";
+        return null;
 
     }
 
