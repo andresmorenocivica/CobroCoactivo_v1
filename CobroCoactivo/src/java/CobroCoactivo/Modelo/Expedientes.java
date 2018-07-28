@@ -8,6 +8,7 @@ import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoExpedientes;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class Expedientes implements java.io.Serializable {
     public Expedientes() {
     }
 
-    public String crearExpediente(CivPersonas civPersonas,ITExpedientes expedienteDAO) throws Exception{
+    public String crearExpediente(CivPersonas civPersonas,ITExpedientes expedienteDAO, CivDeudas civDeudas) throws Exception{
         String nombreExpedientePersona = civPersonas.getCivTipoDocumentos().getTipdocId().intValue() + "-" + civPersonas.getPerDocumento();
         String folderExpedientePersona = "D:/Archivo/Expedientes/" + nombreExpedientePersona;
         File foldersPersona = new File(folderExpedientePersona);
@@ -39,6 +40,13 @@ public class Expedientes implements java.io.Serializable {
             civExpedientes.setExpFechaproceso(new Date());
             civExpedientes.setExpReferencia(nombreExpedientePersona);
             civExpedientes.setExpUbicacion(folderExpedientePersona);
+            civExpedientes.setCivDeudas(civDeudas);
+            CivEstadoExpedientes civEstadoExpedientes = new CivEstadoExpedientes();
+            civEstadoExpedientes.setEstexpId(BigDecimal.ONE);
+            civExpedientes.setCivEstadoExpedientes(civEstadoExpedientes);
+            CivTipoExpedientes civTipoExpedientes = new CivTipoExpedientes();
+            civTipoExpedientes.setTipexpId(BigDecimal.ONE);
+            civExpedientes.setCivTipoExpedientes(civTipoExpedientes);
             expedienteDAO.create(civExpedientes);
         }
         return folderExpedientePersona;

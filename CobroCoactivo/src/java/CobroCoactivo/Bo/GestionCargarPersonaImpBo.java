@@ -133,6 +133,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
     public void sincronizarDeuda(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception {
         int count = 0;
         int tipo = beanGestionCargarPersonas.getPersonas().getTipoDocumentos().getId();
+        CivDeudas civDeudas = new CivDeudas();
         String documento = beanGestionCargarPersonas.getPersonas().getDocumento();
         CivPersonas civPersonas = getItPersonas().consultarPersonasByDocumento(tipo, documento);
         if (civPersonas != null) {
@@ -140,7 +141,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                 if (listDeudas == null) {
                     count++;
-                    CivDeudas civDeudas = new CivDeudas();
+                    civDeudas = new CivDeudas();
                     CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
                     civTipoDeudas.setTipdeuId(new BigDecimal(2));
                     civDeudas.setCivTipoDeudas(civTipoDeudas);
@@ -196,10 +197,10 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
             civPersonas.setPerFechaproceso(new Date());
             getItPersonas().create(civPersonas);
             Expedientes expedientes = new Expedientes();
-            expedientes.crearExpediente(civPersonas,getExpedienteDAO());
+            expedientes.crearExpediente(civPersonas, getExpedienteDAO(),civDeudas);
 
             for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
-                CivDeudas civDeudas = new CivDeudas();
+                civDeudas = new CivDeudas();
                 CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
                 civTipoDeudas.setTipdeuId(new BigDecimal(2));
                 civDeudas.setCivTipoDeudas(civTipoDeudas);
