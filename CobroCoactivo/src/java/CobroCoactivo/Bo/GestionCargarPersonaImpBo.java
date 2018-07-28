@@ -7,14 +7,17 @@ package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionCargarPersonas;
 import CobroCoactivo.Dao.DaoDeudas;
+import CobroCoactivo.Dao.DaoExpedientes;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoTipoDocumento;
 import CobroCoactivo.Dao.ITDeudas;
+import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Modelo.Deudas;
+import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDeudas;
 import CobroCoactivo.Modelo.TipoDocumentos;
@@ -25,6 +28,7 @@ import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,13 +52,14 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
     private ITDeudas itDeudas;
     private ITPlanTrabajo itPlanTrabajo;
     private ITTipoDocumento itTipoDocumento;
+    private ITExpedientes expedienteDAO;
 
     public GestionCargarPersonaImpBo() {
         itPersonas = new DaoPersonas();
         itDeudas = new DaoDeudas();
         itPlanTrabajo = new DaoPlanTrabajo();
         itTipoDocumento = new DaoTipoDocumento();
-
+        expedienteDAO = new DaoExpedientes();
     }
 
     @Override
@@ -190,6 +195,9 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
 
             civPersonas.setPerFechaproceso(new Date());
             getItPersonas().create(civPersonas);
+            Expedientes expedientes = new Expedientes();
+            expedientes.crearExpediente(civPersonas,getExpedienteDAO());
+
             for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                 CivDeudas civDeudas = new CivDeudas();
                 CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
@@ -274,6 +282,20 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
      */
     public void setItTipoDocumento(ITTipoDocumento itTipoDocumento) {
         this.itTipoDocumento = itTipoDocumento;
+    }
+
+    /**
+     * @return the expedienteDAO
+     */
+    public ITExpedientes getExpedienteDAO() {
+        return expedienteDAO;
+    }
+
+    /**
+     * @param expedienteDAO the expedienteDAO to set
+     */
+    public void setExpedienteDAO(ITExpedientes expedienteDAO) {
+        this.expedienteDAO = expedienteDAO;
     }
 
 }

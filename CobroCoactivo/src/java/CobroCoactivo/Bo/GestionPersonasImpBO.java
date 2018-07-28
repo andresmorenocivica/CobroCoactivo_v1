@@ -7,6 +7,7 @@ import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.EstadoTipoDatosPersonas;
+import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDatosPersonas;
@@ -21,6 +22,7 @@ import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +48,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     private ITTipoDatosPersonas tipoDatosPersonasDAO;
     private ITEstadoTipoDatosPersonas estadoTipoDatosPersonasDAO;
     private ITEstadoDatosPersonas estadoDatosPersonasDAO;
+    private ITExpedientes expedienteDAO;
 
     public GestionPersonasImpBO() {
         deudasDAO = new DaoDeudas();
@@ -59,6 +62,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         tipoDatosPersonasDAO = new DaoTipoDatosPersonas();
         estadoTipoDatosPersonasDAO = new DaoEstadoTipoDatosPersonas();
         estadoDatosPersonasDAO = new DaoEstadoDatosPersonas();
+        expedienteDAO = new DaoExpedientes();
     }
 
     @Override
@@ -210,6 +214,9 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civPersonas.setPerFechaproceso(new Date());
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
         getPersonasDAO().create(civPersonas);
+        Expedientes expedientes = new Expedientes();
+        String nombreExpedientePersona = expedientes.crearExpediente(civPersonas,expedienteDAO);
+
         int registro = -1;
         for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {
             registro++;
@@ -395,6 +402,20 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
      */
     public void setEstadoDatosPersonasDAO(ITEstadoDatosPersonas estadoDatosPersonasDAO) {
         this.estadoDatosPersonasDAO = estadoDatosPersonasDAO;
+    }
+
+    /**
+     * @return the expedienteDAO
+     */
+    public ITExpedientes getExpedienteDAO() {
+        return expedienteDAO;
+    }
+
+    /**
+     * @param expedienteDAO the expedienteDAO to set
+     */
+    public void setExpedienteDAO(ITExpedientes expedienteDAO) {
+        this.expedienteDAO = expedienteDAO;
     }
 
 }

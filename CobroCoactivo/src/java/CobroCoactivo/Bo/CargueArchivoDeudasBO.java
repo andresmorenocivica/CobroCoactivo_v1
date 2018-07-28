@@ -17,6 +17,4 @@ import java.math.BigDecimal;
  */
 public interface CargueArchivoDeudasBO {
     void procesarCargueArchivoDeudas(BeanCargueArchivoDeudas beanCargueArchivoDeudas)throws Exception;
-    
-    boolean cargarDatosDeudas(Personas personas, String valor,String referencia, String motivo,String fecha,CivPlanTrabajos civPlanTrabajos,BigDecimal concepto) throws Exception;
 }

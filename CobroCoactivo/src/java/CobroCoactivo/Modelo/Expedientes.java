@@ -1,10 +1,13 @@
 package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
+import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoExpedientes;
 import CobroCoactivo.Persistencia.CivExpedientes;
+import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoExpedientes;
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +27,21 @@ public class Expedientes implements java.io.Serializable {
     private Set detalleExpedienteses = new HashSet(0);
 
     public Expedientes() {
+    }
+
+    public String crearExpediente(CivPersonas civPersonas,ITExpedientes expedienteDAO) throws Exception{
+        String nombreExpedientePersona = civPersonas.getCivTipoDocumentos().getTipdocId().intValue() + "-" + civPersonas.getPerDocumento();
+        String folderExpedientePersona = "D:/Archivo/Expedientes/" + nombreExpedientePersona;
+        File foldersPersona = new File(folderExpedientePersona);
+        if (!foldersPersona.exists()) {
+            foldersPersona.mkdirs();
+            CivExpedientes civExpedientes = new CivExpedientes();
+            civExpedientes.setExpFechaproceso(new Date());
+            civExpedientes.setExpReferencia(nombreExpedientePersona);
+            civExpedientes.setExpUbicacion(folderExpedientePersona);
+            expedienteDAO.create(civExpedientes);
+        }
+        return folderExpedientePersona;
     }
 
     public Expedientes(CivExpedientes civExpedientes) {

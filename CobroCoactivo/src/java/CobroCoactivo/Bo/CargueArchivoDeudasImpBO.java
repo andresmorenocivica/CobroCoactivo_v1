@@ -16,6 +16,7 @@ import CobroCoactivo.Dao.DaoEstadoDetalleDeudas;
 import CobroCoactivo.Dao.DaoEstadoDeudas;
 import CobroCoactivo.Dao.DaoEstadoPersonas;
 import CobroCoactivo.Dao.DaoEstructuraPlanos;
+import CobroCoactivo.Dao.DaoExpedientes;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoTipoDeudas;
@@ -31,6 +32,7 @@ import CobroCoactivo.Dao.ITEstadoDetalleDeudas;
 import CobroCoactivo.Dao.ITEstadoDeudas;
 import CobroCoactivo.Dao.ITEstadoPersonas;
 import CobroCoactivo.Dao.ITEstructuraPlanos;
+import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDeudas;
@@ -39,6 +41,7 @@ import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.CargueDeudasComparendo;
 import CobroCoactivo.Modelo.CargueDeudasImpuesto;
 import CobroCoactivo.Modelo.Deudas;
+import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivArchivosPlanos;
@@ -84,6 +87,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     private ITEstadoDetalleDeudas estadoDetalleDeudasDAO;
     private ITDetalleDeudas detalleDeudasDAO;
     private ITDeudaComparendo deudaComparendoDAO;
+    private ITExpedientes expedientesDAO;
 
     public CargueArchivoDeudasImpBO() {
         archivosPlanosDAO = new DaoArchivosPlanos();
@@ -101,6 +105,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         detalleDeudasDAO = new DaoDetalleDeudas();
         conceptosDAO = new DaoConceptos();
         deudaComparendoDAO = new DaoDeudasComparendo();
+        expedientesDAO = new DaoExpedientes();
     }
 
     @Override
@@ -205,8 +210,8 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
 
     }
 
-    @Override
-    public boolean cargarDatosDeudas(Personas personas, String valor,String referencia, String motivo,String fecha,CivPlanTrabajos civPlanTrabajos,BigDecimal concepto) throws Exception {
+    public boolean cargarDatosDeudas(Personas personas, String valor, String referencia, String motivo, String fecha, CivPlanTrabajos civPlanTrabajos, BigDecimal concepto, int tipoDeuda) throws Exception {
+        String nombreExpedientePersona = "";
         CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
         if (civPersonas == null) {
             civPersonas = new CivPersonas();
@@ -214,9 +219,9 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             civPersonas.setPerNombre2(personas.getNombre2());
             civPersonas.setPerApellido1(personas.getApellido1());
             civPersonas.setPerApellido2(personas.getApellido1());
-           
+
             if (personas != null) {
-                 CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(new BigDecimal(personas.getTipoDocumentos().getCodigo()));
+                CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(new BigDecimal(personas.getTipoDocumentos().getCodigo()));
                 civPersonas.setCivTipoDocumentos(civTipoDocumentos);
                 civPersonas.setPerDocumento(personas.getDocumento());
                 civPersonas.setPerSexo(personas.getSexo());
@@ -225,10 +230,12 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                 getPersonaDAO().create(civPersonas);
             }
         }
-
+        Expedientes expedientes = new Expedientes();
+        nombreExpedientePersona = expedientes.crearExpediente(civPersonas,getExpedientesDAO());
         CivDeudas civDeudas = new CivDeudas();
         civDeudas.setDeuRefencia(referencia);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatterVigencia = new SimpleDateFormat("yyyy");
         civDeudas.setDeuFechadeuda(formatter.parse(fecha));
         civDeudas.setDeuFechaproceso(new Date());
         civDeudas.setDeuMotivo(motivo);
@@ -237,9 +244,18 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(BigDecimal.ONE));
         civDeudas.setCivPersonas(civPersonas);
         civDeudas.setCivPlanTrabajos(civPlanTrabajos);
-        civDeudas.setCivTipoDeudas(getTipoDeudasDAO().find(BigDecimal.ONE));
+        civDeudas.setCivTipoDeudas(getTipoDeudasDAO().find(new BigDecimal(tipoDeuda)));
         getDeudasDAO().create(civDeudas);
-
+        String folderExpedienteDeuda = "";
+        if (tipoDeuda == 1) {
+            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia + "-" +formatterVigencia.format(civDeudas.getDeuFechadeuda());
+        } else if (tipoDeuda == 2) {
+            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia;
+        }
+        File foldersDeuda = new File(folderExpedienteDeuda);
+        if (!foldersDeuda.exists()) {
+            foldersDeuda.mkdirs();
+        }
         CivDetalleDeudas civDetalleDeudas = new CivDetalleDeudas();
         civDetalleDeudas.setCivDeudas(civDeudas);
         civDetalleDeudas.setCivConceptos(getConceptosDAO().find(concepto));
@@ -292,11 +308,11 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasImpuesto.getTipoDocumento()));
             persona.setTipoDocumentos(tipoDocumento);
             persona.setSexo(cargueDeudasImpuesto.getSexo());
-            sw=  cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos,new BigDecimal(1));
+            sw = cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos, new BigDecimal(1), 1);
         }
         return sw;
     }
-    
+
     private boolean guardarCarqueComparendo(List<CargueDeudasComparendo> listacargueDeudasComparendos, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
         boolean sw = false;
         for (CargueDeudasComparendo cargueDeudasComparendo : listacargueDeudasComparendos) {
@@ -338,7 +354,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasComparendo.getTipoDocumento()));
             persona.setTipoDocumentos(tipoDocumento);
             persona.setSexo(cargueDeudasComparendo.getSexo());
-            sw = cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos,new BigDecimal(2));
+            sw = cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos, new BigDecimal(2), 2);
         }
         return sw;
     }
@@ -551,6 +567,20 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
      */
     public void setDeudaComparendoDAO(ITDeudaComparendo deudaComparendoDAO) {
         this.deudaComparendoDAO = deudaComparendoDAO;
+    }
+
+    /**
+     * @return the expedientesDAO
+     */
+    public ITExpedientes getExpedientesDAO() {
+        return expedientesDAO;
+    }
+
+    /**
+     * @param expedientesDAO the expedientesDAO to set
+     */
+    public void setExpedientesDAO(ITExpedientes expedientesDAO) {
+        this.expedientesDAO = expedientesDAO;
     }
 
 }
