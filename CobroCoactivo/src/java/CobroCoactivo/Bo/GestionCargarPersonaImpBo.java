@@ -197,7 +197,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
             civPersonas.setPerFechaproceso(new Date());
             getItPersonas().create(civPersonas);
             Expedientes expedientes = new Expedientes();
-            expedientes.crearExpediente(civPersonas, getExpedienteDAO(),civDeudas);
+            expedientes.crearExpediente(civPersonas, getExpedienteDAO());
 
             for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                 civDeudas = new CivDeudas();

@@ -47,7 +47,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         bean.setListExpedientes(new ArrayList<>());
         CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientes(bean.getReferenciaExpediente());
         if (civExpedientes != null) {
-            Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes(), civExpedientes.getCivDeudas());
+            Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes());
             bean.getListExpedientes().add(expedientes);
             /*String sDirectorio = expedientes.getUbicacion();
             String files;

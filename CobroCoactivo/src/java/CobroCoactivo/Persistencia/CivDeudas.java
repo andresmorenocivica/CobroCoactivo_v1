@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 27/07/2018 01:43:20 PM by Hibernate Tools 4.3.1
+// Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -25,10 +25,12 @@ public class CivDeudas  implements java.io.Serializable {
      private Date deuFechaproceso;
      private String deuRefencia;
      private String deuMotivo;
+     private BigDecimal deuRefUnica;
      private Set civDetalleIngresoDeudases = new HashSet(0);
      private Set civDetalleDeudases = new HashSet(0);
+     private Set civDetallePagoses = new HashSet(0);
      private Set civMovimientoses = new HashSet(0);
-     private Set civExpedienteses = new HashSet(0);
+     private Set civDetalleExpedienteses = new HashSet(0);
 
     public CivDeudas() {
     }
@@ -40,7 +42,7 @@ public class CivDeudas  implements java.io.Serializable {
         this.civPersonas = civPersonas;
         this.civEstadoDeudas = civEstadoDeudas;
     }
-    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, String deuMotivo, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civMovimientoses, Set civExpedienteses) {
+    public CivDeudas(BigDecimal deuId, CivTipoDeudas civTipoDeudas, CivPlanTrabajos civPlanTrabajos, CivPersonas civPersonas, CivEstadoDeudas civEstadoDeudas, CivCobroDeudas civCobroDeudas, Date deuFechadeuda, BigDecimal deuValor, BigDecimal deuSaldo, Date deuFechaproceso, String deuRefencia, String deuMotivo, BigDecimal deuRefUnica, Set civDetalleIngresoDeudases, Set civDetalleDeudases, Set civDetallePagoses, Set civMovimientoses, Set civDetalleExpedienteses) {
        this.deuId = deuId;
        this.civTipoDeudas = civTipoDeudas;
        this.civPlanTrabajos = civPlanTrabajos;
@@ -53,10 +55,12 @@ public class CivDeudas  implements java.io.Serializable {
        this.deuFechaproceso = deuFechaproceso;
        this.deuRefencia = deuRefencia;
        this.deuMotivo = deuMotivo;
+       this.deuRefUnica = deuRefUnica;
        this.civDetalleIngresoDeudases = civDetalleIngresoDeudases;
        this.civDetalleDeudases = civDetalleDeudases;
+       this.civDetallePagoses = civDetallePagoses;
        this.civMovimientoses = civMovimientoses;
-       this.civExpedienteses = civExpedienteses;
+       this.civDetalleExpedienteses = civDetalleExpedienteses;
     }
    
     public BigDecimal getDeuId() {
@@ -143,6 +147,13 @@ public class CivDeudas  implements java.io.Serializable {
     public void setDeuMotivo(String deuMotivo) {
         this.deuMotivo = deuMotivo;
     }
+    public BigDecimal getDeuRefUnica() {
+        return this.deuRefUnica;
+    }
+    
+    public void setDeuRefUnica(BigDecimal deuRefUnica) {
+        this.deuRefUnica = deuRefUnica;
+    }
     public Set getCivDetalleIngresoDeudases() {
         return this.civDetalleIngresoDeudases;
     }
@@ -157,6 +168,13 @@ public class CivDeudas  implements java.io.Serializable {
     public void setCivDetalleDeudases(Set civDetalleDeudases) {
         this.civDetalleDeudases = civDetalleDeudases;
     }
+    public Set getCivDetallePagoses() {
+        return this.civDetallePagoses;
+    }
+    
+    public void setCivDetallePagoses(Set civDetallePagoses) {
+        this.civDetallePagoses = civDetallePagoses;
+    }
     public Set getCivMovimientoses() {
         return this.civMovimientoses;
     }
@@ -164,12 +182,12 @@ public class CivDeudas  implements java.io.Serializable {
     public void setCivMovimientoses(Set civMovimientoses) {
         this.civMovimientoses = civMovimientoses;
     }
-    public Set getCivExpedienteses() {
-        return this.civExpedienteses;
+    public Set getCivDetalleExpedienteses() {
+        return this.civDetalleExpedienteses;
     }
     
-    public void setCivExpedienteses(Set civExpedienteses) {
-        this.civExpedienteses = civExpedienteses;
+    public void setCivDetalleExpedienteses(Set civDetalleExpedienteses) {
+        this.civDetalleExpedienteses = civDetalleExpedienteses;
     }
 
 

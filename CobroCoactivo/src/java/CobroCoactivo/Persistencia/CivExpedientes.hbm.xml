@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27/07/2018 01:43:21 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivExpedientes" table="CIV_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="expId" type="big_decimal">
@@ -13,9 +13,6 @@
         </many-to-one>
         <many-to-one name="civEstadoExpedientes" class="CobroCoactivo.Persistencia.CivEstadoExpedientes" fetch="select">
             <column name="EXP_ESTEXP_FK" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
-            <column name="EXP_DEUDA_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="expReferencia" type="string">
             <column name="EXP_REFERENCIA" length="100" not-null="true" />

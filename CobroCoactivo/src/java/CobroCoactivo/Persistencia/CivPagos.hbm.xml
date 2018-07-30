@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivPagos" table="CIV_PAGOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="pagId" type="big_decimal">
+            <column name="PAG_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
+            <column name="PAG_USU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoPagos" class="CobroCoactivo.Persistencia.CivEstadoPagos" fetch="select">
+            <column name="PAG_EST_PAG_FK" precision="22" scale="0" />
+        </many-to-one>
+        <property name="pagNumero" type="string">
+            <column name="PAG_NUMERO" length="200" />
+        </property>
+        <property name="pagValor" type="big_decimal">
+            <column name="PAG_VALOR" precision="22" scale="0" />
+        </property>
+        <property name="pagFecha" type="date">
+            <column name="PAG_FECHA" length="7" />
+        </property>
+        <property name="pagBanco" type="string">
+            <column name="PAG_BANCO" length="20" />
+        </property>
+        <property name="pagOservacion" type="string">
+            <column name="PAG_OSERVACION" length="20" />
+        </property>
+        <set name="civDetallePagoses" table="CIV_DETALLE_PAGOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETPAG_PAGOS_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetallePagos" />
+        </set>
+    </class>
+</hibernate-mapping>

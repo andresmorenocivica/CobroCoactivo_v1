@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 27/07/2018 01:43:20 PM by Hibernate Tools 4.3.1
+// Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -21,6 +21,7 @@ public class CivUsuarios  implements java.io.Serializable {
      private Date usuFechaproceso;
      private Set civConfUsuRecs = new HashSet(0);
      private Set civAttemptses = new HashSet(0);
+     private Set civPagoses = new HashSet(0);
      private Set civUspHistorias = new HashSet(0);
      private Set logEventoses = new HashSet(0);
      private Set civMovimientoses = new HashSet(0);
@@ -37,7 +38,7 @@ public class CivUsuarios  implements java.io.Serializable {
         this.usuNombre = usuNombre;
         this.usuPass = usuPass;
     }
-    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses) {
+    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civPagoses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses) {
        this.usuId = usuId;
        this.civPersonas = civPersonas;
        this.civEstadoUsuarios = civEstadoUsuarios;
@@ -46,6 +47,7 @@ public class CivUsuarios  implements java.io.Serializable {
        this.usuFechaproceso = usuFechaproceso;
        this.civConfUsuRecs = civConfUsuRecs;
        this.civAttemptses = civAttemptses;
+       this.civPagoses = civPagoses;
        this.civUspHistorias = civUspHistorias;
        this.logEventoses = logEventoses;
        this.civMovimientoses = civMovimientoses;
@@ -107,6 +109,13 @@ public class CivUsuarios  implements java.io.Serializable {
     
     public void setCivAttemptses(Set civAttemptses) {
         this.civAttemptses = civAttemptses;
+    }
+    public Set getCivPagoses() {
+        return this.civPagoses;
+    }
+    
+    public void setCivPagoses(Set civPagoses) {
+        this.civPagoses = civPagoses;
     }
     public Set getCivUspHistorias() {
         return this.civUspHistorias;

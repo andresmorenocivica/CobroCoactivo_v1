@@ -215,7 +215,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         civPersonas.setCivEstadoPersonas(civEstadoPersonas);
         getPersonasDAO().create(civPersonas);
         Expedientes expedientes = new Expedientes();
-        String nombreExpedientePersona = expedientes.crearExpediente(civPersonas,expedienteDAO);
+        String nombreExpedientePersona = expedientes.crearExpediente(civPersonas, expedienteDAO);
 
         int registro = -1;
         for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {

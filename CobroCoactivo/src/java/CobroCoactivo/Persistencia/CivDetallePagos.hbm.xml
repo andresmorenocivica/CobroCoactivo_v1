@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDetallePagos" table="CIV_DETALLE_PAGOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="detpagId" type="big_decimal">
+            <column name="DETPAG_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civPagos" class="CobroCoactivo.Persistencia.CivPagos" fetch="select">
+            <column name="DETPAG_PAGOS_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoDetallePago" class="CobroCoactivo.Persistencia.CivEstadoDetallePago" fetch="select">
+            <column name="DETPAG_ESTDETPAGO_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
+            <column name="DETPAG_DEU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="detpagValor" type="big_decimal">
+            <column name="DETPAG_VALOR" precision="22" scale="0" />
+        </property>
+        <property name="detpagFechaproceso" type="date">
+            <column name="DETPAG_FECHAPROCESO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

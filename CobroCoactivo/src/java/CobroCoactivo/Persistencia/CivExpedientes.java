@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 27/07/2018 01:43:20 PM by Hibernate Tools 4.3.1
+// Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -16,7 +16,6 @@ public class CivExpedientes  implements java.io.Serializable {
      private BigDecimal expId;
      private CivTipoExpedientes civTipoExpedientes;
      private CivEstadoExpedientes civEstadoExpedientes;
-     private CivDeudas civDeudas;
      private String expReferencia;
      private Date expFechaproceso;
      private String expUbicacion;
@@ -26,18 +25,16 @@ public class CivExpedientes  implements java.io.Serializable {
     }
 
 	
-    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expReferencia) {
+    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, String expReferencia) {
         this.expId = expId;
         this.civTipoExpedientes = civTipoExpedientes;
         this.civEstadoExpedientes = civEstadoExpedientes;
-        this.civDeudas = civDeudas;
         this.expReferencia = expReferencia;
     }
-    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas, String expReferencia, Date expFechaproceso, String expUbicacion, Set civDetalleExpedienteses) {
+    public CivExpedientes(BigDecimal expId, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, String expReferencia, Date expFechaproceso, String expUbicacion, Set civDetalleExpedienteses) {
        this.expId = expId;
        this.civTipoExpedientes = civTipoExpedientes;
        this.civEstadoExpedientes = civEstadoExpedientes;
-       this.civDeudas = civDeudas;
        this.expReferencia = expReferencia;
        this.expFechaproceso = expFechaproceso;
        this.expUbicacion = expUbicacion;
@@ -64,13 +61,6 @@ public class CivExpedientes  implements java.io.Serializable {
     
     public void setCivEstadoExpedientes(CivEstadoExpedientes civEstadoExpedientes) {
         this.civEstadoExpedientes = civEstadoExpedientes;
-    }
-    public CivDeudas getCivDeudas() {
-        return this.civDeudas;
-    }
-    
-    public void setCivDeudas(CivDeudas civDeudas) {
-        this.civDeudas = civDeudas;
     }
     public String getExpReferencia() {
         return this.expReferencia;

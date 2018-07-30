@@ -30,7 +30,7 @@ public class Expedientes implements java.io.Serializable {
     public Expedientes() {
     }
 
-    public String crearExpediente(CivPersonas civPersonas,ITExpedientes expedienteDAO, CivDeudas civDeudas) throws Exception{
+    public String crearExpediente(CivPersonas civPersonas, ITExpedientes expedienteDAO) throws Exception {
         String nombreExpedientePersona = civPersonas.getCivTipoDocumentos().getTipdocId().intValue() + "-" + civPersonas.getPerDocumento();
         String folderExpedientePersona = "D:/Archivo/Expedientes/" + nombreExpedientePersona;
         File foldersPersona = new File(folderExpedientePersona);
@@ -40,7 +40,6 @@ public class Expedientes implements java.io.Serializable {
             civExpedientes.setExpFechaproceso(new Date());
             civExpedientes.setExpReferencia(nombreExpedientePersona);
             civExpedientes.setExpUbicacion(folderExpedientePersona);
-            civExpedientes.setCivDeudas(civDeudas);
             CivEstadoExpedientes civEstadoExpedientes = new CivEstadoExpedientes();
             civEstadoExpedientes.setEstexpId(BigDecimal.ONE);
             civExpedientes.setCivEstadoExpedientes(civEstadoExpedientes);
@@ -74,16 +73,6 @@ public class Expedientes implements java.io.Serializable {
         this.Ubicacion = civExpedientes.getExpUbicacion();
         this.tipoExpedientes = new TipoExpedientes(civTipoExpedientes);
         this.estadoExpedientes = new EstadoExpedientes(civEstadoExpedientes);
-    }
-
-    public Expedientes(CivExpedientes civExpedientes, CivTipoExpedientes civTipoExpedientes, CivEstadoExpedientes civEstadoExpedientes, CivDeudas civDeudas) {
-        this.Id = civExpedientes.getExpId().intValue();
-        this.Referencia = civExpedientes.getExpReferencia();
-        this.Fechaproceso = civExpedientes.getExpFechaproceso();
-        this.Ubicacion = civExpedientes.getExpUbicacion();
-        this.tipoExpedientes = new TipoExpedientes(civTipoExpedientes);
-        this.estadoExpedientes = new EstadoExpedientes(civEstadoExpedientes);
-        this.deudas = new Deudas(civDeudas);
     }
 
     public TipoExpedientes getTipoExpedientes() {
