@@ -29,4 +29,16 @@ public class DaoExpedientes extends ImpGeneryHibernateDao<CivExpedientes, Intege
         return null;
     }
 
+    @Override
+    public CivExpedientes getCivExpedientesByUri(String ubicacion) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "from CivExpedientes where expUbicacion=:ubicacion";
+        Query query = session.createQuery(hql);
+        query.setParameter("ubicacion", ubicacion);
+        if (query.list().size() > 0) {
+            return (CivExpedientes) query.list().get(0);
+        }
+        return null;
+    }
+
 }

@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 30/07/2018 04:15:16 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDetalleExpedientes" table="CIV_DETALLE_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detexpId" type="big_decimal">
             <column name="DETEXP_ID" precision="22" scale="0" />
             <generator class="increment" />
         </id>
+        <many-to-one name="civTipoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivTipoDetalleExpedientes" fetch="select">
+            <column name="DETEXP_TIPDETEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
         <many-to-one name="civExpedientes" class="CobroCoactivo.Persistencia.CivExpedientes" fetch="select">
             <column name="DETEXP_EXPEDIENTE_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="civEstadoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes" fetch="select">
             <column name="DETEXP_ESTDETEXP_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <many-to-one name="civTipoDetalleExpedientes" class="CobroCoactivo.Persistencia.CivTipoDetalleExpedientes" fetch="select">
-            <column name="DETEXP_TIPDETEXP_FK" precision="22" scale="0" not-null="true" />
+        <many-to-one name="civDeudas" class="CobroCoactivo.Persistencia.CivDeudas" fetch="select">
+            <column name="DETEXP_DEU_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="detexpDescripcion" type="string">
             <column name="DETEXP_DESCRIPCION" length="100" not-null="true" />
@@ -23,5 +26,14 @@
         <property name="detexpFechaproceso" type="date">
             <column name="DETEXP_FECHAPROCESO" length="7" />
         </property>
+        <property name="detexpUbicacion" type="string">
+            <column name="DETEXP_UBICACION" length="1000" />
+        </property>
+        <set name="civArchivoDetExpedienteses" table="CIV_ARCHIVO_DET_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ARCDETEXP_DET_EXP_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes" />
+        </set>
     </class>
 </hibernate-mapping>

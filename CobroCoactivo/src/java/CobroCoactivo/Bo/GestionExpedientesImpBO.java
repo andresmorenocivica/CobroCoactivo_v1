@@ -17,19 +17,21 @@ import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Persistencia.CivArchivoDetExpedientes;
 import CobroCoactivo.Persistencia.CivDetalleExpedientes;
+import CobroCoactivo.Persistencia.CivEstadoArchDetExp;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import java.io.File;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
  * @author emadrid
  */
-
 public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializable {
 
     private ITExpedientes expedientesDAO;
@@ -86,6 +88,21 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes(civArchivoDetExpediente, civArchivoDetExpediente.getCivEstadoArchDetExp(), civArchivoDetExpediente.getCivDetalleExpedientes());
                 bean.getListArchivoDetExpedientes().add(archivoDetExpedientes);
             }
+        }
+    }
+
+    @Override
+    public void guardarArchivo(BeanGestionExpedientes bean) throws Exception {
+        if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+            CivArchivoDetExpedientes archivoDetExpedientes = new CivArchivoDetExpedientes();
+            CivEstadoArchDetExp estadoArchDetExp = new CivEstadoArchDetExp();
+            estadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
+            CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(new BigDecimal(bean.getIdDetExpediente()));
+            archivoDetExpedientes.setArcdetexpFechaproceso(new Date());
+            archivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
+            archivoDetExpedientes.setCivEstadoArchDetExp(estadoArchDetExp);
+         //   archivoDetExpedientes.setArcdetexpUbicacion(arcdetexpUbicacion);
+            archivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
         }
     }
 

@@ -57,12 +57,12 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivTipoDetalleCobro.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoCobroDeuda.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivModulos.hbm.xml"/>
-    <mapping resource="CobroCoactivo/Persistencia/CivTipoConceptos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoDocumentos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoConceptos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivUsuarios.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivPagos.hbm.xml"/>
-    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDeudas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivAbogados.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoDeudas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoArchDetExp.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoModulos.hbm.xml"/>

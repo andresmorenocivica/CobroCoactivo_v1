@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1
+// Generated 30/07/2018 04:15:15 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -20,6 +20,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
      private CivDeudas civDeudas;
      private String detexpDescripcion;
      private Date detexpFechaproceso;
+     private String detexpUbicacion;
      private Set civArchivoDetExpedienteses = new HashSet(0);
 
     public CivDetalleExpedientes() {
@@ -34,7 +35,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
         this.civDeudas = civDeudas;
         this.detexpDescripcion = detexpDescripcion;
     }
-    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivDeudas civDeudas, String detexpDescripcion, Date detexpFechaproceso, Set civArchivoDetExpedienteses) {
+    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivDeudas civDeudas, String detexpDescripcion, Date detexpFechaproceso, String detexpUbicacion, Set civArchivoDetExpedienteses) {
        this.detexpId = detexpId;
        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
        this.civExpedientes = civExpedientes;
@@ -42,6 +43,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
        this.civDeudas = civDeudas;
        this.detexpDescripcion = detexpDescripcion;
        this.detexpFechaproceso = detexpFechaproceso;
+       this.detexpUbicacion = detexpUbicacion;
        this.civArchivoDetExpedienteses = civArchivoDetExpedienteses;
     }
    
@@ -93,6 +95,13 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     
     public void setDetexpFechaproceso(Date detexpFechaproceso) {
         this.detexpFechaproceso = detexpFechaproceso;
+    }
+    public String getDetexpUbicacion() {
+        return this.detexpUbicacion;
+    }
+    
+    public void setDetexpUbicacion(String detexpUbicacion) {
+        this.detexpUbicacion = detexpUbicacion;
     }
     public Set getCivArchivoDetExpedienteses() {
         return this.civArchivoDetExpedienteses;

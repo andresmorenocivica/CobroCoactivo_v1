@@ -6,26 +6,33 @@
 package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionCargarPersonas;
+import CobroCoactivo.Dao.DaoDetalleExpedientes;
 import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoExpedientes;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoTipoDocumento;
+import CobroCoactivo.Dao.ITDetalleExpedientes;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDocumento;
+import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDeudas;
 import CobroCoactivo.Modelo.TipoDocumentos;
+import CobroCoactivo.Persistencia.CivDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
+import CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Persistencia.CivEstadoPersonas;
+import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
+import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.io.File;
@@ -53,6 +60,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
     private ITPlanTrabajo itPlanTrabajo;
     private ITTipoDocumento itTipoDocumento;
     private ITExpedientes expedienteDAO;
+    private ITDetalleExpedientes detalleExpedientesDAO;
 
     public GestionCargarPersonaImpBo() {
         itPersonas = new DaoPersonas();
@@ -60,11 +68,12 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
         itPlanTrabajo = new DaoPlanTrabajo();
         itTipoDocumento = new DaoTipoDocumento();
         expedienteDAO = new DaoExpedientes();
+        detalleExpedientesDAO = new DaoDetalleExpedientes();
     }
 
     @Override
     public void buscarPersona(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception {
-        WebTarget baseTarge = beanGestionCargarPersonas.getClient().target("http://localhost:8080/WebServiceContraversiones/api/cartera");
+        WebTarget baseTarge = beanGestionCargarPersonas.getClient().target("http://10.10.2.204:8080/WebServiceContraversiones/api/cartera");
         if (baseTarge.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarge.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);
@@ -108,7 +117,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
         beanGestionCargarPersonas.setListDeudas(new ArrayList<>());
         String documento = beanGestionCargarPersonas.getPersonas().getDocumento();
         int tipo = beanGestionCargarPersonas.getPersonas().getTipoDocumentos().getId();
-        WebTarget baseTarget = beanGestionCargarPersonas.getClient().target("http://localhost:8080/WebServiceContraversiones/api/cartera/deudas?numero=" + documento + "&&tipo=" + tipo);
+        WebTarget baseTarget = beanGestionCargarPersonas.getClient().target("http://10.10.2.204:8080/WebServiceContraversiones/api/cartera/deudas?numero=" + documento + "&&tipo=" + tipo);
         if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);
@@ -137,6 +146,9 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
         String documento = beanGestionCargarPersonas.getPersonas().getDocumento();
         CivPersonas civPersonas = getItPersonas().consultarPersonasByDocumento(tipo, documento);
         if (civPersonas != null) {
+            Expedientes expedientes = new Expedientes();
+            String nombreExpedientePersona = "";
+            nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
             for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                 List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                 if (listDeudas == null) {
@@ -158,6 +170,27 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                     civPlanTrabajos.setPlatraId(new BigDecimal(2));
                     civDeudas.setCivPlanTrabajos(civPlanTrabajos);
                     getItDeudas().create(civDeudas);
+                    String folderExpedienteDeuda = "";
+                    folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
+                    File foldersDeuda = new File(folderExpedienteDeuda);
+                    if (!foldersDeuda.exists()) {
+                        foldersDeuda.mkdirs();
+                        CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                        civDetalleExpedientes.setDetexpFechaproceso(new Date());
+                        civDetalleExpedientes.setCivDeudas(civDeudas);
+                        civDetalleExpedientes.setDetexpDescripcion(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                        CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+                        civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+                        civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+                        CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+                        civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                        civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+                        CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                        civDetalleExpedientes.setCivExpedientes(civExpedientes);
+                        civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
+                        getDetalleExpedientesDAO().create(civDetalleExpedientes);
+
+                    }
                 }
 
             }
@@ -197,7 +230,8 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
             civPersonas.setPerFechaproceso(new Date());
             getItPersonas().create(civPersonas);
             Expedientes expedientes = new Expedientes();
-            expedientes.crearExpediente(civPersonas, getExpedienteDAO());
+            String nombreExpedientePersona = "";
+            nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
 
             for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                 civDeudas = new CivDeudas();
@@ -217,6 +251,25 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 civPlanTrabajos.setPlatraId(new BigDecimal(2));
                 civDeudas.setCivPlanTrabajos(civPlanTrabajos);
                 getItDeudas().create(civDeudas);
+                String folderExpedienteDeuda = "";
+                folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
+                File foldersDeuda = new File(folderExpedienteDeuda);
+                if (!foldersDeuda.exists()) {
+                    foldersDeuda.mkdirs();
+                    CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                    civDetalleExpedientes.setDetexpFechaproceso(new Date());
+                    civDetalleExpedientes.setCivDeudas(civDeudas);
+                    civDetalleExpedientes.setDetexpDescripcion(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                    CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+                    civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+                    civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+                    CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+                    civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                    civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+                    CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                    civDetalleExpedientes.setCivExpedientes(civExpedientes);
+                    getDetalleExpedientesDAO().create(civDetalleExpedientes);
+                }
             }
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -297,6 +350,20 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
      */
     public void setExpedienteDAO(ITExpedientes expedienteDAO) {
         this.expedienteDAO = expedienteDAO;
+    }
+
+    /**
+     * @return the detalleExpedientesDAO
+     */
+    public ITDetalleExpedientes getDetalleExpedientesDAO() {
+        return detalleExpedientesDAO;
+    }
+
+    /**
+     * @param detalleExpedientesDAO the detalleExpedientesDAO to set
+     */
+    public void setDetalleExpedientesDAO(ITDetalleExpedientes detalleExpedientesDAO) {
+        this.detalleExpedientesDAO = detalleExpedientesDAO;
     }
 
 }

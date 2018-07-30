@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/06/2018 06:29:53 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 30/07/2018 04:15:16 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivFasesTrabajos" table="CIV_FASES_TRABAJOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="fastraId" type="big_decimal">
             <column name="FASTRA_ID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="civEtapasTrabajos" class="CobroCoactivo.Persistencia.CivEtapasTrabajos" fetch="select">
-            <column name="FASTRA_ETATRA_FK" precision="22" scale="0" not-null="true" />
-        </many-to-one>
         <many-to-one name="civReporteTrabajos" class="CobroCoactivo.Persistencia.CivReporteTrabajos" fetch="select">
             <column name="FASTRA_REPTRA_FK" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="civEtapasTrabajos" class="CobroCoactivo.Persistencia.CivEtapasTrabajos" fetch="select">
+            <column name="FASTRA_ETATRA_FK" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="civEstadoFasesTrabajos" class="CobroCoactivo.Persistencia.CivEstadoFasesTrabajos" fetch="select">
             <column name="FASTRA_ESTFASTRA_FK" precision="22" scale="0" not-null="true" />

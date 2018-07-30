@@ -2,6 +2,7 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 import CobroCoactivo.Persistencia.CivDetalleExpedientes;
+import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
@@ -16,7 +17,9 @@ public class DetalleExpedientes implements java.io.Serializable {
     private TipoDetalleExpedientes tipoDetalleExpedientes;
     private Expedientes expedientes;
     private EstadoDetalleExpedientes estadoDetalleExpedientes;
+    private Deudas deudas;
     private String Descripcion;
+    private String ubicacion;
     private Date Fechaproceso;
 
     public DetalleExpedientes() {
@@ -50,6 +53,16 @@ public class DetalleExpedientes implements java.io.Serializable {
         this.expedientes = new Expedientes(civExpedientes);
         this.estadoDetalleExpedientes = new EstadoDetalleExpedientes(civEstadoDetalleExpedientes);
         this.tipoDetalleExpedientes = new TipoDetalleExpedientes(civTipoDetalleExpedientes);
+    }
+
+    public DetalleExpedientes(CivDetalleExpedientes civDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivDeudas civDeudas) {
+        this.Id = civDetalleExpedientes.getDetexpId().intValue();
+        this.Descripcion = civDetalleExpedientes.getDetexpDescripcion();
+        this.Fechaproceso = civDetalleExpedientes.getDetexpFechaproceso();
+        this.expedientes = new Expedientes(civExpedientes);
+        this.estadoDetalleExpedientes = new EstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+        this.tipoDetalleExpedientes = new TipoDetalleExpedientes(civTipoDetalleExpedientes);
+        this.deudas = new Deudas(civDeudas);
     }
 
     public int getDetexpId() {
@@ -98,6 +111,34 @@ public class DetalleExpedientes implements java.io.Serializable {
 
     public void setDetexpFechaproceso(Date Fechaproceso) {
         this.Fechaproceso = Fechaproceso;
+    }
+
+    /**
+     * @return the deudas
+     */
+    public Deudas getDeudas() {
+        return deudas;
+    }
+
+    /**
+     * @param deudas the deudas to set
+     */
+    public void setDeudas(Deudas deudas) {
+        this.deudas = deudas;
+    }
+
+    /**
+     * @return the ubicacion
+     */
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    /**
+     * @param ubicacion the ubicacion to set
+     */
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
 }

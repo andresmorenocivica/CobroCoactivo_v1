@@ -31,7 +31,7 @@
                                     <h3 class="box-title">Busquedas</h3>
                                 </div>
                                 <div class="box-body">
-                                   
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="nav-tabs-custom" >
@@ -106,9 +106,11 @@
                                                                 </span>
                                                             </td>
                                                             <td>
-
                                                                 <h:commandLink class="fa fa-eye col-sm-2">
                                                                     <f:ajax event="click" listener="#{gestionExpedientesBean.buscarArchivo(listaDetalleExpediente.detexpId)}" render="frmExpedientes:pnlSubCarpetas frmExpedientes:pnlArchivo"/>
+                                                                </h:commandLink>
+                                                                <h:commandLink class="fa fa-plus-square col-sm-2" id="btnAdd" onclick="$('#addArchivo').modal('show');">
+                                                                    <f:ajax event="click"></f:ajax>
                                                                 </h:commandLink>
                                                             </td>
                                                         </tr>
@@ -145,15 +147,15 @@
                                                             <td>
                                                                 <a jsf:id="pdf" jsf:actionListener="#{visorPdfBean.ruta(listaArchivoDetExpedientes.ubicacion)}"  href="#{request.contextPath}/faces/paginas/gestionExpedientes/" target="blank"> 
                                                                 </a>
-                                                                
+
                                                                 <h:commandLink class="fa fa-eye col-sm-2" actionListener="#{gestionExpedientesBean.mostrarPdf(listaArchivoDetExpedientes.ubicacion)}" immediate="true">
-                                                                  
+
                                                                 </h:commandLink>
 
-                                                              <!--  <h:outputLink value="pdf.xhtml" target="_blank" class="fa fa-eye col-sm-2">
-
-                                                                    <f:param name="para1" value="#//{listaArchivoDetExpedientes.ubicacion}"></f:param> 
-                                                                </h:outputLink>  -->
+                                                                <!--  <h:outputLink value="pdf.xhtml" target="_blank" class="fa fa-eye col-sm-2">
+  
+                                                                      <f:param name="para1" value="#//{listaArchivoDetExpedientes.ubicacion}"></f:param> 
+                                                                  </h:outputLink>  -->
 
                                                             </td>
 
@@ -167,6 +169,38 @@
 
                                     </h:panelGroup>
                                 </h:panelGrid>
+                            </div>
+                            <div class="modal fade" id="addArchivo" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog ">
+                                    <div class="modal-content" jsf:id="modalContent">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">Agregar archivo</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="col-sm-10" jsf:id="divArchivo" jsf:rendered="#{!PlanGeneralbean.renderDivCambiarArchivo}">
+                                                <div class="form-group">
+                                                    <label> Agregar Archivo</label>
+                                                    <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{gestionExpedientesBean.file}" jsf:required="true" jsf:requiredMessage="Debe seleccionar un archivo"/>
+                                                    <p class="help-block">.pdf</p>
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <h:commandLink value="Guardar" id="btnGuardarFase" class="btn btn-success">
+                                                        <f:ajax event="click" render="formPlanGeneral:contenedor" listener="#{gestionExpedientesBean}" execute="formPlanGeneral:file"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </div>

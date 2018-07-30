@@ -16,4 +16,6 @@ public interface ITExpedientes extends ITGeneryHibernateDao<CivExpedientes, Inte
 
     public CivExpedientes getCivExpedientes(String referencia) throws Exception;
 
+    public CivExpedientes getCivExpedientesByUri(String ubicacion) throws Exception;
+
 }

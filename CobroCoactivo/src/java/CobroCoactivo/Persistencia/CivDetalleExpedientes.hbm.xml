@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 30/07/2018 04:15:16 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDetalleExpedientes" table="CIV_DETALLE_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detexpId" type="big_decimal">
@@ -25,6 +25,9 @@
         </property>
         <property name="detexpFechaproceso" type="date">
             <column name="DETEXP_FECHAPROCESO" length="7" />
+        </property>
+        <property name="detexpUbicacion" type="string">
+            <column name="DETEXP_UBICACION" length="1000" />
         </property>
         <set name="civArchivoDetExpedienteses" table="CIV_ARCHIVO_DET_EXPEDIENTES" inverse="true" lazy="true" fetch="select">
             <key>

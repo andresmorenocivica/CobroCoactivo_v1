@@ -9,6 +9,7 @@ import CobroCoactivo.Beans.BeanCargueArchivoDeudas;
 import CobroCoactivo.Dao.DaoArchivosPlanos;
 import CobroCoactivo.Dao.DaoConceptos;
 import CobroCoactivo.Dao.DaoDetalleDeudas;
+import CobroCoactivo.Dao.DaoDetalleExpedientes;
 import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoDeudasComparendo;
 import CobroCoactivo.Dao.DaoDeudasImpuesto;
@@ -25,6 +26,7 @@ import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITArchivosPlanos;
 import CobroCoactivo.Dao.ITConceptos;
 import CobroCoactivo.Dao.ITDetalleDeudas;
+import CobroCoactivo.Dao.ITDetalleExpedientes;
 import CobroCoactivo.Dao.ITDeudaComparendo;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITDeudasImpuesto;
@@ -46,11 +48,15 @@ import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivArchivosPlanos;
 import CobroCoactivo.Persistencia.CivDetalleDeudas;
+import CobroCoactivo.Persistencia.CivDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivDeudasComparendo;
 import CobroCoactivo.Persistencia.CivDeudasImpuesto;
+import CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes;
+import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
+import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.Utility;
@@ -88,6 +94,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     private ITDetalleDeudas detalleDeudasDAO;
     private ITDeudaComparendo deudaComparendoDAO;
     private ITExpedientes expedientesDAO;
+    private ITDetalleExpedientes detalleExpedientesDAO;
 
     public CargueArchivoDeudasImpBO() {
         archivosPlanosDAO = new DaoArchivosPlanos();
@@ -106,6 +113,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         conceptosDAO = new DaoConceptos();
         deudaComparendoDAO = new DaoDeudasComparendo();
         expedientesDAO = new DaoExpedientes();
+        detalleExpedientesDAO = new DaoDetalleExpedientes();
     }
 
     @Override
@@ -231,7 +239,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             }
         }
         Expedientes expedientes = new Expedientes();
-        nombreExpedientePersona = expedientes.crearExpediente(civPersonas,getExpedientesDAO());
+        nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
         CivDeudas civDeudas = new CivDeudas();
         civDeudas.setDeuRefencia(referencia);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -248,13 +256,26 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         getDeudasDAO().create(civDeudas);
         String folderExpedienteDeuda = "";
         if (tipoDeuda == 1) {
-            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia + "-" +formatterVigencia.format(civDeudas.getDeuFechadeuda());
+            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia + "-" + formatterVigencia.format(civDeudas.getDeuFechadeuda());
         } else if (tipoDeuda == 2) {
             folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia;
         }
         File foldersDeuda = new File(folderExpedienteDeuda);
         if (!foldersDeuda.exists()) {
             foldersDeuda.mkdirs();
+            CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+            civDetalleExpedientes.setDetexpFechaproceso(new Date());
+            civDetalleExpedientes.setCivDeudas(civDeudas);
+            civDetalleExpedientes.setDetexpDescripcion(civDeudas.getDeuRefencia());
+            CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+            civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+            civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+            CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+            civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+            civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+            CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientesByUri(nombreExpedientePersona);
+            civDetalleExpedientes.setCivExpedientes(civExpedientes);
+            getDetalleExpedientesDAO().create(civDetalleExpedientes);
         }
         CivDetalleDeudas civDetalleDeudas = new CivDetalleDeudas();
         civDetalleDeudas.setCivDeudas(civDeudas);
@@ -581,6 +602,20 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
      */
     public void setExpedientesDAO(ITExpedientes expedientesDAO) {
         this.expedientesDAO = expedientesDAO;
+    }
+
+    /**
+     * @return the detalleExpedientesDAO
+     */
+    public ITDetalleExpedientes getDetalleExpedientesDAO() {
+        return detalleExpedientesDAO;
+    }
+
+    /**
+     * @param detalleExpedientesDAO the detalleExpedientesDAO to set
+     */
+    public void setDetalleExpedientesDAO(ITDetalleExpedientes detalleExpedientesDAO) {
+        this.detalleExpedientesDAO = detalleExpedientesDAO;
     }
 
 }

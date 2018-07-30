@@ -30,6 +30,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -51,9 +52,9 @@ public class BeanGestionExpedientes {
     private List<Expedientes> listExpedientes = new ArrayList<>();
     private List<ArchivoDetExpedientes> listArchivoDetExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpedientes = new ArrayList<>();
+    private Part file;
     private GestionExpedientesBO gestionExpedientesBO;
     private LoginBO loginBO;
-   
 
     @PostConstruct
     public void init() {
@@ -99,19 +100,17 @@ public class BeanGestionExpedientes {
             if (listArchivoDetExpedientes.size() > 0) {
                 setPnlSubcarpetas(false);
                 setPnlArchivo(true);
-                
+
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
-    
-    
-     public void mostrarPdf(String data1) {
+
+    public void mostrarPdf(String data1) {
         try {
-           
-           
+
             File ficheroXLS = new File(data1);
             FacesContext ctx = FacesContext.getCurrentInstance();
             FileInputStream fis = new FileInputStream(ficheroXLS);
@@ -140,9 +139,15 @@ public class BeanGestionExpedientes {
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
-    
 
-
+    public void guardarArchivo() {
+        try {
+            getGestionExpedientesBO().guardarArchivo(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
 
     /**
      * @return the gestionExpedientesBO
@@ -296,6 +301,20 @@ public class BeanGestionExpedientes {
      */
     public void setPnlArchivo(boolean pnlArchivo) {
         this.pnlArchivo = pnlArchivo;
+    }
+
+    /**
+     * @return the file
+     */
+    public Part getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(Part file) {
+        this.file = file;
     }
 
 }

@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/07/2018 08:55:07 AM by Hibernate Tools 4.3.1
+// Generated 30/07/2018 04:15:15 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -17,22 +17,23 @@ public class CivEstadoPagos  implements java.io.Serializable {
      private String estpagDescripcion;
      private Date estpagFechainicial;
      private Date estpagFechafinal;
-     private Date column1;
+     private Date estpagFechaproceso;
      private Set civPagoses = new HashSet(0);
 
     public CivEstadoPagos() {
     }
 
 	
-    public CivEstadoPagos(BigDecimal estpagId) {
+    public CivEstadoPagos(BigDecimal estpagId, String estpagDescripcion) {
         this.estpagId = estpagId;
+        this.estpagDescripcion = estpagDescripcion;
     }
-    public CivEstadoPagos(BigDecimal estpagId, String estpagDescripcion, Date estpagFechainicial, Date estpagFechafinal, Date column1, Set civPagoses) {
+    public CivEstadoPagos(BigDecimal estpagId, String estpagDescripcion, Date estpagFechainicial, Date estpagFechafinal, Date estpagFechaproceso, Set civPagoses) {
        this.estpagId = estpagId;
        this.estpagDescripcion = estpagDescripcion;
        this.estpagFechainicial = estpagFechainicial;
        this.estpagFechafinal = estpagFechafinal;
-       this.column1 = column1;
+       this.estpagFechaproceso = estpagFechaproceso;
        this.civPagoses = civPagoses;
     }
    
@@ -64,12 +65,12 @@ public class CivEstadoPagos  implements java.io.Serializable {
     public void setEstpagFechafinal(Date estpagFechafinal) {
         this.estpagFechafinal = estpagFechafinal;
     }
-    public Date getColumn1() {
-        return this.column1;
+    public Date getEstpagFechaproceso() {
+        return this.estpagFechaproceso;
     }
     
-    public void setColumn1(Date column1) {
-        this.column1 = column1;
+    public void setEstpagFechaproceso(Date estpagFechaproceso) {
+        this.estpagFechaproceso = estpagFechaproceso;
     }
     public Set getCivPagoses() {
         return this.civPagoses;
