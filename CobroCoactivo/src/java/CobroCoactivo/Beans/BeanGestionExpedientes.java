@@ -8,31 +8,26 @@ package CobroCoactivo.Beans;
 import CobroCoactivo.Bo.GestionExpedientesBO;
 import CobroCoactivo.Bo.GestionExpedientesImpBO;
 import CobroCoactivo.Bo.LoginBO;
+import CobroCoactivo.Bo.LoginImplBO;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -45,13 +40,17 @@ public class BeanGestionExpedientes {
 
     private int idExpediente;
     private int idDetExpediente;
+    private int tipoBusqueda;
     private boolean pnlCarpeta = false;
     private boolean pnlSubcarpetas = false;
     private boolean pnlArchivo = false;
+    private boolean pnlBtnAddArchivo = false;
+    private boolean pnlExpSelect = false;
     private String referenciaExpediente;
     private List<Expedientes> listExpedientes = new ArrayList<>();
     private List<ArchivoDetExpedientes> listArchivoDetExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpedientes = new ArrayList<>();
+    private List<DetalleExpedientes> listDetalleExpdientesSelect = new ArrayList<>();
     private Part file;
     private GestionExpedientesBO gestionExpedientesBO;
     private LoginBO loginBO;
@@ -60,18 +59,22 @@ public class BeanGestionExpedientes {
     public void init() {
         try {
             setGestionExpedientesBO(new GestionExpedientesImpBO());
+            setLoginBO(new LoginImplBO());
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
 
-    public void buscarExpedientes() {
+    public void buscarExpedientes(int tipobusqueda) {
         try {
+            setTipoBusqueda(tipobusqueda);
             getGestionExpedientesBO().buscarExpediente(this);
             if (listExpedientes.size() > 0) {
                 setPnlArchivo(false);
                 setPnlCarpeta(true);
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro el Expediente, por favor verifique la referencia.", null));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -97,10 +100,12 @@ public class BeanGestionExpedientes {
         try {
             setIdDetExpediente(idDetExpediente);
             getGestionExpedientesBO().buscarArchivo(this);
+            setPnlBtnAddArchivo(true);
             if (listArchivoDetExpedientes.size() > 0) {
                 setPnlSubcarpetas(false);
                 setPnlArchivo(true);
-
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay archivo en esta carpeta, agrege archivo por favor.", null));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -143,6 +148,24 @@ public class BeanGestionExpedientes {
     public void guardarArchivo() {
         try {
             getGestionExpedientesBO().guardarArchivo(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void mostrarExpedienteSelect() {
+        try {
+            getGestionExpedientesBO().mostrarExpedienteSelect(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void enviarSolicitudes() {
+        try {
+            getGestionExpedientesBO().enviarSolicitud(this);
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
@@ -315,6 +338,62 @@ public class BeanGestionExpedientes {
      */
     public void setFile(Part file) {
         this.file = file;
+    }
+
+    /**
+     * @return the pnlBtnAddArchivo
+     */
+    public boolean isPnlBtnAddArchivo() {
+        return pnlBtnAddArchivo;
+    }
+
+    /**
+     * @param pnlBtnAddArchivo the pnlBtnAddArchivo to set
+     */
+    public void setPnlBtnAddArchivo(boolean pnlBtnAddArchivo) {
+        this.pnlBtnAddArchivo = pnlBtnAddArchivo;
+    }
+
+    /**
+     * @return the listDetalleExpdientesSelect
+     */
+    public List<DetalleExpedientes> getListDetalleExpdientesSelect() {
+        return listDetalleExpdientesSelect;
+    }
+
+    /**
+     * @param listDetalleExpdientesSelect the listDetalleExpdientesSelect to set
+     */
+    public void setListDetalleExpdientesSelect(List<DetalleExpedientes> listDetalleExpdientesSelect) {
+        this.listDetalleExpdientesSelect = listDetalleExpdientesSelect;
+    }
+
+    /**
+     * @return the tipoBusqueda
+     */
+    public int getTipoBusqueda() {
+        return tipoBusqueda;
+    }
+
+    /**
+     * @param tipoBusqueda the tipoBusqueda to set
+     */
+    public void setTipoBusqueda(int tipoBusqueda) {
+        this.tipoBusqueda = tipoBusqueda;
+    }
+
+    /**
+     * @return the pnlExpSelect
+     */
+    public boolean isPnlExpSelect() {
+        return pnlExpSelect;
+    }
+
+    /**
+     * @param pnlExpSelect the pnlExpSelect to set
+     */
+    public void setPnlExpSelect(boolean pnlExpSelect) {
+        this.pnlExpSelect = pnlExpSelect;
     }
 
 }

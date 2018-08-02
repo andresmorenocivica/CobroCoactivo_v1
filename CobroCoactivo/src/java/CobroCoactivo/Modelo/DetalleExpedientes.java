@@ -21,6 +21,7 @@ public class DetalleExpedientes implements java.io.Serializable {
     private String Descripcion;
     private String ubicacion;
     private Date Fechaproceso;
+    private boolean selecionado;
 
     public DetalleExpedientes() {
     }
@@ -139,6 +140,20 @@ public class DetalleExpedientes implements java.io.Serializable {
      */
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
     }
 
 }

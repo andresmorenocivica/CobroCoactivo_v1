@@ -265,6 +265,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                     civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
                     CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
                     civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                    civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
                     civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
                     CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
                     civDetalleExpedientes.setCivExpedientes(civExpedientes);

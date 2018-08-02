@@ -2,7 +2,6 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 import CobroCoactivo.Dao.ITExpedientes;
-import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoExpedientes;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
@@ -21,7 +20,6 @@ public class Expedientes implements java.io.Serializable {
     private int Id;
     private TipoExpedientes tipoExpedientes;
     private EstadoExpedientes estadoExpedientes;
-    private Deudas deudas;
     private String Referencia;
     private Date Fechaproceso;
     private String Ubicacion;
@@ -89,14 +87,6 @@ public class Expedientes implements java.io.Serializable {
 
     public void setEstadoExpedientes(EstadoExpedientes estadoExpedientes) {
         this.estadoExpedientes = estadoExpedientes;
-    }
-
-    public Deudas getDeudas() {
-        return this.deudas;
-    }
-
-    public void setDeudas(Deudas deudas) {
-        this.deudas = deudas;
     }
 
     public Set getDetalleExpedienteses() {

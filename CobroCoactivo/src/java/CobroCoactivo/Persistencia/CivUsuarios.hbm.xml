@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/07/2018 04:15:16 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 2/08/2018 01:52:52 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivUsuarios" table="CIV_USUARIOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="usuId" type="big_decimal">
@@ -78,6 +78,12 @@
                 <column name="ARC_USUARIO_FK" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="CobroCoactivo.Persistencia.CivArchivosPlanos" />
+        </set>
+        <set name="civSolicitudeses" table="CIV_SOLICITUDES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SOL_USU_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivSolicitudes" />
         </set>
     </class>
 </hibernate-mapping>

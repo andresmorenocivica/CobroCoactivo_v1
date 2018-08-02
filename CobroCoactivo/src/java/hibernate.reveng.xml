@@ -123,4 +123,8 @@ Contributor(s):
     <table-filter match-name="CIV_PAGOS"/>
     <table-filter match-name="CIV_ESTADO_PAGOS"/>
     <table-filter match-name="CIV_ESTADO_DETALLE_PAGO"/>
+    <table-filter match-name="CIV_ESTADO_DETALLE_SOLICITUDES"/>
+    <table-filter match-name="CIV_ESTADO_SOLICITUDES"/>
+    <table-filter match-name="CIV_SOLICITUDES"/>
+    <table-filter match-name="CIV_DETALLE_SOLICITUDES"/>
 </hibernate-reverse-engineering>

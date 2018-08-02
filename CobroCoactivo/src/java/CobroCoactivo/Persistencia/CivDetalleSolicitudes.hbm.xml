@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/08/2018 01:52:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivDetalleSolicitudes" table="CIV_DETALLE_SOLICITUDES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="detsolId" type="big_decimal">
+            <column name="DETSOL_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civSolicitudes" class="CobroCoactivo.Persistencia.CivSolicitudes" fetch="select">
+            <column name="DETSOL_SOL_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civEstadoDetalleSolicitudes" class="CobroCoactivo.Persistencia.CivEstadoDetalleSolicitudes" fetch="select">
+            <column name="DETSOL_ESTDETSOL_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="detsolDescripcion" type="string">
+            <column name="DETSOL_DESCRIPCION" length="100" />
+        </property>
+        <property name="detsolFechaproceso" type="date">
+            <column name="DETSOL_FECHAPROCESO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

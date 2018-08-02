@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmSolicitudExpedientes">
+                    <div  class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Solicitar Expedientes 
+                                <small>Formulario para solicitar expedientes</small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <p:messages autoUpdate="true" id="mensajeSolicitud" showIcon="false" closable="true" severity="error,warn,info,fatal"></p:messages>
+                            <div class="box box-danger">
+                                <div class="box-header with-border col-lg-6">
+                                    <h3 class="box-title">Busquedas</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="nav-tabs-custom" >
+                                                <ul class="nav nav-tabs" >
+                                                    <li class="active" ><a href="#referencia" data-toggle="tab">Por persona</a></li>
+                                                    <!--<li><a href="#fechaCarge" data-toggle="tab">Fecha Carge</a></li>
+                                                    <li><a href="#fechaDeuda" data-toggle="tab">Fecha Deuda</a></li> -->
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="referencia">
+                                                        <br></br>
+                                                        <div class="row">
+                                                            <div class="col-lg-2"></div>
+                                                            <div class="col-lg-2" style="text-align: right">
+                                                                <label class="control-label"></label>
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <div class="input-group margin-1">
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Digite la referencia del expediente" id="txtReferencia" value="#{gestionExpedientesBean.referenciaExpediente}" required="true" requiredMessage="Digite el nombre del expediente"></h:inputText>
+                                                                    <span class="input-group-btn">
+                                                                        <h:commandLink class="btn btn-danger" value="Buscar">
+                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarExpedientes(1)}" execute="frmSolicitudExpedientes:txtReferencia" render="frmSolicitudExpedientes:pnlCarpeta"/>
+                                                                        </h:commandLink>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h:panelGrid id="pnlCarpeta" class="col-lg-6">
+                                                <h:panelGroup  rendered="#{gestionExpedientesBean.pnlCarpeta}">
+                                                    <c:forEach items="#{gestionExpedientesBean.listExpedientes}" var="listaExpedientes">
+                                                        <h:commandLink>
+                                                            <p:graphicImage url="/recursos/images/folder(1).png"/>
+                                                            #{listaExpedientes.referencia}
+                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.abrirCarpeta(listaExpedientes.id)}" render="frmSolicitudExpedientes:pnlCarpeta frmSolicitudExpedientes:pnlSubCarpetas"/>
+                                                        </h:commandLink>
+                                                    </c:forEach>
+                                                </h:panelGroup>
+                                                <a href="#{listaExpedientes.id}"> #{listaExpedientes.referencia}</a>
+                                            </h:panelGrid>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <h:panelGrid id="pnlSubCarpetas" style="width:99%">
+                                                    <h:panelGroup rendered="#{gestionExpedientesBean.pnlSubcarpetas}">
+                                                        <div class="box box-danger">
+                                                            <div class="box-header with-border col-lg-6">
+                                                                <h3 class="box-title">Expedientes encontrados</h3>
+                                                            </div>
+                                                            <table class="table table-hover table-bordered">
+                                                                <div class="row">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="col-lg-3">Seleccionar</th>
+                                                                            <th class="col-lg-3">Expedientes</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody jsf:id="datos">
+                                                                        <c:forEach items="#{gestionExpedientesBean.listDetalleExpedientes}" var="listaDetalleExpediente">
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <p:selectBooleanCheckbox value="#{listaDetalleExpediente.selecionado}" required="true" requiredMessage="Debe selecionar algun recurso">
+                                                                                        <f:ajax event="change" listener="#{gestionExpedientesBean.mostrarExpedienteSelect()}" execute="frmSolicitudExpedientes:datos" render="frmSolicitudExpedientes:pnlExpedientesSelect"  ></f:ajax>
+                                                                                    </p:selectBooleanCheckbox>
+                                                                                </td>
+                                                                                <td>#{listaDetalleExpediente.detexpDescripcion}</td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </tbody>
+                                                                </div>
+                                                            </table>
+                                                        </div>
+                                                    </h:panelGroup>
+                                                </h:panelGrid>
+                                            </div>
+                                            <h:panelGrid id="pnlExpedientesSelect" class="col-lg-6">
+                                                <h:panelGroup rendered="#{gestionExpedientesBean.pnlExpSelect}" >
+                                                    <div class="box box-danger">
+                                                        <div class="box-header with-border col-lg-6">
+                                                            <h3 class="box-title">Expedientes Selecionados</h3>
+                                                        </div>
+                                                        <table class="table table-hover table-bordered" >
+                                                            <div class="row">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="col-lg-3">Expediente</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody jsf:id="tableBody">
+                                                                    <c:forEach items="#{gestionExpedientesBean.listDetalleExpdientesSelect}" var="select">
+                                                                        <tr>
+                                                                            <td>#{select.detexpDescripcion}</td>
+                                                                        </tr>
+                                                                    </c:forEach>
+                                                                </tbody>
+                                                            </div>
+                                                        </table>
+                                                    </div>
+                                                    <h:commandLink class="btn btn-success" value="Aceptar">
+                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.enviarSolicitudes()}" execute="frmSolicitudExpedientes:tableBody"></f:ajax>
+                                                    </h:commandLink>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

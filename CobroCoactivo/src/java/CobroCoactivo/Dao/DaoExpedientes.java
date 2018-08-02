@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -18,13 +19,13 @@ import org.hibernate.Session;
 public class DaoExpedientes extends ImpGeneryHibernateDao<CivExpedientes, Integer> implements ITExpedientes {
 
     @Override
-    public CivExpedientes getCivExpedientes(String referencia) throws Exception {
+    public List<CivExpedientes> getCivExpedientes(String expPersona) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from CivExpedientes where expReferencia=:referencia";
         Query query = session.createQuery(hql);
-        query.setParameter("referencia", referencia);
+        query.setParameter("referencia", expPersona);
         if (query.list().size() > 0) {
-            return (CivExpedientes) query.list().get(0);
+            return query.list();
         }
         return null;
     }

@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 30/07/2018 04:15:15 PM by Hibernate Tools 4.3.1
+// Generated 2/08/2018 01:52:51 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -26,6 +26,7 @@ public class CivUsuarios  implements java.io.Serializable {
      private Set logEventoses = new HashSet(0);
      private Set civMovimientoses = new HashSet(0);
      private Set civArchivosPlanoses = new HashSet(0);
+     private Set civSolicitudeses = new HashSet(0);
 
     public CivUsuarios() {
     }
@@ -38,7 +39,7 @@ public class CivUsuarios  implements java.io.Serializable {
         this.usuNombre = usuNombre;
         this.usuPass = usuPass;
     }
-    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civPagoses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses) {
+    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civPagoses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses, Set civSolicitudeses) {
        this.usuId = usuId;
        this.civPersonas = civPersonas;
        this.civEstadoUsuarios = civEstadoUsuarios;
@@ -52,6 +53,7 @@ public class CivUsuarios  implements java.io.Serializable {
        this.logEventoses = logEventoses;
        this.civMovimientoses = civMovimientoses;
        this.civArchivosPlanoses = civArchivosPlanoses;
+       this.civSolicitudeses = civSolicitudeses;
     }
    
     public BigDecimal getUsuId() {
@@ -144,6 +146,13 @@ public class CivUsuarios  implements java.io.Serializable {
     
     public void setCivArchivosPlanoses(Set civArchivosPlanoses) {
         this.civArchivosPlanoses = civArchivosPlanoses;
+    }
+    public Set getCivSolicitudeses() {
+        return this.civSolicitudeses;
+    }
+    
+    public void setCivSolicitudeses(Set civSolicitudeses) {
+        this.civSolicitudeses = civSolicitudeses;
     }
 
 

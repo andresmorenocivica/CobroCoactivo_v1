@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/08/2018 01:52:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivEstadoDetalleSolicitudes" table="CIV_ESTADO_DETALLE_SOLICITUDES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="estdetsolId" type="big_decimal">
+            <column name="ESTDETSOL_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="estdetsolNombre" type="string">
+            <column name="ESTDETSOL_NOMBRE" length="50" />
+        </property>
+        <property name="estdetsolFechaproceso" type="date">
+            <column name="ESTDETSOL_FECHAPROCESO" length="7" />
+        </property>
+        <property name="estdetsolFechainicial" type="date">
+            <column name="ESTDETSOL_FECHAINICIAL" length="7" />
+        </property>
+        <property name="estdetsolFechafinal" type="date">
+            <column name="ESTDETSOL_FECHAFINAL" length="7" />
+        </property>
+        <set name="civDetalleSolicitudeses" table="CIV_DETALLE_SOLICITUDES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DETSOL_ESTDETSOL_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivDetalleSolicitudes" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -13,11 +13,15 @@ import CobroCoactivo.Beans.BeanGestionExpedientes;
  */
 public interface GestionExpedientesBO {
 
-    void buscarExpediente(BeanGestionExpedientes bean) throws Exception;
-
     void abrirExpediente(BeanGestionExpedientes bean) throws Exception;
 
     void buscarArchivo(BeanGestionExpedientes bean) throws Exception;
 
+    void buscarExpediente(BeanGestionExpedientes bean) throws Exception;
+
     void guardarArchivo(BeanGestionExpedientes bean) throws Exception;
+
+    void mostrarExpedienteSelect(BeanGestionExpedientes bean) throws Exception;
+
+    void enviarSolicitud(BeanGestionExpedientes bean) throws Exception;
 }

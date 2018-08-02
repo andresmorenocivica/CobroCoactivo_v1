@@ -7,6 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivExpedientes;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,7 @@ import CobroCoactivo.Persistencia.CivExpedientes;
  */
 public interface ITExpedientes extends ITGeneryHibernateDao<CivExpedientes, Integer> {
 
-    public CivExpedientes getCivExpedientes(String referencia) throws Exception;
+    public List<CivExpedientes> getCivExpedientes(String referencia) throws Exception;
 
     public CivExpedientes getCivExpedientesByUri(String ubicacion) throws Exception;
 

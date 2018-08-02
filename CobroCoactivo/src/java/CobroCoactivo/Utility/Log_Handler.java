@@ -194,7 +194,7 @@ public class Log_Handler {
         CivErrores error = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from CivErrores where ERR_EXCEPTION = :excepcion");
+            Query query = session.createQuery("from CivErrores where errException = :excepcion");
             query.setParameter("excepcion", excepcion);
             error = (CivErrores) query.list().get(0);
             tx.commit();
