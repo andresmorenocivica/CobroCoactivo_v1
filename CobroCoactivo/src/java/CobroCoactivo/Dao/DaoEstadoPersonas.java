@@ -20,14 +20,12 @@ import org.hibernate.Session;
 public class DaoEstadoPersonas extends ImpGeneryHibernateDao<CivEstadoPersonas, Integer> implements ITEstadoPersonas {
 
     @Override
-    public List<CivEstadoPersonas> listAll() throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivEstadoPersonas> listAll(Session session) throws Exception {
         String hql = "from CivEstadoPersonas";
         Query query = session.createQuery(hql);
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 

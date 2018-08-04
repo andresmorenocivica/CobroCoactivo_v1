@@ -29,7 +29,7 @@ public interface ITAttempts extends ITGeneryHibernateDao<CivAttempts, Integer>{
      * @return
      * @throws Exception
      */
-    public boolean update(Session session,CivAttempts attp) throws Exception;
+    void update(Session session,CivAttempts attp) throws Exception;
 
     /**
      *

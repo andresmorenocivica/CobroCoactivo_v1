@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmGestionPagos">
+                    <div class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Consultas y adicionar personas
+                                <!-- <small>guia formulario para consultas</small> -->
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <p:messages autoUpdate="true" id="mensajeConsultarPersona" showIcon="false" closable="true" severity="warn,info"></p:messages>
+                            <!-- Default box -->
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <div class="box-title">
+                                        <h3 class="">Personas </h3>
+                                    </div>
+                                    <!-- <button class="btn btn-success center-block" style="float: right ">Sincronizar todos</button> -->
+                                </div>
+                                <h:panelGroup id="tblPersona">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Numero</th>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Mostrar pagos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ui:repeat value="#{gestionPagosbean.listPersonas}" var="persona">
+                                                <tr>
+                                                    <td>#{persona.tipoDocumentos.descripcion}</td>
+                                                    <td>#{persona.documento}</td>
+                                                    <td>
+                                                        #{persona.nombre1} #{persona.nombre2} 
+                                                    </td>
+                                                    <td> #{persona.apellido1} #{persona.apellido2}</td>
+                                                    <td>
+                                                        <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalPagos').modal('show')">
+                                                            <f:ajax event="click" listener="#{gestionPagosbean.verPagos(persona)}" render="frmGestionPagos:modalPagosContent">
+
+                                                            </f:ajax>
+                                                        </h:commandLink>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </tbody>
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                            <div class="modal fade"  tabindex="-1" id="modalPagos"  aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content" jsf:id="modalPagosContent">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel">Pagos #{gestionCargarPersonasBean.personas.nombre1} #{gestionCargarPersonasBean.personas.apellido1}</h4>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p:messages id="messageCargarPersona" autoUpdate="true" closable="true" showDetail="false" showIcon="false"></p:messages>
+                                            <table class="table table-hover table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Numero factura</th>
+                                                        <th>Fecha</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <ui:repeat value="#{gestionPagosbean.listPagos}" var="pago">
+                                                        <tr>
+                                                            <td>
+                                                                #{pago.numero}
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{pago.fecha}">
+                                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                                </h:outputText>
+
+                                                            </td>
+                                                            <td>#{pago.valor}</td>
+                                                           
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <h:commandLink value="Sincronizar" id="btnGuardarPlanTrabajo" class="btn btn-success">
+                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalPlanTrabajo" listener="#{gestionPagosbean.sincronizarPagos()}" execute="formPlanTrabajo:modalPlanTrabajo"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

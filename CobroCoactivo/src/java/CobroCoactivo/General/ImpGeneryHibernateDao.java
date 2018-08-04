@@ -5,7 +5,6 @@
  */
 package CobroCoactivo.General;
 
-import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
@@ -50,13 +49,8 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
     }
     
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void update(T entity) {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        session.update(entity);
-        session.getTransaction().commit();
-        session.close();
+    public void update(Session session,T entity) {
+        session.merge(entity);
     }
 
     @Override

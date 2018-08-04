@@ -22,22 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> implements ITPersonas {
 
     @Override
-    public CivPersonas consultarPersonasById(int per_id) throws Exception {
-        Session session = getSessionFactory().openSession();
+    public CivPersonas consultarPersonasById(Session session,int per_id) throws Exception {
         String hql = "from CivPersonas where perId =:perId";
         Query query = session.createQuery(hql);
         query.setParameter("perId", new BigDecimal(per_id));
         if (query.list().size() > 0) {
             return (CivPersonas) query.list().get(0);
         }
-        session.close();
         return null;
     }
 
     @Override
-    @Transactional
-    public CivPersonas consultarPersonasByDocumento(int tipo, String nro_documento) throws Exception {
-        Session session = getSessionFactory().openSession();
+    
+    public CivPersonas consultarPersonasByDocumento(Session session,int tipo, String nro_documento) throws Exception {
+       
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
         query.setParameter("tipo", new BigDecimal(tipo));
@@ -45,12 +43,11 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
         if (query.list().size() > 0) {
             return (CivPersonas) query.list().get(0);
         }
-        session.close();
+        
         return null;
     }
 
     @Override
-
     public List<CivPersonas> listarPersonas(Session session, String persona) throws Exception {
         String hql = "from CivPersonas where Per_Nombre1 like :persona or Per_Nombre2 like :persona or Per_Apellido1 like :persona or Per_Apellido2 like :persona ORDER BY 1 asc";
         SQLQuery query = session.createSQLQuery(hql);

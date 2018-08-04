@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface ITEtapasTrabajo extends ITGeneryHibernateDao<CivEtapasTrabajos,Integer>{
  
-     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(int idPlanTrabajo) throws Exception;
+     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(Session session,int idPlanTrabajo) throws Exception;
      
-     CivEtapasTrabajos find(int id) throws Exception;
+     CivEtapasTrabajos find(Session session , int id) throws Exception;
 }

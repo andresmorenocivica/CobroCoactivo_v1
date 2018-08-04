@@ -21,39 +21,29 @@ import org.hibernate.Session;
 public class DaoEtapasTrabajo extends ImpGeneryHibernateDao<CivEtapasTrabajos, Integer> implements ITEtapasTrabajo {
 
     @Override
-    public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(int idPlanTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_ETAPAS_TRABAJOS WHERE ETATRA_PLATRA_FK =:idPlanTrabajo and ETATRA_ESTETATRA_FK=1 ORDER BY ETATRA_PRIORIDAD";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivEtapasTrabajos.class);
-        query.setInteger("idPlanTrabajo", idPlanTrabajo);
+    public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(Session session, int idPlanTrabajo) throws Exception {
+        String sql = "FROM CivEtapasTrabajos WHERE civPlanTrabajos.platraId =:platraId and civEstadoEtapaTrabajos.estetatraId=1 ORDER BY etatraObligatorio";
+        Query query = session.createQuery(sql);
+        query.setParameter("platraId", new BigDecimal(idPlanTrabajo));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public CivEtapasTrabajos find(int id) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
+    public CivEtapasTrabajos find(Session session, int id) throws Exception {
 
-            String sql = "FROM CivEtapasTrabajos WHERE etatraId = :id";
-            Query query = session.createQuery(sql);
-            query.setBigDecimal("id", BigDecimal.valueOf(id));
-            if (query.list().size() > 0) {
-                CivEtapasTrabajos civEtapasTrabajos = (CivEtapasTrabajos) query.list().get(0);
-                System.out.println(civEtapasTrabajos.getCivFasesTrabajoses());
-                return civEtapasTrabajos ;
-            }
-
-            return null;
-        } finally {
-            session.close();
-
+        String sql = "FROM CivEtapasTrabajos WHERE etatraId = :id";
+        Query query = session.createQuery(sql);
+        query.setBigDecimal("id", BigDecimal.valueOf(id));
+        if (query.list().size() > 0) {
+            CivEtapasTrabajos civEtapasTrabajos = (CivEtapasTrabajos) query.list().get(0);
+            System.out.println(civEtapasTrabajos.getCivFasesTrabajoses());
+            return civEtapasTrabajos;
         }
 
+        return null;
     }
 
 }

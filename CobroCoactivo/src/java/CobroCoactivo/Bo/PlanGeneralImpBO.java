@@ -61,7 +61,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
+import org.springframework.transaction.annotation.Transactional;
 
 public class PlanGeneralImpBO implements PlanGeneralBO {
 
@@ -96,422 +98,471 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void actualizarFase(BeanPlanGeneral bean) throws Exception {
-        if (bean.getFasesGenerales().getDianim() < bean.getFasesGenerales().getDiamax()) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (bean.getFasesGenerales().getDianim() < bean.getFasesGenerales().getDiamax()) {
 
-            CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
-            CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
-            CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
-            CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
+                CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
+                CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
+                CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
+                CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
 
-            civEtapasGenerales.setEtagenId(BigDecimal.valueOf(bean.getEtapasGenerales().getId()));
-            civEstadoFasesGenerales.setEstfasgenId(new BigDecimal(bean.getIdEStadoFasesGeneral()));
-            civFasesGenerales.setFasgenId(new BigDecimal(bean.getFasesGenerales().getId()));
-            civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getDescripcion());
-            civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
-            civFasesGenerales.setFasgenFechaproceso(bean.getFasesGenerales().getFechaproceso());
-            civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
-            civFasesGenerales.setFasgenDianim(BigDecimal.valueOf(bean.getFasesGenerales().getDianim()));
-            civFasesGenerales.setFasgenDiamax(BigDecimal.valueOf(bean.getFasesGenerales().getDiamax()));
-            civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
-            List<CivMovimientos> listCivMovimientos = getMovimientosDao().listMovimiento(civFasesGenerales.getFasgenId().intValue());
-            if (listCivMovimientos != null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "No se puede desactivar la fase tiene movimientos", null));
-                return;
-
-            }
-            if (bean.getFile() == null) {
-                civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
-            } else {
-                if (!Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                civEtapasGenerales.setEtagenId(BigDecimal.valueOf(bean.getEtapasGenerales().getId()));
+                civEstadoFasesGenerales.setEstfasgenId(new BigDecimal(bean.getIdEStadoFasesGeneral()));
+                civFasesGenerales.setFasgenId(new BigDecimal(bean.getFasesGenerales().getId()));
+                civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getDescripcion());
+                civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
+                civFasesGenerales.setFasgenFechaproceso(bean.getFasesGenerales().getFechaproceso());
+                civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
+                civFasesGenerales.setFasgenDianim(BigDecimal.valueOf(bean.getFasesGenerales().getDianim()));
+                civFasesGenerales.setFasgenDiamax(BigDecimal.valueOf(bean.getFasesGenerales().getDiamax()));
+                civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
+                List<CivMovimientos> listCivMovimientos = getMovimientosDao().listMovimiento(session, civFasesGenerales.getFasgenId().intValue());
+                if (listCivMovimientos != null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Solo se puede cargar archivo pdf", null));
+                            "No se puede desactivar la fase tiene movimientos", null));
                     return;
-                } else {
 
-                    CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
-                    civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
-                    civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
-                    civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                    civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
-                    civDocumenGenerales.setDocgenFechaproceso(new Date());
-                    civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                    getiTDocumentoGenerales().update(civDocumenGenerales);
                 }
-            }
-
-            civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
-            getFaseGeneralDAO().update(civFasesGenerales);
-            CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDao().getFasesTrabajos(civFasesGenerales.getFasgenId().intValue());
-            if (civFasesTrabajos != null) {
-                civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
-                civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
-                civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
-                civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
-                civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
-                CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
-                civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(bean.getIdEStadoFasesGeneral()));
-                civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
-                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
-                civEtapasTrabajos.setEtatraId(BigDecimal.valueOf(bean.getEtapasGenerales().getId()));
-                civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
-                CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
                 if (bean.getFile() == null) {
-                    civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
+                    civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
                 } else {
-                    CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
-                    civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
-                    civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
-                    civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
-                    civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
-                    civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
-                    civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                    getReporteTrabajoDao().update(civReporteTrabajos);
+                    if (!Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Solo se puede cargar archivo pdf", null));
+                        return;
+                    } else {
+
+                        CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
+                        civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
+                        civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
+                        civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                        civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
+                        civDocumenGenerales.setDocgenFechaproceso(new Date());
+                        civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                        getiTDocumentoGenerales().update(session, civDocumenGenerales);
+                    }
                 }
-                civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
-                getFasesTrabajoDao().update(civFasesTrabajos);
+
+                civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
+                getFaseGeneralDAO().update(session, civFasesGenerales);
+                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDao().getFasesTrabajos(session, civFasesGenerales.getFasgenId().intValue());
+                if (civFasesTrabajos != null) {
+                    civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
+                    civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
+                    civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
+                    civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
+                    civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
+                    CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
+                    civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(bean.getIdEStadoFasesGeneral()));
+                    civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
+                    CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                    civEtapasTrabajos.setEtatraId(BigDecimal.valueOf(bean.getEtapasGenerales().getId()));
+                    civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
+                    CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
+                    if (bean.getFile() == null) {
+                        civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
+                    } else {
+                        CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                        civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
+                        civReporteTrabajos.setReptraId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
+                        civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
+                        civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
+                        civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
+                        civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                        getReporteTrabajoDao().update(session, civReporteTrabajos);
+                    }
+                    civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
+                    getFasesTrabajoDao().update(session, civFasesTrabajos);
+                }
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Fase general actualizada correctamente", "Plan General Creado exitosamente"));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#faseGeneral').modal('hide')");
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Dia minimo debe ser menor que dia maximo", null));
             }
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Fase general actualizada correctamente", "Plan General Creado exitosamente"));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#faseGeneral').modal('hide')");
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Dia minimo debe ser menor que dia maximo", null));
+        } finally {
+            session.flush();
+            session.close();
         }
-
     }
 
     @Override
     public void actualizarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        boolean validador = false;
-        CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
-        CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
-        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
-        CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
-        civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
+        try {
+            Transaction transaction = session.beginTransaction();
+            boolean validador = false;
+            CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
+            CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
+            civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
+            CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
+            civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
 
-        civEtapasGenerales.setEtagenId(new BigDecimal(bean.getEtapasGenerales().getId()));
-        civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
-        civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
-        civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
-        civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
-        civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
-        civEtapasGenerales.setEtagenFechaproceso(new Date());
+            civEtapasGenerales.setEtagenId(new BigDecimal(bean.getEtapasGenerales().getId()));
+            civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
+            civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
+            civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
+            civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
+            civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
+            civEtapasGenerales.setEtagenFechaproceso(new Date());
 
-        if (bean.getEtapasGenerales().getEstadoEtapasGenerales().getId() != 1) {
-            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
-            if (listCivFasesGenerales != null && listCivFasesGenerales.size() > 0) {
-                for (CivFasesGenerales civFasesGenerales : listCivFasesGenerales) {
-                    if (civFasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId().intValue() == 1) {
-                        validador = true;
+            if (bean.getEtapasGenerales().getEstadoEtapasGenerales().getId() != 1) {
+                List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
+                if (listCivFasesGenerales != null && listCivFasesGenerales.size() > 0) {
+                    for (CivFasesGenerales civFasesGenerales : listCivFasesGenerales) {
+                        if (civFasesGenerales.getCivEstadoFasesGenerales().getEstfasgenId().intValue() == 1) {
+                            validador = true;
+                        }
                     }
-                }
 
-                if (validador) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se puede desactivar la etapa por que tiene fases activas", null));
+                    if (validador) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se puede desactivar la etapa por que tiene fases activas", null));
+                    } else {
+                        getItEstapaGeneral().update(session, civEtapasGenerales);
+                        transaction.commit();
+                        bean.init();
+                        bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Etapa desactivada correctamente", null));
+                        RequestContext requestContext = RequestContext.getCurrentInstance();
+                        requestContext.execute("$('#etapaGeneral').modal('hide')");
+                    }
+
                 } else {
-                    getItEstapaGeneral().update(civEtapasGenerales);
+                    CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(session , civEtapasGenerales.getEtagenId().intValue());
+                    if (civEtapasTrabajos != null) {
+                        CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
+                        civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
+                        civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
+                        getEtapaTrabajoDao().update(session, civEtapasTrabajos);
+                    }
+                    getItEstapaGeneral().update(session, civEtapasGenerales);
+                    transaction.commit();
                     bean.init();
                     bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Etapa desactivada correctamente", null));
+                            "Etapa desahabilitada correctamente", null));
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#etapaGeneral').modal('hide')");
                 }
 
             } else {
-                CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(civEtapasGenerales.getEtagenId().intValue());
+                CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(session , civEtapasGenerales.getEtagenId().intValue());
                 if (civEtapasTrabajos != null) {
-                    CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
-                    civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(bean.getEtapasGenerales().getEstadoEtapasGenerales().getId()));
-                    civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
-                    getEtapaTrabajoDao().update(civEtapasTrabajos);
+                    civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
+                    civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
+                    civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
+                    getEtapaTrabajoDao().update(session, civEtapasTrabajos);
+
                 }
-                getItEstapaGeneral().update(civEtapasGenerales);
+                getItEstapaGeneral().update(session, civEtapasGenerales);
+                transaction.commit();
                 bean.init();
                 bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Etapa desahabilitada correctamente", null));
+                        "etapa Actualizado Correctamente", null));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#etapaGeneral').modal('hide')");
             }
 
-        } else {
-            CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(civEtapasGenerales.getEtagenId().intValue());
-            if (civEtapasTrabajos != null) {
-                civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
-                civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
-                civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
-                getEtapaTrabajoDao().update(civEtapasTrabajos);
-
-            }
-            getItEstapaGeneral().update(civEtapasGenerales);
-            bean.init();
-            bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "etapa Actualizado Correctamente", null));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#etapaGeneral').modal('hide')");
+        } finally {
+            session.flush();
+            session.close();
         }
 
-        session.close();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void actualizarPlanGeneral(BeanPlanGeneral bean) throws Exception {
-        boolean flag = false;
-        CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
-        CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
-        civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getPlanGenerales().getEstadoPlanGenerales().getId()));
-        civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
-        civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
-        civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
-        civPlanGenerales.setPlagenFechaproceso(new Date());
-        civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction trasantion = session.beginTransaction();
+            boolean flag = false;
+            CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
+            CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
+            civEstadoPlanGenerales.setEstplagenId(new BigDecimal(bean.getPlanGenerales().getEstadoPlanGenerales().getId()));
+            civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
+            civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
+            civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
+            civPlanGenerales.setPlagenFechaproceso(new Date());
+            civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
 
-        if (bean.getPlanGenerales().getEstadoPlanGenerales().getId() != 1) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanGenerales.getPlagenId().intValue());
-            if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
-                for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
-                    if (civEtapasGenerales.getCivEstadoEtapasGenerales().getEstetagenId().intValue() == 1) {
-                        flag = true;
+            if (bean.getPlanGenerales().getEstadoPlanGenerales().getId() != 1) {
+                List<CivEtapasGenerales> listadoPlangeneral = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, civPlanGenerales.getPlagenId().intValue());
+                if (listadoPlangeneral != null && listadoPlangeneral.size() > 0) {
+                    for (CivEtapasGenerales civEtapasGenerales : listadoPlangeneral) {
+                        if (civEtapasGenerales.getCivEstadoEtapasGenerales().getEstetagenId().intValue() == 1) {
+                            flag = true;
+                        }
                     }
-                }
-                if (flag) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "Debe desactivar las etapas generales", null));
-                    RequestContext requestContext = RequestContext.getCurrentInstance();
-                    requestContext.execute("$('#planGeneral').modal('hide')");
+                    if (flag) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                "Debe desactivar las etapas generales", null));
+                        RequestContext requestContext = RequestContext.getCurrentInstance();
+                        requestContext.execute("$('#planGeneral').modal('hide')");
 
+                    } else {
+                        getiTPlanGeneral().update(session, civPlanGenerales);
+                        trasantion.commit();
+                        bean.init();
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Plan actualizado correctamente", null));
+                        RequestContext requestContext = RequestContext.getCurrentInstance();
+                        requestContext.execute("$('#planGeneral').modal('hide')");
+
+                    }
                 } else {
-                    getiTPlanGeneral().update(civPlanGenerales);
+                    getiTPlanGeneral().update(session, civPlanGenerales);
+                    trasantion.commit();
                     bean.init();
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Plan actualizado correctamente", null));
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#planGeneral').modal('hide')");
-
                 }
             } else {
-                getiTPlanGeneral().update(civPlanGenerales);
-                bean.init();
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan actualizado correctamente", null));
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#planGeneral').modal('hide')");
+                CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().getPlanTrabajo(session, civPlanGenerales.getPlagenId().intValue());
+                CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(session, civPlanGenerales.getPlagenColor());
+                if (civPlanGeneralesColor == null || civPlanGeneralesColor.getPlagenId().intValue() == civPlanGenerales.getPlagenId().intValue()) {
+                    if (civPlanTrabajos != null) {
+                        civPlanTrabajos.setPlatraDescripcion(civPlanGenerales.getPlagenDescripcion());
+                        civPlanTrabajos.setPlatraColor(civPlanGenerales.getPlagenColor());
+                        getPlanTrabajoDao().update(session, civPlanTrabajos);
+                    }
+                    getiTPlanGeneral().update(session, civPlanGenerales);
+                    trasantion.commit();
+                    bean.init();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Plan actualizado correctamente", null));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#planGeneral').modal('hide')");
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "El color ya existe en el sistema", null));
+                }
+
             }
+
+        } finally {
+
+            session.flush();
             session.close();
-        } else {
-            CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().getPlanTrabajo(civPlanGenerales.getPlagenId().intValue());
-            CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(civPlanGenerales.getPlagenColor());
-            if (civPlanGeneralesColor == null || civPlanGeneralesColor.getPlagenId().intValue() == civPlanGenerales.getPlagenId().intValue()) {
-                if (civPlanTrabajos != null) {
-                    civPlanTrabajos.setPlatraDescripcion(civPlanGenerales.getPlagenDescripcion());
-                    civPlanTrabajos.setPlatraColor(civPlanGenerales.getPlagenColor());
-                    getPlanTrabajoDao().update(civPlanTrabajos);
-                }
-                getiTPlanGeneral().update(civPlanGenerales);
-                bean.init();
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan actualizado correctamente", null));
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#planGeneral').modal('hide')");
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "El color ya existe en el sistema", null));
-            }
-
         }
-
     }
 
     @Override
     public void guardarEtapaGeneral(BeanPlanGeneral bean) throws Exception {
-        CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
-        CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
-        CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
-        civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
-        civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(1));
-        civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
-        civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
-        civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
-        civEtapasGenerales.setEtagenFechaproceso(new Date());
-        civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
-        civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
-        getItEstapaGeneral().create(civEtapasGenerales);
-        CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().find(bean.getPlanGenerales().getId());
-        if (civPlanTrabajos != null) {
-            if (civEtapasGenerales.getEtagenObligatorio().equals("TRUE")) {
-                CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
-                civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(1));
-                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
-                civEtapasTrabajos.setEtatraId(civEtapasGenerales.getEtagenId());
-                civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
-                civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
-                civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
-                civEtapasTrabajos.setEtatraFechaproceso(civEtapasGenerales.getEtagenFechaproceso());
-                civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
-                civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
-                getEtapaTrabajoDao().create(civEtapasTrabajos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
+            CivEstadoEtapasGenerales civEstadoEtapasGenerales = new CivEstadoEtapasGenerales();
+            CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
+            civPlanGenerales.setPlagenId(new BigDecimal(bean.getPlanGenerales().getId()));
+            civEstadoEtapasGenerales.setEstetagenId(new BigDecimal(1));
+            civEtapasGenerales.setCivEstadoEtapasGenerales(civEstadoEtapasGenerales);
+            civEtapasGenerales.setCivPlanGenerales(civPlanGenerales);
+            civEtapasGenerales.setEtagenDescripcion(bean.getEtapasGenerales().getDescripcion());
+            civEtapasGenerales.setEtagenFechaproceso(new Date());
+            civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
+            civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
+            getItEstapaGeneral().create(civEtapasGenerales);
+            CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().find(session, bean.getPlanGenerales().getId());
+            if (civPlanTrabajos != null) {
+                if (civEtapasGenerales.getEtagenObligatorio().equals("TRUE")) {
+                    CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
+                    civEstadoEtapaTrabajos.setEstetatraId(new BigDecimal(1));
+                    CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                    civEtapasTrabajos.setEtatraId(civEtapasGenerales.getEtagenId());
+                    civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
+                    civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
+                    civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
+                    civEtapasTrabajos.setEtatraFechaproceso(civEtapasGenerales.getEtagenFechaproceso());
+                    civEtapasTrabajos.setEtatraObligatorio(civEtapasGenerales.getEtagenObligatorio());
+                    civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
+                    getEtapaTrabajoDao().create(civEtapasTrabajos);
+                }
             }
+            bean.init();
+            bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
+        } finally {
+            session.flush();
+            session.close();
         }
-        bean.init();
-        bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
     }
 
     @Override
     public void guardarFasesGeneral(BeanPlanGeneral bean) throws Exception {
-        if (bean.getFasesGenerales().getDianim() < bean.getFasesGenerales().getDiamax()) {
-            if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
-                CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
-                CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
-                civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(1));
-                CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
-                civEtapasGenerales.setEtagenId(new BigDecimal(bean.getEtapasGenerales().getId()));
-                CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
-                CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
-                civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
-                civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
-                civDocumenGenerales.setDocgenFechaproceso(new Date());
-                civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                getiTDocumentoGenerales().create(civDocumenGenerales);
-                civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getDescripcion());
-                civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
-                civFasesGenerales.setFasgenFechaproceso(new Date());
-                civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
-                civFasesGenerales.setFasgenDianim(BigDecimal.valueOf(bean.getFasesGenerales().getDianim()));
-                civFasesGenerales.setFasgenDiamax(BigDecimal.valueOf(bean.getFasesGenerales().getDiamax()));
-                civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
-                civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
-                getiTFasesGenerales().create(civFasesGenerales);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (bean.getFasesGenerales().getDianim() < bean.getFasesGenerales().getDiamax()) {
+                if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                    CivFasesGenerales civFasesGenerales = new CivFasesGenerales();
+                    CivEstadoFasesGenerales civEstadoFasesGenerales = new CivEstadoFasesGenerales();
+                    civEstadoFasesGenerales.setEstfasgenId(BigDecimal.valueOf(1));
+                    CivEtapasGenerales civEtapasGenerales = new CivEtapasGenerales();
+                    civEtapasGenerales.setEtagenId(new BigDecimal(bean.getEtapasGenerales().getId()));
+                    CivDocumenGenerales civDocumenGenerales = new CivDocumenGenerales();
+                    CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
+                    civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
+                    civDocumenGenerales.setDocgenDescripcion(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                    civDocumenGenerales.setCivEstadoDocumengenerales(civEstadoDocumengenerales);
+                    civDocumenGenerales.setDocgenFechaproceso(new Date());
+                    civDocumenGenerales.setDocgenArchivo("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                    getiTDocumentoGenerales().create(civDocumenGenerales);
+                    civFasesGenerales.setFasgenDescripcion(bean.getFasesGenerales().getDescripcion());
+                    civFasesGenerales.setCivEstadoFasesGenerales(civEstadoFasesGenerales);
+                    civFasesGenerales.setFasgenFechaproceso(new Date());
+                    civFasesGenerales.setCivEtapasGenerales(civEtapasGenerales);
+                    civFasesGenerales.setFasgenDianim(BigDecimal.valueOf(bean.getFasesGenerales().getDianim()));
+                    civFasesGenerales.setFasgenDiamax(BigDecimal.valueOf(bean.getFasesGenerales().getDiamax()));
+                    civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
+                    civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
+                    getiTFasesGenerales().create(civFasesGenerales);
 
-                CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(bean.getEtapasGenerales().getId());
-                if (civEtapasTrabajos != null) {
-                    if (bean.getFasesGenerales().getObligatorio().equals("TRUE")) {
-                        CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
-                        CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
-                        civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
-                        CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
-                        civReporteTrabajos.setReptraId(civDocumenGenerales.getDocgenId());
-                        civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
-                        civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
-                        civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
-                        civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                        getReporteTrabajoDao().create(civReporteTrabajos);
-                        CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
-                        civEstadoFasesTrabajos.setEstfastraId(BigDecimal.valueOf(1));
-                        civFasesTrabajos.setFastraId(civFasesGenerales.getFasgenId());
-                        civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
-                        civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
-                        civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
-                        civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
-                        civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
-                        civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
-                        civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
-                        civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
-                        getFasesTrabajoDao().create(civFasesTrabajos);
+                    CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(session , bean.getEtapasGenerales().getId());
+                    if (civEtapasTrabajos != null) {
+                        if (bean.getFasesGenerales().getObligatorio().equals("TRUE")) {
+                            CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
+                            CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                            civEstadoReporteTrabajos.setEstreptraId(BigDecimal.ONE);
+                            CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
+                            civReporteTrabajos.setReptraId(civDocumenGenerales.getDocgenId());
+                            civReporteTrabajos.setReptraArchivo(civDocumenGenerales.getDocgenArchivo());
+                            civReporteTrabajos.setReptraDescripcion(civDocumenGenerales.getDocgenDescripcion());
+                            civReporteTrabajos.setReptraFechaproceso(civDocumenGenerales.getDocgenFechaproceso());
+                            civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                            getReporteTrabajoDao().create(civReporteTrabajos);
+                            CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
+                            civEstadoFasesTrabajos.setEstfastraId(BigDecimal.valueOf(1));
+                            civFasesTrabajos.setFastraId(civFasesGenerales.getFasgenId());
+                            civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
+                            civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
+                            civFasesTrabajos.setFastraFechaproceso(civFasesGenerales.getFasgenFechaproceso());
+                            civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
+                            civFasesTrabajos.setFastraDiamax(civFasesGenerales.getFasgenDiamax());
+                            civFasesTrabajos.setFastraObligatorio(civFasesGenerales.getFasgenObligatorio());
+                            civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
+                            civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
+                            getFasesTrabajoDao().create(civFasesTrabajos);
+                        }
                     }
+                    InputStream stream = bean.getFile().getInputStream();
+                    Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#faseGeneral').modal('hide')");
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente", null));
+                    listarFasesGeneralesPorEtapa(bean);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Solo se puede cargar archivo pdf", null));
                 }
-                InputStream stream = bean.getFile().getInputStream();
-                Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#faseGeneral').modal('hide')");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente", null));
-                listarFasesGeneralesPorEtapa(bean);
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Solo se puede cargar archivo pdf", null));
+                        "Dia minimo debe ser menor que dia maximo", null));
             }
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Dia minimo debe ser menor que dia maximo", null));
+        } finally {
+            session.flush();;
+            session.close();
         }
     }
 
     @Override
     public void guardarPlanGeneral(BeanPlanGeneral bean) throws Exception {
-        CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
-        CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(bean.getPlanGenerales().getColor());
-        CivPlanGenerales civPlanGeneralesDescripcion = getiTPlanGeneral().getCivPlanGeneralByDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
-        if (civPlanGeneralesColor != null || civPlanGeneralesDescripcion != null) {
-            if (civPlanGeneralesColor != null) {
-                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "El color ya existe en el sistema", "Plan General Creado exitosamente"));
-            }
-            if (civPlanGeneralesDescripcion != null) {
-                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "La descripcion ya existe en el sistema", "Plan General Creado exitosamente"));
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivPlanGenerales civPlanGenerales = new CivPlanGenerales();
+            CivPlanGenerales civPlanGeneralesColor = getiTPlanGeneral().getCivPlanGeneralByColor(session, bean.getPlanGenerales().getColor());
+            CivPlanGenerales civPlanGeneralesDescripcion = getiTPlanGeneral().getCivPlanGeneralByDescripcion(session, bean.getPlanGenerales().getDescripcion().toUpperCase());
+            if (civPlanGeneralesColor != null || civPlanGeneralesDescripcion != null) {
+                if (civPlanGeneralesColor != null) {
+                    FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "El color ya existe en el sistema", "Plan General Creado exitosamente"));
+                }
+                if (civPlanGeneralesDescripcion != null) {
+                    FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "La descripcion ya existe en el sistema", "Plan General Creado exitosamente"));
+                }
+
+            } else {
+                CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
+                civEstadoPlanGenerales.setEstplagenId(new BigDecimal(1));
+                civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
+                civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
+                civPlanGenerales.setPlagenFechaproceso(new Date());
+                civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
+                getiTPlanGeneral().create(civPlanGenerales);
+                List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
+                CivEtapasGenerales persuasiva = new CivEtapasGenerales();
+                persuasiva.setCivPlanGenerales(civPlanGenerales);
+                persuasiva.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
+                persuasiva.setEtagenDescripcion("Persuasiva");
+                persuasiva.setEtagenFechaproceso(new Date());
+                persuasiva.setEtagenObligatorio("FALSE");
+                persuasiva.setEtagenPrioridad(new BigDecimal(1));
+                CivEtapasGenerales juridica = new CivEtapasGenerales();
+                juridica.setCivPlanGenerales(civPlanGenerales);
+                juridica.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
+                juridica.setEtagenDescripcion("Juridica");
+                juridica.setEtagenFechaproceso(new Date());
+                juridica.setEtagenObligatorio("TRUE");
+                juridica.setEtagenPrioridad(new BigDecimal(2));
+                CivEtapasGenerales embargo = new CivEtapasGenerales();
+                embargo.setCivPlanGenerales(civPlanGenerales);
+                embargo.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
+                embargo.setEtagenDescripcion("Embargo");
+                embargo.setEtagenFechaproceso(new Date());
+                embargo.setEtagenObligatorio("TRUE");
+                embargo.setEtagenPrioridad(new BigDecimal(3));
+                civEtapaGeneralesPorDefecto.add(persuasiva);
+                civEtapaGeneralesPorDefecto.add(juridica);
+                civEtapaGeneralesPorDefecto.add(embargo);
+                for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
+                    getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
+                }
+                bean.init();
+                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Plan general creado exitosamente", "Plan General Creado exitosamente"));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#planGeneral').modal('hide')");
+
             }
 
-        } else {
-            CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
-            civEstadoPlanGenerales.setEstplagenId(new BigDecimal(1));
-            civPlanGenerales.setPlagenDescripcion(bean.getPlanGenerales().getDescripcion().toUpperCase());
-            civPlanGenerales.setCivEstadoPlanGenerales(civEstadoPlanGenerales);
-            civPlanGenerales.setPlagenFechaproceso(new Date());
-            civPlanGenerales.setPlagenColor(bean.getPlanGenerales().getColor());
-            getiTPlanGeneral().create(civPlanGenerales);
-            List<CivEtapasGenerales> civEtapaGeneralesPorDefecto = new ArrayList<>();
-            CivEtapasGenerales persuasiva = new CivEtapasGenerales();
-            persuasiva.setCivPlanGenerales(civPlanGenerales);
-            persuasiva.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
-            persuasiva.setEtagenDescripcion("Persuasiva");
-            persuasiva.setEtagenFechaproceso(new Date());
-            persuasiva.setEtagenObligatorio("FALSE");
-            persuasiva.setEtagenPrioridad(new BigDecimal(1));
-            CivEtapasGenerales juridica = new CivEtapasGenerales();
-            juridica.setCivPlanGenerales(civPlanGenerales);
-            juridica.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
-            juridica.setEtagenDescripcion("Juridica");
-            juridica.setEtagenFechaproceso(new Date());
-            juridica.setEtagenObligatorio("TRUE");
-            juridica.setEtagenPrioridad(new BigDecimal(2));
-            CivEtapasGenerales embargo = new CivEtapasGenerales();
-            embargo.setCivPlanGenerales(civPlanGenerales);
-            embargo.setCivEstadoEtapasGenerales(getEstadoEtapageneral().find(BigDecimal.ONE));
-            embargo.setEtagenDescripcion("Embargo");
-            embargo.setEtagenFechaproceso(new Date());
-            embargo.setEtagenObligatorio("TRUE");
-            embargo.setEtagenPrioridad(new BigDecimal(3));
-            civEtapaGeneralesPorDefecto.add(persuasiva);
-            civEtapaGeneralesPorDefecto.add(juridica);
-            civEtapaGeneralesPorDefecto.add(embargo);
-            for (int i = 0; i < civEtapaGeneralesPorDefecto.size(); i++) {
-                getItEstapaGeneral().create(civEtapaGeneralesPorDefecto.get(i));
-            }
-            bean.init();
-            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Plan general creado exitosamente", "Plan General Creado exitosamente"));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#planGeneral').modal('hide')");
-
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
+
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, bean.getPlanGenerales().getId());
-        if (listCivEtapasGenerales != null) {
-            bean.setListadoEtapasGeneraleses(new ArrayList<>());
-            for (CivEtapasGenerales civEtapasGeneral : listCivEtapasGenerales) {
-                CivPlanGenerales civPlanGenerales = getiTPlanGeneral().getCivPlanGeneral(civEtapasGeneral.getCivPlanGenerales().getPlagenId().intValue());
-                EtapasGenerales etapasGenerales = new EtapasGenerales(civEtapasGeneral, civEtapasGeneral.getCivEstadoEtapasGenerales(), civPlanGenerales);
-                if (etapasGenerales.getEstadoEtapasGenerales().getId() == 1) {
-                    bean.getListadoEtapasGeneraleses().add(etapasGenerales);
+        try {
+            List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, bean.getPlanGenerales().getId());
+            if (listCivEtapasGenerales != null) {
+                bean.setListadoEtapasGeneraleses(new ArrayList<>());
+                for (CivEtapasGenerales civEtapasGeneral : listCivEtapasGenerales) {
+                    CivPlanGenerales civPlanGenerales = getiTPlanGeneral().getCivPlanGeneral(session, civEtapasGeneral.getCivPlanGenerales().getPlagenId().intValue());
+                    EtapasGenerales etapasGenerales = new EtapasGenerales(civEtapasGeneral, civEtapasGeneral.getCivEstadoEtapasGenerales(), civPlanGenerales);
+                    if (etapasGenerales.getEstadoEtapasGenerales().getId() == 1) {
+                        bean.getListadoEtapasGeneraleses().add(etapasGenerales);
+                    }
                 }
+
+            } else {
+                bean.setListadoEtapasGeneraleses(new ArrayList<>());
             }
 
-        } else {
-            bean.setListadoEtapasGeneraleses(new ArrayList<>());
+        } finally {
+            session.flush();
+            session.close();
         }
-
-        session.close();
     }
 
     @Override
@@ -544,31 +595,34 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
     @Override
     public void listarFasesGeneralesPorEtapa(BeanPlanGeneral bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        boolean faseObligatoria = false;
-        bean.setListFasesGenerales(new ArrayList<>());
-        List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
-        for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
-            if (civFasesGenerale.getFasgenObligatorio().equals("TRUE")) {
-                faseObligatoria = true;
+        try {
+            boolean faseObligatoria = false;
+            bean.setListFasesGenerales(new ArrayList<>());
+            List<CivFasesGenerales> listCivFasesGenerales = getiTFasesGenerales().AllListByEtapaGeneral(session, bean.getEtapasGenerales().getId());
+            for (CivFasesGenerales civFasesGenerale : listCivFasesGenerales) {
+                if (civFasesGenerale.getFasgenObligatorio().equals("TRUE")) {
+                    faseObligatoria = true;
+                }
+                //  faseObligatoria =  civFasesGenerale.getFasgenObligatorio().equals("TRUE") ? true : false;
+                CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().getCivEtapaGeneral(session, civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
+                CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().getCivDocumentoGeneral(session, civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
+                FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale, civFasesGenerale.getCivEstadoFasesGenerales(), civEtapasGenerales, civDocumenGenerales);
+                if (fasesGenerales.getObligatorio().equals("TRUE")) {
+                    fasesGenerales.setObligatorio("Si");
+                } else {
+                    fasesGenerales.setObligatorio("No");
+                }
+                bean.getListFasesGenerales().add(fasesGenerales);
             }
-            //  faseObligatoria =  civFasesGenerale.getFasgenObligatorio().equals("TRUE") ? true : false;
-            CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().getCivEtapaGeneral(civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
-            CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().getCivDocumentoGeneral(civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
-            FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale, civFasesGenerale.getCivEstadoFasesGenerales(), civEtapasGenerales, civDocumenGenerales);
-            if (fasesGenerales.getObligatorio().equals("TRUE")) {
-                fasesGenerales.setObligatorio("Si");
-            } else {
-                fasesGenerales.setObligatorio("No");
+
+            if (!faseObligatoria) {
+                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_WARN,
+                        "La etapa " + bean.getEtapasGenerales().getDescripcion() + " debe contener por lo menos una fases obligatoria", "Plan General Creado exitosamente"));
             }
-            bean.getListFasesGenerales().add(fasesGenerales);
+        } finally {
+            session.flush();
+            session.close();
         }
-
-        if (!faseObligatoria) {
-            FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "La etapa " + bean.getEtapasGenerales().getDescripcion() + " debe contener por lo menos una fases obligatoria" , "Plan General Creado exitosamente"));
-        }
-
-        session.close();
     }
 
     @Override

@@ -20,8 +20,7 @@ import org.hibernate.Session;
 public class DaoDatosPersonas extends ImpGeneryHibernateDao<CivDatosPersonas, Integer> implements ITDatosPersonas {
 
     @Override
-    public List<CivDatosPersonas> listarDatosPersonas(int Id_personas) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivDatosPersonas> listarDatosPersonas(Session session, int Id_personas) throws Exception {
         String sql = "SELECT * FROM CIV_DATOS_PERSONAS WHERE DATPER_PERSONA_FK =:idPersona";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDatosPersonas.class);
@@ -29,7 +28,6 @@ public class DaoDatosPersonas extends ImpGeneryHibernateDao<CivDatosPersonas, In
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 

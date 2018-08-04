@@ -35,6 +35,7 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -45,6 +46,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
@@ -132,6 +135,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 deudas.setReferencia(jSONObject.getString("referencia"));
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
                 deudas.setFechaDeudas(format.parse(jSONObject.getString("fecha")));
+                deudas.setReferenciaUnica(jSONObject.getLong("idCartera"));
                 beanGestionCargarPersonas.getListDeudas().add(deudas);
             }
 
@@ -140,19 +144,105 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
 
     @Override
     public void sincronizarDeuda(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception {
-        int count = 0;
-        int tipo = beanGestionCargarPersonas.getPersonas().getTipoDocumentos().getId();
-        CivDeudas civDeudas = new CivDeudas();
-        String documento = beanGestionCargarPersonas.getPersonas().getDocumento();
-        CivPersonas civPersonas = getItPersonas().consultarPersonasByDocumento(tipo, documento);
-        if (civPersonas != null) {
-            Expedientes expedientes = new Expedientes();
-            String nombreExpedientePersona = "";
-            nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
-            for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
-                List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
-                if (listDeudas == null) {
-                    count++;
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            int count = 0;
+            int tipo = beanGestionCargarPersonas.getPersonas().getTipoDocumentos().getId();
+            CivDeudas civDeudas = new CivDeudas();
+            String documento = beanGestionCargarPersonas.getPersonas().getDocumento();
+            CivPersonas civPersonas = getItPersonas().consultarPersonasByDocumento(session,tipo, documento);
+            if (civPersonas != null) {
+                Expedientes expedientes = new Expedientes();
+                String nombreExpedientePersona = "";
+                nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
+                for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
+                    List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(session,beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                    if (listDeudas == null) {
+                        count++;
+                        civDeudas = new CivDeudas();
+                        CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
+                        civTipoDeudas.setTipdeuId(new BigDecimal(2));
+                        civDeudas.setCivTipoDeudas(civTipoDeudas);
+                        CivEstadoDeudas civEstadoDeudas = new CivEstadoDeudas();
+                        civEstadoDeudas.setEstdeuId(new BigDecimal(1));
+                        civDeudas.setCivEstadoDeudas(civEstadoDeudas);
+                        civDeudas.setCivPersonas(civPersonas);
+                        civDeudas.setDeuFechadeuda(beanGestionCargarPersonas.getListDeudas().get(i).getFechaDeudas());
+                        civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getSaldo()));
+                        civDeudas.setDeuSaldo(BigDecimal.ZERO);
+                        civDeudas.setDeuFechaproceso(new Date());
+                        civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                        civDeudas.setDeuRefUnica(BigDecimal.valueOf(beanGestionCargarPersonas.getListDeudas().get(i).getReferenciaUnica()));
+                        CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
+                        civPlanTrabajos.setPlatraId(new BigDecimal(2));
+                        civDeudas.setCivPlanTrabajos(civPlanTrabajos);
+                        getItDeudas().create(civDeudas);
+                        String folderExpedienteDeuda = "";
+                        folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
+                        File foldersDeuda = new File(folderExpedienteDeuda);
+                        if (!foldersDeuda.exists()) {
+                            foldersDeuda.mkdirs();
+                            CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                            civDetalleExpedientes.setDetexpFechaproceso(new Date());
+                            civDetalleExpedientes.setCivDeudas(civDeudas);
+                            civDetalleExpedientes.setDetexpDescripcion(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                            CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+                            civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+                            civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+                            CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+                            civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                            civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+                            CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                            civDetalleExpedientes.setCivExpedientes(civExpedientes);
+                            civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
+                            getDetalleExpedientesDAO().create(civDetalleExpedientes);
+
+                        }
+                    }
+
+                }
+                if (count != 0) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "se han agregado al aplicativo COBRO COACTIVO " + count + " deudas", "Etapa De trabajo exitosamente"));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#modalDeuda').modal('hide')");
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                            "la persona " + civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1() + " ya tiene las deudas actualizada", "Etapa De trabajo exitosamente"));
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    requestContext.execute("$('#modalDeuda').modal('hide')");
+                }
+            } else {
+                civPersonas = new CivPersonas();
+                civPersonas.setPerDocumento(documento);
+                civPersonas.setPerNombre1(beanGestionCargarPersonas.getPersonas().getNombre1());
+                civPersonas.setPerNombre2(beanGestionCargarPersonas.getPersonas().getNombre2());
+                civPersonas.setPerApellido1(beanGestionCargarPersonas.getPersonas().getApellido1());
+                civPersonas.setPerApellido2(beanGestionCargarPersonas.getPersonas().getApellido2());
+                civPersonas.setPerSexo(beanGestionCargarPersonas.getPersonas().getSexo());
+                CivEstadoPersonas civEstadoPersonas = new CivEstadoPersonas();
+                civEstadoPersonas.setEstperId(new BigDecimal(1));
+                civPersonas.setCivEstadoPersonas(civEstadoPersonas);
+
+                CivTipoDocumentos civTipoDocumentos = getItTipoDocumento().find(new BigDecimal(tipo));
+                if (civTipoDocumentos != null) {
+                    civPersonas.setCivTipoDocumentos(civTipoDocumentos);
+
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "El tipo de documento no coincide con los parametros establecido en el diccionario de datos", "Etapa De trabajo exitosamente"));
+                    return;
+                }
+
+                civPersonas.setPerFechaproceso(new Date());
+                getItPersonas().create(civPersonas);
+                Expedientes expedientes = new Expedientes();
+                String nombreExpedientePersona = "";
+                nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
+
+                for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                     civDeudas = new CivDeudas();
                     CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
                     civTipoDeudas.setTipdeuId(new BigDecimal(2));
@@ -166,6 +256,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                     civDeudas.setDeuSaldo(BigDecimal.ZERO);
                     civDeudas.setDeuFechaproceso(new Date());
                     civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                    civDeudas.setDeuRefUnica(BigDecimal.valueOf(beanGestionCargarPersonas.getListDeudas().get(i).getReferenciaUnica()));
                     CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                     civPlanTrabajos.setPlatraId(new BigDecimal(2));
                     civDeudas.setCivPlanTrabajos(civPlanTrabajos);
@@ -184,103 +275,28 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                         civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
                         CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
                         civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                        civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
                         civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
                         CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
                         civDetalleExpedientes.setCivExpedientes(civExpedientes);
-                        civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
                         getDetalleExpedientesDAO().create(civDetalleExpedientes);
-
                     }
                 }
 
-            }
-            if (count != 0) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "se han agregado al aplicativo COBRO COACTIVO " + count + " deudas", "Etapa De trabajo exitosamente"));
+                        "se ha creado la persona " + civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1() + " con deudas:" + beanGestionCargarPersonas.getListDeudas().size(), "Etapa De trabajo exitosamente"));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#modalDeuda').modal('hide')");
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        "la persona " + civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1() + " ya tiene las deudas actualizada", "Etapa De trabajo exitosamente"));
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#modalDeuda').modal('hide')");
+
             }
-        } else {
-            civPersonas = new CivPersonas();
-            civPersonas.setPerDocumento(documento);
-            civPersonas.setPerNombre1(beanGestionCargarPersonas.getPersonas().getNombre1());
-            civPersonas.setPerNombre2(beanGestionCargarPersonas.getPersonas().getNombre2());
-            civPersonas.setPerApellido1(beanGestionCargarPersonas.getPersonas().getApellido1());
-            civPersonas.setPerApellido2(beanGestionCargarPersonas.getPersonas().getApellido2());
-            civPersonas.setPerSexo(beanGestionCargarPersonas.getPersonas().getSexo());
-            CivEstadoPersonas civEstadoPersonas = new CivEstadoPersonas();
-            civEstadoPersonas.setEstperId(new BigDecimal(1));
-            civPersonas.setCivEstadoPersonas(civEstadoPersonas);
+            transaction.commit();
+            beanGestionCargarPersonas.setListDeudas(new ArrayList<>());
+            beanGestionCargarPersonas.setPersonas(new Personas());
 
-            CivTipoDocumentos civTipoDocumentos = getItTipoDocumento().find(new BigDecimal(tipo));
-            if (civTipoDocumentos != null) {
-                civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "El tipo de documento no coincide con los parametros establecido en el diccionario de datos", "Etapa De trabajo exitosamente"));
-                return;
-            }
-
-            civPersonas.setPerFechaproceso(new Date());
-            getItPersonas().create(civPersonas);
-            Expedientes expedientes = new Expedientes();
-            String nombreExpedientePersona = "";
-            nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
-
-            for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
-                civDeudas = new CivDeudas();
-                CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
-                civTipoDeudas.setTipdeuId(new BigDecimal(2));
-                civDeudas.setCivTipoDeudas(civTipoDeudas);
-                CivEstadoDeudas civEstadoDeudas = new CivEstadoDeudas();
-                civEstadoDeudas.setEstdeuId(new BigDecimal(1));
-                civDeudas.setCivEstadoDeudas(civEstadoDeudas);
-                civDeudas.setCivPersonas(civPersonas);
-                civDeudas.setDeuFechadeuda(beanGestionCargarPersonas.getListDeudas().get(i).getFechaDeudas());
-                civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getSaldo()));
-                civDeudas.setDeuSaldo(BigDecimal.ZERO);
-                civDeudas.setDeuFechaproceso(new Date());
-                civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
-                CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
-                civPlanTrabajos.setPlatraId(new BigDecimal(2));
-                civDeudas.setCivPlanTrabajos(civPlanTrabajos);
-                getItDeudas().create(civDeudas);
-                String folderExpedienteDeuda = "";
-                folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
-                File foldersDeuda = new File(folderExpedienteDeuda);
-                if (!foldersDeuda.exists()) {
-                    foldersDeuda.mkdirs();
-                    CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
-                    civDetalleExpedientes.setDetexpFechaproceso(new Date());
-                    civDetalleExpedientes.setCivDeudas(civDeudas);
-                    civDetalleExpedientes.setDetexpDescripcion(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
-                    CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
-                    civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
-                    civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
-                    CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
-                    civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
-                    civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
-                    civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
-                    CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
-                    civDetalleExpedientes.setCivExpedientes(civExpedientes);
-                    getDetalleExpedientesDAO().create(civDetalleExpedientes);
-                }
-            }
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "se ha creado la persona " + civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1() + " con deudas:" + beanGestionCargarPersonas.getListDeudas().size(), "Etapa De trabajo exitosamente"));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalDeuda').modal('hide')");
-
+        } finally {
+            session.flush();
+            session.close();
         }
-        beanGestionCargarPersonas.setListDeudas(new ArrayList<>());
-        beanGestionCargarPersonas.setPersonas(new Personas());
     }
 
     /**

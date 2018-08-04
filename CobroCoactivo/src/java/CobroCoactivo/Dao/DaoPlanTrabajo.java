@@ -21,27 +21,16 @@ import org.hibernate.Session;
 public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integer> implements ITPlanTrabajo {
 
     @Override
-    public CivPlanTrabajos getPlanTrabajo(int idPlanTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-
-            String sql = "SELECT * FROM CIV_PLAN_TRABAJOS WHERE PLATRA_ID =:idPlanTrabajo";
-            SQLQuery query = session.createSQLQuery(sql);
-            query.addEntity(CivPlanTrabajos.class);
-            query.setInteger("idPlanTrabajo", idPlanTrabajo);
-            if (query.list().size() > 0) {
-                CivPlanTrabajos object = (CivPlanTrabajos) query.list().get(0);
-                object.getCivDeudases().size();
-                object.getCivEtapasTrabajoses().size();
-
-                return object;
-            }
-
-            return null;
-
-        } finally {
-            session.close();
+    public CivPlanTrabajos getPlanTrabajo(Session session, int idPlanTrabajo) throws Exception {
+        String sql = "FROM CivPlanTrabajos WHERE platraId =:idPlanTrabajo";
+        Query query = session.createQuery(sql);
+        query.setParameter("idPlanTrabajo", new BigDecimal(idPlanTrabajo));
+        if (query.list().size() > 0) {
+            CivPlanTrabajos object = (CivPlanTrabajos) query.list().get(0);
+            return object;
         }
+
+        return null;
 
     }
 
@@ -59,25 +48,18 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
     }
 
     @Override
-    public CivPlanTrabajos find(int id) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
+    public CivPlanTrabajos find(Session session, int id) throws Exception {
 
-            String sql = "FROM CivPlanTrabajos WHERE platraId = :id";
-            Query query = session.createQuery(sql);
-            query.setBigDecimal("id", BigDecimal.valueOf(id));
-            if (query.list().size() > 0) {
-                CivPlanTrabajos civEtapasTrabajos = (CivPlanTrabajos) query.list().get(0);
-                System.out.println(civEtapasTrabajos.getCivEstadoPlanTrabajos());
-                System.out.println(civEtapasTrabajos.getCivEtapasTrabajoses());
-                return civEtapasTrabajos;
-            }
+        String sql = "FROM CivPlanTrabajos WHERE platraId = :id";
+        Query query = session.createQuery(sql);
+        query.setBigDecimal("id", BigDecimal.valueOf(id));
+        if (query.list().size() > 0) {
+            CivPlanTrabajos civEtapasTrabajos = (CivPlanTrabajos) query.list().get(0);
 
-            return null;
-        } finally {
-            session.close();
-
+            return civEtapasTrabajos;
         }
+
+        return null;
 
     }
 

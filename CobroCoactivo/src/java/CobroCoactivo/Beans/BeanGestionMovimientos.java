@@ -11,6 +11,7 @@ import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
 import CobroCoactivo.Modelo.PlanTrabajos;
+import CobroCoactivo.Utility.HibernateUtil;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class BeanGestionMovimientos implements Serializable {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }finally{
+            
         }
     }
 

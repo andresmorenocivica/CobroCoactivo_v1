@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import java.math.BigDecimal;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,6 +16,6 @@ import java.math.BigDecimal;
  */
 public interface ITEstadoDeudas extends ITGeneryHibernateDao<CivEstadoDeudas, Integer> {
     
-    public CivEstadoDeudas getEstadoDeudas (BigDecimal estadoDeudas) throws Exception;
+    public CivEstadoDeudas getEstadoDeudas (Session session , BigDecimal estadoDeudas) throws Exception;
     
 }

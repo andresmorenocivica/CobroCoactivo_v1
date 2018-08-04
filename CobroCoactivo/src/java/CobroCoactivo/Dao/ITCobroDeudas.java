@@ -7,6 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivCobroDeudas;
+import org.hibernate.Session;
 
 /**
  *
@@ -14,6 +15,6 @@ import CobroCoactivo.Persistencia.CivCobroDeudas;
  */
 public interface ITCobroDeudas extends ITGeneryHibernateDao<CivCobroDeudas, Integer> {
 
-    public CivCobroDeudas getCobroDeudas(int idCobroDeuda) throws Exception;
+    public CivCobroDeudas getCobroDeudas(Session session , int idCobroDeuda) throws Exception;
 
 }

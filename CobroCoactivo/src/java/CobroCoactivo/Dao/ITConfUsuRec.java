@@ -34,7 +34,8 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
      * @return Retorna verdadero si la actualización fue correcta.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public boolean update(Session session, CivConfUsuRec civConfUsuRec) throws Exception;
+    @Override
+    public void update(Session session, CivConfUsuRec civConfUsuRec);
 
     /**
      * Retorna el listado de los Perfieles de Recursos correspondientes a un

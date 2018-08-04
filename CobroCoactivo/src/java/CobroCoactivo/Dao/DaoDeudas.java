@@ -37,8 +37,19 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByRefencia(String referencia) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivDeudas> listarDeudasByRefenciaUnica(Session session, Long referenciaUnica) throws Exception {
+        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_REF_UNICA =:referenciaUnica";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(CivDeudas.class);
+        query.setParameter("referenciaUnica", new BigDecimal(referenciaUnica));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CivDeudas> listarDeudasByRefencia(Session session, String referencia) throws Exception {
         String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_REFENCIA =:referencia";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDeudas.class);
@@ -46,13 +57,12 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
+
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByTipo(int tipoDeudas) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivDeudas> listarDeudasByTipo(Session session , int tipoDeudas) throws Exception {
         String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_TIPDEU_FK=:tipoDeuda";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDeudas.class);
@@ -60,23 +70,20 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByFechaAdquisicion(Date fechaInicial, Date fechaFinal) throws Exception {
+    public List<CivDeudas> listarDeudasByFechaAdquisicion(Session session, Date fechaInicial, Date fechaFinal) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Session session = HibernateUtil.getSessionFactory().openSession();
         String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHAPROCESO,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN :fechaInicial AND :fechaFinal";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDeudas.class);
-        query.setDate("fechaInicial",format.parse(format.format(fechaInicial)));
-        query.setDate("fechaFinal",format.parse(format.format(fechaFinal)));
+        query.setDate("fechaInicial", format.parse(format.format(fechaInicial)));
+        query.setDate("fechaFinal", format.parse(format.format(fechaFinal)));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
@@ -92,16 +99,13 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByPlanTrabajo(int idPlanTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_PLATRA_FK=:idPlanTrabajo";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivDeudas.class);
-        query.setInteger("idPlanTrabajo", idPlanTrabajo);
+    public List<CivDeudas> listarDeudasByPlanTrabajo(Session session, int idPlanTrabajo) throws Exception {
+        String hql = "FROM CivDeudas WHERE civPlanTrabajos.platraId =:idPlanTrabajo";
+        Query query = session.createQuery(hql);
+        query.setParameter("idPlanTrabajo", new BigDecimal(idPlanTrabajo));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
@@ -123,7 +127,7 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         session.close();
         return cantidad;
     }
-    
+
     @Override
     public long countDeudasEtapaFases(int idPlanTrabajo, int idEtapaTrabajo, int idFaseTrabajo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -145,20 +149,30 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByFechaDeuda(Date fechaInicial, Date fechaFinal) throws Exception {
+    public List<CivDeudas> listarDeudasByFechaDeuda(Session session, Date fechaInicial, Date fechaFinal) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Session session = HibernateUtil.getSessionFactory().openSession();
         String sql = "SELECT * FROM CIV_DEUDAS WHERE TO_DATE(TO_CHAR(DEU_FECHADEUDA,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN :fechaInicial AND :fechaFinal";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDeudas.class);
-        query.setDate("fechaInicial",format.parse(format.format(fechaInicial)));
-        query.setDate("fechaFinal",format.parse(format.format(fechaFinal)));
+        query.setDate("fechaInicial", format.parse(format.format(fechaInicial)));
+        query.setDate("fechaFinal", format.parse(format.format(fechaFinal)));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
-    
+    @Override
+    public CivDeudas getDeudaByReferenciaUnica(Session session, long idReferencia) throws Exception {
+        String hql = "from CivDeudas where deuRefUnica = :idReferenciaUnica";
+        Query query = session.createQuery(hql);
+        query.setParameter("idReferenciaUnica", BigDecimal.valueOf(idReferencia));
+        if (query.uniqueResult() != null) {
+            return (CivDeudas) query.uniqueResult();
+        }
+
+        return null;
+
+    }
+
 }

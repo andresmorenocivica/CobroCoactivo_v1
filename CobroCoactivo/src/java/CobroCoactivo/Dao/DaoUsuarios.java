@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios {
+public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios{
 
 //    @Override
 //    public CivUsuarios consultarUsuario(String usuario, String password) throws Exception {
@@ -34,15 +34,13 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
 //        return null;
 //    }
     @Override
-    public CivUsuarios getCivUsuario(int idpersona) throws Exception {
-        Session session = getSessionFactory().openSession();
+    public CivUsuarios getCivUsuario(Session session , int idpersona) throws Exception {
         String hql = "from CivUsuarios where civPersonas.perId =:perId";
         Query query = session.createQuery(hql);
         query.setParameter("perId", new BigDecimal(idpersona));
         if (query.list().size() > 0) {
             return (CivUsuarios) query.list().get(0);
         }
-        session.close();
         return null;
     }
 
@@ -171,11 +169,12 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
         return true;
     }
 
+    
+   
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean update(Session session, CivUsuarios civUsuario) throws Exception {
-        session.update(civUsuario);
-        return true;
+    public void update(Session session, CivUsuarios civUsuario){
+        session.merge(civUsuario);
+        
     }
 
 }

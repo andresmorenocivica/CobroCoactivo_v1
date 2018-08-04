@@ -36,15 +36,16 @@ public class DaoAttempts extends ImpGeneryHibernateDao<CivAttempts, Integer> imp
 
     /**
      *
+     * @param session
      * @param attp
      * @return
      * @throws Exception
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(Session session, CivAttempts attp) throws Exception {
+    public void update(Session session, CivAttempts attp){
         session.update(attp);
-        return true;
+        
     }
 
     /**

@@ -16,7 +16,7 @@ import org.hibernate.Session;
  */
 public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
 
-    public CivPersonas consultarPersonasById(int per_id) throws Exception;
+    public CivPersonas consultarPersonasById(Session session,int per_id) throws Exception;
 
     /**
      * Retorna La Persona de la base de datos por medio del documento de
@@ -28,7 +28,7 @@ public interface ITPersonas extends ITGeneryHibernateDao<CivPersonas, Integer> {
      * encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivPersonas consultarPersonasByDocumento(int tipo, String Documento) throws Exception;
+    public CivPersonas consultarPersonasByDocumento(Session session, int tipo, String Documento) throws Exception;
 
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un

@@ -13,7 +13,6 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,12 +28,13 @@ public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer>
         return Integer.parseInt(session.save(civConfUsuRec).toString());
     }
 
-    @Override
+   
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(Session session, CivConfUsuRec civConfUsuRec) throws Exception {
+    @Override
+    public void update(Session session, CivConfUsuRec civConfUsuRec){
         session.update(civConfUsuRec);
-        return true;
+       
     }
 
     @Override

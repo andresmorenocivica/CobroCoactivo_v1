@@ -29,8 +29,7 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
     }
 
     @Override
-    public CivPlanGenerales getCivPlanGeneral(int idPlangeneral) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivPlanGenerales getCivPlanGeneral(Session session, int idPlangeneral) throws Exception {
         String sql = "SELECT * FROM CIV_PLAN_GENERALES WHERE PLAGEN_ID = :idPlangeneral";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivPlanGenerales.class);
@@ -38,7 +37,6 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);
         }
-        session.close();
         return null;
     }
 
@@ -50,28 +48,24 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
     }
 
     @Override
-    public CivPlanGenerales getCivPlanGeneralByColor(String color) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivPlanGenerales getCivPlanGeneralByColor(Session session, String color) throws Exception {
         String sql = "from CivPlanGenerales where plagenColor=:color";
-        Query query =  session.createQuery(sql);
+        Query query = session.createQuery(sql);
         query.setString("color", color);
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);
         }
-        session.close();
         return null;
     }
 
     @Override
-    public CivPlanGenerales getCivPlanGeneralByDescripcion(String descripcion) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivPlanGenerales getCivPlanGeneralByDescripcion(Session session, String descripcion) throws Exception {
         String sql = "FROM CivPlanGenerales WHERE plagenDescripcion = :descripcion";
         Query query = session.createQuery(sql);
         query.setString("descripcion", descripcion);
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);
         }
-        session.close();
         return null;
     }
 }

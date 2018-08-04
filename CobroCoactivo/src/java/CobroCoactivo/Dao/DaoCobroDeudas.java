@@ -18,15 +18,13 @@ import org.hibernate.Session;
 public class DaoCobroDeudas extends ImpGeneryHibernateDao<CivCobroDeudas, Integer> implements ITCobroDeudas {
 
     @Override
-    public CivCobroDeudas getCobroDeudas(int idCobroDeuda) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivCobroDeudas getCobroDeudas(Session session, int idCobroDeuda) throws Exception {
         String hql = "from CivCobroDeudas where cobdeuId=:cobroDeuda";
         Query query = session.createQuery(hql);
         query.setInteger("cobroDeuda", idCobroDeuda);
         if (query.list().size() > 0) {
             return (CivCobroDeudas) query.list().get(0);
         }
-        session.close();
         return null;
 
     }

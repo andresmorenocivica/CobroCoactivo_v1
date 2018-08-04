@@ -27,11 +27,11 @@ public interface ITPlanGeneral extends ITGeneryHibernateDao<CivPlanGenerales,Int
        
     List<CivPlanGenerales> findCivPlanGeneral(Session session ,int id) throws Exception;
    
-    CivPlanGenerales getCivPlanGeneral(int idPlangeneral) throws Exception ;
+    CivPlanGenerales getCivPlanGeneral(Session session , int idPlangeneral) throws Exception ;
     
-    CivPlanGenerales getCivPlanGeneralByColor(String color) throws Exception ;
+    CivPlanGenerales getCivPlanGeneralByColor(Session session,String color) throws Exception ;
    
-    CivPlanGenerales getCivPlanGeneralByDescripcion(String descripcion) throws Exception ;
+    CivPlanGenerales getCivPlanGeneralByDescripcion(Session session ,String descripcion) throws Exception ;
     
     List<CivPlanGenerales> getListPlanGenerales(Session session) throws Exception;
     

@@ -167,7 +167,7 @@ public class BeanLogin implements Serializable {
         }
         return "";
     }
-    
+
     public Long numeroDeudas() throws JSONException {
         client = ClientBuilder.newClient();
 
@@ -183,6 +183,28 @@ public class BeanLogin implements Serializable {
 
         return null;
 
+    }
+
+    public Long numeroPagos() {
+        try {
+            client = ClientBuilder.newClient();
+            WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/pagos/numero");
+            if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
+                String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
+                JSONObject jSONObject = new JSONObject(data);
+                if (!jSONObject.isNull("numero")) {
+                    return jSONObject.getLong("numero");
+                }
+
+            }
+
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+            return null;
+        }
     }
 
     public String getCedulaPersonaUsuario() {

@@ -9,6 +9,7 @@ import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoPersonas;
 import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -18,6 +19,6 @@ public interface ITEstadoPersonas  extends ITGeneryHibernateDao<CivEstadoPersona
 
     public CivEstadoPersonas getEstadoPersona(BigDecimal tipoDocumento) throws Exception;
 
-    public List<CivEstadoPersonas> listAll() throws Exception;
+    public List<CivEstadoPersonas> listAll(Session session) throws Exception;
 
 }

@@ -19,7 +19,7 @@ import org.hibernate.Session;
  */
 public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
     
-    public CivUsuarios getCivUsuario (int idpersona) throws Exception;
+    public CivUsuarios getCivUsuario (Session session , int idpersona) throws Exception;
 
     /**
      * Valida el usuario y la contraseña. Usado para el inicio de sesión
@@ -75,7 +75,9 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * @return ID único del elemento insertado.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public boolean update(Session session,CivUsuarios civUsuario) throws Exception;
+    
+    
+    public void update(Session session,CivUsuarios civUsuario) throws Exception;
 
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un

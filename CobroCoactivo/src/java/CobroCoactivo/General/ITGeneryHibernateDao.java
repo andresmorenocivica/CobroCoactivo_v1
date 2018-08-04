@@ -8,6 +8,7 @@ package CobroCoactivo.General;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -17,7 +18,7 @@ public interface ITGeneryHibernateDao<T, ID extends Serializable> {
 
     public void create(T entity) throws Exception;
     
-    public void update(T entity) throws Exception;
+    public void update(Session session ,T entity) throws Exception;
 
     public T find(BigDecimal id) throws Exception;
 

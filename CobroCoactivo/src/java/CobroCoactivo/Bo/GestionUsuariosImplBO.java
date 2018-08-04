@@ -53,6 +53,7 @@ import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivUspHistoria;
+import CobroCoactivo.Utility.HibernateUtil;
 import static CobroCoactivo.Utility.HibernateUtil.getSessionFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -120,43 +121,60 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     @Override
     public void actualizarContraseña(BeanGestionUsuarios bean) throws Exception {
         Session session = getSessionFactory().openSession();
-        List list = getUsuariosDAO().consultar_HPAS(session, bean.getDetalleUsuario().getId());
-        String passCifrada = DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion());
-        if (list.contains(passCifrada)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.", null));
+        try {
+            List list = getUsuariosDAO().consultar_HPAS(session, bean.getDetalleUsuario().getId());
+            String passCifrada = DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion());
+            if (list.contains(passCifrada)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.", null));
+            }
+            CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
+            civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion()));
+            getUsuariosDAO().update(session, civUsuarios);
+            RequestContext requestContexts = RequestContext.getCurrentInstance();
+            requestContexts.execute("$('#modalRestablecerContraseña').modal('hide')");
+        } finally {
+            session.flush();
+            session.close();
         }
-        CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
-        civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion()));
-        getUsuariosDAO().update(civUsuarios);
-        RequestContext requestContexts = RequestContext.getCurrentInstance();
-        requestContexts.execute("$('#modalRestablecerContraseña').modal('hide')");
-        session.close();
     }
 
     @Override
     public void cargarDatosPersonas(BeanGestionUsuarios bean) throws Exception {
-        if (bean != null) {
-            if (bean.getDetallePersonaModal() != null) {
-                if (bean.getDetallePersonaModal().getId() != 0) {
-                    List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(bean.getDetallePersonaModal().getId());
-                    if (listCivDatosPersonas != null) {
-                        for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
-                            DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
-                            bean.getDetallePersonaModal().getListDatosPersonas().add(datosPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (bean != null) {
+                if (bean.getDetallePersonaModal() != null) {
+                    if (bean.getDetallePersonaModal().getId() != 0) {
+                        List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(session, bean.getDetallePersonaModal().getId());
+                        if (listCivDatosPersonas != null) {
+                            for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
+                                DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
+                                bean.getDetallePersonaModal().getListDatosPersonas().add(datosPersonas);
+                            }
                         }
                     }
                 }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarTipoDocumento(BeanGestionUsuarios bean) throws Exception {
-        List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll();
-        for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
-            TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
-            bean.getListTipoDocumento().add(tipoDocumentos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll(session);
+            for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
+                TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
+                bean.getListTipoDocumento().add(tipoDocumentos);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
+
     }
 
     @Override
@@ -243,25 +261,31 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void updateRecursoUsuario(BeanGestionUsuarios bean) throws Exception {
-        int increment = -1;
-        for (int i = 0; i < bean.getListConfUsuRec().size(); i++) {
-            increment++;
-            ConfUsuRec temporal = bean.getListConfUsuRec().get(i);
-            if (temporal.isSelecionado() == true) {
-                if (increment == i) {
-                    CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(BigDecimal.valueOf(temporal.getConfusurecId()));
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            int increment = -1;
+            for (int i = 0; i < bean.getListConfUsuRec().size(); i++) {
+                increment++;
+                ConfUsuRec temporal = bean.getListConfUsuRec().get(i);
+                if (temporal.isSelecionado() == true) {
+                    if (increment == i) {
+                        CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(BigDecimal.valueOf(temporal.getConfusurecId()));
 
-                    CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(2));
-                    CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
+                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(2));
+                        CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
 
-                    civConfUsuRec.setCivUsuarios(civUsuarios);
-                    civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
-                    getConfUsuRecDAO().update(civConfUsuRec);
+                        civConfUsuRec.setCivUsuarios(civUsuarios);
+                        civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
+                        getConfUsuRecDAO().update(session , civConfUsuRec);
+                    }
                 }
             }
+            cargarTodosModulos(bean);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion fue realizada con exito.", null));
+        } finally {
+            session.flush();
+            session.close();
         }
-        cargarTodosModulos(bean);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion fue realizada con exito.", null));
     }
 
     @Override
@@ -307,57 +331,68 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void consultarPersona(BeanGestionUsuarios bean) throws Exception {
-        bean.setListPersonas(new ArrayList<>());
-        CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
-        if (civPersonas != null) {
-            Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
-            bean.getListPersonas().add(persona);
-            bean.setNombreUsuarioNuevo(generarNombreUsuario(civPersonas.getPerNombre1(), civPersonas.getPerApellido1()));
-        }
-        if (civPersonas == null) {
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalAgregarPersona').modal('show')");
-            RequestContext requestContexts = RequestContext.getCurrentInstance();
-            requestContexts.execute("$('#modalRegistrarUser').modal('hide')");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListPersonas(new ArrayList<>());
+            CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+            if (civPersonas != null) {
+                Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+                bean.getListPersonas().add(persona);
+                bean.setNombreUsuarioNuevo(generarNombreUsuario(civPersonas.getPerNombre1(), civPersonas.getPerApellido1()));
+            }
+            if (civPersonas == null) {
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#modalAgregarPersona').modal('show')");
+                RequestContext requestContexts = RequestContext.getCurrentInstance();
+                requestContexts.execute("$('#modalRegistrarUser').modal('hide')");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void registrarUsuario(BeanGestionUsuarios bean) throws Exception {
-        Session session = getSessionFactory().openSession();
-        CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
-        CivUsuarios user = getUsuariosDAO().consultarUsuarioByNombre(session, bean.getNombreUsuarioNuevo().toUpperCase());
-        if (user != null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ya se existe un usuario con este nombre", null));
-        }
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+            CivUsuarios user = getUsuariosDAO().consultarUsuarioByNombre(session, bean.getNombreUsuarioNuevo().toUpperCase());
+            if (user != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ya se existe un usuario con este nombre", null));
+            }
 
-        int idPersona = civPersonas.getPerId().intValue();
-        CivUsuarios cu = getUsuariosDAO().getCivUsuario(idPersona);
+            int idPersona = civPersonas.getPerId().intValue();
+            CivUsuarios cu = getUsuariosDAO().getCivUsuario(session, idPersona);
 
-        if (cu != null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ya existe un usuario registrado a esta persona", null));
-        } else {
-            CivUsuarios civUsuarios = new CivUsuarios();
+            if (cu != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ya existe un usuario registrado a esta persona", null));
+            } else {
+                CivUsuarios civUsuarios = new CivUsuarios();
 
-            CivEstadoUsuarios civEstadoUsuarios = getEstadoUsuariosDAO().consultarModuloById(session, 3);
-            civUsuarios.setUsuNombre(bean.getNombreUsuarioNuevo().toUpperCase());
-            civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
-            civUsuarios.setUsuFechaproceso(new Date());
-            civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
-            civUsuarios.setCivPersonas(civPersonas);
-            getUsuariosDAO().create(civUsuarios);
+                CivEstadoUsuarios civEstadoUsuarios = getEstadoUsuariosDAO().consultarModuloById(session, 3);
+                civUsuarios.setUsuNombre(bean.getNombreUsuarioNuevo().toUpperCase());
+                civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
+                civUsuarios.setUsuFechaproceso(new Date());
+                civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+                civUsuarios.setCivPersonas(civPersonas);
+                getUsuariosDAO().create(civUsuarios);
 
-            CivUspHistoria civUspHistoria = new CivUspHistoria();
-            CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.valueOf(1));
+                CivUspHistoria civUspHistoria = new CivUspHistoria();
+                CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.valueOf(1));
 
-            civUspHistoria.setPData(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
-            civUspHistoria.setFechaProceso(new Date());
-            civUspHistoria.setCivUsuarios(civUsuarios);
-            civUspHistoria.setCivEstadouspHistoria(civEstadouspHistoria);
-            getUspHistoriaDAO().create(civUspHistoria);
+                civUspHistoria.setPData(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
+                civUspHistoria.setFechaProceso(new Date());
+                civUspHistoria.setCivUsuarios(civUsuarios);
+                civUspHistoria.setCivEstadouspHistoria(civEstadouspHistoria);
+                getUspHistoriaDAO().create(civUspHistoria);
+                session.close();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña por defecto es el numero del documento", null));
+            }
+        } finally {
+            session.flush();
             session.close();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña por defecto es el numero del documento", null));
         }
     }
 

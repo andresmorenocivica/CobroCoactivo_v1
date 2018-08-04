@@ -51,7 +51,6 @@ import CobroCoactivo.Utility.HibernateUtil;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
-import org.primefaces.context.RequestContext;
 
 public class LoginImplBO implements LoginBO {
 
@@ -84,66 +83,67 @@ public class LoginImplBO implements LoginBO {
 
     @Override
     public void iniciarSesion(BeanLogin obj) throws Exception {
-        Date ini = new Date();
-        ini.setTime(0);
         Session session = HibernateUtil.getSessionFactory().openSession();
-        session.isOpen();
-        CivUsuarios login = new CivUsuarios();
-        login.setUsuNombre(obj.getUser().trim().toUpperCase(Locale.ROOT));
-        login.setUsuPass(obj.getPassword());
-        CivUsuarios usu = getLoginDAO().getUsuario(session, login.getUsuNombre()); //Esta variable se llena solamente cuando coincide el usuario. Esto es para el registro de intentos
-        Usuarios usuarios = new Usuarios(usu);
-        obj.setUsuarios(usuarios);
-        if (usu != null) {
-            obj.setID_Usuario(usu.getUsuId() + "");
-            this.registrarIntento(usu.getUsuId().intValue()); //Registro de intentos
-        }
-        login = getLoginDAO().validarLogin(session, login); //Carga de datos por medio de password 
-        obj.setPassword("");
-        if (login != null) {
-            if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 2) { //En caso de que el usuario no se encuentre activo 
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.", null));
-                //throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
+        try {
+            CivUsuarios login = new CivUsuarios();
+            login.setUsuNombre(obj.getUser().trim().toUpperCase(Locale.ROOT));
+            login.setUsuPass(obj.getPassword());
+            CivUsuarios usu = getLoginDAO().getUsuario(session, login.getUsuNombre()); //Esta variable se llena solamente cuando coincide el usuario. Esto es para el registro de intentos
+            Usuarios usuarios = new Usuarios(usu);
+            obj.setUsuarios(usuarios);
+            if (usu != null) {
+                obj.setID_Usuario(usu.getUsuId() + "");
+                this.registrarIntento(usu.getUsuId().intValue()); //Registro de intentos
             }
-            if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 4) { //(Revalidación)En caso de que el usuario no se encuentre activo por bloqueo de intentos
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.", null));
-                //throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
+            login = getLoginDAO().validarLogin(session, login); //Carga de datos por medio de password 
+            obj.setPassword("");
+            if (login != null) {
+                if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 2) { //En caso de que el usuario no se encuentre activo 
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.", null));
+                    //throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
+                }
+                if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 4) { //(Revalidación)En caso de que el usuario no se encuentre activo por bloqueo de intentos
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.", null));
+                    //throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
+                }
+                reestablecerIntentosUsuario(login.getUsuId().intValue());
+                Date fecha_pass = getUsuariosDAO().consultarFechaUltimoPassword(session, login.getUsuId().intValue());
+                if (fecha_pass == null) {
+                    obj.setUserEstado(3);
+                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
+                    login.setCivEstadoUsuarios(civEstadousuarios);
+                    getUsuariosDAO().update(session, login);
+                    fecha_pass = new Date(); //Fecha para reestablecer automaticamente si no hay historial 
+                    Log_Handler.registrarEvento("El usuario ID:" + login.getUsuId().intValue() + " necesita restaurar su contraseña ya que no hay registro de una contraseña anterior.", null, Log_Handler.INFO, getClass(), login.getUsuId().intValue());
+                }
+                Long dias = DateUtility.getDateDiff(fecha_pass, new Date(), TimeUnit.DAYS); //Usando fecha proceso.
+                dias++;
+                if (dias > 45) {
+                    //Se cambia el estado del usuario a estado 3 (Restablecer credenciales)
+                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
+                    login.setCivEstadoUsuarios(civEstadousuarios);
+                    getUsuariosDAO().update(session, login);
+                    obj.setUserEstado(3);
+                    Log_Handler.registrarEvento("El usuario ID:" + login.getUsuId().intValue() + " necesita restaurar su contraseña por superar el límite de días para la restauración de contraseña.", null, Log_Handler.INFO, getClass(), login.getUsuId().intValue());
+                }
+                if (dias > 35) {
+                    //CARGA DE MENSAJE: SU CONTRASEÑA ESTÁ POR VENCER
+                    obj.setDias_vencimiento(46 - dias);
+                    obj.getNotificationMap().put(login.getUsuId().intValue(), "Su contraseña está por vencer");
+                }
+                //Se cargan datos básicos de usuario 
+                obj.setID_Usuario(login.getUsuId() + "");
+                obj.setNombre(login.getUsuNombre());
+                obj.setUserEstado(login.getCivEstadoUsuarios().getEstusuId().intValue());
+                obj.setIdPersonaUsuario(login.getCivPersonas().getPerId().intValue());
+            } else {
+                throw new LoginException("Usuario y/o contraseña inválidos");
             }
-            reestablecerIntentosUsuario(login.getUsuId().intValue());
-            Date fecha_pass = getUsuariosDAO().consultarFechaUltimoPassword(session, login.getUsuId().intValue());
-            if (fecha_pass == null) {
-                obj.setUserEstado(3);
-                CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
-                login.setCivEstadoUsuarios(civEstadousuarios);
-                getUsuariosDAO().update(session, login);
-                fecha_pass = new Date(); //Fecha para reestablecer automaticamente si no hay historial 
-                Log_Handler.registrarEvento("El usuario ID:" + login.getUsuId().intValue() + " necesita restaurar su contraseña ya que no hay registro de una contraseña anterior.", null, Log_Handler.INFO, getClass(), login.getUsuId().intValue());
-            }
-            Long dias = DateUtility.getDateDiff(fecha_pass, new Date(), TimeUnit.DAYS); //Usando fecha proceso.
-            dias++;
-            if (dias > 45) {
-                //Se cambia el estado del usuario a estado 3 (Restablecer credenciales)
-                CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
-                login.setCivEstadoUsuarios(civEstadousuarios);
-                getUsuariosDAO().update(session, login);
-                obj.setUserEstado(3);
-                Log_Handler.registrarEvento("El usuario ID:" + login.getUsuId().intValue() + " necesita restaurar su contraseña por superar el límite de días para la restauración de contraseña.", null, Log_Handler.INFO, getClass(), login.getUsuId().intValue());
-            }
-            if (dias > 35) {
-                //CARGA DE MENSAJE: SU CONTRASEÑA ESTÁ POR VENCER
-                obj.setDias_vencimiento(46 - dias);
-                obj.getNotificationMap().put(login.getUsuId().intValue(), "Su contraseña está por vencer");
-            }
-            //Se cargan datos básicos de usuario 
-            obj.setID_Usuario(login.getUsuId() + "");
-            obj.setNombre(login.getUsuNombre());
-            obj.setUserEstado(login.getCivEstadoUsuarios().getEstusuId().intValue());
-            obj.setIdPersonaUsuario(login.getCivPersonas().getPerId().intValue());
-        } else {
+            
+        } finally {
+            session.flush();
             session.close();
-            throw new LoginException("Usuario y/o contraseña inválidos");
         }
-        //  session.close();
     }
 
     //Registrar Intento
@@ -382,7 +382,8 @@ public class LoginImplBO implements LoginBO {
 
     @Override
     public void consultarDatosUsuario(BeanLogin obj) throws Exception {
-        CivPersonas persona = getPersonasDAO().consultarPersonasById(obj.getIdPersonaUsuario());
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CivPersonas persona = getPersonasDAO().consultarPersonasById(session, obj.getIdPersonaUsuario());
         if (persona == null) {
             throw new LoginException("No se encontró la persona correspondiente al usuario");
         }
@@ -390,6 +391,7 @@ public class LoginImplBO implements LoginBO {
         obj.setNombrePersonaUsuario(new ValidacionDatos().letraMayuscula(obj.getNombrePersonaUsuario()));
         obj.setCedulaPersonaUsuario(persona.getPerDocumento());
         obj.setFechaInicioPersonaUsuario(persona.getPerFechaproceso());
+        session.close();
     }
 
     @Override
@@ -422,7 +424,7 @@ public class LoginImplBO implements LoginBO {
         }
         //////////////////
         getUspHistoriaDAO().create(civUspHistoria);
-        getUsuariosDAO().update(civUsuarios);
+        getUsuariosDAO().update(session, civUsuarios);
         session.close();
     }
 

@@ -34,8 +34,7 @@ public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, 
     }
     
     @Override
-    public CivEtapasGenerales getCivEtapaGeneral(int idEtapaGeneral) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivEtapasGenerales getCivEtapaGeneral(Session session , int idEtapaGeneral) throws Exception {
         String sql = "SELECT * FROM CIV_ETAPAS_GENERALES WHERE ETAGEN_ID = :idEtapaGeneral";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivEtapasGenerales.class);
@@ -43,7 +42,6 @@ public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, 
         if (query.list().size() > 0) {
             return (CivEtapasGenerales) query.list().get(0);
         }   
-        session.close();
         return null;
     }
 

@@ -22,13 +22,15 @@ import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
-import java.io.File;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -67,19 +69,32 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
     @Override
     public void cargarTipoDocumento(BeanGestionPersonas beanGestionPersonas) throws Exception {
-        List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll();
-        for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
-            TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
-            beanGestionPersonas.getListTipoDocumento().add(tipoDocumentos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll(session);
+            for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
+                TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
+                beanGestionPersonas.getListTipoDocumento().add(tipoDocumentos);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
+
     }
 
     @Override
     public void cargarEstadoPersonas(BeanGestionPersonas bean) throws Exception {
-        List<CivEstadoPersonas> listCivEstadoPersonas = getEstadoPersonasDAO().listAll();
-        for (CivEstadoPersonas civEstadoPersona : listCivEstadoPersonas) {
-            EstadoPersonas estadoPersonas = new EstadoPersonas(civEstadoPersona);
-            bean.getListEstadoPersonas().add(estadoPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivEstadoPersonas> listCivEstadoPersonas = getEstadoPersonasDAO().listAll(session);
+            for (CivEstadoPersonas civEstadoPersona : listCivEstadoPersonas) {
+                EstadoPersonas estadoPersonas = new EstadoPersonas(civEstadoPersona);
+                bean.getListEstadoPersonas().add(estadoPersonas);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -103,67 +118,90 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
     @Override
     public void cargarMovimientosDeudas(BeanGestionPersonas bean) throws Exception {
-        List<CivMovimientos> listCivMovimientos = getMovimientosDAO().listMovimientos(bean.getDeudaSelecionada().getId());
-        if (listCivMovimientos == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro movimiento en el sistema de esta deuda", null));
-        }
-        if (listCivMovimientos != null) {
-            for (CivMovimientos civMovimiento : listCivMovimientos) {
-                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
-                Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
-                bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivMovimientos> listCivMovimientos = getMovimientosDAO().listMovimientos(session, bean.getDeudaSelecionada().getId());
+            if (listCivMovimientos == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro movimiento en el sistema de esta deuda", null));
             }
+            if (listCivMovimientos != null) {
+                for (CivMovimientos civMovimiento : listCivMovimientos) {
+                    CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(session, civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
+                    Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
+                    bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
+                }
+            }
+
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarDatosPersonas(BeanGestionPersonas beanGestionPersonas) throws Exception {
-        if (beanGestionPersonas != null) {
-            if (beanGestionPersonas.getDetallePersona() != null) {
-                if (beanGestionPersonas.getDetallePersona().getId() != 0) {
-                    List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(beanGestionPersonas.getDetallePersona().getId());
-                    if (listCivDatosPersonas != null) {
-                        for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
-                            DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
-                            beanGestionPersonas.getDetallePersona().getListDatosPersonas().add(datosPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (beanGestionPersonas != null) {
+                if (beanGestionPersonas.getDetallePersona() != null) {
+                    if (beanGestionPersonas.getDetallePersona().getId() != 0) {
+                        List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(session , beanGestionPersonas.getDetallePersona().getId());
+                        if (listCivDatosPersonas != null) {
+                            for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
+                                DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
+                                beanGestionPersonas.getDetallePersona().getListDatosPersonas().add(datosPersonas);
+                            }
                         }
                     }
                 }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void updatePersona(BeanGestionPersonas bean) throws Exception {
-        CivPersonas civPersonas = new CivPersonas();
-        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
-        civTipoDocumentos.setTipdocId(new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
-        civTipoDocumentos.setTipdocDescripcion(civTipoDocumentos.getTipdocDescripcion());
-        civTipoDocumentos.setTipdocNombrecorto(civTipoDocumentos.getTipdocNombrecorto());
-        civTipoDocumentos.setTipdocCodigo(civTipoDocumentos.getTipdocCodigo());
-        civTipoDocumentos.setTipdocFechainicial(civTipoDocumentos.getTipdocFechainicial());
-        civTipoDocumentos.setTipdocFechafinal(civTipoDocumentos.getTipdocFechafinal());
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            CivPersonas civPersonas = new CivPersonas();
+            CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
+            civTipoDocumentos.setTipdocId(new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
+            civTipoDocumentos.setTipdocDescripcion(civTipoDocumentos.getTipdocDescripcion());
+            civTipoDocumentos.setTipdocNombrecorto(civTipoDocumentos.getTipdocNombrecorto());
+            civTipoDocumentos.setTipdocCodigo(civTipoDocumentos.getTipdocCodigo());
+            civTipoDocumentos.setTipdocFechainicial(civTipoDocumentos.getTipdocFechainicial());
+            civTipoDocumentos.setTipdocFechafinal(civTipoDocumentos.getTipdocFechafinal());
 
-        CivEstadoPersonas civEstadoPersonas = new CivEstadoPersonas();
-        civEstadoPersonas.setEstperId(new BigDecimal(bean.getDetallePersona().getEstadoPersonas().getId()));
-        civEstadoPersonas.setEstperDescripcion(bean.getDetallePersona().getEstadoPersonas().getDescripcion());
-        civEstadoPersonas.setEstperFechainicial(bean.getDetallePersona().getEstadoPersonas().getFechainicial());
-        civEstadoPersonas.setEstperFechafinal(bean.getDetallePersona().getEstadoPersonas().getFechafinal());
-        civEstadoPersonas.setEstperFechaproceso(bean.getDetallePersona().getEstadoPersonas().getFechaproceso());
+            CivEstadoPersonas civEstadoPersonas = new CivEstadoPersonas();
+            civEstadoPersonas.setEstperId(new BigDecimal(bean.getDetallePersona().getEstadoPersonas().getId()));
+            civEstadoPersonas.setEstperDescripcion(bean.getDetallePersona().getEstadoPersonas().getDescripcion());
+            civEstadoPersonas.setEstperFechainicial(bean.getDetallePersona().getEstadoPersonas().getFechainicial());
+            civEstadoPersonas.setEstperFechafinal(bean.getDetallePersona().getEstadoPersonas().getFechafinal());
+            civEstadoPersonas.setEstperFechaproceso(bean.getDetallePersona().getEstadoPersonas().getFechaproceso());
 
-        civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
-        civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
-        civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
-        civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-        civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
-        civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
-        civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1());
-        civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2());
-        civPersonas.setCivEstadoPersonas(civEstadoPersonas);
+            civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
+            civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
+            civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
+            civPersonas.setCivTipoDocumentos(civTipoDocumentos);
+            civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
+            civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
+            civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1());
+            civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2());
+            civPersonas.setCivEstadoPersonas(civEstadoPersonas);
 
-        getPersonasDAO().update(civPersonas);
-        if (civPersonas != null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo la persona correctamente", null));
+            getPersonasDAO().update(session, civPersonas);
+            if (civPersonas != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo la persona correctamente", null));
+            }
+
+            transaction.commit();
+
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -186,68 +224,82 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
     @Override
     public void consultarByDocumentoByTipoDocumento(BeanGestionPersonas bean) throws Exception {
-        bean.setListPersonas(new ArrayList<>());
-        CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
-        if (civPersonas != null) {
-            Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
-            bean.getListPersonas().add(persona);
-        }
-        if (civPersonas == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalAgregarPersona').modal('show')");
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListPersonas(new ArrayList<>());
+            CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+            if (civPersonas != null) {
+                Personas persona = new Personas(civPersonas, civPersonas.getCivEstadoPersonas(), civPersonas.getCivTipoDocumentos());
+                bean.getListPersonas().add(persona);
+            }
+            if (civPersonas == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#modalAgregarPersona').modal('show')");
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void guardarPersona(BeanGestionPersonas bean) throws Exception {
-        CivPersonas civPersonas = new CivPersonas();
-        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(BigDecimal.valueOf(bean.getTipoDocumentoPersona()));
-        CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(1));
-        civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1().toUpperCase());
-        civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2().toUpperCase());
-        civPersonas.setPerSexo(bean.getDetallePersona().getSexo().toUpperCase());
-        civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-        civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1().toUpperCase());
-        civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2().toUpperCase());
-        civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
-        civPersonas.setPerFechaproceso(new Date());
-        civPersonas.setCivEstadoPersonas(civEstadoPersonas);
-        getPersonasDAO().create(civPersonas);
-        Expedientes expedientes = new Expedientes();
-        String nombreExpedientePersona = expedientes.crearExpediente(civPersonas, expedienteDAO);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivPersonas civPersonas = new CivPersonas();
+            CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, BigDecimal.valueOf(bean.getTipoDocumentoPersona()));
+            CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(1));
+            civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1().toUpperCase());
+            civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2().toUpperCase());
+            civPersonas.setPerSexo(bean.getDetallePersona().getSexo().toUpperCase());
+            civPersonas.setCivTipoDocumentos(civTipoDocumentos);
+            civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1().toUpperCase());
+            civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2().toUpperCase());
+            civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
+            civPersonas.setPerFechaproceso(new Date());
+            civPersonas.setCivEstadoPersonas(civEstadoPersonas);
+            getPersonasDAO().create(civPersonas);
+            Expedientes expedientes = new Expedientes();
+            String nombreExpedientePersona = expedientes.crearExpediente(civPersonas, expedienteDAO);
 
-        int registro = -1;
-        for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {
-            registro++;
-            if (bean.getListTipoDatosPersonas().get(i).isSelecionado() == true) {
+            int registro = -1;
+            for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {
+                registro++;
+                if (bean.getListTipoDatosPersonas().get(i).isSelecionado() == true) {
 
-                if (registro == i) {
+                    if (registro == i) {
 
-                    CivTipoDatosPersonas civTipoDatosPersonas = new CivTipoDatosPersonas();
-                    CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas = new CivEstadoTipoDatosPersonas();
+                        CivTipoDatosPersonas civTipoDatosPersonas = new CivTipoDatosPersonas();
+                        CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas = new CivEstadoTipoDatosPersonas();
 
-                    civEstadoTipoDatosPersonas.setEsttipdatId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getEstadoTipoDatosPersonas().getId()));
-                    civTipoDatosPersonas.setTipdatperId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getId()));
-                    civTipoDatosPersonas.setTipdatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcion());
-                    civTipoDatosPersonas.setTipdatperNombrecorto(bean.getListTipoDatosPersonas().get(i).getNombrecorto());
-                    civTipoDatosPersonas.setTipdatperCodigo(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getCodigo()));
-                    civTipoDatosPersonas.setTipdatperFechainicial(bean.getListTipoDatosPersonas().get(i).getFechainicial());
-                    civTipoDatosPersonas.setTipdatperFechafinal(bean.getListTipoDatosPersonas().get(i).getFechafinal());
-                    civTipoDatosPersonas.setCivEstadoTipoDatosPersonas(civEstadoTipoDatosPersonas);
-                    CivDatosPersonas civDatosPersonas = new CivDatosPersonas();
-                    CivEstadoDatosPersonas civEstadoDatosPersonas = getEstadoDatosPersonasDAO().getEstadoDatosPersonas(BigDecimal.valueOf(1));
-                    civDatosPersonas.setDatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcionDatosPersonas());
-                    civDatosPersonas.setDatperFechaproceso(new Date());
-                    civDatosPersonas.setCivPersonas(civPersonas);
-                    civDatosPersonas.setCivTipoDatosPersonas(civTipoDatosPersonas);
-                    civDatosPersonas.setCivEstadoDatosPersonas(civEstadoDatosPersonas);
-                    getDatosPersonasDAO().create(civDatosPersonas);
+                        civEstadoTipoDatosPersonas.setEsttipdatId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getEstadoTipoDatosPersonas().getId()));
+                        civTipoDatosPersonas.setTipdatperId(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getId()));
+                        civTipoDatosPersonas.setTipdatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcion());
+                        civTipoDatosPersonas.setTipdatperNombrecorto(bean.getListTipoDatosPersonas().get(i).getNombrecorto());
+                        civTipoDatosPersonas.setTipdatperCodigo(new BigDecimal(bean.getListTipoDatosPersonas().get(i).getCodigo()));
+                        civTipoDatosPersonas.setTipdatperFechainicial(bean.getListTipoDatosPersonas().get(i).getFechainicial());
+                        civTipoDatosPersonas.setTipdatperFechafinal(bean.getListTipoDatosPersonas().get(i).getFechafinal());
+                        civTipoDatosPersonas.setCivEstadoTipoDatosPersonas(civEstadoTipoDatosPersonas);
+                        CivDatosPersonas civDatosPersonas = new CivDatosPersonas();
+                        CivEstadoDatosPersonas civEstadoDatosPersonas = getEstadoDatosPersonasDAO().getEstadoDatosPersonas(BigDecimal.valueOf(1));
+                        civDatosPersonas.setDatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcionDatosPersonas());
+                        civDatosPersonas.setDatperFechaproceso(new Date());
+                        civDatosPersonas.setCivPersonas(civPersonas);
+                        civDatosPersonas.setCivTipoDatosPersonas(civTipoDatosPersonas);
+                        civDatosPersonas.setCivEstadoDatosPersonas(civEstadoDatosPersonas);
+                        getDatosPersonasDAO().create(civDatosPersonas);
+                    }
                 }
+
             }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
+
+        } finally {
+            session.flush();
+            session.close();
 
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
     }
 
     /**

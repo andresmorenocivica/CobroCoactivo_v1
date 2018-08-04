@@ -14,9 +14,8 @@ import java.util.List;
  */
 public interface GestionMovimientosBO {
     void cargarListadoPlanesTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
-    void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception;
+    //void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception;
     void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void cargarFasesTrabajo(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
-    void filtarListaDeudaTabla(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
     void generarMovimiento(BeanGestionMovimientos beanGestionMovimientos)throws Exception;
 }

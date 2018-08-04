@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.math.BigDecimal;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -39,9 +40,9 @@ public interface ITTipoDocumento {
      * @return Retorna verdadero si la actualización fue correcta.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public List<CivTipoDocumentos> listAll() throws Exception;
+    public List<CivTipoDocumentos> listAll(Session session) throws Exception;
 
-    public CivTipoDocumentos getTipoDocumento(BigDecimal tipoDocumento) throws Exception;
+    public CivTipoDocumentos getTipoDocumento(Session session,BigDecimal tipoDocumento) throws Exception;
     
     
     CivTipoDocumentos find(BigDecimal id) throws Exception;

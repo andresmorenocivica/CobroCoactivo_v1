@@ -14,8 +14,10 @@ import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
+import CobroCoactivo.Utility.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -33,28 +35,40 @@ public class DetallePersonaImpBO implements DetallePersonaBO {
 
     @Override
     public void cargarTipoDocumento(BeanDetallePersonas bean) throws Exception {
-        List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll();
-        for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
-            TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
-            bean.getListTipoDocumento().add(tipoDocumentos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivTipoDocumentos> listCivTipoDocumento = getTipoDocumentoDAO().listAll(session);
+            for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
+                TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
+                bean.getListTipoDocumento().add(tipoDocumentos);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarDatosPersonas(BeanDetallePersonas bean) throws Exception {
-        if (bean != null) {
-            if (bean.getDetallePersonasModal() != null) {
-                if (bean.getDetallePersonasModal().getId() != 0) {
-                    bean.getDetallePersonasModal().setListDatosPersonas(new ArrayList<>());
-                    List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(bean.getDetallePersonasModal().getId());
-                    if (listCivDatosPersonas != null) {
-                        for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
-                            DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
-                            bean.getDetallePersonasModal().getListDatosPersonas().add(datosPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (bean != null) {
+                if (bean.getDetallePersonasModal() != null) {
+                    if (bean.getDetallePersonasModal().getId() != 0) {
+                        bean.getDetallePersonasModal().setListDatosPersonas(new ArrayList<>());
+                        List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(session , bean.getDetallePersonasModal().getId());
+                        if (listCivDatosPersonas != null) {
+                            for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
+                                DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
+                                bean.getDetallePersonasModal().getListDatosPersonas().add(datosPersonas);
+                            }
                         }
                     }
                 }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 

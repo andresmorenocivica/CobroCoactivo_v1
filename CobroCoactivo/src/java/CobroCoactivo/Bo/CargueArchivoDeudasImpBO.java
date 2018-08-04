@@ -59,6 +59,7 @@ import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivUsuarios;
+import CobroCoactivo.Utility.HibernateUtil;
 import CobroCoactivo.Utility.Utility;
 import CobroCoactivo.Utility.UtilityCargues;
 import java.io.BufferedReader;
@@ -71,6 +72,7 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.hibernate.Session;
 
 /**
  *
@@ -219,8 +221,10 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     }
 
     public boolean cargarDatosDeudas(Personas personas, String valor, String referencia, String motivo, String fecha, CivPlanTrabajos civPlanTrabajos, BigDecimal concepto, int tipoDeuda) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
         String nombreExpedientePersona = "";
-        CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
+        CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(session,personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
         if (civPersonas == null) {
             civPersonas = new CivPersonas();
             civPersonas.setPerNombre1(personas.getNombre1());
@@ -229,7 +233,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
             civPersonas.setPerApellido2(personas.getApellido1());
 
             if (personas != null) {
-                CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(new BigDecimal(personas.getTipoDocumentos().getCodigo()));
+                CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(session,new BigDecimal(personas.getTipoDocumentos().getCodigo()));
                 civPersonas.setCivTipoDocumentos(civTipoDocumentos);
                 civPersonas.setPerDocumento(personas.getDocumento());
                 civPersonas.setPerSexo(personas.getSexo());
@@ -249,7 +253,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         civDeudas.setDeuMotivo(motivo);
         civDeudas.setDeuValor(new BigDecimal(valor));
         civDeudas.setDeuSaldo(new BigDecimal(valor));
-        civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(BigDecimal.ONE));
+        civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(session,BigDecimal.ONE));
         civDeudas.setCivPersonas(civPersonas);
         civDeudas.setCivPlanTrabajos(civPlanTrabajos);
         civDeudas.setCivTipoDeudas(getTipoDeudasDAO().find(new BigDecimal(tipoDeuda)));
@@ -284,8 +288,11 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
         civDetalleDeudas.setDeuFechaproceso(new Date());
         civDetalleDeudas.setDeuValor(civDeudas.getDeuValor());
         getDetalleDeudasDAO().create(civDetalleDeudas);
-
         return true;
+        } finally {
+            session.flush();
+            session.close();
+        }
     }
 
     private boolean guardarCarqueImpuesto(List<CargueDeudasImpuesto> listacargueDeudasImpuesto, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {

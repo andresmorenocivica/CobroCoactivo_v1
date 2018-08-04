@@ -19,15 +19,13 @@ import org.hibernate.Session;
 public class DaoEstadoDeudas extends ImpGeneryHibernateDao<CivEstadoDeudas, Integer> implements ITEstadoDeudas {
 
     @Override
-    public CivEstadoDeudas getEstadoDeudas(BigDecimal estadoDeudas) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivEstadoDeudas getEstadoDeudas(Session session, BigDecimal estadoDeudas) throws Exception {
         String hql = "from CivEstadoDeudas where estdeuId=:codigoEstado";
         Query query = session.createQuery(hql);
         query.setBigDecimal("codigoEstado", estadoDeudas);
         if (query.list().size() > 0) {
             return (CivEstadoDeudas) query.list().get(0);
         }
-        session.close();
         return null;
     }
 

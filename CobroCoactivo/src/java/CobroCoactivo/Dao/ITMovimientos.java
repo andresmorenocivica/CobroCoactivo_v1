@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivMovimientos;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,9 +16,9 @@ import java.util.List;
  */
 public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Integer> {
 
-    public List<CivMovimientos> listMovimientos(int idMovimientos) throws Exception;
+    public List<CivMovimientos> listMovimientos(Session session , int idMovimientos) throws Exception;
 
-    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(int deuId, int faseTrabajo) throws Exception;
+    public CivMovimientos getMovimientoByDeudaByFaseTrabajo(Session session,int deuId, int faseTrabajo) throws Exception;
 
     /**
      *
@@ -25,7 +26,7 @@ public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Inte
      * @return lista movimiento por fase
      * @throws Exception
      */
-    List<CivMovimientos> listMovimiento(int fase) throws Exception;
+    List<CivMovimientos> listMovimiento(Session session,int fase) throws Exception;
 
     public List<CivMovimientos> getMovimientoByUser(int idUsuario) throws Exception;
 

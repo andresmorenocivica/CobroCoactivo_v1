@@ -19,8 +19,7 @@ import org.hibernate.Session;
 public class DaoDocumentosGenerales extends ImpGeneryHibernateDao<CivDocumenGenerales, Integer> implements ITDocumentoGenerales{
 
     @Override
-    public CivDocumenGenerales getCivDocumentoGeneral(int idDocumentoGeneral) throws Exception {
-       Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivDocumenGenerales getCivDocumentoGeneral(Session session ,int idDocumentoGeneral) throws Exception {
         String sql = "SELECT * FROM CIV_DOCUMEN_GENERALES WHERE DOCGEN_ID = :idDocumentoGeneral";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivDocumenGenerales.class);
@@ -28,7 +27,6 @@ public class DaoDocumentosGenerales extends ImpGeneryHibernateDao<CivDocumenGene
         if (query.list().size() > 0) {
             return (CivDocumenGenerales) query.list().get(0);
         }   
-        session.close();
         return null;
     }
     

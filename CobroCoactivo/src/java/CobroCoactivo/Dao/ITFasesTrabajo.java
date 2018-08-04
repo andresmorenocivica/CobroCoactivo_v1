@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivFasesTrabajos;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface ITFasesTrabajo extends ITGeneryHibernateDao<CivFasesTrabajos, Integer> {
 
-    public List<CivFasesTrabajos> listarFasesTrabajo(int idEtapaTrabajo) throws Exception;
+    public List<CivFasesTrabajos> listarFasesTrabajo(Session session , int idEtapaTrabajo) throws Exception;
     
-    public CivFasesTrabajos getFasesTrabajos (int idFasesTrabajos) throws Exception;
+    public CivFasesTrabajos getFasesTrabajos (Session session , int idFasesTrabajos) throws Exception;
 }

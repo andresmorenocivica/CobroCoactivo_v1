@@ -33,6 +33,7 @@ public class Deudas implements java.io.Serializable {
     private Personas personas;
     private CobroDeudas cobroDeudas;
     private int diasHabilesDeuda;
+    private long referenciaUnica;
     // Lista que se utilizara para listar los movimeindo de la deuda seleccionada.
     private List<Movimientos> listMovimientos = new ArrayList<>();
 
@@ -46,6 +47,7 @@ public class Deudas implements java.io.Serializable {
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
         this.Referencia = civDeudas.getDeuRefencia();
+        this.referenciaUnica = civDeudas.getDeuRefUnica().longValue();
 
     }
 
@@ -368,6 +370,20 @@ public class Deudas implements java.io.Serializable {
      */
     public void setListMovimientos(List<Movimientos> listMovimientos) {
         this.listMovimientos = listMovimientos;
+    }
+
+    /**
+     * @return the referenciaUnica
+     */
+    public long getReferenciaUnica() {
+        return referenciaUnica;
+    }
+
+    /**
+     * @param referenciaUnica the referenciaUnica to set
+     */
+    public void setReferenciaUnica(long referenciaUnica) {
+        this.referenciaUnica = referenciaUnica;
     }
 
 }

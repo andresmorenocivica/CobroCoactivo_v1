@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDocumenGenerales;
 import java.io.Serializable;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,5 +16,5 @@ import java.io.Serializable;
  */
 public interface ITDocumentoGenerales extends ITGeneryHibernateDao<CivDocumenGenerales, Integer>{
     
-    CivDocumenGenerales getCivDocumentoGeneral(int idDocumentoGeneral) throws Exception ;
+    CivDocumenGenerales getCivDocumentoGeneral(Session session , int idDocumentoGeneral) throws Exception ;
 }
