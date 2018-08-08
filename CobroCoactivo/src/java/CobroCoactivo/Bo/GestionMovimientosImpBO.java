@@ -38,13 +38,13 @@ import CobroCoactivo.Utility.DateUtility;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -124,7 +124,6 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         }
 
     } */
-
     @Override
     public void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -231,43 +230,50 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         } finally {
             session.flush();
             session.close();
-            
+
         }
     }
 
     @Override
     public void generarMovimiento(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-        List<Deudas> listaDeudasRealizadas = new ArrayList<>();
-        int i = 0;
-        for (Deudas deudas : beanGestionMovimientos.getListaDeudasTabla()) {
-            if (deudas.isSeleccionado()) {
-                CivMovimientos civMovimientos = new CivMovimientos();
-                CivDeudas civDeudas = getDeudasDAO().find(new BigDecimal(deudas.getId()));
-                CivEstadoMovimientos civEstadomovimiento = getEstadoMovimientosDAO().find(BigDecimal.ONE);
-                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(new BigDecimal(beanGestionMovimientos.getFaseTrabajoSeleccionada().getId()));
-                CivPersonas civPersonas = getPersonaDAO().find(new BigDecimal(deudas.getPersonas().getId()));
-                CivUsuarios civUsuarios = getUsuarioDAO().find(new BigDecimal(beanGestionMovimientos.getLoginBO().getID_Usuario()));
-                civMovimientos.setCivDeudas(civDeudas);
-                civMovimientos.setCivEstadoMovimientos(civEstadomovimiento);
-                civMovimientos.setCivFasesTrabajos(civFasesTrabajos);
-                civMovimientos.setCivPersonas(civPersonas);
-                civMovimientos.setCivUsuarios(civUsuarios);
-                civMovimientos.setMovFechaproceso(new Date());
-                getMovimientoDAO().create(civMovimientos);
-                listaDeudasRealizadas.add(deudas);
-                i++;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            List<Deudas> listaDeudasRealizadas = new ArrayList<>();
+            int i = 0;
+            for (Deudas deudas : beanGestionMovimientos.getListaDeudasTabla()) {
+                if (deudas.isSeleccionado()) {
+                    CivMovimientos civMovimientos = new CivMovimientos();
+                    CivDeudas civDeudas = getDeudasDAO().find(session , new BigDecimal(deudas.getId()));
+                    CivEstadoMovimientos civEstadomovimiento = getEstadoMovimientosDAO().find(session , BigDecimal.ONE);
+                    CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(session , new BigDecimal(beanGestionMovimientos.getFaseTrabajoSeleccionada().getId()));
+                    CivPersonas civPersonas = getPersonaDAO().find(session , new BigDecimal(deudas.getPersonas().getId()));
+                    CivUsuarios civUsuarios = getUsuarioDAO().find(session , new BigDecimal(beanGestionMovimientos.getLoginBO().getID_Usuario()));
+                    civMovimientos.setCivDeudas(civDeudas);
+                    civMovimientos.setCivEstadoMovimientos(civEstadomovimiento);
+                    civMovimientos.setCivFasesTrabajos(civFasesTrabajos);
+                    civMovimientos.setCivPersonas(civPersonas);
+                    civMovimientos.setCivUsuarios(civUsuarios);
+                    civMovimientos.setMovFechaproceso(new Date());
+                    getMovimientoDAO().create(session , civMovimientos);
+                    listaDeudasRealizadas.add(deudas);
+                    i++;
+                }
+
             }
+            transaction.commit();
+            
+            for (Deudas deudasRealizada : listaDeudasRealizadas) {
+                beanGestionMovimientos.getListaDeudasTabla().remove(deudasRealizada);
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    i + " Movimiento realizado exitosamente", null));
 
+        } finally {
+            session.flush();
+            session.close();
         }
-        for (Deudas deudasRealizada : listaDeudasRealizadas) {
-            beanGestionMovimientos.getListaDeudasTabla().remove(deudasRealizada);
-        }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                i + " Movimiento realizado exitoxamente", null));
-
     }
-
-
 
     /**
      * @return the planTrabajoDAO
@@ -380,7 +386,5 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
     public void setUsuarioDAO(ITUsuarios usuarioDAO) {
         this.usuarioDAO = usuarioDAO;
     }
-
-  
 
 }

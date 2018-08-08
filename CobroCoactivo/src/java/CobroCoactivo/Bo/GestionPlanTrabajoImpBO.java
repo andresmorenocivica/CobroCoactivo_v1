@@ -46,6 +46,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -87,10 +88,10 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
         try {
 
             for (FasesTrabajos fasesTrabajos : beanGestionPlanTrabajo.getListFasesTrabajoses()) {
-                CivFasesGenerales civFasesGenerales = getFasesGeneralesDAO().find(BigDecimal.valueOf(fasesTrabajos.getId()));
+                CivFasesGenerales civFasesGenerales = getFasesGeneralesDAO().find(session, BigDecimal.valueOf(fasesTrabajos.getId()));
                 if (fasesTrabajos.isUpdateFase()) {
                     if (civFasesGenerales.getFasgenDiamax().intValue() >= fasesTrabajos.getDiamax()) {
-                        CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(BigDecimal.valueOf(fasesTrabajos.getId()));
+                        CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(session, BigDecimal.valueOf(fasesTrabajos.getId()));
                         civFasesTrabajos.setFastraDianim(BigDecimal.valueOf(fasesTrabajos.getDianim()));
                         civFasesTrabajos.setFastraDiamax(BigDecimal.valueOf(fasesTrabajos.getDiamax()));
                         getFasesTrabajoDAO().update(session, civFasesTrabajos);
@@ -163,13 +164,18 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
     @Override
     public void getListaTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
-        beanGestionPlanTrabajo.setListPlanTrabajos(new ArrayList<>());
-        List<CivPlanTrabajos> listCivPlanTrabajos = getPlanTrabajoDAO().findAll();
-        for (CivPlanTrabajos civPlanTrabajo : listCivPlanTrabajos) {
-            PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajo, civPlanTrabajo.getCivEstadoPlanTrabajos());
-            beanGestionPlanTrabajo.getListPlanTrabajos().add(planTrabajos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            beanGestionPlanTrabajo.setListPlanTrabajos(new ArrayList<>());
+            List<CivPlanTrabajos> listCivPlanTrabajos = getPlanTrabajoDAO().findAll(session);
+            for (CivPlanTrabajos civPlanTrabajo : listCivPlanTrabajos) {
+                PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajo, civPlanTrabajo.getCivEstadoPlanTrabajos());
+                beanGestionPlanTrabajo.getListPlanTrabajos().add(planTrabajos);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
-
     }
 
     @Override
@@ -207,7 +213,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                     civPlanTrabajos.setPlatraNumeroactoadm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoNumeroActo());
                     civPlanTrabajos.setPlatraFechaanctoadm(beanGestionPlanTrabajo.getListPlanGenerales().get(i).getPlanTrabajoFechaActo());
 
-                    getPlanTrabajoDAO().create(civPlanTrabajos);
+                    getPlanTrabajoDAO().create(session, civPlanTrabajos);
                     List<CivEtapasGenerales> listCivEtapasGenerales = getEtapaGeneralDAO().findAllEtapaByIdPlanGeneral(session, civPlanTrabajos.getPlatraId().intValue());
                     for (CivEtapasGenerales etapaGeneral : listCivEtapasGenerales) {
                         if (etapaGeneral.getEtagenObligatorio().equals("TRUE")) {
@@ -229,7 +235,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                             civEtapasTrabajos.setEtatraObligatorio(etapaGeneral.getEtagenObligatorio());
                             civEtapasTrabajos.setEtatraPrioridad(etapaGeneral.getEtagenPrioridad());
                             //finaliza  la CivEtapasTrabajo a guardar
-                            getEtapasTrabajoDAO().create(civEtapasTrabajos);
+                            getEtapasTrabajoDAO().create(session, civEtapasTrabajos);
                             List<CivFasesGenerales> listFasesGenerales = getFasesGeneralesDAO().AllListByEtapaGeneral(session, civEtapasTrabajos.getEtatraId().intValue());
                             for (CivFasesGenerales fasesGenerales : listFasesGenerales) {
                                 CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
@@ -250,7 +256,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                                 civReporteTrabajos.setReptraFechaproceso(fasesGenerales.getCivDocumenGenerales().getDocgenFechaproceso());
                                 civReporteTrabajos.setReptraArchivo(fasesGenerales.getCivDocumenGenerales().getDocgenArchivo());
                                 civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                                getReporteTrabajosDAO().create(civReporteTrabajos);
+                                getReporteTrabajosDAO().create(session, civReporteTrabajos);
                                 //Objeto civFasesTrabajos
                                 CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
                                 civFasesTrabajos.setFastraId(fasesGenerales.getFasgenId());
@@ -263,7 +269,7 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                                 civFasesTrabajos.setFastraObligatorio(fasesGenerales.getFasgenObligatorio());
                                 civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
                                 if (civFasesTrabajos.getFastraObligatorio().equals("TRUE")) {
-                                    getFasesTrabajoDAO().create(civFasesTrabajos);
+                                    getFasesTrabajoDAO().create(session, civFasesTrabajos);
                                 }
                             }
 
@@ -284,42 +290,49 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
 
     @Override
     public void guardarFaseTrabajo(BeanGestionPlanTrabajo beanGestionPlanTrabajo) throws Exception {
-        for (int i = 0; i < beanGestionPlanTrabajo.getListFasesGeneral().size(); i++) {
-            if (beanGestionPlanTrabajo.getListFasesGeneral().get(i).isSeleccionado()) {
-                CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
-                CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
-                civEtapasTrabajos.setEtatraId(new BigDecimal(beanGestionPlanTrabajo.getEtapasTrabajos().getId()));
-                CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
-                civEstadoReporteTrabajos.setEstreptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getEstadoDocumengenerales().getId()));
-                CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
-                civReporteTrabajos.setReptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getId()));
-                civReporteTrabajos.setReptraArchivo(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getArchivo());
-                civReporteTrabajos.setReptraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getDescripcion());
-                civReporteTrabajos.setReptraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getFechaproceso());
-                civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
-                getReporteTrabajosDAO().create(civReporteTrabajos);
-                CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
-                civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getEstadoFasesGenerales().getId()));
-                civFasesTrabajos.setFastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getId()));
-                civFasesTrabajos.setFastraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDescripcion());
-                civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
-                civFasesTrabajos.setFastraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getFechaproceso());
-                civFasesTrabajos.setFastraDianim(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDianim()));
-                civFasesTrabajos.setFastraDiamax(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDiamax()));
-                civFasesTrabajos.setFastraObligatorio(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getObligatorio());
-                civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
-                civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
-                getFasesTrabajoDAO().create(civFasesTrabajos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            for (int i = 0; i < beanGestionPlanTrabajo.getListFasesGeneral().size(); i++) {
+                if (beanGestionPlanTrabajo.getListFasesGeneral().get(i).isSeleccionado()) {
+                    CivFasesTrabajos civFasesTrabajos = new CivFasesTrabajos();
+                    CivEtapasTrabajos civEtapasTrabajos = new CivEtapasTrabajos();
+                    civEtapasTrabajos.setEtatraId(new BigDecimal(beanGestionPlanTrabajo.getEtapasTrabajos().getId()));
+                    CivEstadoReporteTrabajos civEstadoReporteTrabajos = new CivEstadoReporteTrabajos();
+                    civEstadoReporteTrabajos.setEstreptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getEstadoDocumengenerales().getId()));
+                    CivReporteTrabajos civReporteTrabajos = new CivReporteTrabajos();
+                    civReporteTrabajos.setReptraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getId()));
+                    civReporteTrabajos.setReptraArchivo(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getArchivo());
+                    civReporteTrabajos.setReptraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getDescripcion());
+                    civReporteTrabajos.setReptraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDocumenGenerales().getFechaproceso());
+                    civReporteTrabajos.setCivEstadoReporteTrabajos(civEstadoReporteTrabajos);
+                    getReporteTrabajosDAO().create(session, civReporteTrabajos);
+                    CivEstadoFasesTrabajos civEstadoFasesTrabajos = new CivEstadoFasesTrabajos();
+                    civEstadoFasesTrabajos.setEstfastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getEstadoFasesGenerales().getId()));
+                    civFasesTrabajos.setFastraId(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getId()));
+                    civFasesTrabajos.setFastraDescripcion(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDescripcion());
+                    civFasesTrabajos.setCivEstadoFasesTrabajos(civEstadoFasesTrabajos);
+                    civFasesTrabajos.setFastraFechaproceso(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getFechaproceso());
+                    civFasesTrabajos.setFastraDianim(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDianim()));
+                    civFasesTrabajos.setFastraDiamax(new BigDecimal(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getDiamax()));
+                    civFasesTrabajos.setFastraObligatorio(beanGestionPlanTrabajo.getListFasesGeneral().get(i).getObligatorio());
+                    civFasesTrabajos.setCivEtapasTrabajos(civEtapasTrabajos);
+                    civFasesTrabajos.setCivReporteTrabajos(civReporteTrabajos);
+                    getFasesTrabajoDAO().create(session, civFasesTrabajos);
 
+                }
             }
+            transaction.commit();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "fase de trabajo creada exitosamente", "Etapa De trabajo exitosamente"));
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#fasesTrabajos').modal('hide')");
+            getFases(beanGestionPlanTrabajo);
+            getfasesGenerales(beanGestionPlanTrabajo);
+        } finally {
+            session.flush();
+            session.close();
         }
-
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                "fase de trabajo creada exitosamente", "Etapa De trabajo exitosamente"));
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("$('#fasesTrabajos').modal('hide')");
-        getFases(beanGestionPlanTrabajo);
-        getfasesGenerales(beanGestionPlanTrabajo);
     }
 
     @Override
@@ -334,11 +347,11 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                     civEtapasTrabajos.setEtatraFechaproceso(new java.util.Date());
                     civEtapasTrabajos.setEtatraObligatorio(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getObligatorio());
                     civEtapasTrabajos.setEtatraPrioridad(new BigDecimal(beanGestionPlanTrabajo.getListEtapaGenerales().get(i).getPrioridad()));
-                    CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = getEstadoEtapasTrabajoDAO().find(BigDecimal.ONE);
+                    CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = getEstadoEtapasTrabajoDAO().find(session, BigDecimal.ONE);
                     civEtapasTrabajos.setCivEstadoEtapaTrabajos(civEstadoEtapaTrabajos);
                     CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, beanGestionPlanTrabajo.getPlanTrabajos().getId());
                     civEtapasTrabajos.setCivPlanTrabajos(civPlanTrabajos);
-                    getEtapasTrabajoDAO().create(civEtapasTrabajos);
+                    getEtapasTrabajoDAO().create(session, civEtapasTrabajos);
                 }
             }
             beanGestionPlanTrabajo.listaEtapaTrabajo(beanGestionPlanTrabajo.getPlanTrabajos());

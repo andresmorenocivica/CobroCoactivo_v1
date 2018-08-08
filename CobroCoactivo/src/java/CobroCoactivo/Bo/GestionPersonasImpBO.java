@@ -100,19 +100,31 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
     @Override
     public void cargarTipoDatosPersonas(BeanGestionPersonas bean) throws Exception {
-        List<CivTipoDatosPersonas> listCivTipoDatosPersonas = getTipoDatosPersonasDAO().findAll();
-        for (CivTipoDatosPersonas civTipoDatosPersona : listCivTipoDatosPersonas) {
-            TipoDatosPersonas tipoDatosPersonas = new TipoDatosPersonas(civTipoDatosPersona, civTipoDatosPersona.getCivEstadoTipoDatosPersonas());
-            bean.getListTipoDatosPersonas().add(tipoDatosPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivTipoDatosPersonas> listCivTipoDatosPersonas = getTipoDatosPersonasDAO().findAll(session);
+            for (CivTipoDatosPersonas civTipoDatosPersona : listCivTipoDatosPersonas) {
+                TipoDatosPersonas tipoDatosPersonas = new TipoDatosPersonas(civTipoDatosPersona, civTipoDatosPersona.getCivEstadoTipoDatosPersonas());
+                bean.getListTipoDatosPersonas().add(tipoDatosPersonas);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarEstadoTipoDatosPersonas(BeanGestionPersonas bean) throws Exception {
-        List<CivEstadoTipoDatosPersonas> listCivEstadoTipoDatosPersonas = getEstadoTipoDatosPersonasDAO().findAll();
-        for (CivEstadoTipoDatosPersonas civEstadoTipoDatosPersona : listCivEstadoTipoDatosPersonas) {
-            EstadoTipoDatosPersonas estadoTipoDatosPersonas = new EstadoTipoDatosPersonas(civEstadoTipoDatosPersona);
-            bean.getListEstadoTipoDatosPersonas().add(estadoTipoDatosPersonas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivEstadoTipoDatosPersonas> listCivEstadoTipoDatosPersonas = getEstadoTipoDatosPersonasDAO().findAll(session);
+            for (CivEstadoTipoDatosPersonas civEstadoTipoDatosPersona : listCivEstadoTipoDatosPersonas) {
+                EstadoTipoDatosPersonas estadoTipoDatosPersonas = new EstadoTipoDatosPersonas(civEstadoTipoDatosPersona);
+                bean.getListEstadoTipoDatosPersonas().add(estadoTipoDatosPersonas);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -145,7 +157,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             if (beanGestionPersonas != null) {
                 if (beanGestionPersonas.getDetallePersona() != null) {
                     if (beanGestionPersonas.getDetallePersona().getId() != 0) {
-                        List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(session , beanGestionPersonas.getDetallePersona().getId());
+                        List<CivDatosPersonas> listCivDatosPersonas = getDatosPersonasDAO().listarDatosPersonas(session, beanGestionPersonas.getDetallePersona().getId());
                         if (listCivDatosPersonas != null) {
                             for (CivDatosPersonas CivDatosPersona : listCivDatosPersonas) {
                                 DatosPersonas datosPersonas = new DatosPersonas(CivDatosPersona, CivDatosPersona.getCivTipoDatosPersonas(), CivDatosPersona.getCivEstadoDatosPersonas());
@@ -247,6 +259,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     public void guardarPersona(BeanGestionPersonas bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
+            Transaction transaction = session.beginTransaction();
             CivPersonas civPersonas = new CivPersonas();
             CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, BigDecimal.valueOf(bean.getTipoDocumentoPersona()));
             CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(1));
@@ -259,7 +272,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
             civPersonas.setPerFechaproceso(new Date());
             civPersonas.setCivEstadoPersonas(civEstadoPersonas);
-            getPersonasDAO().create(civPersonas);
+            getPersonasDAO().create(session, civPersonas);
             Expedientes expedientes = new Expedientes();
             String nombreExpedientePersona = expedientes.crearExpediente(civPersonas, expedienteDAO);
 
@@ -288,11 +301,12 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                         civDatosPersonas.setCivPersonas(civPersonas);
                         civDatosPersonas.setCivTipoDatosPersonas(civTipoDatosPersonas);
                         civDatosPersonas.setCivEstadoDatosPersonas(civEstadoDatosPersonas);
-                        getDatosPersonasDAO().create(civDatosPersonas);
+                        getDatosPersonasDAO().create(session, civDatosPersonas);
                     }
                 }
 
             }
+            transaction.commit();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
 
         } finally {

@@ -92,7 +92,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            List<CivCobroDeudas> listCivCobroDeudas = getCobroDeudasDAO().findAll();
+            List<CivCobroDeudas> listCivCobroDeudas = getCobroDeudasDAO().findAll(session);
             for (CivCobroDeudas CivCobroDeuda : listCivCobroDeudas) {
                 CobroDeudas cobroDeudas = new CobroDeudas(CivCobroDeuda);
                 switch (cobroDeudas.getDescripcion()) {
@@ -123,7 +123,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            List<CivDeudas> listCivDeudas = getDeudasDAO().findAll();
+            List<CivDeudas> listCivDeudas = getDeudasDAO().findAll(session);
             if (listCivDeudas != null) {
                 if (listCivDeudas.size() > 0) {
                     int i = 0;
@@ -214,9 +214,9 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     public void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            CivDeudas civDeudas = getDeudasDAO().find(new BigDecimal(bean.getDeudaSeleccionada().getId()));
+            CivDeudas civDeudas = getDeudasDAO().find(session , new BigDecimal(bean.getDeudaSeleccionada().getId()));
             CivCobroDeudas civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session , bean.getCobroDeudasSeleccionado().getId());
-            CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
+            CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(session , new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
             CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(session, new BigDecimal(bean.getDeudaSeleccionada().getEstadoDeudas().getId()));
             CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, bean.getDeudaSeleccionada().getPlanTrabajoDeuda().getId());
             CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session, bean.getDeudaSeleccionada().getPersonas().getId());
@@ -252,7 +252,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            List<CivCobroDeudas> listaCivCobroDeudas = getCobroDeudasDAO().findAll();
+            List<CivCobroDeudas> listaCivCobroDeudas = getCobroDeudasDAO().findAll(session);
             for (CivCobroDeudas civCobroDeudas : listaCivCobroDeudas) {
                 List<CivDetalleCobroDeudas> listCivDetalleCobroDeudas = getDetalleCobroDeudasDAO().listarDetalleCobroDeudas(civCobroDeudas.getCobdeuId().intValue());
                 for (CivDetalleCobroDeudas civDetalleCobroDeudas : listCivDetalleCobroDeudas) {

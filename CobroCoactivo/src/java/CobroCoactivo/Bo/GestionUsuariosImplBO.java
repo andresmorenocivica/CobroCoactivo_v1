@@ -62,6 +62,7 @@ import java.util.Random;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -127,7 +128,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
             if (list.contains(passCifrada)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.", null));
             }
-            CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(bean.getDetalleUsuario().getId()));
+            CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(bean.getDetalleUsuario().getId()));
             civUsuarios.setUsuPass(DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion()));
             getUsuariosDAO().update(session, civUsuarios);
             RequestContext requestContexts = RequestContext.getCurrentInstance();
@@ -228,22 +229,28 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void cargarTodosModulos(BeanGestionUsuarios bean) throws Exception {
-        bean.setListTodosModulos(new ArrayList<>());
-        List<CivModulos> listCivModulos = getModulosDAO().findAll();
-        if (listCivModulos != null) {
-            for (CivModulos civModulo : listCivModulos) {
-                Modulos modulos = new Modulos(civModulo, civModulo.getCivEstadoModulos());
-                List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
-                if (listCivRecursos != null) {
-                    for (CivRecursos CivRecurso : listCivRecursos) {
-                        List<CivConfUsuRec> civConfUsuRec = getConfUsuRecDAO().getConfUsuRec(CivRecurso.getRecId().intValue());
-                        Recursos recurso = new Recursos(CivRecurso);
-                        recurso.setSelecionado(civConfUsuRec != null ? true : false);
-                        modulos.getListRecurso().add(recurso);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListTodosModulos(new ArrayList<>());
+            List<CivModulos> listCivModulos = getModulosDAO().findAll(session);
+            if (listCivModulos != null) {
+                for (CivModulos civModulo : listCivModulos) {
+                    Modulos modulos = new Modulos(civModulo, civModulo.getCivEstadoModulos());
+                    List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
+                    if (listCivRecursos != null) {
+                        for (CivRecursos CivRecurso : listCivRecursos) {
+                            List<CivConfUsuRec> civConfUsuRec = getConfUsuRecDAO().getConfUsuRec(CivRecurso.getRecId().intValue());
+                            Recursos recurso = new Recursos(CivRecurso);
+                            recurso.setSelecionado(civConfUsuRec != null ? true : false);
+                            modulos.getListRecurso().add(recurso);
+                        }
                     }
+                    bean.getListTodosModulos().add(modulos);
                 }
-                bean.getListTodosModulos().add(modulos);
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -269,14 +276,14 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 ConfUsuRec temporal = bean.getListConfUsuRec().get(i);
                 if (temporal.isSelecionado() == true) {
                     if (increment == i) {
-                        CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(BigDecimal.valueOf(temporal.getConfusurecId()));
+                        CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(session, BigDecimal.valueOf(temporal.getConfusurecId()));
 
                         CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(2));
-                        CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
+                        CivUsuarios civUsuarios = getUsuariosDAO().find(session, BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
 
                         civConfUsuRec.setCivUsuarios(civUsuarios);
                         civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
-                        getConfUsuRecDAO().update(session , civConfUsuRec);
+                        getConfUsuRecDAO().update(session, civConfUsuRec);
                     }
                 }
             }
@@ -290,27 +297,35 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void guardarRecursoUsuario(BeanGestionUsuarios bean) throws Exception {
-        int increment = -1;
-        for (int i = 0; i < bean.getListRecursos().size(); i++) {
-            increment++;
-            if (bean.getListRecursos().get(i).isSelecionado() == true) {
-                if (increment == i) {
-                    CivConfUsuRec civConfUsuRec = new CivConfUsuRec();
-                    CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(1));
-                    CivRecursos civRecursos = getRecursosDAO().getRecursos(bean.getListRecursos().get(i).getRecId().intValue());
-                    CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            int increment = -1;
+            for (int i = 0; i < bean.getListRecursos().size(); i++) {
+                increment++;
+                if (bean.getListRecursos().get(i).isSelecionado() == true) {
+                    if (increment == i) {
+                        CivConfUsuRec civConfUsuRec = new CivConfUsuRec();
+                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(1));
+                        CivRecursos civRecursos = getRecursosDAO().getRecursos(bean.getListRecursos().get(i).getRecId().intValue());
+                        CivUsuarios civUsuarios = getUsuariosDAO().find(session, BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
 
-                    civConfUsuRec.setCivUsuarios(civUsuarios);
-                    civConfUsuRec.setConfusurecFechaproceso(new Date());
-                    civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
-                    civConfUsuRec.setCivRecursos(civRecursos);
-                    getConfUsuRecDAO().create(civConfUsuRec);
+                        civConfUsuRec.setCivUsuarios(civUsuarios);
+                        civConfUsuRec.setConfusurecFechaproceso(new Date());
+                        civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
+                        civConfUsuRec.setCivRecursos(civRecursos);
+                        getConfUsuRecDAO().create(session, civConfUsuRec);
+                    }
                 }
-            }
 
+            }
+            transaction.commit();
+            cargarTodosModulos(bean);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente, el usuario debe iniciar sesion pa ver los cambios", null));
+        } finally {
+            session.flush();
+            session.close();
         }
-        cargarTodosModulos(bean);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agrego el recurso exitosamente, el usuario debe iniciar sesion pa ver los cambios", null));
     }
 
     public String generarNombreUsuario(String nombre, String apellido) {
@@ -357,6 +372,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     public void registrarUsuario(BeanGestionUsuarios bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
+            Transaction transaction = session.beginTransaction();
             CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
             CivUsuarios user = getUsuariosDAO().consultarUsuarioByNombre(session, bean.getNombreUsuarioNuevo().toUpperCase());
             if (user != null) {
@@ -377,17 +393,17 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 civUsuarios.setUsuFechaproceso(new Date());
                 civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
                 civUsuarios.setCivPersonas(civPersonas);
-                getUsuariosDAO().create(civUsuarios);
+                getUsuariosDAO().create(session, civUsuarios);
 
                 CivUspHistoria civUspHistoria = new CivUspHistoria();
-                CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.valueOf(1));
+                CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(session, BigDecimal.valueOf(1));
 
                 civUspHistoria.setPData(DigestHandler.encryptSHA2(bean.getDocumentoPersona()));
                 civUspHistoria.setFechaProceso(new Date());
                 civUspHistoria.setCivUsuarios(civUsuarios);
                 civUspHistoria.setCivEstadouspHistoria(civEstadouspHistoria);
-                getUspHistoriaDAO().create(civUspHistoria);
-                session.close();
+                getUspHistoriaDAO().create(session, civUspHistoria);
+                transaction.commit();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña por defecto es el numero del documento", null));
             }
         } finally {

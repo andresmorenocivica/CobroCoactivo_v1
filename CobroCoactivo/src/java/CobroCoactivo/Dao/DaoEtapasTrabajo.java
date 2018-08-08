@@ -22,7 +22,7 @@ public class DaoEtapasTrabajo extends ImpGeneryHibernateDao<CivEtapasTrabajos, I
 
     @Override
     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(Session session, int idPlanTrabajo) throws Exception {
-        String sql = "FROM CivEtapasTrabajos WHERE civPlanTrabajos.platraId =:platraId and civEstadoEtapaTrabajos.estetatraId=1 ORDER BY etatraObligatorio";
+        String sql = "FROM CivEtapasTrabajos WHERE civPlanTrabajos.platraId =:platraId and civEstadoEtapaTrabajos.estetatraId=1 ORDER BY etatraObligatorio ,etatraPrioridad";
         Query query = session.createQuery(sql);
         query.setParameter("platraId", new BigDecimal(idPlanTrabajo));
         if (query.list().size() > 0) {

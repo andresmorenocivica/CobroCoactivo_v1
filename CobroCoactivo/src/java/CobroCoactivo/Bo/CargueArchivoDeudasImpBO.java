@@ -42,7 +42,6 @@ import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.CargueDeudasComparendo;
 import CobroCoactivo.Modelo.CargueDeudasImpuesto;
-import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDocumentos;
@@ -73,6 +72,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -120,29 +120,32 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
 
     @Override
     public void procesarCargueArchivoDeudas(BeanCargueArchivoDeudas beanCargueArchivoDeudas) throws Exception {
-        if (Paths.get(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName()).getFileName().toString().endsWith(".txt")) {
-            String nombreArchivo = beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName().replace(".txt", "");
-            if (nombreArchivo.endsWith("PlanoDeudasImpuesto") || nombreArchivo.endsWith("PlanoDeudasComparendos")) {
-                int tipoPlano = nombreArchivo.equals("PlanoDeudasImpuesto") ? 1 : (nombreArchivo.equals("PlanoDeudasComparendo") ? 2 : 0);
-                CivPlanTrabajos civPlanTrabajos = null;
-                if (tipoPlano != 0) {
-                    civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(tipoPlano == 1 ? "DERECHO DE TRANSITO" : (tipoPlano == 2 ? "COMPARENDO" : ""));//plan de trabajo impuesto
-                }
-                boolean datosGuardados = false;
-                if (civPlanTrabajos != null) {
-                    String linea;
-                    Utility utility = new Utility();
-                    org.apache.commons.fileupload.FileItem fileItem = null;
-                    String folder = "D:/Archivo/archivos_planos/";
-                    File folders = new File(folder);
-                    if (!folders.exists()) {
-                        folders.mkdirs();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            if (Paths.get(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName()).getFileName().toString().endsWith(".txt")) {
+                String nombreArchivo = beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName().replace(".txt", "");
+                if (nombreArchivo.endsWith("PlanoDeudasImpuesto") || nombreArchivo.endsWith("PlanoDeudasComparendos")) {
+                    int tipoPlano = nombreArchivo.equals("PlanoDeudasImpuesto") ? 1 : (nombreArchivo.equals("PlanoDeudasComparendo") ? 2 : 0);
+                    CivPlanTrabajos civPlanTrabajos = null;
+                    if (tipoPlano != 0) {
+                        civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(tipoPlano == 1 ? "DERECHO DE TRANSITO" : (tipoPlano == 2 ? "COMPARENDO" : ""));//plan de trabajo impuesto
                     }
-                    nombreArchivo = folder + beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName();
-                    File saveTo = new File(nombreArchivo);
-                    //fileItem.write(saveTo);
-                    java.io.FileInputStream fis = new java.io.FileInputStream(saveTo);
-                    java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+                    boolean datosGuardados = false;
+                    if (civPlanTrabajos != null) {
+                        String linea;
+                        Utility utility = new Utility();
+                        org.apache.commons.fileupload.FileItem fileItem = null;
+                        String folder = "D:/Archivo/archivos_planos/";
+                        File folders = new File(folder);
+                        if (!folders.exists()) {
+                            folders.mkdirs();
+                        }
+                        nombreArchivo = folder + beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName();
+                        File saveTo = new File(nombreArchivo);
+                        //fileItem.write(saveTo);
+                        java.io.FileInputStream fis = new java.io.FileInputStream(saveTo);
+                        java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
 //        
 //        InputStream stream = beanCargueArchivoDeudas.getArchivoCague().getInputStream();
@@ -150,145 +153,151 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
 //        file.c
 //        Files.copy(stream, new File(folder + Paths.get(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
 //          
-                    while ((linea = reader.readLine()) != null) {
-                        java.util.List listaCampos = utility.obtenerCampos(linea);
-                        UtilityCargues utilityCargues = new UtilityCargues();
-                        List<UtilityCargues> listaCamposDeudas = utilityCargues.validarlineaImpuesto(listaCampos, getEstructuraPlanosDAO(), tipoPlano);
-                        switch (tipoPlano) {
-                            case 1:
-                                if (utilityCargues.isError()) {
-                                    CargueDeudasImpuesto cargueDeudasImpuesto = new CargueDeudasImpuesto(listaCamposDeudas);
-                                    beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas().add(cargueDeudasImpuesto);
-                                    beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
-                                } else {
-                                    beanCargueArchivoDeudas.getListaDeudasImpuestoIncorrectas().add(utilityCargues);
-                                    beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
-                                }
-                                break;
-                            case 2:
-                                if (utilityCargues.isError()) {
-                                    CargueDeudasComparendo cargueDeudasComparendo = new CargueDeudasComparendo(listaCamposDeudas);
-                                    beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas().add(cargueDeudasComparendo);
-                                    beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
-                                } else {
-                                    beanCargueArchivoDeudas.getListaDeudasComparendoIncorrectas().add(utilityCargues);
-                                    beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
-                                }
-                                break;
-                        }
+                        while ((linea = reader.readLine()) != null) {
+                            java.util.List listaCampos = utility.obtenerCampos(linea);
+                            UtilityCargues utilityCargues = new UtilityCargues();
+                            List<UtilityCargues> listaCamposDeudas = utilityCargues.validarlineaImpuesto(listaCampos, getEstructuraPlanosDAO(), tipoPlano);
+                            switch (tipoPlano) {
+                                case 1:
+                                    if (utilityCargues.isError()) {
+                                        CargueDeudasImpuesto cargueDeudasImpuesto = new CargueDeudasImpuesto(listaCamposDeudas);
+                                        beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas().add(cargueDeudasImpuesto);
+                                        beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
+                                    } else {
+                                        beanCargueArchivoDeudas.getListaDeudasImpuestoIncorrectas().add(utilityCargues);
+                                        beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
+                                    }
+                                    break;
+                                case 2:
+                                    if (utilityCargues.isError()) {
+                                        CargueDeudasComparendo cargueDeudasComparendo = new CargueDeudasComparendo(listaCamposDeudas);
+                                        beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas().add(cargueDeudasComparendo);
+                                        beanCargueArchivoDeudas.setCargados(beanCargueArchivoDeudas.getCargados() + 1);
+                                    } else {
+                                        beanCargueArchivoDeudas.getListaDeudasComparendoIncorrectas().add(utilityCargues);
+                                        beanCargueArchivoDeudas.setSinCargar(beanCargueArchivoDeudas.getSinCargar() + 1);
+                                    }
+                                    break;
+                            }
 
-                    }
-                    if (beanCargueArchivoDeudas.getCargados() > 0) {
-                        CivArchivosPlanos civArchivosPlanos = new CivArchivosPlanos();
-                        civArchivosPlanos.setArcNombre(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName());
-                        civArchivosPlanos.setArcFecha(new Date());
-                        civArchivosPlanos.setArcEstadoFk(BigDecimal.ONE);
-                        CivUsuarios civUsuarios = getUsuarioDAO().find(new BigDecimal(beanCargueArchivoDeudas.getLoginBO().getID_Usuario()));
-                        civArchivosPlanos.setCivUsuarios(civUsuarios);
-                        getArchivosPlanosDAO().create(civArchivosPlanos);
-                        if (tipoPlano == 1) {
-                            datosGuardados = guardarCarqueImpuesto(beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas(), civArchivosPlanos, civPlanTrabajos);
-                        } else if (tipoPlano == 2) {
-                            datosGuardados = guardarCarqueComparendo(beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas(), civArchivosPlanos, civPlanTrabajos);
                         }
+                        if (beanCargueArchivoDeudas.getCargados() > 0) {
+                            CivArchivosPlanos civArchivosPlanos = new CivArchivosPlanos();
+                            civArchivosPlanos.setArcNombre(beanCargueArchivoDeudas.getArchivoCague().getSubmittedFileName());
+                            civArchivosPlanos.setArcFecha(new Date());
+                            civArchivosPlanos.setArcEstadoFk(BigDecimal.ONE);
+                            CivUsuarios civUsuarios = getUsuarioDAO().find(session, new BigDecimal(beanCargueArchivoDeudas.getLoginBO().getID_Usuario()));
+                            civArchivosPlanos.setCivUsuarios(civUsuarios);
+                            getArchivosPlanosDAO().create(session, civArchivosPlanos);
+                            transaction.commit();
+                            if (tipoPlano == 1) {
+                                datosGuardados = guardarCarqueImpuesto(beanCargueArchivoDeudas.getListaDeudasImpuestoCorrectas(), civArchivosPlanos, civPlanTrabajos);
+                            } else if (tipoPlano == 2) {
+                                datosGuardados = guardarCarqueComparendo(beanCargueArchivoDeudas.getListaDeudasComparendoCorrectas(), civArchivosPlanos, civPlanTrabajos);
+                            }
 
-                        if (datosGuardados) {
-                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                    "Datos CargadosCorrectamente", null));
+                            if (datosGuardados) {
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        "Datos CargadosCorrectamente", null));
+                            } else {
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                        "Ocurrio un problema al guardar los datos", null));
+                            }
+
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                    "Ocurrio un problema al guardar los datos", null));
+                                    "El Archivo no pudo ser cargado", null));
                         }
-
                     } else {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                "El Archivo no pudo ser cargado", null));
+                                "No se encontro ningun plan de trabajo para el archivo :" + nombreArchivo, null));
                     }
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "No se encontro ningun plan de trabajo para el archivo :" + nombreArchivo, null));
+                            "Nombre del archivo no corresponde al requerido", null));
                 }
+
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        "Nombre del archivo no corresponde al requerido", null));
+                        "Solo puede cargar archivos .txt", null));
             }
-
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "Solo puede cargar archivos .txt", null));
+        } finally {
+            session.flush();
+            session.close();
         }
-
     }
 
     public boolean cargarDatosDeudas(Personas personas, String valor, String referencia, String motivo, String fecha, CivPlanTrabajos civPlanTrabajos, BigDecimal concepto, int tipoDeuda) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-        String nombreExpedientePersona = "";
-        CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(session,personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
-        if (civPersonas == null) {
-            civPersonas = new CivPersonas();
-            civPersonas.setPerNombre1(personas.getNombre1());
-            civPersonas.setPerNombre2(personas.getNombre2());
-            civPersonas.setPerApellido1(personas.getApellido1());
-            civPersonas.setPerApellido2(personas.getApellido1());
+            Transaction transaction = session.beginTransaction();
+            String nombreExpedientePersona = "";
+            CivPersonas civPersonas = getPersonaDAO().consultarPersonasByDocumento(session, personas.getTipoDocumentos().getCodigo(), personas.getDocumento());
+            if (civPersonas == null) {
+                civPersonas = new CivPersonas();
+                civPersonas.setPerNombre1(personas.getNombre1());
+                civPersonas.setPerNombre2(personas.getNombre2());
+                civPersonas.setPerApellido1(personas.getApellido1());
+                civPersonas.setPerApellido2(personas.getApellido1());
 
-            if (personas != null) {
-                CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(session,new BigDecimal(personas.getTipoDocumentos().getCodigo()));
-                civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-                civPersonas.setPerDocumento(personas.getDocumento());
-                civPersonas.setPerSexo(personas.getSexo());
-                civPersonas.setPerFechaproceso(new Date());
-                civPersonas.setCivEstadoPersonas(getEstadoPersonaDAO().getEstadoPersona(BigDecimal.ONE));
-                getPersonaDAO().create(civPersonas);
+                if (personas != null) {
+                    CivTipoDocumentos civTipoDocumentos = getTipoDocumentosDAO().getTipoDocumento(session, new BigDecimal(personas.getTipoDocumentos().getCodigo()));
+                    civPersonas.setCivTipoDocumentos(civTipoDocumentos);
+                    civPersonas.setPerDocumento(personas.getDocumento());
+                    civPersonas.setPerSexo(personas.getSexo());
+                    civPersonas.setPerFechaproceso(new Date());
+                    civPersonas.setCivEstadoPersonas(getEstadoPersonaDAO().getEstadoPersona(BigDecimal.ONE));
+                    getPersonaDAO().create(session, civPersonas);
+                }
             }
-        }
-        Expedientes expedientes = new Expedientes();
-        nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
-        CivDeudas civDeudas = new CivDeudas();
-        civDeudas.setDeuRefencia(referencia);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatterVigencia = new SimpleDateFormat("yyyy");
-        civDeudas.setDeuFechadeuda(formatter.parse(fecha));
-        civDeudas.setDeuFechaproceso(new Date());
-        civDeudas.setDeuMotivo(motivo);
-        civDeudas.setDeuValor(new BigDecimal(valor));
-        civDeudas.setDeuSaldo(new BigDecimal(valor));
-        civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(session,BigDecimal.ONE));
-        civDeudas.setCivPersonas(civPersonas);
-        civDeudas.setCivPlanTrabajos(civPlanTrabajos);
-        civDeudas.setCivTipoDeudas(getTipoDeudasDAO().find(new BigDecimal(tipoDeuda)));
-        getDeudasDAO().create(civDeudas);
-        String folderExpedienteDeuda = "";
-        if (tipoDeuda == 1) {
-            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia + "-" + formatterVigencia.format(civDeudas.getDeuFechadeuda());
-        } else if (tipoDeuda == 2) {
-            folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia;
-        }
-        File foldersDeuda = new File(folderExpedienteDeuda);
-        if (!foldersDeuda.exists()) {
-            foldersDeuda.mkdirs();
-            CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
-            civDetalleExpedientes.setDetexpFechaproceso(new Date());
-            civDetalleExpedientes.setCivDeudas(civDeudas);
-            civDetalleExpedientes.setDetexpDescripcion(civDeudas.getDeuRefencia());
-            CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
-            civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
-            civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
-            CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
-            civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
-            civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
-            CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientesByUri(nombreExpedientePersona);
-            civDetalleExpedientes.setCivExpedientes(civExpedientes);
-            getDetalleExpedientesDAO().create(civDetalleExpedientes);
-        }
-        CivDetalleDeudas civDetalleDeudas = new CivDetalleDeudas();
-        civDetalleDeudas.setCivDeudas(civDeudas);
-        civDetalleDeudas.setCivConceptos(getConceptosDAO().find(concepto));
-        civDetalleDeudas.setCivEstadoDetalleDeudas(getEstadoDetalleDeudasDAO().find(BigDecimal.ONE));
-        civDetalleDeudas.setDeuFechaproceso(new Date());
-        civDetalleDeudas.setDeuValor(civDeudas.getDeuValor());
-        getDetalleDeudasDAO().create(civDetalleDeudas);
-        return true;
+            Expedientes expedientes = new Expedientes();
+            nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
+            CivDeudas civDeudas = new CivDeudas();
+            civDeudas.setDeuRefencia(referencia);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatterVigencia = new SimpleDateFormat("yyyy");
+            civDeudas.setDeuFechadeuda(formatter.parse(fecha));
+            civDeudas.setDeuFechaproceso(new Date());
+            civDeudas.setDeuMotivo(motivo);
+            civDeudas.setDeuValor(new BigDecimal(valor));
+            civDeudas.setDeuSaldo(new BigDecimal(valor));
+            civDeudas.setCivEstadoDeudas(getEstadoDeudasDAO().getEstadoDeudas(session, BigDecimal.ONE));
+            civDeudas.setCivPersonas(civPersonas);
+            civDeudas.setCivPlanTrabajos(civPlanTrabajos);
+            civDeudas.setCivTipoDeudas(getTipoDeudasDAO().find(session, new BigDecimal(tipoDeuda)));
+            getDeudasDAO().create(session, civDeudas);
+            String folderExpedienteDeuda = "";
+            if (tipoDeuda == 1) {
+                folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia + "-" + formatterVigencia.format(civDeudas.getDeuFechadeuda());
+            } else if (tipoDeuda == 2) {
+                folderExpedienteDeuda = nombreExpedientePersona + "/" + referencia;
+            }
+            File foldersDeuda = new File(folderExpedienteDeuda);
+            if (!foldersDeuda.exists()) {
+                foldersDeuda.mkdirs();
+                CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                civDetalleExpedientes.setDetexpFechaproceso(new Date());
+                civDetalleExpedientes.setCivDeudas(civDeudas);
+                civDetalleExpedientes.setDetexpDescripcion(civDeudas.getDeuRefencia());
+                CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+                civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+                civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+                CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+                civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+                CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                civDetalleExpedientes.setCivExpedientes(civExpedientes);
+                getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
+            }
+            CivDetalleDeudas civDetalleDeudas = new CivDetalleDeudas();
+            civDetalleDeudas.setCivDeudas(civDeudas);
+            civDetalleDeudas.setCivConceptos(getConceptosDAO().find(session, concepto));
+            civDetalleDeudas.setCivEstadoDetalleDeudas(getEstadoDetalleDeudasDAO().find(session, BigDecimal.ONE));
+            civDetalleDeudas.setDeuFechaproceso(new Date());
+            civDetalleDeudas.setDeuValor(civDeudas.getDeuValor());
+            getDetalleDeudasDAO().create(session, civDetalleDeudas);
+            transaction.commit();
+            return true;
         } finally {
             session.flush();
             session.close();
@@ -296,95 +305,113 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
     }
 
     private boolean guardarCarqueImpuesto(List<CargueDeudasImpuesto> listacargueDeudasImpuesto, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
-        boolean sw = false;
-        for (CargueDeudasImpuesto cargueDeudasImpuesto : listacargueDeudasImpuesto) {
-            CivDeudasImpuesto civDeudasImpuesto = new CivDeudasImpuesto();
-            civDeudasImpuesto.setDeuimpConsecutivo(cargueDeudasImpuesto.getConsecutivo());
-            civDeudasImpuesto.setDeuimpFecha(cargueDeudasImpuesto.getFecha());
-            civDeudasImpuesto.setDeuimpTipo(cargueDeudasImpuesto.getTipo());
-            civDeudasImpuesto.setDeuimpValor(cargueDeudasImpuesto.getValor());
-            civDeudasImpuesto.setDeuimpMotivo(cargueDeudasImpuesto.getMotivo());
-            civDeudasImpuesto.setDeuimpReferencia(cargueDeudasImpuesto.getFererencia());
-            civDeudasImpuesto.setDeuimpNombre1(cargueDeudasImpuesto.getNombre1());
-            civDeudasImpuesto.setDeuimpNombre2(cargueDeudasImpuesto.getNombre2());
-            civDeudasImpuesto.setDeuimpApellido1(cargueDeudasImpuesto.getApellido1());
-            civDeudasImpuesto.setDeuimpApellido2(cargueDeudasImpuesto.getApellido2());
-            civDeudasImpuesto.setDeuimpTipodocumento(cargueDeudasImpuesto.getTipoDocumento());
-            civDeudasImpuesto.setDeuimpDocumento(cargueDeudasImpuesto.getDocumento());
-            civDeudasImpuesto.setDeuimpSexo(cargueDeudasImpuesto.getSexo());
-            civDeudasImpuesto.setDeuimpDireccion1(cargueDeudasImpuesto.getDireccion1());
-            civDeudasImpuesto.setDeuimpDireccion2(cargueDeudasImpuesto.getDireccion2());
-            civDeudasImpuesto.setDeuimpCelular(cargueDeudasImpuesto.getCelular());
-            civDeudasImpuesto.setDeuimpTelefono(cargueDeudasImpuesto.getTelefono());
-            civDeudasImpuesto.setDeuimpCorreoelectronico(cargueDeudasImpuesto.getCorreo());
-            civDeudasImpuesto.setDeuimpPlaca(cargueDeudasImpuesto.getPlaca());
-            civDeudasImpuesto.setDeuimpServiciovehiculo(cargueDeudasImpuesto.getServicioVehiculo());
-            civDeudasImpuesto.setDeuimpClasevehiculo(cargueDeudasImpuesto.getClaseVehiculo());
-            civDeudasImpuesto.setDeuimpAvaluo(cargueDeudasImpuesto.getAvaluo());
-            civDeudasImpuesto.setDeuimpLiquidacionoficial(cargueDeudasImpuesto.getLiquidacionOficial());
-            civDeudasImpuesto.setDeuimpFechaliquidacion(cargueDeudasImpuesto.getFechaLiquidacion());
-            civDeudasImpuesto.setDeuimpFechamatricula(cargueDeudasImpuesto.getFechamatricula());
-            civDeudasImpuesto.setDeuimpArchivoFk(civArchivosPlanos.getArcId());
-            getDeudasImpuestoDAO().create(civDeudasImpuesto);
-            Personas persona = new Personas();
-            persona.setNombre1(cargueDeudasImpuesto.getNombre1());
-            persona.setNombre2(cargueDeudasImpuesto.getNombre2());
-            persona.setApellido1(cargueDeudasImpuesto.getApellido1());
-            persona.setApellido2(cargueDeudasImpuesto.getApellido2());
-            persona.setDocumento(cargueDeudasImpuesto.getDocumento());
-            TipoDocumentos tipoDocumento = new TipoDocumentos();
-            tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasImpuesto.getTipoDocumento()));
-            persona.setTipoDocumentos(tipoDocumento);
-            persona.setSexo(cargueDeudasImpuesto.getSexo());
-            sw = cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos, new BigDecimal(1), 1);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            boolean sw = false;
+            for (CargueDeudasImpuesto cargueDeudasImpuesto : listacargueDeudasImpuesto) {
+                CivDeudasImpuesto civDeudasImpuesto = new CivDeudasImpuesto();
+                civDeudasImpuesto.setDeuimpConsecutivo(cargueDeudasImpuesto.getConsecutivo());
+                civDeudasImpuesto.setDeuimpFecha(cargueDeudasImpuesto.getFecha());
+                civDeudasImpuesto.setDeuimpTipo(cargueDeudasImpuesto.getTipo());
+                civDeudasImpuesto.setDeuimpValor(cargueDeudasImpuesto.getValor());
+                civDeudasImpuesto.setDeuimpMotivo(cargueDeudasImpuesto.getMotivo());
+                civDeudasImpuesto.setDeuimpReferencia(cargueDeudasImpuesto.getFererencia());
+                civDeudasImpuesto.setDeuimpNombre1(cargueDeudasImpuesto.getNombre1());
+                civDeudasImpuesto.setDeuimpNombre2(cargueDeudasImpuesto.getNombre2());
+                civDeudasImpuesto.setDeuimpApellido1(cargueDeudasImpuesto.getApellido1());
+                civDeudasImpuesto.setDeuimpApellido2(cargueDeudasImpuesto.getApellido2());
+                civDeudasImpuesto.setDeuimpTipodocumento(cargueDeudasImpuesto.getTipoDocumento());
+                civDeudasImpuesto.setDeuimpDocumento(cargueDeudasImpuesto.getDocumento());
+                civDeudasImpuesto.setDeuimpSexo(cargueDeudasImpuesto.getSexo());
+                civDeudasImpuesto.setDeuimpDireccion1(cargueDeudasImpuesto.getDireccion1());
+                civDeudasImpuesto.setDeuimpDireccion2(cargueDeudasImpuesto.getDireccion2());
+                civDeudasImpuesto.setDeuimpCelular(cargueDeudasImpuesto.getCelular());
+                civDeudasImpuesto.setDeuimpTelefono(cargueDeudasImpuesto.getTelefono());
+                civDeudasImpuesto.setDeuimpCorreoelectronico(cargueDeudasImpuesto.getCorreo());
+                civDeudasImpuesto.setDeuimpPlaca(cargueDeudasImpuesto.getPlaca());
+                civDeudasImpuesto.setDeuimpServiciovehiculo(cargueDeudasImpuesto.getServicioVehiculo());
+                civDeudasImpuesto.setDeuimpClasevehiculo(cargueDeudasImpuesto.getClaseVehiculo());
+                civDeudasImpuesto.setDeuimpAvaluo(cargueDeudasImpuesto.getAvaluo());
+                civDeudasImpuesto.setDeuimpLiquidacionoficial(cargueDeudasImpuesto.getLiquidacionOficial());
+                civDeudasImpuesto.setDeuimpFechaliquidacion(cargueDeudasImpuesto.getFechaLiquidacion());
+                civDeudasImpuesto.setDeuimpFechamatricula(cargueDeudasImpuesto.getFechamatricula());
+                civDeudasImpuesto.setDeuimpArchivoFk(civArchivosPlanos.getArcId());
+                getDeudasImpuestoDAO().create(session, civDeudasImpuesto);
+                Personas persona = new Personas();
+                persona.setNombre1(cargueDeudasImpuesto.getNombre1());
+                persona.setNombre2(cargueDeudasImpuesto.getNombre2());
+                persona.setApellido1(cargueDeudasImpuesto.getApellido1());
+                persona.setApellido2(cargueDeudasImpuesto.getApellido2());
+                persona.setDocumento(cargueDeudasImpuesto.getDocumento());
+                TipoDocumentos tipoDocumento = new TipoDocumentos();
+                tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasImpuesto.getTipoDocumento()));
+                persona.setTipoDocumentos(tipoDocumento);
+                persona.setSexo(cargueDeudasImpuesto.getSexo());
+                sw = cargarDatosDeudas(persona, cargueDeudasImpuesto.getValor(), cargueDeudasImpuesto.getPlaca(), cargueDeudasImpuesto.getMotivo(), cargueDeudasImpuesto.getFecha(), civPlanTrabajos, new BigDecimal(1), 1);
+            }
+            transaction.commit();
+            return sw;
+        } finally {
+            session.flush();
+            session.close();
+
         }
-        return sw;
     }
 
     private boolean guardarCarqueComparendo(List<CargueDeudasComparendo> listacargueDeudasComparendos, CivArchivosPlanos civArchivosPlanos, CivPlanTrabajos civPlanTrabajos) throws Exception {
-        boolean sw = false;
-        for (CargueDeudasComparendo cargueDeudasComparendo : listacargueDeudasComparendos) {
-            CivDeudasComparendo civDeudasComparendo = new CivDeudasComparendo();
-            civDeudasComparendo.setDeucomConsecutivo(cargueDeudasComparendo.getConsecutivo());
-            civDeudasComparendo.setDeucomFecha(cargueDeudasComparendo.getFecha());
-            civDeudasComparendo.setDeucomTipo(cargueDeudasComparendo.getTipo());
-            civDeudasComparendo.setDeucomValor(cargueDeudasComparendo.getValor());
-            civDeudasComparendo.setDeucomMotivo(cargueDeudasComparendo.getMotivo());
-            civDeudasComparendo.setDeucomReferencia(cargueDeudasComparendo.getReferencia());
-            civDeudasComparendo.setDeucomNombre1(cargueDeudasComparendo.getNombre1());
-            civDeudasComparendo.setDeucomNombre2(cargueDeudasComparendo.getNombre2());
-            civDeudasComparendo.setDeucomApellido1(cargueDeudasComparendo.getApellido1());
-            civDeudasComparendo.setDeucomApellido2(cargueDeudasComparendo.getApellido2());
-            civDeudasComparendo.setDeucomTipodocumento(cargueDeudasComparendo.getTipoDocumento());
-            civDeudasComparendo.setDeucomDocumento(cargueDeudasComparendo.getDocumento());
-            civDeudasComparendo.setDeucomSexo(cargueDeudasComparendo.getSexo());
-            civDeudasComparendo.setDeucomDireccion1(cargueDeudasComparendo.getDireccion1());
-            civDeudasComparendo.setDeucomDireccion2(cargueDeudasComparendo.getDireccion2());
-            civDeudasComparendo.setDeucomCelular(cargueDeudasComparendo.getCelular());
-            civDeudasComparendo.setDeucomTelefono(cargueDeudasComparendo.getTelefono());
-            civDeudasComparendo.setDeucomCorreoelectronico(cargueDeudasComparendo.getCorreo());
-            civDeudasComparendo.setDeucomNumerocomparendo(cargueDeudasComparendo.getNumeroComparendo());
-            civDeudasComparendo.setDeucomInfraccion(cargueDeudasComparendo.getInfraccion());
-            civDeudasComparendo.setDeucomDescripcioninfraccion(cargueDeudasComparendo.getDescripcionInfraccion());
-            civDeudasComparendo.setDeucomFechaComparendo(cargueDeudasComparendo.getFechaComparendo());
-            civDeudasComparendo.setDeucomNumerosancion(cargueDeudasComparendo.getNumeroSancion());
-            civDeudasComparendo.setDeucomFechasancion(cargueDeudasComparendo.getFechaSancion());
-            civDeudasComparendo.setDeucomValorsancion(cargueDeudasComparendo.getValorSancion());
-            civDeudasComparendo.setDeucomArchivoFk(civArchivosPlanos.getArcId());
-            getDeudaComparendoDAO().create(civDeudasComparendo);
-            Personas persona = new Personas();
-            persona.setNombre1(cargueDeudasComparendo.getNombre1());
-            persona.setNombre2(cargueDeudasComparendo.getNombre2());
-            persona.setApellido1(cargueDeudasComparendo.getApellido1());
-            persona.setApellido2(cargueDeudasComparendo.getApellido2());
-            persona.setDocumento(cargueDeudasComparendo.getDocumento());
-            TipoDocumentos tipoDocumento = new TipoDocumentos();
-            tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasComparendo.getTipoDocumento()));
-            persona.setTipoDocumentos(tipoDocumento);
-            persona.setSexo(cargueDeudasComparendo.getSexo());
-            sw = cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos, new BigDecimal(2), 2);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            boolean sw = false;
+            for (CargueDeudasComparendo cargueDeudasComparendo : listacargueDeudasComparendos) {
+                CivDeudasComparendo civDeudasComparendo = new CivDeudasComparendo();
+                civDeudasComparendo.setDeucomConsecutivo(cargueDeudasComparendo.getConsecutivo());
+                civDeudasComparendo.setDeucomFecha(cargueDeudasComparendo.getFecha());
+                civDeudasComparendo.setDeucomTipo(cargueDeudasComparendo.getTipo());
+                civDeudasComparendo.setDeucomValor(cargueDeudasComparendo.getValor());
+                civDeudasComparendo.setDeucomMotivo(cargueDeudasComparendo.getMotivo());
+                civDeudasComparendo.setDeucomReferencia(cargueDeudasComparendo.getReferencia());
+                civDeudasComparendo.setDeucomNombre1(cargueDeudasComparendo.getNombre1());
+                civDeudasComparendo.setDeucomNombre2(cargueDeudasComparendo.getNombre2());
+                civDeudasComparendo.setDeucomApellido1(cargueDeudasComparendo.getApellido1());
+                civDeudasComparendo.setDeucomApellido2(cargueDeudasComparendo.getApellido2());
+                civDeudasComparendo.setDeucomTipodocumento(cargueDeudasComparendo.getTipoDocumento());
+                civDeudasComparendo.setDeucomDocumento(cargueDeudasComparendo.getDocumento());
+                civDeudasComparendo.setDeucomSexo(cargueDeudasComparendo.getSexo());
+                civDeudasComparendo.setDeucomDireccion1(cargueDeudasComparendo.getDireccion1());
+                civDeudasComparendo.setDeucomDireccion2(cargueDeudasComparendo.getDireccion2());
+                civDeudasComparendo.setDeucomCelular(cargueDeudasComparendo.getCelular());
+                civDeudasComparendo.setDeucomTelefono(cargueDeudasComparendo.getTelefono());
+                civDeudasComparendo.setDeucomCorreoelectronico(cargueDeudasComparendo.getCorreo());
+                civDeudasComparendo.setDeucomNumerocomparendo(cargueDeudasComparendo.getNumeroComparendo());
+                civDeudasComparendo.setDeucomInfraccion(cargueDeudasComparendo.getInfraccion());
+                civDeudasComparendo.setDeucomDescripcioninfraccion(cargueDeudasComparendo.getDescripcionInfraccion());
+                civDeudasComparendo.setDeucomFechaComparendo(cargueDeudasComparendo.getFechaComparendo());
+                civDeudasComparendo.setDeucomNumerosancion(cargueDeudasComparendo.getNumeroSancion());
+                civDeudasComparendo.setDeucomFechasancion(cargueDeudasComparendo.getFechaSancion());
+                civDeudasComparendo.setDeucomValorsancion(cargueDeudasComparendo.getValorSancion());
+                civDeudasComparendo.setDeucomArchivoFk(civArchivosPlanos.getArcId());
+                getDeudaComparendoDAO().create(session , civDeudasComparendo);
+                Personas persona = new Personas();
+                persona.setNombre1(cargueDeudasComparendo.getNombre1());
+                persona.setNombre2(cargueDeudasComparendo.getNombre2());
+                persona.setApellido1(cargueDeudasComparendo.getApellido1());
+                persona.setApellido2(cargueDeudasComparendo.getApellido2());
+                persona.setDocumento(cargueDeudasComparendo.getDocumento());
+                TipoDocumentos tipoDocumento = new TipoDocumentos();
+                tipoDocumento.setCodigo(Integer.parseInt(cargueDeudasComparendo.getTipoDocumento()));
+                persona.setTipoDocumentos(tipoDocumento);
+                persona.setSexo(cargueDeudasComparendo.getSexo());
+                sw = cargarDatosDeudas(persona, cargueDeudasComparendo.getValor(), cargueDeudasComparendo.getNumeroComparendo(), cargueDeudasComparendo.getMotivo(), cargueDeudasComparendo.getFecha(), civPlanTrabajos, new BigDecimal(2), 2);
+            }
+            transaction.commit();
+            return sw;
+        } finally {
+            session.flush();
+            session.close();
+
         }
-        return sw;
     }
 
     /**

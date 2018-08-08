@@ -20,5 +20,7 @@ public interface GestionCargarPersonaBO {
     
     void sincronizarDeuda(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception;
     
+    void sincronizarTodasDeudas(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception;
+    
     
 }
