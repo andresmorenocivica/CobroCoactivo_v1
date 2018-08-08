@@ -51,6 +51,7 @@ import CobroCoactivo.Utility.HibernateUtil;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class LoginImplBO implements LoginBO {
 
@@ -139,7 +140,7 @@ public class LoginImplBO implements LoginBO {
             } else {
                 throw new LoginException("Usuario y/o contraseña inválidos");
             }
-            
+
         } finally {
             session.flush();
             session.close();
@@ -156,41 +157,48 @@ public class LoginImplBO implements LoginBO {
      */
     private void registrarIntento(int usuario) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
+        try {
+            CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
 
-        if (aut == null) {
-            aut = new CivAttempts();
-            CivUsuarios usu = getUsuariosDAO().consultarIdPer(session, usuario);
-            aut.setCivUsuarios(usu);
-            aut.setTppUltimoIntento(new Date());
-            aut.setTtpIntentos(new BigDecimal(1L));
-            getAttemptsDAO().create(aut);
-        } else {
-            Long horas = DateUtility.getDateDiff(aut.getTppUltimoIntento(), new Date(), TimeUnit.HOURS);
-            CivUsuarios obj_usuario = getUsuariosDAO().consultarUsuarioBy(session, usuario);
-            if (horas >= TIEMPO_RESTABLECER_HORAS) {
-                aut.setTtpIntentos(new BigDecimal(0L));
-                if (obj_usuario.getCivEstadoUsuarios().getEstusuId().intValue() == 4) {
-                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
+            if (aut == null) {
+                aut = new CivAttempts();
+                CivUsuarios usu = getUsuariosDAO().consultarIdPer(session, usuario);
+                aut.setCivUsuarios(usu);
+                aut.setTppUltimoIntento(new Date());
+                aut.setTtpIntentos(new BigDecimal(1L));
+                getAttemptsDAO().create(session, aut);
+            } else {
+                Long horas = DateUtility.getDateDiff(aut.getTppUltimoIntento(), new Date(), TimeUnit.HOURS);
+                CivUsuarios obj_usuario = getUsuariosDAO().consultarUsuarioBy(session, usuario);
+                if (horas >= TIEMPO_RESTABLECER_HORAS) {
+                    aut.setTtpIntentos(new BigDecimal(0L));
+                    if (obj_usuario.getCivEstadoUsuarios().getEstusuId().intValue() == 4) {
+                        CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
+                        obj_usuario.setCivEstadoUsuarios(civEstadousuarios);
+                        getUsuariosDAO().update(session, obj_usuario);
+                        Log_Handler.registrarEvento("El usuario ID:" + usuario + " debe reestablecer su contraseña ya que hace mas de " + TIEMPO_RESTABLECER_HORAS + " horas se registró un bloqueo por intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
+                    }
+                } else if (aut.getTtpIntentos().intValue() >= 6) {
+                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 4);
                     obj_usuario.setCivEstadoUsuarios(civEstadousuarios);
                     getUsuariosDAO().update(session, obj_usuario);
-                    Log_Handler.registrarEvento("El usuario ID:" + usuario + " debe reestablecer su contraseña ya que hace mas de " + TIEMPO_RESTABLECER_HORAS + " horas se registró un bloqueo por intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
+                    aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
+                    aut.setTppUltimoIntento(new Date());
+                    getAttemptsDAO().update(session, aut);
+                    Log_Handler.registrarEvento("El usuario ID:" + usuario + " ha sido bloqueado por superar el número de intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
+                    throw new LoginException("Ha superado el máximo número de intentos de inicio de sesión. Contáctese con el administrador del sistema.");
                 }
-            } else if (aut.getTtpIntentos().intValue() >= 6) {
-                CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 4);
-                obj_usuario.setCivEstadoUsuarios(civEstadousuarios);
-                getUsuariosDAO().update(session, obj_usuario);
-                aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
-                aut.setTppUltimoIntento(new Date());
-                getAttemptsDAO().update(session, aut);
-                Log_Handler.registrarEvento("El usuario ID:" + usuario + " ha sido bloqueado por superar el número de intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
-                throw new LoginException("Ha superado el máximo número de intentos de inicio de sesión. Contáctese con el administrador del sistema.");
+                //aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
+                // aut.setTppUltimoIntento(new Date());
+                // getAttemptsDAO().update(aut);
             }
-            //aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
-            // aut.setTppUltimoIntento(new Date());
-            // getAttemptsDAO().update(aut);
+
+        } finally {
+            session.flush();
+            session.close();
+
         }
-        session.close();
+
     }
 
     /**
@@ -397,35 +405,43 @@ public class LoginImplBO implements LoginBO {
     @Override
     public void actualizarContraseña(BeanLogin obj) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List list = getUsuariosDAO().consultar_HPAS(session, obj.getUsuarios().getId());
-        String passCifrada = DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion());
-        if (list.contains(passCifrada)) {
-            throw new LoginException("Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.");
-        }
-        CivEstadoUsuarios civEstadoUsuarios = getEstadosUsuariosDAO().consultarModuloById(session, 1);
-        CivUsuarios civUsuarios = getUsuariosDAO().find(new BigDecimal(obj.getUsuarios().getId()));
-        civUsuarios.setUsuPass(DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion()));
-        civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
-        obj.setUserEstado(1);
+        try {
+            Transaction transaction = session.beginTransaction();
+            List list = getUsuariosDAO().consultar_HPAS(session, obj.getUsuarios().getId());
+            String passCifrada = DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion());
+            if (list.contains(passCifrada)) {
+                throw new LoginException("Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.");
+            }
+            CivEstadoUsuarios civEstadoUsuarios = getEstadosUsuariosDAO().consultarModuloById(session, 1);
+            CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(obj.getUsuarios().getId()));
+            civUsuarios.setUsuPass(DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion()));
+            civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+            obj.setUserEstado(1);
 
-        CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(BigDecimal.ONE);
-        CivUspHistoria civUspHistoria = new CivUspHistoria(null, civUsuarios, civEstadouspHistoria, passCifrada, new Date());
-        // SE ACTULIZAN TODAS LAS CONTRASEÑA QUE A TENIDO EL USUARIO A ESTADO 2 (INACTIVO)
-        List<CivUspHistoria> listCivUspHistoria = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
-        if (listCivUspHistoria != null) {
-            List<CivUspHistoria> listCivUspHistorias = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
-            for (CivUspHistoria cuh : listCivUspHistorias) {
-                if (cuh.getCivEstadouspHistoria().getEstuspId().intValue() == 1) {
-                    CivEstadouspHistoria civEstadoHistoria = getEstadoUspHistoriaDAO().find(new BigDecimal(2));
-                    cuh.setCivEstadouspHistoria(civEstadoHistoria);
-                    getUsuariosDAO().updateHisPass(session, cuh);
+            CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(session, BigDecimal.ONE);
+            CivUspHistoria civUspHistoria = new CivUspHistoria(null, civUsuarios, civEstadouspHistoria, passCifrada, new Date());
+            // SE ACTULIZAN TODAS LAS CONTRASEÑA QUE A TENIDO EL USUARIO A ESTADO 2 (INACTIVO)
+            List<CivUspHistoria> listCivUspHistoria = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
+            if (listCivUspHistoria != null) {
+                List<CivUspHistoria> listCivUspHistorias = getUsuariosDAO().consultarEstado_HPAS(session, obj.getUsuarios().getId());
+                for (CivUspHistoria cuh : listCivUspHistorias) {
+                    if (cuh.getCivEstadouspHistoria().getEstuspId().intValue() == 1) {
+                        CivEstadouspHistoria civEstadoHistoria = getEstadoUspHistoriaDAO().find(session, new BigDecimal(2));
+                        cuh.setCivEstadouspHistoria(civEstadoHistoria);
+                        getUsuariosDAO().updateHisPass(session, cuh);
+                    }
                 }
             }
+            //////////////////
+            getUspHistoriaDAO().create(session, civUspHistoria);
+            getUsuariosDAO().update(session, civUsuarios);
+            transaction.commit();
+        } finally {
+            session.flush();
+            session.close();
+
         }
-        //////////////////
-        getUspHistoriaDAO().create(civUspHistoria);
-        getUsuariosDAO().update(session, civUsuarios);
-        session.close();
+
     }
 
     public ITPersonas getPersonasDAO() {

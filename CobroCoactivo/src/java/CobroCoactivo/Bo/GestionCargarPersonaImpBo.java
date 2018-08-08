@@ -178,7 +178,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                         CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                         civPlanTrabajos.setPlatraId(new BigDecimal(2));
                         civDeudas.setCivPlanTrabajos(civPlanTrabajos);
-                        getItDeudas().create(session , civDeudas);
+                        getItDeudas().create(session, civDeudas);
                         String folderExpedienteDeuda = "";
                         folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
                         File foldersDeuda = new File(folderExpedienteDeuda);
@@ -194,10 +194,10 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                             CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
                             civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
                             civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
-                            CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                            CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(session, nombreExpedientePersona);
                             civDetalleExpedientes.setCivExpedientes(civExpedientes);
                             civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
-                            getDetalleExpedientesDAO().create(session ,civDetalleExpedientes);
+                            getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
 
                         }
                     }
@@ -237,7 +237,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 }
 
                 civPersonas.setPerFechaproceso(new Date());
-                getItPersonas().create(session , civPersonas);
+                getItPersonas().create(session, civPersonas);
                 Expedientes expedientes = new Expedientes();
                 String nombreExpedientePersona = "";
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
@@ -260,7 +260,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                     CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                     civPlanTrabajos.setPlatraId(new BigDecimal(2));
                     civDeudas.setCivPlanTrabajos(civPlanTrabajos);
-                    getItDeudas().create(session , civDeudas);
+                    getItDeudas().create(session, civDeudas);
                     String folderExpedienteDeuda = "";
                     folderExpedienteDeuda = nombreExpedientePersona + "/" + beanGestionCargarPersonas.getListDeudas().get(i).getReferencia();
                     File foldersDeuda = new File(folderExpedienteDeuda);
@@ -277,9 +277,9 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                         civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
                         civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
                         civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
-                        CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                        CivExpedientes civExpedientes = getExpedienteDAO().getCivExpedientesByUri(session, nombreExpedientePersona);
                         civDetalleExpedientes.setCivExpedientes(civExpedientes);
-                        getDetalleExpedientesDAO().create(session , civDetalleExpedientes);
+                        getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
                     }
                 }
 
@@ -301,10 +301,10 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
 
     @Override
     public void sincronizarTodasDeudas(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception {
-        for (int i = 0; i < beanGestionCargarPersonas.getListPersonas().size() ; i++) {
+        for (int i = 0; i < beanGestionCargarPersonas.getListPersonas().size(); i++) {
             beanGestionCargarPersonas.setPersonas(beanGestionCargarPersonas.getListPersonas().get(i));
             sincronizarDeuda(beanGestionCargarPersonas);
-            
+
         }
     }
 

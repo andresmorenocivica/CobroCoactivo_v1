@@ -6,7 +6,7 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivArchivoDetExpedientes;
+import CobroCoactivo.Persistencia.CivDetalleSolicitudes;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,19 +15,18 @@ import org.hibernate.Session;
 
 /**
  *
- * @author emadrid
+ * @author emadridp
  */
-public class DaoArchivoDetExpedientes extends ImpGeneryHibernateDao<CivArchivoDetExpedientes, Integer> implements ITArchivoDetExpedientes {
+public class DaoDetalleSolicitudes extends ImpGeneryHibernateDao<CivDetalleSolicitudes, Integer> implements ITDetalleSolicitudes {
 
     @Override
-    public List<CivArchivoDetExpedientes> getCivArchivoDetExpedientes(Session session,int idDetExpediente) throws Exception {
-        String hql = "from CivArchivoDetExpedientes where civDetalleExpedientes.detexpId =:id";
+    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session,int idSolicitud) throws Exception {
+        String hql = "from CivDetalleSolicitudes where civSolicitudes.solId =:idSolicitud";
         Query query = session.createQuery(hql);
-        query.setParameter("id", new BigDecimal(idDetExpediente));
+        query.setParameter("idSolicitud", new BigDecimal(idSolicitud));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 

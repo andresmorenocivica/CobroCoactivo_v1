@@ -7,11 +7,11 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionExpedientesBO;
 import CobroCoactivo.Bo.GestionExpedientesImpBO;
-import CobroCoactivo.Bo.LoginBO;
-import CobroCoactivo.Bo.LoginImplBO;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
+import CobroCoactivo.Modelo.DetalleSolicitudes;
 import CobroCoactivo.Modelo.Expedientes;
+import CobroCoactivo.Modelo.Solicitudes;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 /**
@@ -41,26 +42,69 @@ public class BeanGestionExpedientes {
     private int idExpediente;
     private int idDetExpediente;
     private int tipoBusqueda;
+    private int idSolicitud;
+    private int idDetSolicitud;
+    private int tipoDocumentoPersona;
     private boolean pnlCarpeta = false;
     private boolean pnlSubcarpetas = false;
     private boolean pnlArchivo = false;
     private boolean pnlBtnAddArchivo = false;
     private boolean pnlExpSelect = false;
+    private boolean pnlBtnActualizarFile = false;
+    private boolean pnlBtnGuardarFile = true;
+    private boolean pnlBtnAddExpediente = false;
+    private boolean pnlPersonaEncontrada = false;
+    private boolean pnlBtnAddFolder = false;
     private String referenciaExpediente;
+    private String idUser;
+    private String titleModal = "Agregar Archivo";
+    private String nombrePersona;
+    private String documentoPersona;
     private List<Expedientes> listExpedientes = new ArrayList<>();
     private List<ArchivoDetExpedientes> listArchivoDetExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpdientesSelect = new ArrayList<>();
+    private List<Solicitudes> listSolicitudes = new ArrayList<>();
+    private List<DetalleSolicitudes> listDetalleSolicitudes = new ArrayList<>();
     private Part file;
+    private ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes();
     private GestionExpedientesBO gestionExpedientesBO;
-    private LoginBO loginBO;
+    private BeanLogin loginBO;
 
     @PostConstruct
     public void init() {
         try {
             setGestionExpedientesBO(new GestionExpedientesImpBO());
-            setLoginBO(new LoginImplBO());
+            getGestionExpedientesBO().cargarSolicitudes(this);
+            FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+            BeanLogin obj_ = ((BeanLogin) session.getAttribute("loginBean"));
+            setPnlBtnAddExpediente(true);
+            if (obj_.getID_Usuario() != null) {
+                setIdUser(obj_.getID_Usuario());
+            }
         } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void crearExpedientes() {
+        try {
+            getGestionExpedientesBO().crearExpediente(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void buscarPersona() {
+        try {
+            getGestionExpedientesBO().buscarPersona(this);
+        } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -71,10 +115,14 @@ public class BeanGestionExpedientes {
             setTipoBusqueda(tipobusqueda);
             getGestionExpedientesBO().buscarExpediente(this);
             if (listExpedientes.size() > 0) {
-                setPnlArchivo(false);
                 setPnlCarpeta(true);
+                setPnlArchivo(false);
+                setPnlSubcarpetas(false);
+                setPnlExpSelect(false);
+                setPnlBtnAddExpediente(false);
+                setPnlBtnAddArchivo(false);
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro el Expediente, por favor verifique la referencia.", null));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro el expediente, por favor verifique la referencia.", null));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -89,6 +137,10 @@ public class BeanGestionExpedientes {
             if (listDetalleExpedientes.size() > 0) {
                 setPnlCarpeta(false);
                 setPnlSubcarpetas(true);
+                setPnlBtnAddFolder(true);
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro deudas en el expediente de la persona.", null));
+                setPnlBtnAddFolder(true);
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
@@ -172,6 +224,51 @@ public class BeanGestionExpedientes {
         }
     }
 
+    public void buscarDetSolicitudes(int idSolicitud) {
+        try {
+            setIdSolicitud(idSolicitud);
+            getGestionExpedientesBO().buscarDetSolicitudes(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void estadoExpedientes(int idDetSolicitud) {
+        try {
+            setIdDetSolicitud(idDetSolicitud);
+            getGestionExpedientesBO().estadoExpediente(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
+    public void modalActualizarArchivo(ArchivoDetExpedientes archivoDetExpedientes) {
+        try {
+            setPnlBtnGuardarFile(false);
+            setFile(null);
+            String title = "Actualizar archivo";
+            setPnlBtnActualizarFile(true);
+            setTitleModal(title);
+            setArchivoDetExpedientes(archivoDetExpedientes);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+
+    }
+
+    public void updateArchivo() {
+        try {
+            getGestionExpedientesBO().updateArchivo(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+    }
+
     /**
      * @return the gestionExpedientesBO
      */
@@ -184,20 +281,6 @@ public class BeanGestionExpedientes {
      */
     public void setGestionExpedientesBO(GestionExpedientesBO gestionExpedientesBO) {
         this.gestionExpedientesBO = gestionExpedientesBO;
-    }
-
-    /**
-     * @return the loginBO
-     */
-    public LoginBO getLoginBO() {
-        return loginBO;
-    }
-
-    /**
-     * @param loginBO the loginBO to set
-     */
-    public void setLoginBO(LoginBO loginBO) {
-        this.loginBO = loginBO;
     }
 
     /**
@@ -394,6 +477,230 @@ public class BeanGestionExpedientes {
      */
     public void setPnlExpSelect(boolean pnlExpSelect) {
         this.pnlExpSelect = pnlExpSelect;
+    }
+
+    /**
+     * @return the loginBO
+     */
+    public BeanLogin getLoginBO() {
+        return loginBO;
+    }
+
+    /**
+     * @param loginBO the loginBO to set
+     */
+    public void setLoginBO(BeanLogin loginBO) {
+        this.loginBO = loginBO;
+    }
+
+    /**
+     * @return the idUser
+     */
+    public String getIdUser() {
+        return idUser;
+    }
+
+    /**
+     * @param idUser the idUser to set
+     */
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    /**
+     * @return the listSolicitudes
+     */
+    public List<Solicitudes> getListSolicitudes() {
+        return listSolicitudes;
+    }
+
+    /**
+     * @param listSolicitudes the listSolicitudes to set
+     */
+    public void setListSolicitudes(List<Solicitudes> listSolicitudes) {
+        this.listSolicitudes = listSolicitudes;
+    }
+
+    /**
+     * @return the idSolicitud
+     */
+    public int getIdSolicitud() {
+        return idSolicitud;
+    }
+
+    /**
+     * @param idSolicitud the idSolicitud to set
+     */
+    public void setIdSolicitud(int idSolicitud) {
+        this.idSolicitud = idSolicitud;
+    }
+
+    /**
+     * @return the listDetalleSolicitudes
+     */
+    public List<DetalleSolicitudes> getListDetalleSolicitudes() {
+        return listDetalleSolicitudes;
+    }
+
+    /**
+     * @param listDetalleSolicitudes the listDetalleSolicitudes to set
+     */
+    public void setListDetalleSolicitudes(List<DetalleSolicitudes> listDetalleSolicitudes) {
+        this.listDetalleSolicitudes = listDetalleSolicitudes;
+    }
+
+    /**
+     * @return the idDetSolicitud
+     */
+    public int getIdDetSolicitud() {
+        return idDetSolicitud;
+    }
+
+    /**
+     * @param idDetSolicitud the idDetSolicitud to set
+     */
+    public void setIdDetSolicitud(int idDetSolicitud) {
+        this.idDetSolicitud = idDetSolicitud;
+    }
+
+    /**
+     * @return the titleModal
+     */
+    public String getTitleModal() {
+        return titleModal;
+    }
+
+    /**
+     * @param titleModal the titleModal to set
+     */
+    public void setTitleModal(String titleModal) {
+        this.titleModal = titleModal;
+    }
+
+    /**
+     * @return the archivoDetExpedientes
+     */
+    public ArchivoDetExpedientes getArchivoDetExpedientes() {
+        return archivoDetExpedientes;
+    }
+
+    /**
+     * @param archivoDetExpedientes the archivoDetExpedientes to set
+     */
+    public void setArchivoDetExpedientes(ArchivoDetExpedientes archivoDetExpedientes) {
+        this.archivoDetExpedientes = archivoDetExpedientes;
+    }
+
+    /**
+     * @return the pnlBtnActualizarFile
+     */
+    public boolean isPnlBtnActualizarFile() {
+        return pnlBtnActualizarFile;
+    }
+
+    /**
+     * @param pnlBtnActualizarFile the pnlBtnActualizarFile to set
+     */
+    public void setPnlBtnActualizarFile(boolean pnlBtnActualizarFile) {
+        this.pnlBtnActualizarFile = pnlBtnActualizarFile;
+    }
+
+    /**
+     * @return the pnlBtnGuardarFile
+     */
+    public boolean isPnlBtnGuardarFile() {
+        return pnlBtnGuardarFile;
+    }
+
+    /**
+     * @param pnlBtnGuardarFile the pnlBtnGuardarFile to set
+     */
+    public void setPnlBtnGuardarFile(boolean pnlBtnGuardarFile) {
+        this.pnlBtnGuardarFile = pnlBtnGuardarFile;
+    }
+
+    /**
+     * @return the pnlBtnAddExpediente
+     */
+    public boolean isPnlBtnAddExpediente() {
+        return pnlBtnAddExpediente;
+    }
+
+    /**
+     * @param pnlBtnAddExpediente the pnlBtnAddExpediente to set
+     */
+    public void setPnlBtnAddExpediente(boolean pnlBtnAddExpediente) {
+        this.pnlBtnAddExpediente = pnlBtnAddExpediente;
+    }
+
+    /**
+     * @return the nombrePersona
+     */
+    public String getNombrePersona() {
+        return nombrePersona;
+    }
+
+    /**
+     * @param nombrePersona the nombrePersona to set
+     */
+    public void setNombrePersona(String nombrePersona) {
+        this.nombrePersona = nombrePersona;
+    }
+
+    /**
+     * @return the documentoPersona
+     */
+    public String getDocumentoPersona() {
+        return documentoPersona;
+    }
+
+    /**
+     * @param documentoPersona the documentoPersona to set
+     */
+    public void setDocumentoPersona(String documentoPersona) {
+        this.documentoPersona = documentoPersona;
+    }
+
+    /**
+     * @return the tipoDocumentoPersona
+     */
+    public int getTipoDocumentoPersona() {
+        return tipoDocumentoPersona;
+    }
+
+    /**
+     * @param tipoDocumentoPersona the tipoDocumentoPersona to set
+     */
+    public void setTipoDocumentoPersona(int tipoDocumentoPersona) {
+        this.tipoDocumentoPersona = tipoDocumentoPersona;
+    }
+
+    /**
+     * @return the pnlPersonaEncontrada
+     */
+    public boolean isPnlPersonaEncontrada() {
+        return pnlPersonaEncontrada;
+    }
+
+    /**
+     * @param pnlPersonaEncontrada the pnlPersonaEncontrada to set
+     */
+    public void setPnlPersonaEncontrada(boolean pnlPersonaEncontrada) {
+        this.pnlPersonaEncontrada = pnlPersonaEncontrada;
+    }
+
+    /**
+     * @return the pnlBtnAddFolder
+     */
+    public boolean isPnlBtnAddFolder() {
+        return pnlBtnAddFolder;
+    }
+
+    /**
+     * @param pnlBtnAddFolder the pnlBtnAddFolder to set
+     */
+    public void setPnlBtnAddFolder(boolean pnlBtnAddFolder) {
+        this.pnlBtnAddFolder = pnlBtnAddFolder;
     }
 
 }

@@ -285,7 +285,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                 CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
                 civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
                 civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
-                CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientesByUri(nombreExpedientePersona);
+                CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientesByUri(session, nombreExpedientePersona);
                 civDetalleExpedientes.setCivExpedientes(civExpedientes);
                 getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
             }
@@ -392,7 +392,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                 civDeudasComparendo.setDeucomFechasancion(cargueDeudasComparendo.getFechaSancion());
                 civDeudasComparendo.setDeucomValorsancion(cargueDeudasComparendo.getValorSancion());
                 civDeudasComparendo.setDeucomArchivoFk(civArchivosPlanos.getArcId());
-                getDeudaComparendoDAO().create(session , civDeudasComparendo);
+                getDeudaComparendoDAO().create(session, civDeudasComparendo);
                 Personas persona = new Personas();
                 persona.setNombre1(cargueDeudasComparendo.getNombre1());
                 persona.setNombre2(cargueDeudasComparendo.getNombre2());

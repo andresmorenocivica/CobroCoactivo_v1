@@ -20,7 +20,6 @@ public class EstadoSolicitudes {
     private Date fechaInicial;
     private Date fechaFinal;
 
-
     public EstadoSolicitudes() {
     }
 

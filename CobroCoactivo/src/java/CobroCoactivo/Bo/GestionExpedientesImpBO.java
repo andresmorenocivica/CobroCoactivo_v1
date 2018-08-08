@@ -8,21 +8,35 @@ package CobroCoactivo.Bo;
 import CobroCoactivo.Beans.BeanGestionExpedientes;
 import CobroCoactivo.Dao.DaoArchivoDetExpedientes;
 import CobroCoactivo.Dao.DaoDetalleExpedientes;
+import CobroCoactivo.Dao.DaoDetalleSolicitudes;
 import CobroCoactivo.Dao.DaoExpedientes;
+import CobroCoactivo.Dao.DaoPersonas;
+import CobroCoactivo.Dao.DaoSolicitudes;
 import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITArchivoDetExpedientes;
 import CobroCoactivo.Dao.ITDetalleExpedientes;
+import CobroCoactivo.Dao.ITDetalleSolicitudes;
 import CobroCoactivo.Dao.ITExpedientes;
+import CobroCoactivo.Dao.ITPersonas;
+import CobroCoactivo.Dao.ITSolicitudes;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
+import CobroCoactivo.Modelo.DetalleSolicitudes;
 import CobroCoactivo.Modelo.Expedientes;
+import CobroCoactivo.Modelo.Solicitudes;
 import CobroCoactivo.Persistencia.CivArchivoDetExpedientes;
 import CobroCoactivo.Persistencia.CivDetalleExpedientes;
+import CobroCoactivo.Persistencia.CivDetalleSolicitudes;
 import CobroCoactivo.Persistencia.CivEstadoArchDetExp;
+import CobroCoactivo.Persistencia.CivEstadoDetalleSolicitudes;
+import CobroCoactivo.Persistencia.CivEstadoExpedientes;
 import CobroCoactivo.Persistencia.CivEstadoSolicitudes;
 import CobroCoactivo.Persistencia.CivExpedientes;
+import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivSolicitudes;
+import CobroCoactivo.Persistencia.CivTipoExpedientes;
+import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.File;
 import java.io.InputStream;
@@ -36,7 +50,6 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
@@ -51,58 +64,100 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     private ITDetalleExpedientes detalleExpedientesDAO;
     private ITArchivoDetExpedientes archivoDetExpedientesDAO;
     private ITUsuarios usuariosDAO;
+    private ITSolicitudes solicitudesDAO;
+    private ITDetalleSolicitudes detalleSolicitudesDAO;
+    private ITPersonas personasDAO;
 
     public GestionExpedientesImpBO() {
         expedientesDAO = new DaoExpedientes();
         detalleExpedientesDAO = new DaoDetalleExpedientes();
         archivoDetExpedientesDAO = new DaoArchivoDetExpedientes();
         usuariosDAO = new DaoUsuarios();
+        solicitudesDAO = new DaoSolicitudes();
+        detalleSolicitudesDAO = new DaoDetalleSolicitudes();
+        personasDAO = new DaoPersonas();
+    }
+
+    @Override
+    public void crearExpediente(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+            if (civPersonas != null) {
+                Expedientes expedientes = new Expedientes();
+                String nombreExpedientePersona = "";
+                nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se creo el expediente correctamente, la referencia del expediente es el N° de cedula.", null));
+            }
+        } finally {
+            session.flush();
+            session.close();
+        }
     }
 
     @Override
     public void buscarExpediente(BeanGestionExpedientes bean) throws Exception {
-        List<CivExpedientes> listCivExpedientes = new ArrayList<>();
-        bean.setListExpedientes(new ArrayList<>());
-        switch (bean.getTipoBusqueda()) {
-            case 1:
-                listCivExpedientes = getExpedientesDAO().getCivExpedientes(bean.getReferenciaExpediente());
-                break;
-        }
-        if (listCivExpedientes != null) {
-            for (CivExpedientes civExpedientes : listCivExpedientes) {
-                Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes());
-                bean.getListExpedientes().add(expedientes);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivExpedientes> listCivExpedientes = new ArrayList<>();
+            bean.setListExpedientes(new ArrayList<>());
+            switch (bean.getTipoBusqueda()) {
+                case 1:
+                    listCivExpedientes = getExpedientesDAO().getCivExpedientes(session, bean.getReferenciaExpediente());
+                    break;
             }
+            if (listCivExpedientes != null) {
+                for (CivExpedientes civExpedientes : listCivExpedientes) {
+                    Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes());
+                    bean.getListExpedientes().add(expedientes);
+                }
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void abrirExpediente(BeanGestionExpedientes bean) throws Exception {
-        bean.setListDetalleExpedientes(new ArrayList<>());
-        List<CivDetalleExpedientes> listCivDetalleExpedientes = getDetalleExpedientesDAO().getListCivDetalleExpediente(bean.getIdExpediente());
-        if (listCivDetalleExpedientes != null) {
-            for (CivDetalleExpedientes civDetalleExpediente : listCivDetalleExpedientes) {
-                DetalleExpedientes detalleExpedientes = new DetalleExpedientes(civDetalleExpediente, civDetalleExpediente.getCivExpedientes(), civDetalleExpediente.getCivEstadoDetalleExpedientes(), civDetalleExpediente.getCivTipoDetalleExpedientes());
-                bean.getListDetalleExpedientes().add(detalleExpedientes);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListDetalleExpedientes(new ArrayList<>());
+            List<CivDetalleExpedientes> listCivDetalleExpedientes = getDetalleExpedientesDAO().getListCivDetalleExpediente(session, bean.getIdExpediente());
+            if (listCivDetalleExpedientes != null) {
+                for (CivDetalleExpedientes civDetalleExpediente : listCivDetalleExpedientes) {
+                    DetalleExpedientes detalleExpedientes = new DetalleExpedientes(civDetalleExpediente, civDetalleExpediente.getCivExpedientes(), civDetalleExpediente.getCivEstadoDetalleExpedientes(), civDetalleExpediente.getCivTipoDetalleExpedientes());
+                    bean.getListDetalleExpedientes().add(detalleExpedientes);
+                }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void buscarArchivo(BeanGestionExpedientes bean) throws Exception {
-        bean.setListArchivoDetExpedientes(new ArrayList<>());
-        List<CivArchivoDetExpedientes> listCivArchivoDetExpedientes = getArchivoDetExpedientesDAO().getCivArchivoDetExpedientes(bean.getIdDetExpediente());
-        if (listCivArchivoDetExpedientes != null) {
-            for (CivArchivoDetExpedientes civArchivoDetExpediente : listCivArchivoDetExpedientes) {
-                ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes(civArchivoDetExpediente, civArchivoDetExpediente.getCivEstadoArchDetExp(), civArchivoDetExpediente.getCivDetalleExpedientes());
-                bean.getListArchivoDetExpedientes().add(archivoDetExpedientes);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListArchivoDetExpedientes(new ArrayList<>());
+            List<CivArchivoDetExpedientes> listCivArchivoDetExpedientes = getArchivoDetExpedientesDAO().getCivArchivoDetExpedientes(session, bean.getIdDetExpediente());
+            if (listCivArchivoDetExpedientes != null) {
+                for (CivArchivoDetExpedientes civArchivoDetExpediente : listCivArchivoDetExpedientes) {
+                    ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes(civArchivoDetExpediente, civArchivoDetExpediente.getCivEstadoArchDetExp(), civArchivoDetExpediente.getCivDetalleExpedientes());
+                    bean.getListArchivoDetExpedientes().add(archivoDetExpedientes);
+                }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void guardarArchivo(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
+
         try {
             Transaction transaction = session.beginTransaction();
             if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
@@ -130,10 +185,41 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
             session.close();
 
         }
+
+    }
+
+    @Override
+    public void updateArchivo(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                Transaction transaction = session.beginTransaction();
+                CivArchivoDetExpedientes civArchivoDetExpedientes = getArchivoDetExpedientesDAO().find(session, new BigDecimal(bean.getArchivoDetExpedientes().getId()));
+                CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(session, new BigDecimal(bean.getIdDetExpediente()));
+                civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
+                CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
+                civEstadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
+                civArchivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
+                civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
+                civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                InputStream stream = bean.getFile().getInputStream();
+                Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                getArchivoDetExpedientesDAO().update(session, civArchivoDetExpedientes);
+                transaction.commit();
+                RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("$('#addArchivo').modal('hide')");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo el archivo correctamente.", null));
+            }
+        } finally {
+            session.flush();
+            session.close();
+        }
     }
 
     @Override
     public void mostrarExpedienteSelect(BeanGestionExpedientes bean) throws Exception {
+
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             bean.setListDetalleExpdientesSelect(new ArrayList<>());
@@ -143,7 +229,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 DetalleExpedientes detExp = bean.getListDetalleExpedientes().get(i);
                 if (detExp.isSelecionado() == true) {
                     if (increment == i) {
-                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(session , BigDecimal.valueOf(detExp.getDetexpId()));
+                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(session, BigDecimal.valueOf(detExp.getDetexpId()));
                         DetalleExpedientes detalleExpedientes = new DetalleExpedientes(civDetalleExpedientes);
                         bean.getListDetalleExpdientesSelect().add(detalleExpedientes);
                     }
@@ -157,38 +243,140 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
+
         }
+
     }
 
     @Override
     public void enviarSolicitud(BeanGestionExpedientes bean) throws Exception {
-        if (bean.getListDetalleExpdientesSelect().size() > 0) {
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+
             CivSolicitudes civSolicitudes = new CivSolicitudes();
             CivEstadoSolicitudes civEstadoSolicitudes = new CivEstadoSolicitudes();
             civEstadoSolicitudes.setEstsolId(BigDecimal.ONE);
-            // CivUsuarios civUsuarios = getUsuariosDAO().find(BigDecimal.valueOf());
+            CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(bean.getIdUser()));
+            civSolicitudes.setSolFechaproceso(new Date());
+            civSolicitudes.setSolDescripcion(generarReferencia());
+            civSolicitudes.setCivUsuarios(civUsuarios);
+            civSolicitudes.setCivEstadoSolicitudes(civEstadoSolicitudes);
+            getSolicitudesDAO().create(session, civSolicitudes);
+
+            CivDetalleSolicitudes civDetalleSolicitudes = new CivDetalleSolicitudes();
+            for (int i = 0; i < bean.getListDetalleExpdientesSelect().size(); i++) {
+                civDetalleSolicitudes = new CivDetalleSolicitudes();
+                CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = new CivEstadoDetalleSolicitudes();
+                civEstadoDetalleSolicitudes.setEstdetsolId(BigDecimal.ONE);
+                civDetalleSolicitudes.setDetsolFechaproceso(new Date());
+                civDetalleSolicitudes.setCivSolicitudes(civSolicitudes);
+                civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
+                civDetalleSolicitudes.setDetsolDescripcion(bean.getListDetalleExpdientesSelect().get(i).getDetexpDescripcion());
+                getDetalleSolicitudesDAO().create(session, civDetalleSolicitudes);
+            }
+            transaction.commit();
+            if (civDetalleSolicitudes != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha enviado la solicitud.", null));
+                bean.setPnlSubcarpetas(false);
+                bean.setPnlExpSelect(false);
+            }
+        } finally {
+            session.flush();
+            session.close();
+
         }
+
     }
 
-    public String generarMatricula() {
+    public String generarReferencia() {
         String referencia = "";
         int a;
-        for (int i = 0; i < 7; i++) {
-            if (i < 4) {    // 0,1,2,3 posiciones de numeros
+        for (int i = 0; i < 6; i++) {
+            if (i < 3) {    // 0,1,2 posiciones de numeros
                 referencia = (int) (Math.random() * 9) + "" + referencia;
-            } else {       // 4,5,6 posiciones de letras
+            } else {       // 3,4,5 posiciones de letras
                 do {
                     a = (int) (Math.random() * 26 + 65);///
                 } while (a == 65 || a == 69 || a == 73 || a == 79 || a == 85);
                 char letra = (char) a;
                 if (i == 4) {
-                    referencia = referencia + "-" + letra;
+                    referencia = referencia + letra;
                 } else {
-                    referencia = referencia + "" + letra;
+                    referencia = referencia + letra;
                 }
             }
         }
         return referencia;
+    }
+
+    @Override
+    public void cargarSolicitudes(BeanGestionExpedientes bean) throws Exception {
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListSolicitudes(new ArrayList<>());
+            List<CivSolicitudes> listCivSolicitudes = getSolicitudesDAO().findAll(session);
+            for (CivSolicitudes civSolicitudes : listCivSolicitudes) {
+                Solicitudes solicitudes = new Solicitudes(civSolicitudes, civSolicitudes.getCivEstadoSolicitudes(), civSolicitudes.getCivUsuarios());
+                bean.getListSolicitudes().add(solicitudes);
+            }
+        } finally {
+            session.flush();
+            session.close();
+
+        }
+
+    }
+
+    @Override
+    public void buscarDetSolicitudes(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListDetalleSolicitudes(new ArrayList<>());
+            List<CivDetalleSolicitudes> listCivDetalleSolicitudes = getDetalleSolicitudesDAO().getCivDetalleSolicitudes(session, bean.getIdSolicitud());
+            for (CivDetalleSolicitudes civDetalleSolicitudes : listCivDetalleSolicitudes) {
+                DetalleSolicitudes detalleSolicitudes = new DetalleSolicitudes(civDetalleSolicitudes, civDetalleSolicitudes.getCivEstadoDetalleSolicitudes(), civDetalleSolicitudes.getCivSolicitudes());
+                bean.getListDetalleSolicitudes().add(detalleSolicitudes);
+            }
+        } finally {
+            session.flush();
+            session.close();
+
+        }
+    }
+
+    @Override
+    public void estadoExpediente(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getIdDetSolicitud()));
+            CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = new CivEstadoDetalleSolicitudes();
+            civEstadoDetalleSolicitudes.setEstdetsolId(BigDecimal.valueOf(4));
+
+            civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
+            getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion se genero correctamente.", null));
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+
+    @Override
+    public void buscarPersona(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
+            if (civPersonas != null) {
+                bean.setNombrePersona(civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1());
+                bean.setPnlPersonaEncontrada(true);
+            }
+        } finally {
+            session.flush();
+            session.close();
+        }
     }
 
     /**
@@ -245,6 +433,48 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
      */
     public void setUsuariosDAO(ITUsuarios usuariosDAO) {
         this.usuariosDAO = usuariosDAO;
+    }
+
+    /**
+     * @return the solicitudesDAO
+     */
+    public ITSolicitudes getSolicitudesDAO() {
+        return solicitudesDAO;
+    }
+
+    /**
+     * @param solicitudesDAO the solicitudesDAO to set
+     */
+    public void setSolicitudesDAO(ITSolicitudes solicitudesDAO) {
+        this.solicitudesDAO = solicitudesDAO;
+    }
+
+    /**
+     * @return the detalleSolicitudesDAO
+     */
+    public ITDetalleSolicitudes getDetalleSolicitudesDAO() {
+        return detalleSolicitudesDAO;
+    }
+
+    /**
+     * @param detalleSolicitudesDAO the detalleSolicitudesDAO to set
+     */
+    public void setDetalleSolicitudesDAO(ITDetalleSolicitudes detalleSolicitudesDAO) {
+        this.detalleSolicitudesDAO = detalleSolicitudesDAO;
+    }
+
+    /**
+     * @return the personasDAO
+     */
+    public ITPersonas getPersonasDAO() {
+        return personasDAO;
+    }
+
+    /**
+     * @param personasDAO the personasDAO to set
+     */
+    public void setPersonasDAO(ITPersonas personasDAO) {
+        this.personasDAO = personasDAO;
     }
 
 }

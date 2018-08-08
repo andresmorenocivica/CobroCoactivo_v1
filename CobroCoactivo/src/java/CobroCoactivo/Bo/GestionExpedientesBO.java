@@ -13,7 +13,19 @@ import CobroCoactivo.Beans.BeanGestionExpedientes;
  */
 public interface GestionExpedientesBO {
 
+    void crearExpediente(BeanGestionExpedientes bean) throws Exception;
+
+    void cargarSolicitudes(BeanGestionExpedientes bean) throws Exception;
+
+    void buscarDetSolicitudes(BeanGestionExpedientes bean) throws Exception;
+
+    void estadoExpediente(BeanGestionExpedientes bean) throws Exception;
+
+    void updateArchivo(BeanGestionExpedientes bean) throws Exception;
+
     void abrirExpediente(BeanGestionExpedientes bean) throws Exception;
+
+    void buscarPersona(BeanGestionExpedientes bean) throws Exception;
 
     void buscarArchivo(BeanGestionExpedientes bean) throws Exception;
 

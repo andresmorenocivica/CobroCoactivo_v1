@@ -35,7 +35,7 @@ public class Expedientes implements java.io.Serializable {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
-            String nombreExpedientePersona = civPersonas.getCivTipoDocumentos().getTipdocId().intValue() + "-" + civPersonas.getPerDocumento();
+            String nombreExpedientePersona = civPersonas.getPerDocumento();
             String folderExpedientePersona = "D:/Archivo/Expedientes/" + nombreExpedientePersona;
             File foldersPersona = new File(folderExpedientePersona);
             if (!foldersPersona.exists()) {
@@ -50,7 +50,7 @@ public class Expedientes implements java.io.Serializable {
                 CivTipoExpedientes civTipoExpedientes = new CivTipoExpedientes();
                 civTipoExpedientes.setTipexpId(BigDecimal.ONE);
                 civExpedientes.setCivTipoExpedientes(civTipoExpedientes);
-                expedienteDAO.create(session , civExpedientes);
+                expedienteDAO.create(session, civExpedientes);
                 transaction.commit();
             }
             return folderExpedientePersona;

@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmSolicitudesExpedientes">
+                    <div  class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Solicitudes de Expedientes 
+                                <small>Formulario de solicitudes expedientes</small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <div class="box box-danger">
+                                <div class="box-body">
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Usuario</th>
+                                                <th>Referencia</th>
+                                                <th>Fecha solicitud</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="#{gestionExpedientesBean.listSolicitudes}" var="listaSolicitudes">
+                                                <tr>
+                                                    <td>#{listaSolicitudes.usuarios.nombre}</td>
+                                                    <td>
+                                                        <h:commandLink value="#{listaSolicitudes.descripcion}" onclick="$('#modalSolicitudExpediente').modal('show')">
+                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarDetSolicitudes(listaSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes"/>
+                                                        </h:commandLink>
+                                                    </td>
+                                                    <td>#{listaSolicitudes.fechaProceso}</td>
+                                                    <td>#{listaSolicitudes.estadoSolicitudes.nombre}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modalSolicitudExpediente" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Expedientes solicitados</h4>
+                                        </div>
+                                        <div class="modal-body" jsf:id="modalBodySolicitudes">
+                                            <p:messages autoUpdate="true" id="mensajeSolicitud" showIcon="false" closable="true" severity="error,warn,info,fatal"></p:messages>
+                                            <table id="dataTableDetalle" class="table table-hover">
+                                                <div class="row">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="col-md-3">Referencia</th>
+                                                            <th class="col-md-3">Estado</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="#{gestionExpedientesBean.listDetalleSolicitudes}" var="listaDetSolicitudes">
+                                                            <tr>
+                                                                <td>#{listaDetSolicitudes.descripcion}</td>
+                                                                <td>#{listaDetSolicitudes.estadoDetalleSolicitudes.nombre}</td>
+                                                                <td>
+                                                                    <c:if test="#{listaDetSolicitudes.estadoDetalleSolicitudes.nombre != 'PRESTADO'}">
+                                                                        <h:commandLink id="btnPrestar" value="Prestar" class="btn btn-success">
+                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.estadoExpedientes(listaDetSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes"/>
+                                                                        </h:commandLink>
+                                                                    </c:if>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </div>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

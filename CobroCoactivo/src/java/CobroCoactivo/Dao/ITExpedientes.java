@@ -8,6 +8,7 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -15,8 +16,8 @@ import java.util.List;
  */
 public interface ITExpedientes extends ITGeneryHibernateDao<CivExpedientes, Integer> {
 
-    public List<CivExpedientes> getCivExpedientes(String referencia) throws Exception;
+    public List<CivExpedientes> getCivExpedientes(Session session, String referencia) throws Exception;
 
-    public CivExpedientes getCivExpedientesByUri(String ubicacion) throws Exception;
+    public CivExpedientes getCivExpedientesByUri(Session session, String ubicacion) throws Exception;
 
 }

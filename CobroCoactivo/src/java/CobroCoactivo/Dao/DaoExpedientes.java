@@ -19,8 +19,7 @@ import org.hibernate.Session;
 public class DaoExpedientes extends ImpGeneryHibernateDao<CivExpedientes, Integer> implements ITExpedientes {
 
     @Override
-    public List<CivExpedientes> getCivExpedientes(String expPersona) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivExpedientes> getCivExpedientes(Session session, String expPersona) throws Exception {
         String hql = "from CivExpedientes where expReferencia=:referencia";
         Query query = session.createQuery(hql);
         query.setParameter("referencia", expPersona);
@@ -31,8 +30,7 @@ public class DaoExpedientes extends ImpGeneryHibernateDao<CivExpedientes, Intege
     }
 
     @Override
-    public CivExpedientes getCivExpedientesByUri(String ubicacion) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivExpedientes getCivExpedientesByUri(Session session, String ubicacion) throws Exception {
         String hql = "from CivExpedientes where expUbicacion=:ubicacion";
         Query query = session.createQuery(hql);
         query.setParameter("ubicacion", ubicacion);

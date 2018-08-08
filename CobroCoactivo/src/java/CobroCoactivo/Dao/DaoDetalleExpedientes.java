@@ -19,8 +19,7 @@ import org.hibernate.Session;
 public class DaoDetalleExpedientes extends ImpGeneryHibernateDao<CivDetalleExpedientes, Integer> implements ITDetalleExpedientes {
 
     @Override
-    public List<CivDetalleExpedientes> getListCivDetalleExpediente(int idExpediente) throws Exception {
-        Session session = getSessionFactory().openSession();
+    public List<CivDetalleExpedientes> getListCivDetalleExpediente(Session session, int idExpediente) throws Exception {
         String hql = "from CivDetalleExpedientes where civExpedientes.expId =:expId";
         Query query = session.createQuery(hql);
         query.setParameter("expId", new BigDecimal(idExpediente));

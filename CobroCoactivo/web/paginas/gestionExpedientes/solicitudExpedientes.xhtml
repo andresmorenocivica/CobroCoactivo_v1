@@ -52,7 +52,7 @@
                                                                     <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Digite la referencia del expediente" id="txtReferencia" value="#{gestionExpedientesBean.referenciaExpediente}" required="true" requiredMessage="Digite el nombre del expediente"></h:inputText>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-danger" value="Buscar">
-                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarExpedientes(1)}" execute="frmSolicitudExpedientes:txtReferencia" render="frmSolicitudExpedientes:pnlCarpeta"/>
+                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarExpedientes(1)}" execute="frmSolicitudExpedientes:txtReferencia" render="frmSolicitudExpedientes:pnlCarpeta frmSolicitudExpedientes:pnlSubCarpetas"/>
                                                                         </h:commandLink>
                                                                     </span>
                                                                 </div>
@@ -136,7 +136,7 @@
                                                         </table>
                                                     </div>
                                                     <h:commandLink class="btn btn-success" value="Aceptar">
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.enviarSolicitudes()}" execute="frmSolicitudExpedientes:tableBody"></f:ajax>
+                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.enviarSolicitudes()}" execute="frmSolicitudExpedientes:tableBody" render="frmSolicitudExpedientes:pnlExpedientesSelect frmSolicitudExpedientes:pnlSubCarpetas"></f:ajax>
                                                     </h:commandLink>
                                                 </h:panelGroup>
                                             </h:panelGrid>

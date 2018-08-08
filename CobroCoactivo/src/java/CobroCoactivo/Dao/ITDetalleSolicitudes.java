@@ -6,15 +6,16 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivArchivoDetExpedientes;
+import CobroCoactivo.Persistencia.CivDetalleSolicitudes;
 import java.util.List;
 import org.hibernate.Session;
 
 /**
  *
- * @author emadrid
+ * @author emadridp
  */
-public interface ITArchivoDetExpedientes extends ITGeneryHibernateDao<CivArchivoDetExpedientes, Integer> {
+public interface ITDetalleSolicitudes extends ITGeneryHibernateDao<CivDetalleSolicitudes, Integer> {
 
-    public List<CivArchivoDetExpedientes> getCivArchivoDetExpedientes(Session session, int idDetExpediente) throws Exception;
+    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session,int idSolicitud) throws Exception;
+
 }

@@ -180,7 +180,7 @@
                                                                                         <h:commandLink class="fa fa-plus col-md-1" onclick="$('#modalRecursoModulos').modal('show')">
                                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.cargarRecursoByModulo(listaTodosModulos.modId)}" render="frmDetalleUsuario:modalBodyAgregarRecurso"/>
                                                                                         </h:commandLink>
-                                                                                        <h:commandLink class="fa fa-trash col-md-1" onclick="$('#modalQuitarRecursoModulos').modal('show')">
+                                                                                        <h:commandLink class="fa fa-trash col-md-1" onclick="$('#modalQuitarRecursoModulo').modal('show')">
                                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.cargarConfUsuRec(listaTodosModulos.modId)}" render="frmDetalleUsuario:modalQuitarRecursoModulos"/>
                                                                                         </h:commandLink>
                                                                                     </div>
@@ -333,7 +333,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="modalQuitarRecursoModulos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="modalQuitarRecursoModulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" >
                                     <div class="modal-content">
                                         <div class="modal-header">
