@@ -2,6 +2,7 @@ package CobroCoactivo.Modelo;
 // Generated 30/05/2018 02:16:05 PM by Hibernate Tools 4.3.1
 
 import CobroCoactivo.Persistencia.CivCobroDeudas;
+import CobroCoactivo.Persistencia.CivDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
 import CobroCoactivo.Persistencia.CivMovimientos;
@@ -98,7 +99,6 @@ public class Deudas implements java.io.Serializable {
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas, civPersonas.getCivTipoDocumentos());
     }
-  
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivPlanTrabajos civPlanTrabajos, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas) {
         this.Id = civDeudas.getDeuId().intValue();
@@ -111,9 +111,10 @@ public class Deudas implements java.io.Serializable {
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas);
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
-        if(civCobroDeudas !=null){
+        if (civCobroDeudas != null) {
             this.cobroDeudas = new CobroDeudas(civCobroDeudas);
         }
+
     }
 
     public Deudas(CivDeudas civDeudas, CivEstadoDeudas civEstadoDeudas, CivPlanTrabajos civPlanTrabajos, CivTipoDeudas civTipoDeudas, CivPersonas civPersonas, CivCobroDeudas civCobroDeudas, List<CivMovimientos> listCivMovimientos) {

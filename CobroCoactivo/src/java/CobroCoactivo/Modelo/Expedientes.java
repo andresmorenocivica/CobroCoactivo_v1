@@ -52,6 +52,8 @@ public class Expedientes implements java.io.Serializable {
                 civExpedientes.setCivTipoExpedientes(civTipoExpedientes);
                 expedienteDAO.create(session, civExpedientes);
                 transaction.commit();
+            } else {
+                return folderExpedientePersona;
             }
             return folderExpedientePersona;
         } finally {

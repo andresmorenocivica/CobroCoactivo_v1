@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 9/08/2018 03:19:25 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivPrestamoExpHistorial" table="CIV_PRESTAMO_EXP_HISTORIAL" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="preexphisId" type="big_decimal">
+            <column name="PREEXPHIS_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
+            <column name="PREEXPHIS_USU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civDetalleExpedientes" class="CobroCoactivo.Persistencia.CivDetalleExpedientes" fetch="select">
+            <column name="PREEXPHIS_DETEXP_FK" precision="22" scale="0" />
+        </many-to-one>
+        <property name="preexphisFechaproceso" type="date">
+            <column name="PREEXPHIS_FECHAPROCESO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

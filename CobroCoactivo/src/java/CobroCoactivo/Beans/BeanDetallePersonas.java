@@ -40,7 +40,7 @@ public class BeanDetallePersonas {
     private DetallePersonaBO detallePersonaBO;
 
     public void init() {
-        try {
+        try { 
             setDetallePersonaBO(new DetallePersonaImpBO());
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);

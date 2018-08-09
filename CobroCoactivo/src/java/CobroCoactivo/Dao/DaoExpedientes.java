@@ -19,12 +19,12 @@ import org.hibernate.Session;
 public class DaoExpedientes extends ImpGeneryHibernateDao<CivExpedientes, Integer> implements ITExpedientes {
 
     @Override
-    public List<CivExpedientes> getCivExpedientes(Session session, String expPersona) throws Exception {
+    public CivExpedientes getCivExpedientes(Session session, String expPersona) throws Exception {
         String hql = "from CivExpedientes where expReferencia=:referencia";
         Query query = session.createQuery(hql);
         query.setParameter("referencia", expPersona);
         if (query.list().size() > 0) {
-            return query.list();
+            return (CivExpedientes) query.list().get(0);
         }
         return null;
     }

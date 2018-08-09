@@ -8,8 +8,10 @@ package CobroCoactivo.Bo;
 import CobroCoactivo.Beans.BeanGestionDeudas;
 import CobroCoactivo.Dao.DaoCobroDeudas;
 import CobroCoactivo.Dao.DaoDetalleCobroDeudas;
+import CobroCoactivo.Dao.DaoDetalleExpedientes;
 import CobroCoactivo.Dao.DaoDeudas;
 import CobroCoactivo.Dao.DaoEstadoDeudas;
+import CobroCoactivo.Dao.DaoExpedientes;
 import CobroCoactivo.Dao.DaoPersonas;
 import CobroCoactivo.Dao.DaoPlanTrabajo;
 import CobroCoactivo.Dao.DaoTipoDetalleCobro;
@@ -18,8 +20,10 @@ import CobroCoactivo.Dao.DaoTipoDocumento;
 import CobroCoactivo.Dao.DaoValorTipoDetalleCobro;
 import CobroCoactivo.Dao.ITCobroDeudas;
 import CobroCoactivo.Dao.ITDetalleCobroDeudas;
+import CobroCoactivo.Dao.ITDetalleExpedientes;
 import CobroCoactivo.Dao.ITDeudas;
 import CobroCoactivo.Dao.ITEstadoDeudas;
+import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDetalleCobro;
@@ -27,26 +31,35 @@ import CobroCoactivo.Dao.ITTipoDeudas;
 import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITValorTipoDetalleCobro;
 import CobroCoactivo.Modelo.CobroDeudas;
+import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Modelo.Deudas;
+import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.TipoDeudas;
 import CobroCoactivo.Persistencia.CivCobroDeudas;
 import CobroCoactivo.Persistencia.CivDetalleCobroDeudas;
+import CobroCoactivo.Persistencia.CivDetalleExpedientes;
+import CobroCoactivo.Persistencia.CivEstadoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
+import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivTipoDetalleCobro;
+import CobroCoactivo.Persistencia.CivTipoDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivValorTipoDetalleCobro;
 import CobroCoactivo.Utility.HibernateUtil;
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -64,6 +77,8 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     private ITEstadoDeudas estadoDeudasDAO;
     private ITPlanTrabajo planTrabajoDAO;
     private ITTipoDocumento tipoDocumentoDAO;
+    private ITExpedientes expedientesDAO;
+    private ITDetalleExpedientes detalleExpedientesDAO;
 
     public GestionDeudasImpBO() {
         deudasDAO = new DaoDeudas();
@@ -76,6 +91,8 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
         estadoDeudasDAO = new DaoEstadoDeudas();
         planTrabajoDAO = new DaoPlanTrabajo();
         tipoDocumentoDAO = new DaoTipoDocumento();
+        detalleExpedientesDAO = new DaoDetalleExpedientes();
+        expedientesDAO = new DaoExpedientes();
     }
 
     @Override
@@ -154,17 +171,17 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
             bean.setListDeudas(new ArrayList<>());
             switch (bean.getTipoBusqueda()) {
                 case 1:
-                    listCivDeudas = getDeudasDAO().listarDeudasByRefencia(session , bean.getReferenciaDeuda().toUpperCase());
+                    listCivDeudas = getDeudasDAO().listarDeudasByRefencia(session, bean.getReferenciaDeuda().toUpperCase());
                     break;
                 case 2:
-                    listCivDeudas = getDeudasDAO().listarDeudasByFechaAdquisicion(session , bean.getFechaCargueInicial(), bean.getFechaCargueFinal());
+                    listCivDeudas = getDeudasDAO().listarDeudasByFechaAdquisicion(session, bean.getFechaCargueInicial(), bean.getFechaCargueFinal());
                     break;
 
                 case 3:
-                    listCivDeudas = getDeudasDAO().listarDeudasByFechaDeuda(session , bean.getFechaDeudaInicial(), bean.getFechaDeudaFinal());
+                    listCivDeudas = getDeudasDAO().listarDeudasByFechaDeuda(session, bean.getFechaDeudaInicial(), bean.getFechaDeudaFinal());
                     break;
                 case 4:
-                    listCivDeudas = getDeudasDAO().listarDeudasByTipo(session , bean.getTipoDeudas());
+                    listCivDeudas = getDeudasDAO().listarDeudasByTipo(session, bean.getTipoDeudas());
                     break;
             }
             if (listCivDeudas == null) {
@@ -174,15 +191,18 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                 if (listCivDeudas.size() > 0) {
                     int i = 0;
                     for (CivDeudas civDeuda : listCivDeudas) {
-                        CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session , civDeuda.getCivPersonas().getPerId().intValue());
-                        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session , civPersonas.getCivTipoDocumentos().getTipdocId());
+                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, civDeuda.getDeuRefencia());
+                        if (civDetalleExpedientes != null) {
+                            bean.setPrueba(true);
+                        }
+                        CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session, civDeuda.getCivPersonas().getPerId().intValue());
+                        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, civPersonas.getCivTipoDocumentos().getTipdocId());
                         civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-                        CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session , civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
-                        CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(session ,civDeuda.getCivEstadoDeudas().getEstdeuId());
+                        CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
+                        CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(session, civDeuda.getCivEstadoDeudas().getEstdeuId());
                         CivCobroDeudas civCobroDeudas = null;
                         if (civDeuda.getCivCobroDeudas() != null) {
-                            civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session , civDeuda.getCivCobroDeudas().getCobdeuId().intValue());
-
+                            civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session, civDeuda.getCivCobroDeudas().getCobdeuId().intValue());
                         }
                         Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas, civCobroDeudas);
                         if (civCobroDeudas != null) {
@@ -203,7 +223,6 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     }
                 }
             }
-
         } finally {
             session.flush();
             session.close();
@@ -214,9 +233,9 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     public void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            CivDeudas civDeudas = getDeudasDAO().find(session , new BigDecimal(bean.getDeudaSeleccionada().getId()));
-            CivCobroDeudas civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session , bean.getCobroDeudasSeleccionado().getId());
-            CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(session , new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
+            CivDeudas civDeudas = getDeudasDAO().find(session, new BigDecimal(bean.getDeudaSeleccionada().getId()));
+            CivCobroDeudas civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session, bean.getCobroDeudasSeleccionado().getId());
+            CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(session, new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
             CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(session, new BigDecimal(bean.getDeudaSeleccionada().getEstadoDeudas().getId()));
             CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, bean.getDeudaSeleccionada().getPlanTrabajoDeuda().getId());
             CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session, bean.getDeudaSeleccionada().getPersonas().getId());
@@ -267,6 +286,45 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                 session.flush();
                 session.close();
             }
+        }
+    }
+
+    @Override
+    public void crearExpedienteDeuda(BeanGestionDeudas bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientes(session, bean.getDeudas().getPersonas().getDocumento());
+            if (civExpedientes != null) {
+                Expedientes expedientes = new Expedientes(civExpedientes);
+                String folderExpedienteDeuda = "";
+                folderExpedienteDeuda = expedientes.getUbicacion() + "/" + bean.getDeudas().getReferencia();
+                File folderDeuda = new File(folderExpedienteDeuda);
+                if (!folderDeuda.exists()) {
+                    folderDeuda.mkdirs();
+                    CivDeudas civDeudas = getDeudasDAO().find(session, new BigDecimal(bean.getDeudas().getId()));
+                    CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                    civDetalleExpedientes.setDetexpFechaproceso(new Date());
+                    civDetalleExpedientes.setCivDeudas(civDeudas);
+                    civDetalleExpedientes.setDetexpDescripcion(bean.getDeudas().getReferencia());
+                    CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
+                    civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
+                    civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);
+                    CivTipoDetalleExpedientes civTipoDetalleExpedientes = new CivTipoDetalleExpedientes();
+                    civTipoDetalleExpedientes.setTipdetexpId(BigDecimal.ONE);
+                    civDetalleExpedientes.setCivTipoDetalleExpedientes(civTipoDetalleExpedientes);
+                    civDetalleExpedientes.setCivExpedientes(civExpedientes);
+                    civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
+                    getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha creado el expediente a la deuda.", null));
+                }
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La persona que esta asociada esta deuda no tiene expediente.", null));
+            }
+            transaction.commit();
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -408,6 +466,34 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
      */
     public void setTipoDocumentoDAO(ITTipoDocumento tipoDocumentoDAO) {
         this.tipoDocumentoDAO = tipoDocumentoDAO;
+    }
+
+    /**
+     * @return the detalleExpedientesDAO
+     */
+    public ITDetalleExpedientes getDetalleExpedientesDAO() {
+        return detalleExpedientesDAO;
+    }
+
+    /**
+     * @param detalleExpedientesDAO the detalleExpedientesDAO to set
+     */
+    public void setDetalleExpedientesDAO(ITDetalleExpedientes detalleExpedientesDAO) {
+        this.detalleExpedientesDAO = detalleExpedientesDAO;
+    }
+
+    /**
+     * @return the expedientesDAO
+     */
+    public ITExpedientes getExpedientesDAO() {
+        return expedientesDAO;
+    }
+
+    /**
+     * @param expedientesDAO the expedientesDAO to set
+     */
+    public void setExpedientesDAO(ITExpedientes expedientesDAO) {
+        this.expedientesDAO = expedientesDAO;
     }
 
 }

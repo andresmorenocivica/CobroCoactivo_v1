@@ -39,8 +39,8 @@ public class BeanGestionDeudas {
     private Date fechaCargueFinal;
     private Date fechaDeudaInicial;
     private Date fechaDeudaFinal;
-    
-    
+    private boolean prueba = false;
+
     private List<TipoDeudas> listTipoDeudas = new ArrayList<>();
     private List<Deudas> listDeudas = new ArrayList<>();
     private Personas personas = new Personas();
@@ -62,7 +62,7 @@ public class BeanGestionDeudas {
             //getGestionDeudasBO().clasificacionDeudas(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
 
@@ -72,14 +72,14 @@ public class BeanGestionDeudas {
         try {
             setTipoBusqueda(tipo);
             getGestionDeudasBO().buscarDeudas(this);
-            if(getListDeudas().size() > 0){
+            if (getListDeudas().size() > 0) {
                 setBusquedaVisible(false);
-            }else{
-            
+            } else {
+
             }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
@@ -91,10 +91,20 @@ public class BeanGestionDeudas {
             getGestionDeudasBO().actualizarDeudaCargada(this);
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
+    }
 
+    public void crearExpedienteDeuda(Deudas deudas) {
+        try {
+            setDeudas(deudas);
+            getGestionDeudasBO().crearExpedienteDeuda(this);
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
     }
 
     /**
@@ -377,8 +387,18 @@ public class BeanGestionDeudas {
         this.fechaDeudaFinal = fechaDeudaFinal;
     }
 
-  
+    /**
+     * @return the prueba
+     */
+    public boolean isPrueba() {
+        return prueba;
+    }
 
-    
+    /**
+     * @param prueba the prueba to set
+     */
+    public void setPrueba(boolean prueba) {
+        this.prueba = prueba;
+    }
 
 }

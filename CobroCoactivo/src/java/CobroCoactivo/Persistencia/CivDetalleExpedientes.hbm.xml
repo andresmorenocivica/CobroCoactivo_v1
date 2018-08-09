@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 2/08/2018 01:52:52 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 9/08/2018 03:19:25 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivDetalleExpedientes" table="CIV_DETALLE_EXPEDIENTES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detexpId" type="big_decimal">
@@ -34,6 +34,12 @@
                 <column name="ARCDETEXP_DET_EXP_FK" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes" />
+        </set>
+        <set name="civPrestamoExpHistorials" table="CIV_PRESTAMO_EXP_HISTORIAL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PREEXPHIS_DETEXP_FK" precision="22" scale="0" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivPrestamoExpHistorial" />
         </set>
     </class>
 </hibernate-mapping>

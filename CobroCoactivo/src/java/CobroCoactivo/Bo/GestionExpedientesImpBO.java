@@ -99,18 +99,16 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     public void buscarExpediente(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            List<CivExpedientes> listCivExpedientes = new ArrayList<>();
+            CivExpedientes civExpedientes = new CivExpedientes();
             bean.setListExpedientes(new ArrayList<>());
             switch (bean.getTipoBusqueda()) {
                 case 1:
-                    listCivExpedientes = getExpedientesDAO().getCivExpedientes(session, bean.getReferenciaExpediente());
+                    civExpedientes = getExpedientesDAO().getCivExpedientes(session, bean.getReferenciaExpediente());
                     break;
             }
-            if (listCivExpedientes != null) {
-                for (CivExpedientes civExpedientes : listCivExpedientes) {
-                    Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes());
-                    bean.getListExpedientes().add(expedientes);
-                }
+            if (civExpedientes != null) {
+                Expedientes expedientes = new Expedientes(civExpedientes, civExpedientes.getCivTipoExpedientes(), civExpedientes.getCivEstadoExpedientes());
+                bean.getListExpedientes().add(expedientes);
             }
         } finally {
             session.flush();

@@ -16,7 +16,7 @@ import org.hibernate.Session;
  */
 public interface ITExpedientes extends ITGeneryHibernateDao<CivExpedientes, Integer> {
 
-    public List<CivExpedientes> getCivExpedientes(Session session, String referencia) throws Exception;
+    public CivExpedientes getCivExpedientes(Session session, String referencia) throws Exception;
 
     public CivExpedientes getCivExpedientesByUri(Session session, String ubicacion) throws Exception;
 

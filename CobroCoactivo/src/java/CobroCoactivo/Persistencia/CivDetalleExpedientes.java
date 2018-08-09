@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 2/08/2018 01:52:51 PM by Hibernate Tools 4.3.1
+// Generated 9/08/2018 03:19:23 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
      private Date detexpFechaproceso;
      private String detexpUbicacion;
      private Set civArchivoDetExpedienteses = new HashSet(0);
+     private Set civPrestamoExpHistorials = new HashSet(0);
 
     public CivDetalleExpedientes() {
     }
@@ -35,7 +36,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
         this.civDeudas = civDeudas;
         this.detexpDescripcion = detexpDescripcion;
     }
-    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivDeudas civDeudas, String detexpDescripcion, Date detexpFechaproceso, String detexpUbicacion, Set civArchivoDetExpedienteses) {
+    public CivDetalleExpedientes(BigDecimal detexpId, CivTipoDetalleExpedientes civTipoDetalleExpedientes, CivExpedientes civExpedientes, CivEstadoDetalleExpedientes civEstadoDetalleExpedientes, CivDeudas civDeudas, String detexpDescripcion, Date detexpFechaproceso, String detexpUbicacion, Set civArchivoDetExpedienteses, Set civPrestamoExpHistorials) {
        this.detexpId = detexpId;
        this.civTipoDetalleExpedientes = civTipoDetalleExpedientes;
        this.civExpedientes = civExpedientes;
@@ -45,6 +46,7 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
        this.detexpFechaproceso = detexpFechaproceso;
        this.detexpUbicacion = detexpUbicacion;
        this.civArchivoDetExpedienteses = civArchivoDetExpedienteses;
+       this.civPrestamoExpHistorials = civPrestamoExpHistorials;
     }
    
     public BigDecimal getDetexpId() {
@@ -109,6 +111,13 @@ public class CivDetalleExpedientes  implements java.io.Serializable {
     
     public void setCivArchivoDetExpedienteses(Set civArchivoDetExpedienteses) {
         this.civArchivoDetExpedienteses = civArchivoDetExpedienteses;
+    }
+    public Set getCivPrestamoExpHistorials() {
+        return this.civPrestamoExpHistorials;
+    }
+    
+    public void setCivPrestamoExpHistorials(Set civPrestamoExpHistorials) {
+        this.civPrestamoExpHistorials = civPrestamoExpHistorials;
     }
 
 

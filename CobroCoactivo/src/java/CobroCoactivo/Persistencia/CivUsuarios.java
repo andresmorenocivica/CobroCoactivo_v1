@@ -1,5 +1,5 @@
 package CobroCoactivo.Persistencia;
-// Generated 2/08/2018 01:52:51 PM by Hibernate Tools 4.3.1
+// Generated 9/08/2018 03:19:23 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -21,6 +21,8 @@ public class CivUsuarios  implements java.io.Serializable {
      private Date usuFechaproceso;
      private Set civConfUsuRecs = new HashSet(0);
      private Set civAttemptses = new HashSet(0);
+     private Set civPrestamoExpHistorials = new HashSet(0);
+     private Set civFinanciacions = new HashSet(0);
      private Set civPagoses = new HashSet(0);
      private Set civUspHistorias = new HashSet(0);
      private Set logEventoses = new HashSet(0);
@@ -39,7 +41,7 @@ public class CivUsuarios  implements java.io.Serializable {
         this.usuNombre = usuNombre;
         this.usuPass = usuPass;
     }
-    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civPagoses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses, Set civSolicitudeses) {
+    public CivUsuarios(BigDecimal usuId, CivPersonas civPersonas, CivEstadoUsuarios civEstadoUsuarios, String usuNombre, String usuPass, Date usuFechaproceso, Set civConfUsuRecs, Set civAttemptses, Set civPrestamoExpHistorials, Set civFinanciacions, Set civPagoses, Set civUspHistorias, Set logEventoses, Set civMovimientoses, Set civArchivosPlanoses, Set civSolicitudeses) {
        this.usuId = usuId;
        this.civPersonas = civPersonas;
        this.civEstadoUsuarios = civEstadoUsuarios;
@@ -48,6 +50,8 @@ public class CivUsuarios  implements java.io.Serializable {
        this.usuFechaproceso = usuFechaproceso;
        this.civConfUsuRecs = civConfUsuRecs;
        this.civAttemptses = civAttemptses;
+       this.civPrestamoExpHistorials = civPrestamoExpHistorials;
+       this.civFinanciacions = civFinanciacions;
        this.civPagoses = civPagoses;
        this.civUspHistorias = civUspHistorias;
        this.logEventoses = logEventoses;
@@ -111,6 +115,20 @@ public class CivUsuarios  implements java.io.Serializable {
     
     public void setCivAttemptses(Set civAttemptses) {
         this.civAttemptses = civAttemptses;
+    }
+    public Set getCivPrestamoExpHistorials() {
+        return this.civPrestamoExpHistorials;
+    }
+    
+    public void setCivPrestamoExpHistorials(Set civPrestamoExpHistorials) {
+        this.civPrestamoExpHistorials = civPrestamoExpHistorials;
+    }
+    public Set getCivFinanciacions() {
+        return this.civFinanciacions;
+    }
+    
+    public void setCivFinanciacions(Set civFinanciacions) {
+        this.civFinanciacions = civFinanciacions;
     }
     public Set getCivPagoses() {
         return this.civPagoses;

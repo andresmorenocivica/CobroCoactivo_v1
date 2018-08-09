@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 9/08/2018 03:19:25 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivFinanciacion" table="CIV_FINANCIACION" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="finId" type="big_decimal">
+            <column name="FIN_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
+            <column name="FIN_USU_FK" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="civEstadoFinanciacion" class="CobroCoactivo.Persistencia.CivEstadoFinanciacion" fetch="select">
+            <column name="FIN_EST_FIN_FK" precision="22" scale="0" />
+        </many-to-one>
+        <property name="finNumero" type="string">
+            <column name="FIN_NUMERO" length="100" />
+        </property>
+        <property name="finValor" type="big_decimal">
+            <column name="FIN_VALOR" precision="22" scale="0" />
+        </property>
+        <property name="finFecha" type="date">
+            <column name="FIN_FECHA" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

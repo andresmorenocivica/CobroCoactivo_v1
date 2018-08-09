@@ -26,4 +26,6 @@ public interface GestionDeudasBO {
 
     void buscarDeudas(BeanGestionDeudas bean) throws Exception;
 
+    void crearExpedienteDeuda(BeanGestionDeudas bean) throws Exception;
+
 }

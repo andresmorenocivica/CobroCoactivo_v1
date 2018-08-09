@@ -17,4 +17,6 @@ import org.hibernate.Session;
 public interface ITDetalleExpedientes extends ITGeneryHibernateDao<CivDetalleExpedientes, Integer> {
 
     public List<CivDetalleExpedientes> getListCivDetalleExpediente(Session session, int idExpediente) throws Exception;
+    
+    public CivDetalleExpedientes getCivDetalleExpedientes(Session session,String referencia)throws Exception;
 }

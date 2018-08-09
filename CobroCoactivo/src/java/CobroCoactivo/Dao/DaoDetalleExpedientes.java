@@ -29,4 +29,15 @@ public class DaoDetalleExpedientes extends ImpGeneryHibernateDao<CivDetalleExped
         return null;
     }
 
+    @Override
+    public CivDetalleExpedientes getCivDetalleExpedientes(Session session, String referencia) throws Exception {
+        String hql = "from CivDetalleExpedientes where detexpDescripcion=:referencia";
+        Query query = session.createQuery(hql);
+        query.setString("referencia", referencia);
+        if (query.list().size() > 0) {
+            return (CivDetalleExpedientes) query.list().get(0);
+        }
+        return null;
+    }
+
 }
