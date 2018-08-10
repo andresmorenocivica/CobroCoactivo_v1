@@ -193,7 +193,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     for (CivDeudas civDeuda : listCivDeudas) {
                         CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, civDeuda.getDeuRefencia());
                         if (civDetalleExpedientes != null) {
-                            bean.setPrueba(true);
+                            bean.setBtnCrearExp(false);
                         }
                         CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session, civDeuda.getCivPersonas().getPerId().intValue());
                         CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, civPersonas.getCivTipoDocumentos().getTipdocId());

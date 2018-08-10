@@ -234,11 +234,11 @@ public class BeanGestionExpedientes {
         }
     }
 
-    public void estadoExpedientes(int idDetSolicitud) {
+    public void aceptarSolicitudExpedientes() {
         try {
-            setIdDetSolicitud(idDetSolicitud);
-            getGestionExpedientesBO().estadoExpediente(this);
+            getGestionExpedientesBO().aceptarSolicitudExpediente(this);
         } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }

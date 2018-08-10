@@ -144,15 +144,9 @@
                                         <ul class="nav nav-tabs">
                                             <!-- <li class="active"> <a href="#activity" data-toggle="tab">Permisos</a></li>-->
                                             <li><a href="#Modulos" data-toggle="tab">Modulos</a></li> 
-                                            <h:commandButton>
-                                                <li> 
-                                                    <f:ajax event="click" onevent="test"/>
-                                                    <a href="#HistorialRecuso" data-toggle="tab"> 
-                                                        Historial Recursos
-                                                    </a>
-                                                </li> 
-                                            </h:commandButton>
+                                            <li><a href="#HistorialRecuso" data-toggle="tab">Historial Recursos</a></li> 
                                             <li><a href="#Movimientos" data-toggle="tab">Historial de movimiento</a></li> 
+                                            <li><a href="#HistorialExpediente" data-toggle="tab">Historial Expediente</a></li> 
                                         </ul>
                                         <div class="tab-content">
                                             <div class="tab-pane" id="activity">
@@ -276,6 +270,37 @@
                                                                                     </span>
                                                                                 </td>
                                                                                 <td>#{listMovimientos.fechaproceso}</td>
+                                                                            </tr>
+                                                                        </ui:repeat>
+                                                                    </tbody>
+                                                                </table>
+                                                            </h:panelGroup>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="HistorialExpediente">
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border">
+                                                        <h:outputLabel id="tituloHistorial" class="box-title" value="Historial de prestamo"></h:outputLabel>
+                                                    </div>
+                                                    <div class="box-body no-padding">
+                                                        <div class="mailbox-controls">
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <h:panelGroup id="pnlTablaPrestamoExp">
+                                                                <table id="dataTable" class="table table-bordered table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Fecha Prestamo</th>
+                                                                            <th>Expediente</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ui:repeat value="#{gestionUsuariosBean.listPrestamoExpHistorial}" var="listaPrestamoHistorial">
+                                                                            <tr>
+                                                                                <td>#{listaPrestamoHistorial.fechaproceso}</td>
+                                                                                <td>#{listaPrestamoHistorial.detalleExpedientes.detexpDescripcion}</td>
                                                                             </tr>
                                                                         </ui:repeat>
                                                                     </tbody>

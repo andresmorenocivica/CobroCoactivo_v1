@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 9/08/2018 03:19:25 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 10/08/2018 01:54:00 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivMovimientos" table="CIV_MOVIMIENTOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="movId" type="big_decimal">
             <column name="MOV_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="MOV_USUARIO_FK" precision="22" scale="0" not-null="true" />

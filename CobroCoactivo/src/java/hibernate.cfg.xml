@@ -82,6 +82,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivArchivosPlanos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivArchivoDetExpedientes.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivDeudasImpuesto.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivActosAdministractivos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivValorTipoDetalleCobro.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivCobroDeudas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivFasesGenerales.hbm.xml"/>

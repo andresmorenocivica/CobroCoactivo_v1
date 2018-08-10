@@ -13,6 +13,7 @@ import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.PrestamoExpHistorial;
 import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Modelo.Usuarios;
@@ -51,6 +52,7 @@ public class BeanGestionUsuarios {
     private List<ConfUsuRec> listConfUsuRec = new ArrayList<>();
     private List<ConfUsuRec> listConfUsuRecByUser = new ArrayList<>(); // ESTA LISTA SE LLENARA CON LOS RECURSO QUE TIENE UN USUARIO
     private List<Movimientos> listMovimientosByUser = new ArrayList<>();      // ESTA LISTA SE LLENARA CON LOS MOVIMIENTOS QUE A HECHO UN USUARIO
+    private List<PrestamoExpHistorial> listPrestamoExpHistorial = new ArrayList<>(); // LISTA QUE ALMACENARA LOS DATOS DEL HISTORIAL DE EXPEDIENTE DE EL USER
     private Usuarios detalleUsuario;
     private String encabezadoDetalleUsuario;
     private String contraseñaActual;
@@ -76,6 +78,7 @@ public class BeanGestionUsuarios {
                 getGestionUsuariosBO().cargarTodosModulos(this);
                 getGestionUsuariosBO().cargarHistorialConfUsuRec(this);
                 getGestionUsuariosBO().cargarMovimientoByUser(this);
+                getGestionUsuariosBO().cargarHistorialExpPrestado(this);
                 if (obj_.getPersonas() != null) {
                     setEncabezadoDetalleUsuario(obj_.getRuta());
                     setDetallePersonaModal(obj_.getPersonas());
@@ -554,6 +557,20 @@ public class BeanGestionUsuarios {
      */
     public void setListMovimientosByUser(List<Movimientos> listMovimientosByUser) {
         this.listMovimientosByUser = listMovimientosByUser;
+    }
+
+    /**
+     * @return the listPrestamoExpHistorial
+     */
+    public List<PrestamoExpHistorial> getListPrestamoExpHistorial() {
+        return listPrestamoExpHistorial;
+    }
+
+    /**
+     * @param listPrestamoExpHistorial the listPrestamoExpHistorial to set
+     */
+    public void setListPrestamoExpHistorial(List<PrestamoExpHistorial> listPrestamoExpHistorial) {
+        this.listPrestamoExpHistorial = listPrestamoExpHistorial;
     }
 
 }

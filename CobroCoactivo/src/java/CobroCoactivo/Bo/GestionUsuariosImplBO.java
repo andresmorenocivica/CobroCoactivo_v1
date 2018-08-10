@@ -15,6 +15,7 @@ import CobroCoactivo.Dao.DaoEstadoUsuarios;
 import CobroCoactivo.Dao.DaoModulos;
 import CobroCoactivo.Dao.DaoMovimientos;
 import CobroCoactivo.Dao.DaoPersonas;
+import CobroCoactivo.Dao.DaoPrestamoExpHistorial;
 import CobroCoactivo.Dao.DaoRecursos;
 import CobroCoactivo.Dao.DaoTipoDocumento;
 import CobroCoactivo.Dao.DaoUspHistoria;
@@ -27,6 +28,7 @@ import CobroCoactivo.Dao.ITEstadoUsuarios;
 import CobroCoactivo.Dao.ITModulos;
 import CobroCoactivo.Dao.ITMovimientos;
 import CobroCoactivo.Dao.ITPersonas;
+import CobroCoactivo.Dao.ITPrestamoExpHistorial;
 import CobroCoactivo.Dao.ITRecursos;
 import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITUspHistoria;
@@ -36,6 +38,7 @@ import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
+import CobroCoactivo.Modelo.PrestamoExpHistorial;
 import CobroCoactivo.Modelo.Recursos;
 import CobroCoactivo.Modelo.TipoDocumentos;
 import CobroCoactivo.Persistencia.CivUsuarios;
@@ -50,6 +53,7 @@ import CobroCoactivo.Persistencia.CivEstadouspHistoria;
 import CobroCoactivo.Persistencia.CivModulos;
 import CobroCoactivo.Persistencia.CivMovimientos;
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Persistencia.CivPrestamoExpHistorial;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivUspHistoria;
@@ -83,6 +87,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     private ITEstadoUspHistoria estadoUspHistoriaDAO;
     private ITUspHistoria uspHistoriaDAO;
     private ITMovimientos movimientosDAO;
+    private ITPrestamoExpHistorial prestamoExpHistorialDAO;
 
     public GestionUsuariosImplBO() {
         usuariosDAO = new DaoUsuarios();
@@ -97,6 +102,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
         estadoUspHistoriaDAO = new DaoEstadoUspHistoria();
         uspHistoriaDAO = new DaoUspHistoria();
         movimientosDAO = new DaoMovimientos();
+        prestamoExpHistorialDAO = new DaoPrestamoExpHistorial();
     }
 
     @Override
@@ -224,6 +230,23 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civMovimiento.getCivFasesTrabajos(), civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
                 bean.getListMovimientosByUser().add(movimientos);
             }
+        }
+    }
+
+    @Override
+    public void cargarHistorialExpPrestado(BeanGestionUsuarios bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivPrestamoExpHistorial> listCivPrestamoExpHistorial = getPrestamoExpHistorialDAO().getCivPrestamoExpHistorial(session, bean.getDetalleUsuario().getId());
+            if (listCivPrestamoExpHistorial != null) {
+                for (CivPrestamoExpHistorial civPrestamoExpHistorial : listCivPrestamoExpHistorial) {
+                    PrestamoExpHistorial prestamoExpHistorial = new PrestamoExpHistorial(civPrestamoExpHistorial, civPrestamoExpHistorial.getCivUsuarios(), civPrestamoExpHistorial.getCivDetalleExpedientes());
+                    bean.getListPrestamoExpHistorial().add(prestamoExpHistorial);
+                }
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -578,6 +601,20 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
      */
     public void setMovimientosDAO(ITMovimientos movimientosDAO) {
         this.movimientosDAO = movimientosDAO;
+    }
+
+    /**
+     * @return the prestamoExpHistorialDAO
+     */
+    public ITPrestamoExpHistorial getPrestamoExpHistorialDAO() {
+        return prestamoExpHistorialDAO;
+    }
+
+    /**
+     * @param prestamoExpHistorialDAO the prestamoExpHistorialDAO to set
+     */
+    public void setPrestamoExpHistorialDAO(ITPrestamoExpHistorial prestamoExpHistorialDAO) {
+        this.prestamoExpHistorialDAO = prestamoExpHistorialDAO;
     }
 
 }

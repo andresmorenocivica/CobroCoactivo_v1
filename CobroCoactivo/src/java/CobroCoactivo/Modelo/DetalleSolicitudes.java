@@ -21,6 +21,7 @@ public class DetalleSolicitudes {
     private EstadoDetalleSolicitudes estadoDetalleSolicitudes;
     private String descripcion;
     private Date fechaProceso;
+    private boolean selecionado;
 
     public DetalleSolicitudes() {
     }
@@ -114,6 +115,20 @@ public class DetalleSolicitudes {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * @return the selecionado
+     */
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    /**
+     * @param selecionado the selecionado to set
+     */
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
     }
 
 }

@@ -130,4 +130,5 @@ Contributor(s):
     <table-filter match-name="CIV_PRESTAMO_EXP_HISTORIAL"/>
     <table-filter match-name="CIV_FINANCIACION"/>
     <table-filter match-name="CIV_ESTADO_FINANCIACION"/>
+    <table-filter match-name="CIV_ACTOS_ADMINISTRACTIVOS"/>
 </hibernate-reverse-engineering>

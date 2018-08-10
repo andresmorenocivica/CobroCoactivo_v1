@@ -77,9 +77,9 @@
                                                                 <td>#{listaDetSolicitudes.estadoDetalleSolicitudes.nombre}</td>
                                                                 <td>
                                                                     <c:if test="#{listaDetSolicitudes.estadoDetalleSolicitudes.nombre != 'PRESTADO'}">
-                                                                        <h:commandLink id="btnPrestar" value="Prestar" class="btn btn-success">
-                                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.estadoExpedientes(listaDetSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes"/>
-                                                                        </h:commandLink>
+                                                                        <p:selectBooleanCheckbox value="#{listaDetSolicitudes.selecionado}" required="true" requiredMessage="Debe selecionar algun expediente">
+                                                                            <f:ajax event="change"></f:ajax>
+                                                                        </p:selectBooleanCheckbox>
                                                                     </c:if>
                                                                 </td>
                                                             </tr>
@@ -90,6 +90,9 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                            <h:commandLink id="btnPrestar" value="Prestar" class="btn btn-success">
+                                                <f:ajax event="click" listener="#{gestionExpedientesBean.aceptarSolicitudExpedientes()}" execute="frmSolicitudesExpedientes:modalBodySolicitudes" render="frmSolicitudesExpeddientes"/>
+                                            </h:commandLink>
                                         </div>
                                     </div>
                                 </div>

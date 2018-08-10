@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 9/08/2018 03:19:25 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 10/08/2018 01:54:00 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivRecursos" table="CIV_RECURSOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <comment>Tabla que guardara los recurso que existan en el sistema.</comment>
         <id name="recId" type="big_decimal">
             <column name="REC_ID" precision="22" scale="0" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="civTipoRecursos" class="CobroCoactivo.Persistencia.CivTipoRecursos" fetch="select">
             <column name="REC_TIPREC_FK" precision="22" scale="0" not-null="true" />

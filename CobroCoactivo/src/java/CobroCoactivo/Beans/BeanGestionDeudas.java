@@ -39,7 +39,7 @@ public class BeanGestionDeudas {
     private Date fechaCargueFinal;
     private Date fechaDeudaInicial;
     private Date fechaDeudaFinal;
-    private boolean prueba = false;
+    private boolean btnCrearExp = true;
 
     private List<TipoDeudas> listTipoDeudas = new ArrayList<>();
     private List<Deudas> listDeudas = new ArrayList<>();
@@ -388,17 +388,17 @@ public class BeanGestionDeudas {
     }
 
     /**
-     * @return the prueba
+     * @return the btnCrearExp
      */
-    public boolean isPrueba() {
-        return prueba;
+    public boolean isBtnCrearExp() {
+        return btnCrearExp;
     }
 
     /**
-     * @param prueba the prueba to set
+     * @param btnCrearExp the btnCrearExp to set
      */
-    public void setPrueba(boolean prueba) {
-        this.prueba = prueba;
+    public void setBtnCrearExp(boolean btnCrearExp) {
+        this.btnCrearExp = btnCrearExp;
     }
 
 }

@@ -9,15 +9,19 @@ import CobroCoactivo.Beans.BeanGestionExpedientes;
 import CobroCoactivo.Dao.DaoArchivoDetExpedientes;
 import CobroCoactivo.Dao.DaoDetalleExpedientes;
 import CobroCoactivo.Dao.DaoDetalleSolicitudes;
+import CobroCoactivo.Dao.DaoEstadoDetalleSolicitudes;
 import CobroCoactivo.Dao.DaoExpedientes;
 import CobroCoactivo.Dao.DaoPersonas;
+import CobroCoactivo.Dao.DaoPrestamoExpHistorial;
 import CobroCoactivo.Dao.DaoSolicitudes;
 import CobroCoactivo.Dao.DaoUsuarios;
 import CobroCoactivo.Dao.ITArchivoDetExpedientes;
 import CobroCoactivo.Dao.ITDetalleExpedientes;
 import CobroCoactivo.Dao.ITDetalleSolicitudes;
+import CobroCoactivo.Dao.ITEstadoDetalleSolicitudes;
 import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
+import CobroCoactivo.Dao.ITPrestamoExpHistorial;
 import CobroCoactivo.Dao.ITSolicitudes;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
@@ -34,6 +38,7 @@ import CobroCoactivo.Persistencia.CivEstadoExpedientes;
 import CobroCoactivo.Persistencia.CivEstadoSolicitudes;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
+import CobroCoactivo.Persistencia.CivPrestamoExpHistorial;
 import CobroCoactivo.Persistencia.CivSolicitudes;
 import CobroCoactivo.Persistencia.CivTipoExpedientes;
 import CobroCoactivo.Persistencia.CivUsuarios;
@@ -67,6 +72,8 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     private ITSolicitudes solicitudesDAO;
     private ITDetalleSolicitudes detalleSolicitudesDAO;
     private ITPersonas personasDAO;
+    private ITPrestamoExpHistorial prestamoExpHistorialDAO;
+    private ITEstadoDetalleSolicitudes estadoDetalleSolicitudesDAO;
 
     public GestionExpedientesImpBO() {
         expedientesDAO = new DaoExpedientes();
@@ -76,6 +83,8 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         solicitudesDAO = new DaoSolicitudes();
         detalleSolicitudesDAO = new DaoDetalleSolicitudes();
         personasDAO = new DaoPersonas();
+        prestamoExpHistorialDAO = new DaoPrestamoExpHistorial();
+        estadoDetalleSolicitudesDAO = new DaoEstadoDetalleSolicitudes();
     }
 
     @Override
@@ -255,7 +264,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
 
             CivSolicitudes civSolicitudes = new CivSolicitudes();
             CivEstadoSolicitudes civEstadoSolicitudes = new CivEstadoSolicitudes();
-            civEstadoSolicitudes.setEstsolId(BigDecimal.ONE);
+            civEstadoSolicitudes.setEstsolId(BigDecimal.valueOf(3));
             CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(bean.getIdUser()));
             civSolicitudes.setSolFechaproceso(new Date());
             civSolicitudes.setSolDescripcion(generarReferencia());
@@ -283,9 +292,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
-
         }
-
     }
 
     public String generarReferencia() {
@@ -346,15 +353,33 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     }
 
     @Override
-    public void estadoExpediente(BeanGestionExpedientes bean) throws Exception {
+    public void aceptarSolicitudExpediente(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getIdDetSolicitud()));
-            CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = new CivEstadoDetalleSolicitudes();
-            civEstadoDetalleSolicitudes.setEstdetsolId(BigDecimal.valueOf(4));
+            Transaction transaction = session.beginTransaction();
+            int increment = -1;
+            for (int i = 0; i < bean.getListDetalleSolicitudes().size(); i++) {
+                increment++;
+                if (bean.getListDetalleSolicitudes().get(i).isSelecionado() == true) {
+                    if (increment == i) {
+                        CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getListDetalleSolicitudes().get(i).getId()));
+                        CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = getEstadoDetalleSolicitudesDAO().find(session, new BigDecimal(4));
+                        civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
+                        getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
 
-            civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
-            getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
+                        CivPrestamoExpHistorial civPrestamoExpHistorial = new CivPrestamoExpHistorial();
+                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, bean.getListDetalleSolicitudes().get(i).getDescripcion());
+                        CivUsuarios civUsuarios = getUsuariosDAO().consultarUsuarioBy(session, civDetalleSolicitudes.getCivSolicitudes().getCivUsuarios().getUsuId().intValue());
+                        civPrestamoExpHistorial.setPreexphisFechaproceso(new Date());
+                        civPrestamoExpHistorial.setCivDetalleExpedientes(civDetalleExpedientes);
+                        civPrestamoExpHistorial.setCivUsuarios(civUsuarios);
+                        getPrestamoExpHistorialDAO().create(session, civPrestamoExpHistorial);
+                    }
+                }
+            }
+            transaction.commit();
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalSolicitudExpediente').modal('hide')");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion se genero correctamente.", null));
         } finally {
             session.flush();
@@ -473,6 +498,34 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
      */
     public void setPersonasDAO(ITPersonas personasDAO) {
         this.personasDAO = personasDAO;
+    }
+
+    /**
+     * @return the prestamoExpHistorialDAO
+     */
+    public ITPrestamoExpHistorial getPrestamoExpHistorialDAO() {
+        return prestamoExpHistorialDAO;
+    }
+
+    /**
+     * @param prestamoExpHistorialDAO the prestamoExpHistorialDAO to set
+     */
+    public void setPrestamoExpHistorialDAO(ITPrestamoExpHistorial prestamoExpHistorialDAO) {
+        this.prestamoExpHistorialDAO = prestamoExpHistorialDAO;
+    }
+
+    /**
+     * @return the estadoDetalleSolicitudesDAO
+     */
+    public ITEstadoDetalleSolicitudes getEstadoDetalleSolicitudesDAO() {
+        return estadoDetalleSolicitudesDAO;
+    }
+
+    /**
+     * @param estadoDetalleSolicitudesDAO the estadoDetalleSolicitudesDAO to set
+     */
+    public void setEstadoDetalleSolicitudesDAO(ITEstadoDetalleSolicitudes estadoDetalleSolicitudesDAO) {
+        this.estadoDetalleSolicitudesDAO = estadoDetalleSolicitudesDAO;
     }
 
 }

@@ -19,7 +19,7 @@ public interface GestionExpedientesBO {
 
     void buscarDetSolicitudes(BeanGestionExpedientes bean) throws Exception;
 
-    void estadoExpediente(BeanGestionExpedientes bean) throws Exception;
+    void aceptarSolicitudExpediente(BeanGestionExpedientes bean) throws Exception;
 
     void updateArchivo(BeanGestionExpedientes bean) throws Exception;
 
