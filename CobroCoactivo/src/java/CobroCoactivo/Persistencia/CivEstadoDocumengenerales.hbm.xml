@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoDocumengenerales" table="CIV_ESTADO_DOCUMENGENERALES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estdocgenId" type="big_decimal">
             <column name="ESTDOCGEN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estdocgenDescripcion" type="string">
             <column name="ESTDOCGEN_DESCRIPCION" length="100" not-null="true">

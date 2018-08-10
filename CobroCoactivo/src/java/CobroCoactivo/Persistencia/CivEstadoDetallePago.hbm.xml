@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoDetallePago" table="CIV_ESTADO_DETALLE_PAGO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estdetpagId" type="big_decimal">
             <column name="ESTDETPAG_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estdetpagDescripcion" type="string">
             <column name="ESTDETPAG_DESCRIPCION" length="20" />

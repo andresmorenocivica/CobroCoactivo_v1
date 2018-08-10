@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivArchivosPlanos" table="CIV_ARCHIVOS_PLANOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="arcId" type="big_decimal">
             <column name="ARC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="ARC_USUARIO_FK" precision="22" scale="0" not-null="true" />

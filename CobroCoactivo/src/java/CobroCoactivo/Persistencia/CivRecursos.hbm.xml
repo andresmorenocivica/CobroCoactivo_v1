@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los recurso que existan en el sistema.</comment>
         <id name="recId" type="big_decimal">
             <column name="REC_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civTipoRecursos" class="CobroCoactivo.Persistencia.CivTipoRecursos" fetch="select">
             <column name="REC_TIPREC_FK" precision="22" scale="0" not-null="true" />

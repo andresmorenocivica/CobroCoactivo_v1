@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstructuraPlanos" table="CIV_ESTRUCTURA_PLANOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estplaId" type="big_decimal">
             <column name="ESTPLA_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estplaNombreCampo" type="string">
             <column name="ESTPLA_NOMBRE_CAMPO" length="50" />

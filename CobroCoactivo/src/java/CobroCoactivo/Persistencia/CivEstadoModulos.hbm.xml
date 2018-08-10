@@ -7,7 +7,7 @@
         <comment>Tabla que guardara los estados existentes en el sistema para la tabla de CIV_MODULOS.</comment>
         <id name="estmodId" type="big_decimal">
             <column name="ESTMOD_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estmodDescripcion" type="string">
             <column name="ESTMOD_DESCRIPCION" length="10" not-null="true">

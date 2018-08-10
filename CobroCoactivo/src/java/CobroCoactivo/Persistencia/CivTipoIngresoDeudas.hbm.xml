@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivTipoIngresoDeudas" table="CIV_TIPO_INGRESO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="tipingId" type="big_decimal">
             <column name="TIPING_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="tipingDescripcion" type="string">
             <column name="TIPING_DESCRIPCION" length="100" not-null="true">

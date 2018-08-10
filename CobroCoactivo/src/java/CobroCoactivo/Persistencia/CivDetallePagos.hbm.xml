@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivDetallePagos" table="CIV_DETALLE_PAGOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detpagId" type="big_decimal">
             <column name="DETPAG_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civPagos" class="CobroCoactivo.Persistencia.CivPagos" fetch="select">
             <column name="DETPAG_PAGOS_FK" precision="22" scale="0" not-null="true" />

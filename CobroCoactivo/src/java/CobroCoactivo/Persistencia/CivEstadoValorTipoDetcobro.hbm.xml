@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoValorTipoDetcobro" table="CIV_ESTADO_VALOR_TIPO_DETCOBRO" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estvaltipdetcobId" type="big_decimal">
             <column name="ESTVALTIPDETCOB_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estvaltipdetcobDescripcion" type="string">
             <column name="ESTVALTIPDETCOB_DESCRIPCION" length="100" not-null="true" />

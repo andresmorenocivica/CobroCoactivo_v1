@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivSolicitudes" table="CIV_SOLICITUDES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="solId" type="big_decimal">
             <column name="SOL_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="SOL_USU_FK" precision="22" scale="0" not-null="true" />

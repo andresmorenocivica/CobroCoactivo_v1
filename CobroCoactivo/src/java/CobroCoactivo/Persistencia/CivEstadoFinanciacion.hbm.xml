@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoFinanciacion" table="CIV_ESTADO_FINANCIACION" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estfinId" type="big_decimal">
             <column name="ESTFIN_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estfinDescripcio" type="string">
             <column name="ESTFIN_DESCRIPCIO" length="100" />

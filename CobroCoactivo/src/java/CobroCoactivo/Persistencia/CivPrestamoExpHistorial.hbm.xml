@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivPrestamoExpHistorial" table="CIV_PRESTAMO_EXP_HISTORIAL" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="preexphisId" type="big_decimal">
             <column name="PREEXPHIS_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
             <column name="PREEXPHIS_USU_FK" precision="22" scale="0" not-null="true" />

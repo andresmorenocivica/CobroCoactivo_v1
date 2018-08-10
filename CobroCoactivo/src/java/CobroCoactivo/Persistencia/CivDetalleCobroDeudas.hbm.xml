@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivDetalleCobroDeudas" table="CIV_DETALLE_COBRO_DEUDAS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="detcobdeuId" type="big_decimal">
             <column name="DETCOBDEU_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="civValorTipoDetalleCobro" class="CobroCoactivo.Persistencia.CivValorTipoDetalleCobro" fetch="select">
             <column name="DETCOBDEU_VALTIPDET_FK" precision="22" scale="0" not-null="true" />

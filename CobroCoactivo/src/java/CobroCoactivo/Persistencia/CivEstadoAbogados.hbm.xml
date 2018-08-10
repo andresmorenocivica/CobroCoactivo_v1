@@ -6,7 +6,7 @@
     <class name="CobroCoactivo.Persistencia.CivEstadoAbogados" table="CIV_ESTADO_ABOGADOS" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estaboId" type="big_decimal">
             <column name="ESTABO_ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="estaboDescripcion" type="string">
             <column name="ESTABO_DESCRIPCION" length="100" not-null="true">
