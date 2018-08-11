@@ -25,6 +25,7 @@
                             </ol>
                         </section>
                         <section class="content">
+                            <p:messages autoUpdate="true" id="mensaje" showIcon="false" closable="true" severity="error,warn,info,fatal"></p:messages>
                             <div class="box box-danger">
                                 <div class="box-body">
                                     <table class="table table-hover table-bordered">
@@ -42,7 +43,7 @@
                                                     <td>#{listaSolicitudes.usuarios.nombre}</td>
                                                     <td>
                                                         <h:commandLink value="#{listaSolicitudes.descripcion}" onclick="$('#modalSolicitudExpediente').modal('show')">
-                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarDetSolicitudes(listaSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes"/>
+                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarDetSolicitudes(listaSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes frmSolicitudesExpedientes:btnPrestar"/>
                                                         </h:commandLink>
                                                     </td>
                                                     <td>#{listaSolicitudes.fechaProceso}</td>
@@ -90,7 +91,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                            <h:commandLink id="btnPrestar" value="Prestar" class="btn btn-success">
+                                            <h:commandLink  value="Aceptar" class="btn btn-success">
                                                 <f:ajax event="click" listener="#{gestionExpedientesBean.aceptarSolicitudExpedientes()}" execute="frmSolicitudesExpedientes:modalBodySolicitudes" render="frmSolicitudesExpeddientes"/>
                                             </h:commandLink>
                                         </div>

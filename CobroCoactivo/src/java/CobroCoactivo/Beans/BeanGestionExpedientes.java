@@ -55,6 +55,7 @@ public class BeanGestionExpedientes {
     private boolean pnlBtnAddExpediente = false;
     private boolean pnlPersonaEncontrada = false;
     private boolean pnlBtnAddFolder = false;
+    private boolean btnAceptar = false;
     private String referenciaExpediente;
     private String idUser;
     private String titleModal = "Agregar Archivo";
@@ -701,6 +702,20 @@ public class BeanGestionExpedientes {
      */
     public void setPnlBtnAddFolder(boolean pnlBtnAddFolder) {
         this.pnlBtnAddFolder = pnlBtnAddFolder;
+    }
+
+    /**
+     * @return the btnAceptar
+     */
+    public boolean isBtnAceptar() {
+        return btnAceptar;
+    }
+
+    /**
+     * @param btnAceptar the btnAceptar to set
+     */
+    public void setBtnAceptar(boolean btnAceptar) {
+        this.btnAceptar = btnAceptar;
     }
 
 }

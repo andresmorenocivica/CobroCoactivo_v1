@@ -250,7 +250,7 @@
                                                         <!-- corte codigo fuente tabla  -->
                                                         <div class="table-responsive">
                                                             <h:panelGroup id="pnlTablaMovimiento">
-                                                                <table id="dataTable" class="table table-bordered table-hover">
+                                                                <table id="table" class="table table-bordered table-hover">
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="col-md-3">Deudas</th>
@@ -328,7 +328,7 @@
                                                     <div class="form-group">
                                                         <div class="form-group has-feedback left-inner-addon">
                                                             <label>Contraseña Actual:</label> 
-                                                            <h:inputSecret value="#{gestionUsuariosBean.contraseñaActual}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                                            <h:inputSecret value="#{gestionUsuariosBean.contraseñaActual}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="11" required="true" requiredMessage="Ingrese su contraseña actual.">
                                                             </h:inputSecret>
                                                         </div>
                                                     </div>
@@ -336,14 +336,14 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Nueva contraseña:</label> 
-                                                        <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="20" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
+                                                        <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="11" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
                                                         </h:inputSecret>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Confirme contraseña:</label> 
-                                                        <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="20" value="#{gestionUsuariosBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
+                                                        <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="11" value="#{gestionUsuariosBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
                                                         </h:inputSecret>
                                                     </div>
                                                 </div>

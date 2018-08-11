@@ -100,12 +100,10 @@ public class LoginImplBO implements LoginBO {
             obj.setPassword("");
             if (login != null) {
                 if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 2) { //En caso de que el usuario no se encuentre activo 
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.", null));
-                    //throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
+                    throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
                 }
                 if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 4) { //(Revalidación)En caso de que el usuario no se encuentre activo por bloqueo de intentos
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.", null));
-                    //throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
+                    throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
                 }
                 reestablecerIntentosUsuario(login.getUsuId().intValue());
                 Date fecha_pass = getUsuariosDAO().consultarFechaUltimoPassword(session, login.getUsuId().intValue());

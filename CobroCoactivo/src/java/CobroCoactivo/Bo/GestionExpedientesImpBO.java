@@ -164,7 +164,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     @Override
     public void guardarArchivo(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-
         try {
             Transaction transaction = session.beginTransaction();
             if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
@@ -190,9 +189,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
-
         }
-
     }
 
     @Override
@@ -226,7 +223,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
 
     @Override
     public void mostrarExpedienteSelect(BeanGestionExpedientes bean) throws Exception {
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             bean.setListDetalleExpdientesSelect(new ArrayList<>());
@@ -250,14 +246,11 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
-
         }
-
     }
 
     @Override
     public void enviarSolicitud(BeanGestionExpedientes bean) throws Exception {
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
@@ -318,7 +311,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
 
     @Override
     public void cargarSolicitudes(BeanGestionExpedientes bean) throws Exception {
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             bean.setListSolicitudes(new ArrayList<>());
@@ -330,9 +322,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
-
         }
-
     }
 
     @Override
@@ -348,7 +338,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         } finally {
             session.flush();
             session.close();
-
         }
     }
 
