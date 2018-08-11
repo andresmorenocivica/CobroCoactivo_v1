@@ -15,7 +15,7 @@
                     <div class="content-wrapper">
                         <section class="content-header">
                             <h1>
-                                Consultas y adicionar personas
+                                Consultas y sincroniza pagos
                                 <!-- <small>guia formulario para consultas</small> -->
                             </h1>
                             <ol class="breadcrumb">
@@ -30,7 +30,7 @@
                             <div class="box box-danger">
                                 <div class="box-header with-border">
                                     <div class="box-title">
-                                        <h3 class="">Personas </h3>
+                                        <h3 class="">Pagos </h3>
                                     </div>
                                     <!-- <button class="btn btn-success center-block" style="float: right ">Sincronizar todos</button> -->
                                 </div>
@@ -38,25 +38,26 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Tipo</th>
-                                                <th>Numero</th>
-                                                <th>Nombres</th>
-                                                <th>Apellidos</th>
-                                                <th>Mostrar pagos</th>
+                                                <th>Numero Factura</th>
+                                                <th>Valor</th>
+                                                <th>Fecha</th>
+                                                <th>Mostrar cartera</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ui:repeat value="#{gestionPagosbean.listPersonas}" var="persona">
+                                            <ui:repeat value="#{gestionPagosbean.listPagos}" var="pago">
                                                 <tr>
-                                                    <td>#{persona.tipoDocumentos.descripcion}</td>
-                                                    <td>#{persona.documento}</td>
+                                                    <td>#{pago.numero}</td>
+                                                    <td>#{pago.valor}</td>
                                                     <td>
-                                                        #{persona.nombre1} #{persona.nombre2} 
+                                                        <h:outputText value="#{pago.fecha}">
+                                                            <f:convertDateTime pattern="dd-mm-yyyy"></f:convertDateTime>
+                                                        </h:outputText>
+                                                        
                                                     </td>
-                                                    <td> #{persona.apellido1} #{persona.apellido2}</td>
                                                     <td>
                                                         <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalPagos').modal('show')">
-                                                            <f:ajax event="click" listener="#{gestionPagosbean.verPagos(persona)}" render="frmGestionPagos:modalPagosContent">
+                                                            <f:ajax event="click" listener="#{gestionPagosbean.verCartera(pago)}" render="frmGestionPagos:modalPagosContent">
 
                                                             </f:ajax>
                                                         </h:commandLink>
@@ -71,7 +72,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content" jsf:id="modalPagosContent">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Pagos #{gestionCargarPersonasBean.personas.nombre1} #{gestionCargarPersonasBean.personas.apellido1}</h4>
+                                            <h4 class="modal-title" id="myModalLabel">Cartera Asociada</h4>
 
                                         </div>
                                         <div class="row">
@@ -83,26 +84,26 @@
                                             <table class="table table-hover table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Numero factura</th>
+                                                        <th>Referencia</th>
                                                         <th>Fecha</th>
-                                                        <th>Total</th>
+                                                        <th>Valor</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
 
-                                                    <ui:repeat value="#{gestionPagosbean.listPagos}" var="pago">
+                                                    <ui:repeat value="#{gestionPagosbean.listDeudas}" var="deuda">
                                                         <tr>
                                                             <td>
-                                                                #{pago.numero}
+                                                                #{deuda.referencia}
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{pago.fecha}">
+                                                                <h:outputText value="#{deuda.fechaDeudas}">
                                                                     <f:convertDateTime pattern="dd-MM-yyyy" />
                                                                 </h:outputText>
 
                                                             </td>
-                                                            <td>#{pago.valor}</td>
-                                                           
+                                                            <td>#{deuda.valor}</td>
+
                                                         </tr>
                                                     </ui:repeat>
                                                 </tbody>

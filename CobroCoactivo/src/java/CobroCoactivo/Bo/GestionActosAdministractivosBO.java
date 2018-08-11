@@ -5,15 +5,15 @@
  */
 package CobroCoactivo.Bo;
 
-import CobroCoactivo.Beans.BeanAcuerdosPagos;
+import CobroCoactivo.Beans.BeanActosAdministractivo;
 
 /**
  *
  * @author jvergara
  */
-public interface GestionAcuerdosPagosBO {
+public interface GestionActosAdministractivosBO {
     
     
-    void getListAcuerdosPagos(BeanAcuerdosPagos beanAcuerdosPagos) throws Exception;
+    void getTodosActosAdministractivos(BeanActosAdministractivo beanActosAdministractivo) throws Exception;
     
 }

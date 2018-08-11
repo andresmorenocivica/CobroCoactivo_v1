@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionAcuerdosPagosBO;
 import CobroCoactivo.Bo.GestionAcuerdosPagosImpBO;
+import CobroCoactivo.Modelo.Financiacion;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Utility.Log_Handler;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import javax.ws.rs.client.ClientBuilder;
 public class BeanAcuerdosPagos {
 
     private Client client;
-    private List<Personas> listPersonas = new ArrayList<>();
+    private List<Financiacion> listFinanciacion = new ArrayList<>();
     private BeanLogin loginBO = new BeanLogin();
     private GestionAcuerdosPagosBO acuerdosPagosBO = new GestionAcuerdosPagosImpBO();
     
@@ -41,7 +42,7 @@ public class BeanAcuerdosPagos {
 
     public void getListaPersonas() {
         try {
-            getAcuerdosPagosBO().getListPersonasAcuerdosPagos(this);
+            getAcuerdosPagosBO().getListAcuerdosPagos(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +55,7 @@ public class BeanAcuerdosPagos {
     @PostConstruct
     public void init(){
         setClient(ClientBuilder.newClient());
-        getListPersonas();
+        getListaPersonas();
         
     }
 
@@ -72,19 +73,7 @@ public class BeanAcuerdosPagos {
         this.client = client;
     }
 
-    /**
-     * @return the listPersonas
-     */
-    public List<Personas> getListPersonas() {
-        return listPersonas;
-    }
 
-    /**
-     * @param listPersonas the listPersonas to set
-     */
-    public void setListPersonas(List<Personas> listPersonas) {
-        this.listPersonas = listPersonas;
-    }
 
     /**
      * @return the loginBO
@@ -112,6 +101,20 @@ public class BeanAcuerdosPagos {
      */
     public void setAcuerdosPagosBO(GestionAcuerdosPagosBO acuerdosPagosBO) {
         this.acuerdosPagosBO = acuerdosPagosBO;
+    }
+
+    /**
+     * @return the listFinanciacion
+     */
+    public List<Financiacion> getListFinanciacion() {
+        return listFinanciacion;
+    }
+
+    /**
+     * @param listFinanciacion the listFinanciacion to set
+     */
+    public void setListFinanciacion(List<Financiacion> listFinanciacion) {
+        this.listFinanciacion = listFinanciacion;
     }
 
 }

@@ -98,32 +98,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         }
     }
 
-    //@Override
-/*    public void cargarListadoDeudas(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            List<CivDeudas> listaCivDeudas = new ArrayList<>();
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-            listaCivDeudas = getDeudasDAO().listarDeudasByFechaDeuda(format.parse("01/06/2018"), format.parse("01/06/2018"));
-            if (listaCivDeudas != null) {
-                for (CivDeudas civDeuda : listaCivDeudas) {
 
-                    CivPersonas civPersonas = getPersonaDAO().consultarPersonasById(session, civDeuda.getCivPersonas().getPerId().intValue());
-                    CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
-                    Deudas deudas = new Deudas(civDeuda, civDeuda.getCivEstadoDeudas(), civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas);
-                    int diasDeuda = DateUtility.fechasDiferenciaEnDias(deudas.getFechaproceso(), new Date());
-                    deudas.setDiasHabilesDeuda(diasDeuda);
-                    beanGestionMovimientos.getListaDeudas().add(deudas);
-                }
-
-            }
-        } finally {
-            session.flush();
-            session.close();
-
-        }
-
-    } */
     @Override
     public void cargarEtapasPlanTrabajo(BeanGestionMovimientos beanGestionMovimientos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();

@@ -7,8 +7,8 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionPagosBo;
 import CobroCoactivo.Bo.GestionPagosImpBO;
+import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Pagos;
-import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Utility.Log_Handler;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -29,17 +30,18 @@ import javax.ws.rs.client.ClientBuilder;
 public class BeanGestionPagos {
 
     private Client client;
-    private List<Personas> listPersonas = new ArrayList<>();
-    private Personas personas = new Personas();
-    private int tipo;
-    private String numero;
-    private BeanLogin loginBO = new BeanLogin();
+    private String numeroFactura;
+    private String idUser;
+
+    private BeanLogin loginBO;
     private GestionPagosBo pagosBo = new GestionPagosImpBO();
     private List<Pagos> listPagos = new ArrayList<>();
+    private List<Deudas> listDeudas = new ArrayList<>();
+    private Pagos pagos = new Pagos();
 
-    public void listaPersonas() {
+    public void listaPagos() {
         try {
-            getPagosBo().listarPersonas(this);
+            getPagosBo().listarPagos(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,10 +52,11 @@ public class BeanGestionPagos {
 
     }
 
-    public void verPagos(Personas personas) {
+    public void verCartera(Pagos pagos) {
         try {
-            setPersonas(personas);
-            getPagosBo().verPagos(this);
+            this.setPagos(pagos);
+            setNumeroFactura(pagos.getNumero());
+            getPagosBo().verCarteras(this);
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -64,7 +67,7 @@ public class BeanGestionPagos {
 
     public void sincronizarPagos() {
         try {
-            
+
             getPagosBo().sincronizarPagos(this);
 
         } catch (Exception e) {
@@ -79,7 +82,13 @@ public class BeanGestionPagos {
     @PostConstruct
     public void init() {
         setClient(ClientBuilder.newClient());
-        listaPersonas();
+        listaPagos();
+        FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        BeanLogin obj_ = ((BeanLogin) session.getAttribute("loginBean"));
+        if (obj_.getID_Usuario() != null) {
+            setIdUser(obj_.getID_Usuario());
+        }
     }
 
     /**
@@ -104,59 +113,17 @@ public class BeanGestionPagos {
     }
 
     /**
-     * @return the listPersonas
-     */
-    public List<Personas> getListPersonas() {
-        return listPersonas;
-    }
-
-    /**
-     * @param listPersonas the listPersonas to set
-     */
-    public void setListPersonas(List<Personas> listPersonas) {
-        this.listPersonas = listPersonas;
-    }
-
-    /**
-     * @return the personas
-     */
-    public Personas getPersonas() {
-        return personas;
-    }
-
-    /**
-     * @param personas the personas to set
-     */
-    public void setPersonas(Personas personas) {
-        this.personas = personas;
-    }
-
-    /**
-     * @return the tipo
-     */
-    public int getTipo() {
-        return tipo;
-    }
-
-    /**
-     * @param tipo the tipo to set
-     */
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
-    }
-
-    /**
      * @return the numero
      */
-    public String getNumero() {
-        return numero;
+    public String getNumeroFactura() {
+        return numeroFactura;
     }
 
     /**
      * @param numero the numero to set
      */
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setNumeroFactura(String numero) {
+        this.numeroFactura = numero;
     }
 
     /**
@@ -199,6 +166,48 @@ public class BeanGestionPagos {
      */
     public void setListPagos(List<Pagos> listPagos) {
         this.listPagos = listPagos;
+    }
+
+    /**
+     * @return the listDeudas
+     */
+    public List<Deudas> getListDeudas() {
+        return listDeudas;
+    }
+
+    /**
+     * @param listDeudas the listDeudas to set
+     */
+    public void setListDeudas(List<Deudas> listDeudas) {
+        this.listDeudas = listDeudas;
+    }
+
+    /**
+     * @return the pagos
+     */
+    public Pagos getPagos() {
+        return pagos;
+    }
+
+    /**
+     * @param pagos the pagos to set
+     */
+    public void setPagos(Pagos pagos) {
+        this.pagos = pagos;
+    }
+
+    /**
+     * @return the idUser
+     */
+    public String getIdUser() {
+        return idUser;
+    }
+
+    /**
+     * @param idUser the idUser to set
+     */
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
 }

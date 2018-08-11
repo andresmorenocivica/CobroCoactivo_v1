@@ -15,7 +15,7 @@
                     <div class="content-wrapper">
                         <section class="content-header">
                             <h1>
-                                Consultas y adicionar personas
+                                Consultas y sincronizar acuerdos pagos
                                 <!-- <small>guia formulario para consultas</small> -->
                             </h1>
                             <ol class="breadcrumb">
@@ -30,7 +30,7 @@
                             <div class="box box-danger">
                                 <div class="box-header with-border">
                                     <div class="box-title">
-                                        <h3 class="">Personas </h3>
+                                        <h3 class="">Acuerdos pagos </h3>
                                     </div>
                                     <!-- <button class="btn btn-success center-block" style="float: right ">Sincronizar todos</button> -->
                                 </div>
@@ -38,25 +38,28 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Tipo</th>
                                                 <th>Numero</th>
-                                                <th>Nombres</th>
-                                                <th>Apellidos</th>
-                                                <th>Mostrar acuerdo pagos</th>
+                                                <th>Fecha</th>
+                                                <th>Valor</th>
+                                                <th>Mostrar carteras financiadas</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ui:repeat value="#{gestionPagosbean.listPersonas}" var="persona">
+                                            <ui:repeat value="#{acuerdosPagosbean.listFinanciacion}" var="financiacion">
                                                 <tr>
-                                                    <td>#{persona.tipoDocumentos.descripcion}</td>
-                                                    <td>#{persona.documento}</td>
+                                                    <td>#{financiacion.numero}</td>
                                                     <td>
-                                                        #{persona.nombre1} #{persona.nombre2} 
+                                                        <h:outputText value="#{financiacion.fecha}">
+                                                            <f:convertDateTime pattern="dd-mm-yyyy"/>
+                                                        </h:outputText>
                                                     </td>
-                                                    <td> #{persona.apellido1} #{persona.apellido2}</td>
+                                                    <td>
+                                                        #{financiacion.valor} 
+                                                    </td>
+
                                                     <td>
                                                         <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalPagos').modal('show')">
-                                                            <f:ajax event="click" listener="#{gestionPagosbean.verPagos(persona)}" render="frmGestionPagos:modalPagosContent">
+                                                            <f:ajax event="click" listener="#{gestionPagosbean.verPagos(financiacion)}" render="frmGestionPagos:modalPagosContent">
 
                                                             </f:ajax>
                                                         </h:commandLink>

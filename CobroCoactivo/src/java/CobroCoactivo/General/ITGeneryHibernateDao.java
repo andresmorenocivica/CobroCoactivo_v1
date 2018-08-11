@@ -16,13 +16,11 @@ import org.hibernate.Session;
  */
 public interface ITGeneryHibernateDao<T, ID extends Serializable> {
 
-    public void create(Session session ,T entity) throws Exception;
-    
-    public void update(Session session ,T entity) throws Exception;
+    public void create(Session session, T entity) throws Exception;
 
-    public T find(Session session , BigDecimal id) throws Exception;
+    public void update(Session session, T entity) throws Exception;
 
-    public void remove(ID id) throws Exception;
+    public T find(Session session, BigDecimal id) throws Exception;
 
     public List<T> findAll(Session session) throws Exception;
 

@@ -38,22 +38,20 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Tipo</th>
                                                 <th>Numero</th>
-                                                <th>Nombres</th>
-                                                <th>Apellidos</th>
-                                                <th>Mostrar pagos</th>
+                                                <th>Fecha proceso</th>
+                                                <th>Ver Comparendos</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ui:repeat value="#{gestionPagosbean.listPersonas}" var="persona">
+                                            <ui:repeat value="#{actosAdministractivobean.listActosAdministractivo}" var="actosAdministractivos">
                                                 <tr>
-                                                    <td>#{persona.tipoDocumentos.descripcion}</td>
-                                                    <td>#{persona.documento}</td>
+                                                    <td>#{actosAdministractivos.actNumero}</td>
                                                     <td>
-                                                        #{persona.nombre1} #{persona.nombre2} 
+                                                        <h:outputText value="#{actosAdministractivos.actFecha}">
+                                                            <f:convertDateTime pattern="dd-MM-yyyy"/>
+                                                        </h:outputText>
                                                     </td>
-                                                    <td> #{persona.apellido1} #{persona.apellido2}</td>
                                                     <td>
                                                         <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalPagos').modal('show')">
                                                             <f:ajax event="click" listener="#{gestionPagosbean.verPagos(persona)}" render="frmGestionPagos:modalPagosContent">
@@ -102,7 +100,7 @@
 
                                                             </td>
                                                             <td>#{pago.valor}</td>
-                                                           
+
                                                         </tr>
                                                     </ui:repeat>
                                                 </tbody>

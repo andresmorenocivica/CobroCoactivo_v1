@@ -13,9 +13,9 @@ import CobroCoactivo.Beans.BeanGestionPagos;
  */
 public interface GestionPagosBo {
     
-    void listarPersonas(BeanGestionPagos pagos) throws Exception;
+    void listarPagos(BeanGestionPagos pagos) throws Exception;
     
-    void verPagos(BeanGestionPagos beanGestionPagos) throws Exception;
+    void verCarteras(BeanGestionPagos beanGestionPagos) throws Exception;
     
     void sincronizarPagos(BeanGestionPagos beanGestionPagos) throws Exception;
     

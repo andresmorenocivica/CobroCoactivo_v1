@@ -6,11 +6,6 @@
 package CobroCoactivo.General;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import CobroCoactivo.Persistencia.CivDeudas;
-import CobroCoactivo.Persistencia.CivEtapasGenerales;
-import CobroCoactivo.Persistencia.CivModulos;
-import CobroCoactivo.Persistencia.CivPlanGenerales;
-import CobroCoactivo.Persistencia.CivPlanTrabajos;
 import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDatosPersonas;
 import CobroCoactivo.Utility.HibernateUtil;
@@ -55,17 +50,6 @@ public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGene
         return entity;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void remove(ID id) {
-        Session session = getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        T entity = (T) session.get(getEntityClass(), id);
-        session.delete(entity);
-        session.getTransaction().commit();
-        session.close();
-
-    }
 
     @Override
     public List<T> findAll(Session session) {

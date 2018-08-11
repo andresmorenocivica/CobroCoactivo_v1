@@ -51,6 +51,7 @@ import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -143,6 +144,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void sincronizarDeuda(BeanGestionCargarPersonas beanGestionCargarPersonas) throws Exception {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -157,6 +159,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 Expedientes expedientes = new Expedientes();
                 String nombreExpedientePersona = "";
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
+                verDeuda(beanGestionCargarPersonas);
                 for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                     List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(session, beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                     if (listDeudas == null) {
@@ -170,7 +173,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                         civDeudas.setCivEstadoDeudas(civEstadoDeudas);
                         civDeudas.setCivPersonas(civPersonas);
                         civDeudas.setDeuFechadeuda(beanGestionCargarPersonas.getListDeudas().get(i).getFechaDeudas());
-                        civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getSaldo()));
+                        civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getValor()));
                         civDeudas.setDeuSaldo(BigDecimal.ZERO);
                         civDeudas.setDeuFechaproceso(new Date());
                         civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
@@ -241,7 +244,9 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 Expedientes expedientes = new Expedientes();
                 String nombreExpedientePersona = "";
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
-
+                
+                verDeuda(beanGestionCargarPersonas);
+                
                 for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                     civDeudas = new CivDeudas();
                     CivTipoDeudas civTipoDeudas = new CivTipoDeudas();
