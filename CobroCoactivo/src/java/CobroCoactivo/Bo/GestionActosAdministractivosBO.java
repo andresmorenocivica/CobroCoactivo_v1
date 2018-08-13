@@ -16,4 +16,8 @@ public interface GestionActosAdministractivosBO {
     
     void getTodosActosAdministractivos(BeanActosAdministractivo beanActosAdministractivo) throws Exception;
     
+    void getCarteras(BeanActosAdministractivo beanActosAdministractivo) throws Exception;
+    
+    void sincronizarActosAdministractivo(BeanActosAdministractivo beanActosAdministractivo) throws Exception;
+    
 }

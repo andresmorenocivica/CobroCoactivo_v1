@@ -14,7 +14,7 @@
         <property name="actNumero" type="string">
             <column name="ACT_NUMERO" length="20" />
         </property>
-        <property name="actFecha" type="string">
+        <property name="actFecha" type="java.util.Date">
             <column name="ACT_FECHA" length="20" />
         </property>
     </class>
