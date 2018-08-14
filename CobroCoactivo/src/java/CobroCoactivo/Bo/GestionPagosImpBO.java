@@ -72,9 +72,9 @@ public class GestionPagosImpBO implements GestionPagosBo {
     }
 
     @Override
-    public void listarPagos(BeanGestionPagos pagos) throws Exception {
-        pagos.setListPagos(new ArrayList<>());
-        Client client = pagos.getClient();
+    public void listarPagos(BeanGestionPagos beanGestionPagos) throws Exception {
+        beanGestionPagos.setListPagos(new ArrayList<>());
+        Client client = beanGestionPagos.getClient();
         WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/pagos");
         if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
@@ -86,33 +86,44 @@ public class GestionPagosImpBO implements GestionPagosBo {
                 pago.setValor(Double.valueOf(jSONObject.getString("total")));
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
                 pago.setFecha(format.parse(jSONObject.getString("fecha")));
-                pagos.getListPagos().add(pago);
+                beanGestionPagos.setNumeroFactura(pago.getNumero());
+                verCarteras(beanGestionPagos);
+                if (beanGestionPagos.getListDeudas().size() > 0) {
+                     beanGestionPagos.getListPagos().add(pago);
+                }
+               
             }
         }
     }
 
     @Override
     public void verCarteras(BeanGestionPagos beanGestionPagos) throws Exception {
-        beanGestionPagos.setListDeudas(new ArrayList<>());
-        Client client = beanGestionPagos.getClient();
-        WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/pagos/carteras?numeroFactura=" + beanGestionPagos.getNumeroFactura());
-        if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
-            String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
-            JSONArray jSONArray = new JSONArray(data);
-            for (int i = 0; i < jSONArray.length(); i++) {
-                Deudas deudas = new Deudas();
-                JSONObject jSONObject = jSONArray.getJSONObject(i);
-                deudas.setReferenciaUnica(jSONObject.getLong("idCartera"));
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-                deudas.setFechaDeudas(format.parse(jSONObject.getString("fechaCreacion")));
-                deudas.setValor(jSONObject.getInt("dtValorTotal"));
-                deudas.setReferencia(jSONObject.getString("referencia"));
-                beanGestionPagos.getListDeudas().add(deudas);
-
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            beanGestionPagos.setListDeudas(new ArrayList<>());
+            Client client = beanGestionPagos.getClient();
+            WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/pagos/carteras?numeroFactura=" + beanGestionPagos.getNumeroFactura());
+            if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
+                String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
+                JSONArray jSONArray = new JSONArray(data);
+                for (int i = 0; i < jSONArray.length(); i++) {
+                    Deudas deudas = new Deudas();
+                    JSONObject jSONObject = jSONArray.getJSONObject(i);
+                    deudas.setReferenciaUnica(jSONObject.getLong("idCartera"));
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+                    deudas.setFechaDeudas(format.parse(jSONObject.getString("fechaCreacion")));
+                    deudas.setValor(jSONObject.getInt("dtValorTotal"));
+                    deudas.setReferencia(jSONObject.getString("referencia"));
+                     CivDeudas civDeudas = getiTDeudas().getDeudaByReferenciaUnica(session, deudas.getReferenciaUnica());
+                    if (civDeudas != null) {
+                        beanGestionPagos.getListDeudas().add(deudas);
+                    }
+                }
             }
-
+        } finally {
+            session.flush();
+            session.close();
         }
-
     }
 
     @Override

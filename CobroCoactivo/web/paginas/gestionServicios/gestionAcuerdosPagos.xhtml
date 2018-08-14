@@ -59,7 +59,7 @@
 
                                                     <td>
                                                         <h:commandLink class="fa fa-eye col-sm-4" onclick="$('#modalPagos').modal('show')">
-                                                            <f:ajax event="click" listener="#{gestionPagosbean.verPagos(financiacion)}" render="frmGestionPagos:modalPagosContent">
+                                                            <f:ajax event="click" listener="#{acuerdosPagosbean.verCarteras(financiacion)}" render="frmGestionPagos:modalPagosContent">
 
                                                             </f:ajax>
                                                         </h:commandLink>
@@ -74,7 +74,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content" jsf:id="modalPagosContent">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Pagos #{gestionCargarPersonasBean.personas.nombre1} #{gestionCargarPersonasBean.personas.apellido1}</h4>
+                                            <h4 class="modal-title" id="myModalLabel">Carteras</h4>
 
                                         </div>
                                         <div class="row">
@@ -86,25 +86,25 @@
                                             <table class="table table-hover table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Numero factura</th>
+                                                        <th>Referencia</th>
                                                         <th>Fecha</th>
-                                                        <th>Total</th>
+                                                        <th>Valor</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
 
-                                                    <ui:repeat value="#{gestionPagosbean.listPagos}" var="pago">
+                                                    <ui:repeat value="#{acuerdosPagosbean.listDeudas}" var="deuda">
                                                         <tr>
                                                             <td>
-                                                                #{pago.numero}
+                                                                #{deuda.referencia}
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{pago.fecha}">
+                                                                <h:outputText value="#{deuda.fechaDeudas}">
                                                                     <f:convertDateTime pattern="dd-MM-yyyy" />
                                                                 </h:outputText>
 
                                                             </td>
-                                                            <td>#{pago.valor}</td>
+                                                            <td>#{deuda.valor}</td>
 
                                                         </tr>
                                                     </ui:repeat>
@@ -121,7 +121,7 @@
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <h:commandLink value="Sincronizar" id="btnGuardarPlanTrabajo" class="btn btn-success">
-                                                        <f:ajax event="click" render="formPlanTrabajo:contenedor formPlanTrabajo:modalPlanTrabajo" listener="#{gestionPagosbean.sincronizarPagos()}" execute="formPlanTrabajo:modalPlanTrabajo"/>
+                                                        <f:ajax event="click"  listener="#{acuerdosPagosbean.sincronizar()}"/>
                                                     </h:commandLink>
                                                 </div>
                                             </div>

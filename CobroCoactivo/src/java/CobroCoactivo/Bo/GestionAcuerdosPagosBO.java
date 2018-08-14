@@ -12,8 +12,11 @@ import CobroCoactivo.Beans.BeanAcuerdosPagos;
  * @author jvergara
  */
 public interface GestionAcuerdosPagosBO {
-    
-    
+
     void getListAcuerdosPagos(BeanAcuerdosPagos beanAcuerdosPagos) throws Exception;
-    
+
+    void getListCarteras(BeanAcuerdosPagos beanAcuerdosPagos) throws Exception;
+
+    void sincronizar(BeanAcuerdosPagos beanAcuerdosPagos) throws Exception;
+
 }

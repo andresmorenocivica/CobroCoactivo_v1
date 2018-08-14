@@ -14,10 +14,10 @@
         <property name="estfinFechainicial" type="date">
             <column name="ESTFIN_FECHAINICIAL" length="7" />
         </property>
-        <property name="estfinFechafinal" type="string">
+        <property name="estfinFechafinal" type="java.util.Date">
             <column name="ESTFIN_FECHAFINAL" length="20" />
         </property>
-        <property name="estfinFechaproceso" type="string">
+        <property name="estfinFechaproceso" type="java.util.Date">
             <column name="ESTFIN_FECHAPROCESO" length="20" />
         </property>
         <set name="civFinanciacions" table="CIV_FINANCIACION" inverse="true" lazy="true" fetch="select">

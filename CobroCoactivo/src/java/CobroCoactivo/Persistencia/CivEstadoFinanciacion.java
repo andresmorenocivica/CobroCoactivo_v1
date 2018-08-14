@@ -16,8 +16,8 @@ public class CivEstadoFinanciacion  implements java.io.Serializable {
      private BigDecimal estfinId;
      private String estfinDescripcio;
      private Date estfinFechainicial;
-     private String estfinFechafinal;
-     private String estfinFechaproceso;
+     private Date estfinFechafinal;
+     private Date estfinFechaproceso;
      private Set civFinanciacions = new HashSet(0);
 
     public CivEstadoFinanciacion() {
@@ -27,7 +27,7 @@ public class CivEstadoFinanciacion  implements java.io.Serializable {
     public CivEstadoFinanciacion(BigDecimal estfinId) {
         this.estfinId = estfinId;
     }
-    public CivEstadoFinanciacion(BigDecimal estfinId, String estfinDescripcio, Date estfinFechainicial, String estfinFechafinal, String estfinFechaproceso, Set civFinanciacions) {
+    public CivEstadoFinanciacion(BigDecimal estfinId, String estfinDescripcio, Date estfinFechainicial, Date estfinFechafinal, Date estfinFechaproceso, Set civFinanciacions) {
        this.estfinId = estfinId;
        this.estfinDescripcio = estfinDescripcio;
        this.estfinFechainicial = estfinFechainicial;
@@ -57,18 +57,18 @@ public class CivEstadoFinanciacion  implements java.io.Serializable {
     public void setEstfinFechainicial(Date estfinFechainicial) {
         this.estfinFechainicial = estfinFechainicial;
     }
-    public String getEstfinFechafinal() {
+    public Date getEstfinFechafinal() {
         return this.estfinFechafinal;
     }
     
-    public void setEstfinFechafinal(String estfinFechafinal) {
+    public void setEstfinFechafinal(Date estfinFechafinal) {
         this.estfinFechafinal = estfinFechafinal;
     }
-    public String getEstfinFechaproceso() {
+    public Date getEstfinFechaproceso() {
         return this.estfinFechaproceso;
     }
     
-    public void setEstfinFechaproceso(String estfinFechaproceso) {
+    public void setEstfinFechaproceso(Date estfinFechaproceso) {
         this.estfinFechaproceso = estfinFechaproceso;
     }
     public Set getCivFinanciacions() {

@@ -53,7 +53,7 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
         itDeudas = new DaoDeudas();
         iTDetalleDeudas = new DaoDetalleDeudas();
         iTActosAdministractivo = new DaoActosAdministractivo();
-        usuariosDao =  new DaoUsuarios();
+        usuariosDao = new DaoUsuarios();
     }
 
     @Override
@@ -70,7 +70,11 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
                 SimpleDateFormat parse = new SimpleDateFormat("yyyy-mm-dd");
                 actosAdministractivos.setActFecha(parse.parse(jSONObject.getString("fechaProceso")));
                 actosAdministractivos.setActNumero(jSONObject.getString("noresolucion"));
-                beanActosAdministractivo.getListActosAdministractivo().add(actosAdministractivos);
+                beanActosAdministractivo.setActosAdministractivos(actosAdministractivos);
+                getCarteras(beanActosAdministractivo);
+                if (beanActosAdministractivo.getListDeudas().size() > 0) {
+                    beanActosAdministractivo.getListActosAdministractivo().add(actosAdministractivos);
+                }
             }
         }
     }
@@ -119,7 +123,7 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
                             getiTDetalleDeudas().update(session, DetalleDeuda);
                         }
                     }
-                     CivActosAdministractivos civActosAdministractivos = new CivActosAdministractivos();
+                    CivActosAdministractivos civActosAdministractivos = new CivActosAdministractivos();
                     civActosAdministractivos.setActNumero(beanActosAdministractivo.getActosAdministractivos().getActNumero());
                     civActosAdministractivos.setActFecha(beanActosAdministractivo.getActosAdministractivos().getActFecha());
                     CivUsuarios civUsuarios = getUsuariosDao().find(session, new BigDecimal(beanActosAdministractivo.getIdUser()));
@@ -144,15 +148,14 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
         } finally {
             session.flush();
             session.close();
-                    
-                    
+
         }
-                    
+
     }
 
     /**
      * @return the itDeudas
-                     */
+     */
     public ITDeudas getItDeudas() {
         return itDeudas;
     }
