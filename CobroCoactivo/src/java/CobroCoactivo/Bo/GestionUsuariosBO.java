@@ -45,6 +45,10 @@ public interface GestionUsuariosBO {
     void cargarHistorialConfUsuRec(BeanGestionUsuarios bean) throws Exception;
 
     void cargarMovimientoByUser(BeanGestionUsuarios bean) throws Exception;
-    
+
+    void cargarEstadoUsuario(BeanGestionUsuarios bean) throws Exception;
+
+    void actualizarUser(BeanGestionUsuarios bean) throws Exception;
+
     void cargarHistorialExpPrestado(BeanGestionUsuarios bean) throws Exception; // metodo que se utiliza para los historiales de los expediente por user
 }

@@ -20,10 +20,20 @@ import org.hibernate.Session;
 public class DaoDetalleSolicitudes extends ImpGeneryHibernateDao<CivDetalleSolicitudes, Integer> implements ITDetalleSolicitudes {
 
     @Override
-    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session,int idSolicitud) throws Exception {
+    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session, int idSolicitud) throws Exception {
         String hql = "from CivDetalleSolicitudes where civSolicitudes.solId =:idSolicitud";
         Query query = session.createQuery(hql);
         query.setParameter("idSolicitud", new BigDecimal(idSolicitud));
+        if (query.list().size() > 0) {
+            return query.list();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session) throws Exception {
+        String hql = "from CivDetalleSolicitudes where civEstadoDetalleSolicitudes.estdetsolId =4";
+        Query query = session.createQuery(hql);
         if (query.list().size() > 0) {
             return query.list();
         }

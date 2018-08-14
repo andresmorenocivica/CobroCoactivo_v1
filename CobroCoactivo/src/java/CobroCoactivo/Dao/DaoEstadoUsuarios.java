@@ -5,11 +5,13 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import CobroCoactivo.Persistencia.CivEstadoUsuarios;
+import java.io.Serializable;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -17,19 +19,12 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author amoreno
  */
-public class DaoEstadoUsuarios implements ITEstadoUsuarios {
+public class DaoEstadoUsuarios extends ImpGeneryHibernateDao<CivEstadoUsuarios, Integer> implements ITEstadoUsuarios {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public long insert(Session session, CivEstadoUsuarios estadousuarios) throws Exception {
         return Integer.parseInt(session.save(estadousuarios).toString());
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean update(Session session, CivEstadoUsuarios estadousuarios) throws Exception {
-        session.update(estadousuarios);
-        return true;
     }
 
     @Override

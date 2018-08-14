@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -314,7 +315,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             bean.setListSolicitudes(new ArrayList<>());
-            List<CivSolicitudes> listCivSolicitudes = getSolicitudesDAO().findAll(session);
+            List<CivSolicitudes> listCivSolicitudes = getSolicitudesDAO().getCivSolicitudesPendientes(session);
             for (CivSolicitudes civSolicitudes : listCivSolicitudes) {
                 Solicitudes solicitudes = new Solicitudes(civSolicitudes, civSolicitudes.getCivEstadoSolicitudes(), civSolicitudes.getCivUsuarios());
                 bean.getListSolicitudes().add(solicitudes);
@@ -342,6 +343,22 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     }
 
     @Override
+    public void cargarDetSolicitudes(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListDetalleSolicitudes(new ArrayList<>());
+            List<CivDetalleSolicitudes> listCivDetalleSolicitudes = getDetalleSolicitudesDAO().getCivDetalleSolicitudes(session);
+            for (CivDetalleSolicitudes civDetalleSolicitudes : listCivDetalleSolicitudes) {
+                DetalleSolicitudes detalleSolicitudes = new DetalleSolicitudes(civDetalleSolicitudes, civDetalleSolicitudes.getCivEstadoDetalleSolicitudes(), civDetalleSolicitudes.getCivSolicitudes());
+                bean.getListDetalleSolicitudes().add(detalleSolicitudes);
+            }
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+
+    @Override
     public void aceptarSolicitudExpediente(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -352,10 +369,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 if (bean.getListDetalleSolicitudes().get(i).isSelecionado() == true) {
                     if (increment == i) {
                         CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getListDetalleSolicitudes().get(i).getId()));
-                        CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = getEstadoDetalleSolicitudesDAO().find(session, new BigDecimal(4));
-                        civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
-                        getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
-
                         CivPrestamoExpHistorial civPrestamoExpHistorial = new CivPrestamoExpHistorial();
                         CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, bean.getListDetalleSolicitudes().get(i).getDescripcion());
                         CivUsuarios civUsuarios = getUsuariosDAO().consultarUsuarioBy(session, civDetalleSolicitudes.getCivSolicitudes().getCivUsuarios().getUsuId().intValue());
@@ -363,9 +376,20 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                         civPrestamoExpHistorial.setCivDetalleExpedientes(civDetalleExpedientes);
                         civPrestamoExpHistorial.setCivUsuarios(civUsuarios);
                         getPrestamoExpHistorialDAO().create(session, civPrestamoExpHistorial);
+
+                        CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = getEstadoDetalleSolicitudesDAO().find(session, new BigDecimal(4));
+                        civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
+                        getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
+
+                        CivSolicitudes civSolicitudes = getSolicitudesDAO().find(session, new BigDecimal(bean.getIdSolicitud()));
+                        CivEstadoSolicitudes civEstadoSolicitudes = new CivEstadoSolicitudes();
+                        civEstadoSolicitudes.setEstsolId(new BigDecimal(4));
+                        civSolicitudes.setCivEstadoSolicitudes(civEstadoSolicitudes);
+                        getSolicitudesDAO().update(session, civSolicitudes);
                     }
                 }
             }
+            bean.init();
             transaction.commit();
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalSolicitudExpediente').modal('hide')");
@@ -385,6 +409,23 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 bean.setNombrePersona(civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1());
                 bean.setPnlPersonaEncontrada(true);
             }
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+
+    @Override
+    public void recibirExp(BeanGestionExpedientes bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getDetalleSolicitudes().getId()));
+            CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = getEstadoDetalleSolicitudesDAO().find(session, BigDecimal.ONE);
+            civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
+            getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
+            transaction.commit();
+            cargarDetSolicitudes(bean);
         } finally {
             session.flush();
             session.close();

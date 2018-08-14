@@ -96,45 +96,49 @@
                                                     <div class="col-lg-9">
                                                         <h3 class="box-title">Información Usuario</h3>
                                                     </div>
-                                                    <!--<div class="col-lg-1">
+                                                    <div class="col-lg-1">
                                                         <h:panelGroup id="pnlEditarUsuario" >
                                                             <h:commandLink class="fa fa-pencil-square-o col-sm-4" id="editarUsuario" rendered="#{!gestionUsuariosBean.detalleUsuario.editable}">
-                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.detalleUsuario.setEditable(true)}" render="frmDetalleUsuario:txtDetUsuarioNombre frmDetalleUsuario:pnlEditarUsuario frmDetalleUsuario:pnlGuardarUsuario"></f:ajax>
+                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.detalleUsuario.setEditable(true)}" render="frmDetalleUsuario:editableControladores frmDetalleUsuario:pnlEditarUsuario frmDetalleUsuario:pnlGuardarUsuario"></f:ajax>
                                                             </h:commandLink>
                                                         </h:panelGroup>
                                                         <h:panelGroup id="pnlGuardarUsuario" >
                                                             <h:commandLink class="fa fa-save col-sm-4" id="guardarUsuario" rendered="#{gestionUsuariosBean.detalleUsuario.editable}">
-                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.detalleUsuario.setEditable(false)}" render="frmDetalleUsuario:txtDetUsuarioNombre frmDetalleUsuario:pnlGuardarUsuario frmDetalleUsuario:pnlEditarUsuario"></f:ajax>
+                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.updateUser()}" execute="frmDetalleUsuario:selectEstado" render="frmDetalleUsuario:editableControladores frmDetalleUsuario:pnlGuardarUsuario frmDetalleUsuario:pnlEditarUsuario"></f:ajax>
                                                             </h:commandLink>
                                                         </h:panelGroup>
-                                                    </div> -->
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!-- /.box-header -->
-                                            <div class="box-body">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                            <label for="txtDetUsuarioNombre">Nombre Usuario</label>
-                                                            <h:inputText class="form-control" id="txtDetUsuarioNombre" value="#{gestionUsuariosBean.detalleUsuario.nombre}" disabled="#{!gestionUsuariosBean.detalleUsuario.editable}"/>
+                                            <h:panelGroup id="editableControladores" >
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label for="txtDetUsuarioNombre">Nombre Usuario</label>
+                                                                <h:inputText class="form-control" id="txtDetUsuarioNombre" value="#{gestionUsuariosBean.detalleUsuario.nombre}" disabled="true"/>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                            <label for="txtDetUsuarioEstado">Estado</label>
-                                                            <h:inputText class="form-control" id="txtDetUsuarioEstado" value="#{gestionUsuariosBean.detalleUsuario.estadoUsuarios.descripcion}" disabled="#{!gestionUsuariosBean.detalleUsuario.editable}"/>
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label for="txtDetUsuarioEstado">Estado</label>
+                                                                <h:selectOneMenu value="#{gestionUsuariosBean.detalleUsuario.estadoUsuarios.id}" class="form-control" id="selectEstado" disabled="#{!gestionUsuariosBean.detalleUsuario.editable}" >
+                                                                    <f:selectItems id="estadoUsuario" value="#{gestionUsuariosBean.listEstadoUsuarios}" var="estadoUsuarios" itemLabel="#{estadoUsuarios.descripcion}" itemValue="#{estadoUsuarios.id}"></f:selectItems>
+                                                                </h:selectOneMenu>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                            <label for="txtDetUsuarioNombre">Fecha Creación</label>
-                                                            <h:inputText class="date datepicker form-control" id="txtDetUsuarioFechaCreacion" value="#{gestionUsuariosBean.detalleUsuario.fechaProceso}" disabled="#{!gestionUsuariosBean.detalleUsuario.editable}">
-                                                                <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-                                                            </h:inputText>
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label for="txtDetUsuarioNombre">Fecha Creación</label>
+                                                                <h:inputText class="date datepicker form-control" id="txtDetUsuarioFechaCreacion" value="#{gestionUsuariosBean.detalleUsuario.fechaProceso}" disabled="true">
+                                                                    <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                                                </h:inputText>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </h:panelGroup>
                                             <!-- /.box-body -->
                                         </div>
                                     </h:form>
@@ -336,7 +340,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Nueva contraseña:</label> 
-                                                        <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="11" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
+                                                        <h:inputSecret  label="Contraseña nueva"  autocomplete="false" id="txtPassNueva" class="form-control" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
                                                         </h:inputSecret>
                                                     </div>
                                                 </div>

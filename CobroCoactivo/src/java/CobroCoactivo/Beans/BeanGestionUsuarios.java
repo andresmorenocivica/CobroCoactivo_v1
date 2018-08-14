@@ -10,6 +10,7 @@ import CobroCoactivo.Bo.GestionUsuariosImplBO;
 import CobroCoactivo.Crypto.DigestHandler;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.EstadoPersonas;
+import CobroCoactivo.Modelo.EstadoUsuarios;
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
@@ -27,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Size;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -38,6 +40,7 @@ import org.primefaces.context.RequestContext;
 public class BeanGestionUsuarios {
 
     private GestionUsuariosBO gestionUsuariosBO;
+    private BeanLogin loginBO;
     private String NombreUsuario; // Variable que es usada para busqueda de user
     private String nombreUsuarioNuevo; // Usuario genereado 
     private List<Usuarios> listadoUsuarios = new ArrayList<>();
@@ -46,6 +49,7 @@ public class BeanGestionUsuarios {
     private Personas detallePersonaModal = new Personas(); //Objeto que se utilizara para mostrar la persona del usuario
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
+    private List<EstadoUsuarios> listEstadoUsuarios = new ArrayList<>();
     private List<Modulos> listModulos = new ArrayList<>();
     private List<Modulos> listTodosModulos = new ArrayList<>();
     private List<Recursos> listRecursos = new ArrayList<>();
@@ -72,6 +76,7 @@ public class BeanGestionUsuarios {
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
             getGestionUsuariosBO().cargarTipoDocumento(this);
+            setLoginBO(new BeanLogin());
             if (obj_ != null) {
                 setDetalleUsuario(obj_.getUsuario());
                 getGestionUsuariosBO().cargarModulosByUsuario(this);
@@ -79,6 +84,7 @@ public class BeanGestionUsuarios {
                 getGestionUsuariosBO().cargarHistorialConfUsuRec(this);
                 getGestionUsuariosBO().cargarMovimientoByUser(this);
                 getGestionUsuariosBO().cargarHistorialExpPrestado(this);
+                getGestionUsuariosBO().cargarEstadoUsuario(this);
                 if (obj_.getPersonas() != null) {
                     setEncabezadoDetalleUsuario(obj_.getRuta());
                     setDetallePersonaModal(obj_.getPersonas());
@@ -91,6 +97,7 @@ public class BeanGestionUsuarios {
                 }
             }
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -131,6 +138,7 @@ public class BeanGestionUsuarios {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
                     } else {
                         getGestionUsuariosBO().actualizarContraseña(this);
+                        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("modalRestablecerContraseña");
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
                     }
                 }
@@ -207,6 +215,18 @@ public class BeanGestionUsuarios {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
+    }
+
+    public void updateUser() {
+        try {
+            getDetalleUsuario().setEditable(false);
+            getDetalleUsuario();
+            getGestionUsuariosBO().actualizarUser(this);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
+
     }
 
     /**
@@ -571,6 +591,34 @@ public class BeanGestionUsuarios {
      */
     public void setListPrestamoExpHistorial(List<PrestamoExpHistorial> listPrestamoExpHistorial) {
         this.listPrestamoExpHistorial = listPrestamoExpHistorial;
+    }
+
+    /**
+     * @return the listEstadoUsuarios
+     */
+    public List<EstadoUsuarios> getListEstadoUsuarios() {
+        return listEstadoUsuarios;
+    }
+
+    /**
+     * @param listEstadoUsuarios the listEstadoUsuarios to set
+     */
+    public void setListEstadoUsuarios(List<EstadoUsuarios> listEstadoUsuarios) {
+        this.listEstadoUsuarios = listEstadoUsuarios;
+    }
+
+    /**
+     * @return the loginBO
+     */
+    public BeanLogin getLoginBO() {
+        return loginBO;
+    }
+
+    /**
+     * @param loginBO the loginBO to set
+     */
+    public void setLoginBO(BeanLogin loginBO) {
+        this.loginBO = loginBO;
     }
 
 }

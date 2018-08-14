@@ -45,6 +45,7 @@ public class BeanDetallePersonas {
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             BeanRequest obj_ = (BeanRequest) session.getAttribute("requestBean");
+            setLoginBO(new BeanLogin());
             if (obj_ != null) {
                 if (obj_.getPersonas() != null) {
                     setDetallePersonasModal(obj_.getPersonas());

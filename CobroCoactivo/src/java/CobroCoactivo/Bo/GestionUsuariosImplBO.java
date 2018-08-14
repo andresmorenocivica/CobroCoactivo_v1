@@ -35,6 +35,7 @@ import CobroCoactivo.Dao.ITUspHistoria;
 import CobroCoactivo.Dao.ITUsuarios;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.DatosPersonas;
+import CobroCoactivo.Modelo.EstadoUsuarios;
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
@@ -61,6 +62,7 @@ import CobroCoactivo.Utility.HibernateUtil;
 import static CobroCoactivo.Utility.HibernateUtil.getSessionFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Random;
 import javax.faces.application.FacesMessage;
@@ -107,7 +109,6 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void consultarUsuario(BeanGestionUsuarios bean) throws Exception {
-        //List<CivUsuarios> listarCivUsuario = new ArrayList<CivUsuarios>();
         List<CivUsuarios> listaCivUsuario = new ArrayList<>();
         switch (bean.getTipoBusqueda()) {
             case 1:
@@ -176,6 +177,23 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
             for (CivTipoDocumentos civTipoDocumentos : listCivTipoDocumento) {
                 TipoDocumentos tipoDocumentos = new TipoDocumentos(civTipoDocumentos);
                 bean.getListTipoDocumento().add(tipoDocumentos);
+            }
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+
+    @Override
+    public void cargarEstadoUsuario(BeanGestionUsuarios bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivEstadoUsuarios> listCivEstadoUsuarios = getEstadoUsuariosDAO().listAll(session);
+            if (listCivEstadoUsuarios != null) {
+                for (CivEstadoUsuarios civEstadoUsuario : listCivEstadoUsuarios) {
+                    EstadoUsuarios estadoUsuarios = new EstadoUsuarios(civEstadoUsuario);
+                    bean.getListEstadoUsuarios().add(estadoUsuarios);
+                }
             }
         } finally {
             session.flush();
@@ -340,7 +358,6 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                         getConfUsuRecDAO().create(session, civConfUsuRec);
                     }
                 }
-
             }
             transaction.commit();
             cargarTodosModulos(bean);
@@ -429,6 +446,23 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 transaction.commit();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña por defecto es el numero del documento", null));
             }
+        } finally {
+            session.flush();
+            session.close();
+        }
+    }
+
+    @Override
+    public void actualizarUser(BeanGestionUsuarios bean) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Transaction transaction = session.beginTransaction();
+            CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(bean.getDetalleUsuario().getId()));
+            CivEstadoUsuarios civEstadoUsuarios = getEstadoUsuariosDAO().find(session, new BigDecimal(bean.getDetalleUsuario().getEstadoUsuarios().getId()));
+            civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+            getUsuariosDAO().update(session, civUsuarios);
+            transaction.commit();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha actualizado el estado del usuario.", null));
         } finally {
             session.flush();
             session.close();

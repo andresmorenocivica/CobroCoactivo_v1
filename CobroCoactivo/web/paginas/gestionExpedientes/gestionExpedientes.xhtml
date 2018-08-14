@@ -97,7 +97,7 @@
                                                             </div>
                                                             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
                                                                 <div class="input-group margin-5">
-                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Digite la referencia del expediente" id="txtReferencia" value="#{gestionExpedientesBean.referenciaExpediente}" requiredMessage="Digite el nombre del expediente"></h:inputText>
+                                                                    <h:inputText class="form-control text-uppercase" maxlength="20" a:placeholder="Digite la referencia del expediente" id="txtReferencia" value="#{gestionExpedientesBean.referenciaExpediente}" required="true" requiredMessage="Digite la referencia del expediente"></h:inputText>
                                                                     <span class="input-group-btn">
                                                                         <h:commandLink class="btn btn-danger" value="Buscar">
                                                                             <f:ajax event="click" listener="#{gestionExpedientesBean.buscarExpedientes(1)}" execute="frmExpedientes:txtReferencia" render="frmExpedientes:pnlCarpeta frmExpedientes:pnlArchivo frmExpedientes:Carpetas frmExpedientes:pnlBtnAddExpediente frmExpedientes:pnlBtnAddArchivo"/>
@@ -278,8 +278,6 @@
                                 </div>
                                 <div class="modal-footer">
                                     <div class="row">
-                                        <div class="col-lg-8">
-                                        </div>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                                     </div>
                                 </div>

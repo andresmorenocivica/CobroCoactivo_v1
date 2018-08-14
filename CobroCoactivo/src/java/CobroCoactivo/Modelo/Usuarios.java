@@ -16,7 +16,7 @@ public class Usuarios implements java.io.Serializable {
     private EstadoUsuarios estadoUsuarios;
     private String Nombre;
     private String Pass;
-    private boolean editable = false;
+    private boolean editable;
     private Date fechaProceso;
 
     public Usuarios() {

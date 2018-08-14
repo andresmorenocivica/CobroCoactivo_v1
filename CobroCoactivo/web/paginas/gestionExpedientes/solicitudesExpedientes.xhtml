@@ -25,32 +25,38 @@
                             </ol>
                         </section>
                         <section class="content">
+                            <div align="right">
+                                <h:commandLink class="btn btn-success" value="Recibir Expedientes" action="recibirExpedientes.xhtml">
+                                </h:commandLink>
+                            </div>
                             <p:messages autoUpdate="true" id="mensaje" showIcon="false" closable="true" severity="error,warn,info,fatal"></p:messages>
                             <div class="box box-danger">
                                 <div class="box-body">
-                                    <table class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Usuario</th>
-                                                <th>Referencia</th>
-                                                <th>Fecha solicitud</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="#{gestionExpedientesBean.listSolicitudes}" var="listaSolicitudes">
+                                    <table id="table" class="table table-hover" >
+                                        <div class="row">
+                                            <thead>
                                                 <tr>
-                                                    <td>#{listaSolicitudes.usuarios.nombre}</td>
-                                                    <td>
-                                                        <h:commandLink value="#{listaSolicitudes.descripcion}" onclick="$('#modalSolicitudExpediente').modal('show')">
-                                                            <f:ajax event="click" listener="#{gestionExpedientesBean.buscarDetSolicitudes(listaSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes frmSolicitudesExpedientes:btnPrestar"/>
-                                                        </h:commandLink>
-                                                    </td>
-                                                    <td>#{listaSolicitudes.fechaProceso}</td>
-                                                    <td>#{listaSolicitudes.estadoSolicitudes.nombre}</td>
+                                                    <th>Usuario</th>
+                                                    <th>Referencia</th>
+                                                    <th>Fecha solicitud</th>
+                                                    <th>Estado</th>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
+                                            </thead>
+                                            <tbody >
+                                                <c:forEach items="#{gestionExpedientesBean.listSolicitudes}" var="listaSolicitudes">
+                                                    <tr>
+                                                        <td>#{listaSolicitudes.usuarios.nombre}</td>
+                                                        <td>
+                                                            <h:commandLink value="#{listaSolicitudes.descripcion}" onclick="$('#modalSolicitudExpediente').modal('show')">
+                                                                <f:ajax event="click" listener="#{gestionExpedientesBean.buscarDetSolicitudes(listaSolicitudes.id)}" render="frmSolicitudesExpedientes:modalBodySolicitudes frmSolicitudesExpedientes:btnPrestar"/>
+                                                            </h:commandLink>
+                                                        </td>
+                                                        <td>#{listaSolicitudes.fechaProceso}</td>
+                                                        <td>#{listaSolicitudes.estadoSolicitudes.nombre}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </div>
                                     </table>
                                 </div>
                             </div>
@@ -63,7 +69,7 @@
                                         </div>
                                         <div class="modal-body" jsf:id="modalBodySolicitudes">
                                             <p:messages autoUpdate="true" id="mensajeSolicitud" showIcon="false" closable="true" severity="error,warn,info,fatal"></p:messages>
-                                            <table id="dataTableDetalle" class="table table-hover">
+                                            <table id="" class="table table-hover">
                                                 <div class="row">
                                                     <thead>
                                                         <tr>
@@ -92,7 +98,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                                             <h:commandLink  value="Aceptar" class="btn btn-success">
-                                                <f:ajax event="click" listener="#{gestionExpedientesBean.aceptarSolicitudExpedientes()}" execute="frmSolicitudesExpedientes:modalBodySolicitudes" render="frmSolicitudesExpeddientes"/>
+                                                <f:ajax event="click" listener="#{gestionExpedientesBean.aceptarSolicitudExpedientes()}" execute="frmSolicitudesExpedientes:modalBodySolicitudes" render="frmSolicitudesExpedientes:tablaBodySolicitudes"/>
                                             </h:commandLink>
                                         </div>
                                     </div>

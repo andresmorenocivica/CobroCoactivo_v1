@@ -7,11 +7,14 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivSolicitudes;
+import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
  * @author emadridp
  */
-public interface ITSolicitudes extends ITGeneryHibernateDao<CivSolicitudes, Integer>{
-    
+public interface ITSolicitudes extends ITGeneryHibernateDao<CivSolicitudes, Integer> {
+
+    public List<CivSolicitudes> getCivSolicitudesPendientes(Session session) throws Exception;
 }

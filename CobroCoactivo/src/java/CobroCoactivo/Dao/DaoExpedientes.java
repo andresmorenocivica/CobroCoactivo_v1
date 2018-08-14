@@ -7,8 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivExpedientes;
-import CobroCoactivo.Utility.HibernateUtil;
-import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 

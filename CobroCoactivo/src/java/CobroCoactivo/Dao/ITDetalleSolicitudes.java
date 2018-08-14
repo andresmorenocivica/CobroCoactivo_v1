@@ -17,5 +17,7 @@ import org.hibernate.Session;
 public interface ITDetalleSolicitudes extends ITGeneryHibernateDao<CivDetalleSolicitudes, Integer> {
 
     public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session,int idSolicitud) throws Exception;
+    
+    public List<CivDetalleSolicitudes> getCivDetalleSolicitudes(Session session) throws Exception;
 
 }

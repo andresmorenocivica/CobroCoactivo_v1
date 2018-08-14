@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:body onload="table()">
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmRecibirExpedientes">
+                    <div  class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Recibir Expedientes 
+                                <small></small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
+                        <section class="content">
+                            <div class="box box-danger">
+                                <div class="box-body">
+                                    <table id="dataTableDetalle" class="table table-hover">
+                                        <div class="row">
+                                            <thead>
+                                                <tr>
+                                                    <th>Referencia</th>
+                                                    <th>Fecha</th>
+                                                    <th>Accion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody jsf:id="tableBody">
+                                                <c:forEach items="#{gestionExpedientesBean.listDetalleSolicitudes}" var="listDetSolicitudes">
+                                                    <tr>
+                                                        <td>#{listDetSolicitudes.descripcion}</td>
+                                                        <td>#{listDetSolicitudes.fechaProceso}</td>
+                                                        <td>
+                                                            <h:commandLink class="btn btn-success" value="Recibir">
+                                                                <f:ajax event="click" listener="#{gestionExpedientesBean.recibirExpediente(listDetSolicitudes)}" render="frmRecibirExpedientes:tableBody"/>
+                                                            </h:commandLink>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </div>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

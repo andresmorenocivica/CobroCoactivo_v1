@@ -36,4 +36,8 @@ public interface GestionExpedientesBO {
     void mostrarExpedienteSelect(BeanGestionExpedientes bean) throws Exception;
 
     void enviarSolicitud(BeanGestionExpedientes bean) throws Exception;
+
+    void cargarDetSolicitudes(BeanGestionExpedientes bean) throws Exception;
+
+    void recibirExp(BeanGestionExpedientes bean) throws Exception;
 }
