@@ -7,7 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionPersonasBO;
 import CobroCoactivo.Bo.GestionPersonasImpBO;
-import CobroCoactivo.Modelo.DatosPersonas;
+import CobroCoactivo.Exception.PersonasException;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.EstadoTipoDatosPersonas;
@@ -15,7 +15,6 @@ import CobroCoactivo.Modelo.Movimientos;
 import CobroCoactivo.Modelo.Personas;
 import CobroCoactivo.Modelo.TipoDatosPersonas;
 import CobroCoactivo.Modelo.TipoDocumentos;
-import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,29 +37,22 @@ import org.primefaces.context.RequestContext;
 public class BeanGestionPersonas implements Serializable {
     // filtros de Busqueda 
 
-    private String documentoPersona;
+    private int estadoPersonas;
     private int tipoDocumentoPersona;
+    private String documentoPersona;
     private String nombrePersona;
+    private String encabezadoDetallePersona;
+    private String idUser;
     private Date FechaInicial, FechaFinal;
     //--- filtros de busqueda
-    // lista que se utilizara para cargar el combo de tipos de documento
-    private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
-    // lista que se utilizara para cargar la tabla de resultado de la busqueda
-    private List<Personas> listPersonas = new ArrayList<>();
+    private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();// lista que se utilizara para cargar el combo de tipos de documento
+    private List<Personas> listPersonas = new ArrayList<>(); // lista que se utilizara para cargar la tabla de resultado de la busqueda de persona
     private List<TipoDatosPersonas> listTipoDatosPersonas = new ArrayList<>();
     private List<EstadoTipoDatosPersonas> listEstadoTipoDatosPersonas = new ArrayList<>();
-
-    // Objeto que se utiliza para captura la deuda que seleccione para mostrar sus movimientos
-    private Deudas deudaSelecionada;
-    private Movimientos detalleMovimientos = new Movimientos();
-
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
-    private int estadoPersonas;
-
-    // objeto que se utilizara para mostrar el detalle de la persona
-    private Personas detallePersona = new Personas();
-    private String encabezadoDetallePersona;
-
+    private Deudas deudaSelecionada;// Objeto que se utiliza para captura la deuda que seleccione para mostrar sus movimientos
+    private Movimientos detalleMovimientos = new Movimientos();
+    private Personas detallePersona = new Personas(); // objeto que se utilizara para mostrar el detalle de la persona
     private BeanLogin loginBO;
     private BeanRequest requestBean = new BeanRequest();
     private GestionPersonasBO gestionPersonasBO;
@@ -68,6 +60,12 @@ public class BeanGestionPersonas implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            FacesContext contexts = javax.faces.context.FacesContext.getCurrentInstance();
+            HttpSession session1 = (HttpSession) contexts.getExternalContext().getSession(false);
+            BeanLogin obj = ((BeanLogin) session1.getAttribute("loginBean"));
+            if (obj.getID_Usuario() != null) {
+                setIdUser(obj.getID_Usuario());
+            }
             setGestionPersonasBO(new GestionPersonasImpBO());
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -81,7 +79,7 @@ public class BeanGestionPersonas implements Serializable {
                     obj_.setPersonas(new Personas());
                 }
             }
-            setLoginBO(new BeanLogin());
+
             if (getListTipoDocumento() != null && getListTipoDocumento().size() == 0) {
                 getGestionPersonasBO().cargarTipoDocumento(this);
                 getGestionPersonasBO().cargarEstadoPersonas(this);
@@ -89,7 +87,7 @@ public class BeanGestionPersonas implements Serializable {
                 getGestionPersonasBO().cargarEstadoTipoDatosPersonas(this);
             }
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prueba", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -101,7 +99,7 @@ public class BeanGestionPersonas implements Serializable {
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalAgregarPersona').modal('show')");
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -118,8 +116,10 @@ public class BeanGestionPersonas implements Serializable {
                 case 2:
                     break;
             }
+        } catch (PersonasException pe) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -133,7 +133,7 @@ public class BeanGestionPersonas implements Serializable {
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("frmDetallePersona:tablaMovimientos");
             requestContext.execute("$('#modalMovimiento').modal('show')");
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -145,8 +145,10 @@ public class BeanGestionPersonas implements Serializable {
             getDetallePersona().setEditable(false);
             getDetallePersona();
             getGestionPersonasBO().updatePersona(this);
+        } catch (PersonasException pe) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -157,8 +159,10 @@ public class BeanGestionPersonas implements Serializable {
             getGestionPersonasBO().guardarPersona(this);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalAgregarPersona').modal('hide')");
+        } catch (PersonasException pe) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al guardar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -414,6 +418,20 @@ public class BeanGestionPersonas implements Serializable {
      */
     public void setListEstadoTipoDatosPersonas(List<EstadoTipoDatosPersonas> listEstadoTipoDatosPersonas) {
         this.listEstadoTipoDatosPersonas = listEstadoTipoDatosPersonas;
+    }
+
+    /**
+     * @return the idUser
+     */
+    public String getIdUser() {
+        return idUser;
+    }
+
+    /**
+     * @param idUser the idUser to set
+     */
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
 }

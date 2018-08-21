@@ -6,7 +6,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:jsf="http://xmlns.jcp.org/jsf">
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
     <h:body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
@@ -14,15 +15,15 @@
                     <div class="content-wrapper">
                         <h:outputText value="#{gestionUsuariosBean.encabezadoDetalleUsuario}" escape="false"></h:outputText>
                         <section class="content">
-                            <p:messages autoUpdate="true" id="mensaje" showIcon="false" closable="true" severity="info"></p:messages>
+                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
                             <div class="modal fade" id="modalRecursoModulos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" >
-                                    <div class="modal-content">
+                                    <div class="modal-content" jsf:id="modalBodyAgregarRecurso">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             <h5 class="modal-title" id="exampleModalLabel">Recurso del modulo</h5>
                                         </div>
-                                        <div class="modal-body" jsf:id="modalBodyAgregarRecurso">
+                                        <div class="modal-body" >
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
@@ -45,21 +46,10 @@
                                             </table>
                                         </div>
                                         <div class="modal-footer">
-                                            <div class="row"> 
-                                                <div class="col-lg-8"></div>
-                                                <div class="col-lg-2">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <h:panelGrid id="pnlGuardarRecurso">
-                                                        <h:panelGroup >
-                                                            <h:commandLink value="Guardar" id="btnGuardarRecurso" class="btn btn-success"  >
-                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.guardarRecursoUsuario()}" execute="frmDetalleUsuario:modalBodyAgregarRecurso" render="frmDetalleUsuario:ModulosRender"/>
-                                                            </h:commandLink>
-                                                        </h:panelGroup>
-                                                    </h:panelGrid>
-                                                </div>
-                                            </div>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                            <h:commandLink rendered="#{gestionUsuariosBean.pnlBtnAceptar}" value="Guardar" id="btnGuardarRecurso" class="btn btn-success"  >
+                                                <f:ajax event="click" listener="#{gestionUsuariosBean.guardarRecursoUsuario()}" execute="frmDetalleUsuario:modalBodyAgregarRecurso" render="frmDetalleUsuario:ModulosRender"/>
+                                            </h:commandLink>
                                         </div>
                                     </div>
                                 </div>
@@ -79,12 +69,12 @@
                                                     <b>Following</b> <a class="pull-right">543</a>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <b>Friends</b> <a class="pull-right">13,287</a>
+                                                    <h:inputText id="contrasena" a:placeholder="Contraseña nueva" class="control-label form-control" readonly="true" value="#{gestionUsuariosBean.contrasenaAleatoria}"></h:inputText>
                                                 </li>
                                             </ul>
-                                            <h:commandLink class="btn btn-danger btn-block" onclick="$('#modalRestablecerContraseña').modal('show');">
-                                                <b>Actualizar Contraseña</b>
-                                                <f:ajax event="click" ></f:ajax>
+                                            <h:commandLink class="btn btn-danger btn-block">
+                                                <b>Restablecer Contraseña</b>
+                                                <f:ajax render="frmDetalleUsuario:contrasena" listener="#{gestionUsuariosBean.generarContrasena()}" ></f:ajax>
                                             </h:commandLink>
                                         </div>
                                         <!-- /.box-body -->
@@ -175,10 +165,10 @@
                                                                                 <h4 class="panel-title ">
                                                                                     <div class="row" >
                                                                                         <a class="cursor col-md-10" data-toggle="collapse" data-target="#collapse#{listaTodosModulos.modId}" aria-controls="collapse#{listaTodosModulos.modId}">#{listaTodosModulos.modNombre} <span class="badge badge-pill badge-primary ">#{listaTodosModulos.listRecurso.size()}</span></a>
-                                                                                        <h:commandLink class="fa fa-plus col-md-1" onclick="$('#modalRecursoModulos').modal('show')">
+                                                                                        <h:commandLink class="fa fa-plus col-sm-1" onclick="$('#modalRecursoModulos').modal('show')">
                                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.cargarRecursoByModulo(listaTodosModulos.modId)}" render="frmDetalleUsuario:modalBodyAgregarRecurso"/>
                                                                                         </h:commandLink>
-                                                                                        <h:commandLink class="fa fa-trash col-md-1" onclick="$('#modalQuitarRecursoModulo').modal('show')">
+                                                                                        <h:commandLink class="fa fa-trash col-sm-1" onclick="$('#modalQuitarRecursoModulo').modal('show')">
                                                                                             <f:ajax event="click" listener="#{gestionUsuariosBean.cargarConfUsuRec(listaTodosModulos.modId)}" render="frmDetalleUsuario:modalQuitarRecursoModulos"/>
                                                                                         </h:commandLink>
                                                                                     </div>
@@ -318,58 +308,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="modalRestablecerContraseña" style="overflow-y: scroll;" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-md">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel">Actualizar contraseña</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <p:messages autoUpdate="true" id="mensajeModalRestablecer" showIcon="false" closable="true" severity="error,info"></p:messages>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <div class="form-group has-feedback left-inner-addon">
-                                                            <label>Contraseña Actual:</label> 
-                                                            <h:inputSecret value="#{gestionUsuariosBean.contraseñaActual}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="11" required="true" requiredMessage="Ingrese su contraseña actual.">
-                                                            </h:inputSecret>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>Nueva contraseña:</label> 
-                                                        <h:inputSecret  label="Contraseña nueva"  autocomplete="false" id="txtPassNueva" class="form-control" value="#{gestionUsuariosBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
-                                                        </h:inputSecret>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>Confirme contraseña:</label> 
-                                                        <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="11" value="#{gestionUsuariosBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
-                                                        </h:inputSecret>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                            <h:commandLink value="Actualizar" id="btnGuardarContraseña" class="btn btn-success">
-                                                <f:ajax event="click" listener="#{gestionUsuariosBean.actualizarContraseña()}" execute="frmDetalleUsuario:txtPassActual frmDetalleUsuario:txtPassNueva frmDetalleUsuario:txtPassConfirmacionNueva" />
-                                            </h:commandLink>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="modal fade" id="modalQuitarRecursoModulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" >
-                                    <div class="modal-content">
+                                    <div class="modal-content" jsf:id="modalQuitarRecursoModulos">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             <h5 class="modal-title" id="exampleModalLabel">Quitar Recurso</h5>
                                         </div>
-                                        <div class="modal-body" jsf:id="modalQuitarRecursoModulos">
+                                        <div class="modal-body" >
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
@@ -392,21 +338,10 @@
                                             </table>
                                         </div>
                                         <div class="modal-footer">
-                                            <div class="row"> 
-                                                <div class="col-lg-8"></div>
-                                                <div class="col-lg-2">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <h:panelGrid id="pnlRecurso">
-                                                        <h:panelGroup >
-                                                            <h:commandLink value="Guardar" id="btnRecurso" class="btn btn-success"  >
-                                                                <f:ajax event="click" listener="#{gestionUsuariosBean.updateRecursoUsuario()}" execute="frmDetalleUsuario:modalBodyAgregarRecurso" render="frmDetalleUsuario:ModulosRender"/>
-                                                            </h:commandLink>
-                                                        </h:panelGroup>
-                                                    </h:panelGrid>
-                                                </div>
-                                            </div>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                            <h:commandLink rendered="#{gestionUsuariosBean.pnlBtnAceptar}" value="Guardar" id="btnRecurso" class="btn btn-success"  >
+                                                <f:ajax event="click" listener="#{gestionUsuariosBean.updateRecursoUsuario()}" execute="frmDetalleUsuario:modalBodyAgregarRecurso" render="frmDetalleUsuario:ModulosRender"/>
+                                            </h:commandLink>
                                         </div>
                                     </div>
                                 </div>

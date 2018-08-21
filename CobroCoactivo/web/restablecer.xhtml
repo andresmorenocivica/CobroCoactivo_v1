@@ -6,7 +6,7 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Reestablecer Contraseña</title>
+        <title>Restablecer Contraseña</title>
         <link rel="shortcut icon" href="#{request.contextPath}/recursos/images/favicon.png" type="image/x-icon"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta charset="UTF-8"/>
@@ -71,7 +71,8 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Contraseña Actual:</label> 
-                                    <h:inputSecret value="#{loginBean.password}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="20" required="true" requiredMessage="Ingrese su contraseña actual.">
+                                    <h:inputSecret value="#{loginBean.password}"  autocomplete="false" id="txtPassActual" class="form-control" maxlength="20" required="true" 
+                                                   requiredMessage="Ingrese su contraseña actual.">
                                     </h:inputSecret>
                                 </div>
                             </div>
@@ -85,14 +86,16 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Nueva contraseña:</label> 
-                                <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaNueva}" required="true" requiredMessage="Ingrese su nueva contraseña.">
+                                <h:inputSecret  autocomplete="false" id="txtPassNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaNueva}" required="true" 
+                                                requiredMessage="Ingrese su nueva contraseña.">
                                 </h:inputSecret>
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Confirme contraseña:</label> 
-                                <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaConfirmacion}" required="true" requiredMessage="Confirme su contraseña por favor">
+                                <h:inputSecret autocomplete="false" id="txtPassConfirmacionNueva" class="form-control" maxlength="20" value="#{loginBean.contraseñaConfirmacion}" 
+                                               required="true" requiredMessage="Confirme su contraseña por favor">
                                 </h:inputSecret>
                             </div>
                         </div>

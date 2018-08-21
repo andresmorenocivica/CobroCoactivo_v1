@@ -8,6 +8,7 @@ package CobroCoactivo.Beans;
 import CobroCoactivo.Bo.GestionUsuariosBO;
 import CobroCoactivo.Bo.GestionUsuariosImplBO;
 import CobroCoactivo.Crypto.DigestHandler;
+import CobroCoactivo.Exception.UsuariosException;
 import CobroCoactivo.Modelo.ConfUsuRec;
 import CobroCoactivo.Modelo.EstadoPersonas;
 import CobroCoactivo.Modelo.EstadoUsuarios;
@@ -28,7 +29,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Size;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -39,14 +39,23 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class BeanGestionUsuarios {
 
-    private GestionUsuariosBO gestionUsuariosBO;
-    private BeanLogin loginBO;
+    private int tipoBusqueda;
+    private int idModuloSelecionado;
+    private int tipoDocumentoPersona;
+    private int idRecurso;
     private String NombreUsuario; // Variable que es usada para busqueda de user
     private String nombreUsuarioNuevo; // Usuario genereado 
+    private String encabezadoDetalleUsuario;
+    private String contraseñaActual;
+    private String contraseñaNueva;
+    private String contraseñaConfirmacion;
+    private String contrasenaAleatoria;
+    private String documentoPersona;
+    private String idUser;
+    private boolean selecionado;
+    private boolean pnlBtnAceptar = false; //Boton aceptar en la modal Quitar Recurso y agregar recurso en la vista detalleUsuario;
     private List<Usuarios> listadoUsuarios = new ArrayList<>();
-    private int tipoBusqueda;
     private List<Personas> listPersonas = new ArrayList<>();
-    private Personas detallePersonaModal = new Personas(); //Objeto que se utilizara para mostrar la persona del usuario
     private List<TipoDocumentos> listTipoDocumento = new ArrayList<>();
     private List<EstadoPersonas> listEstadoPersonas = new ArrayList<>();
     private List<EstadoUsuarios> listEstadoUsuarios = new ArrayList<>();
@@ -58,19 +67,19 @@ public class BeanGestionUsuarios {
     private List<Movimientos> listMovimientosByUser = new ArrayList<>();      // ESTA LISTA SE LLENARA CON LOS MOVIMIENTOS QUE A HECHO UN USUARIO
     private List<PrestamoExpHistorial> listPrestamoExpHistorial = new ArrayList<>(); // LISTA QUE ALMACENARA LOS DATOS DEL HISTORIAL DE EXPEDIENTE DE EL USER
     private Usuarios detalleUsuario;
-    private String encabezadoDetalleUsuario;
-    private String contraseñaActual;
-    private String contraseñaNueva;
-    private String contraseñaConfirmacion;
-    private int idModuloSelecionado;
-    private String documentoPersona;
-    private int tipoDocumentoPersona;
-    private BigDecimal idRecurso;
-    private boolean selecionado;
+    private Personas detallePersonaModal = new Personas(); //Objeto que se utilizara para mostrar la persona del usuario
+    private GestionUsuariosBO gestionUsuariosBO;
+    private BeanLogin loginBO;
 
     @PostConstruct
     public void init() {
         try {
+            FacesContext contexts = javax.faces.context.FacesContext.getCurrentInstance();
+            HttpSession session1 = (HttpSession) contexts.getExternalContext().getSession(false);
+            BeanLogin obj = ((BeanLogin) session1.getAttribute("loginBean"));
+            if (obj.getID_Usuario() != null) {
+                setIdUser(obj.getID_Usuario());
+            }
             setGestionUsuariosBO(new GestionUsuariosImplBO());
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -79,25 +88,22 @@ public class BeanGestionUsuarios {
             setLoginBO(new BeanLogin());
             if (obj_ != null) {
                 setDetalleUsuario(obj_.getUsuario());
-                getGestionUsuariosBO().cargarModulosByUsuario(this);
-                getGestionUsuariosBO().cargarTodosModulos(this);
-                getGestionUsuariosBO().cargarHistorialConfUsuRec(this);
-                getGestionUsuariosBO().cargarMovimientoByUser(this);
-                getGestionUsuariosBO().cargarHistorialExpPrestado(this);
-                getGestionUsuariosBO().cargarEstadoUsuario(this);
-                if (obj_.getPersonas() != null) {
-                    setEncabezadoDetalleUsuario(obj_.getRuta());
-                    setDetallePersonaModal(obj_.getPersonas());
-                    getGestionUsuariosBO().cargarDatosPersonas(this);
-//                    if (obj_.getPersonas().getApellido1() != null) {
-//                        RequestContext requestContext = RequestContext.getCurrentInstance();
-//                        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("pnlModalDetallePersona");
-//                        requestContext.execute("$('#modalDetallePersona').modal('show')");
-//                    }
+                if (obj_.getUsuario() != null) {
+                    getGestionUsuariosBO().cargarModulosByUsuario(this);
+                    getGestionUsuariosBO().cargarTodosModulos(this);
+                    getGestionUsuariosBO().cargarHistorialConfUsuRec(this);
+                    getGestionUsuariosBO().cargarMovimientoByUser(this);
+                    getGestionUsuariosBO().cargarHistorialExpPrestado(this);
+                    getGestionUsuariosBO().cargarEstadoUsuario(this);
+                    if (obj_.getPersonas() != null) {
+                        setEncabezadoDetalleUsuario(obj_.getRuta());
+                        setDetallePersonaModal(obj_.getPersonas());
+                        getGestionUsuariosBO().cargarDatosPersonas(this);
+                    }
                 }
             }
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -107,6 +113,7 @@ public class BeanGestionUsuarios {
         try {
             getGestionUsuariosBO().cargarModulosByUsuario(this);
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar los modulos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -117,33 +124,10 @@ public class BeanGestionUsuarios {
             setTipoBusqueda(tipo);
             setListadoUsuarios(new ArrayList<>());
             getGestionUsuariosBO().consultarUsuario(this);
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
-            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
-        }
-    }
-
-    public void actualizarContraseña() {
-        try {
-            if (getDetalleUsuario() != null) {
-                if (!getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual))) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
-                }
-                if (getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual)) && !DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
-                }
-
-                if (getDetalleUsuario().getPass().equals(DigestHandler.encryptSHA2(contraseñaActual)) && DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
-                    if (DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaActual))) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
-                    } else {
-                        getGestionUsuariosBO().actualizarContraseña(this);
-                        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("modalRestablecerContraseña");
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
-                    }
-                }
-            }
-        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al consultar usuario: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -154,6 +138,7 @@ public class BeanGestionUsuarios {
             setIdModuloSelecionado(idModulos);
             getGestionUsuariosBO().cargarRecursoByModulo(this);
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar recurso: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -164,6 +149,7 @@ public class BeanGestionUsuarios {
             setIdModuloSelecionado(idModulo);
             getGestionUsuariosBO().cargarConfUsuRec(this);
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al cargar conf usu rec: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -172,9 +158,10 @@ public class BeanGestionUsuarios {
     public void guardarRecursoUsuario() {
         try {
             getGestionUsuariosBO().guardarRecursoUsuario(this);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalRecursoModulos').modal('hide')");
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al guardar recurso: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -183,9 +170,10 @@ public class BeanGestionUsuarios {
     public void updateRecursoUsuario() {
         try {
             getGestionUsuariosBO().updateRecursoUsuario(this);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalQuitarRecursoModulos').modal('hide')");
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al actualizar los recursos: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -194,7 +182,10 @@ public class BeanGestionUsuarios {
     public void registrarUser() {
         try {
             getGestionUsuariosBO().registrarUsuario(this);
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al registrar usuario: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -211,8 +202,11 @@ public class BeanGestionUsuarios {
                 case 2:
                     break;
             }
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            Log_Handler.registrarEvento("Error al buscar persona: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
@@ -222,11 +216,25 @@ public class BeanGestionUsuarios {
             getDetalleUsuario().setEditable(false);
             getDetalleUsuario();
             getGestionUsuariosBO().actualizarUser(this);
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al actualizar el estado del usuario: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
+    }
 
+    public void generarContrasena() {
+        try {
+            getGestionUsuariosBO().generarContrasena(this);
+        } catch (UsuariosException ue) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al generar contraseña: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
+        }
     }
 
     /**
@@ -510,20 +518,6 @@ public class BeanGestionUsuarios {
     }
 
     /**
-     * @return the idRecurso
-     */
-    public BigDecimal getIdRecurso() {
-        return idRecurso;
-    }
-
-    /**
-     * @param idRecurso the idRecurso to set
-     */
-    public void setIdRecurso(BigDecimal idRecurso) {
-        this.idRecurso = idRecurso;
-    }
-
-    /**
      * @return the listConfUsuRec
      */
     public List<ConfUsuRec> getListConfUsuRec() {
@@ -619,6 +613,62 @@ public class BeanGestionUsuarios {
      */
     public void setLoginBO(BeanLogin loginBO) {
         this.loginBO = loginBO;
+    }
+
+    /**
+     * @return the idUser
+     */
+    public String getIdUser() {
+        return idUser;
+    }
+
+    /**
+     * @param idUser the idUser to set
+     */
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    /**
+     * @return the contrasenaAleatoria
+     */
+    public String getContrasenaAleatoria() {
+        return contrasenaAleatoria;
+    }
+
+    /**
+     * @param contrasenaAleatoria the contrasenaAleatoria to set
+     */
+    public void setContrasenaAleatoria(String contrasenaAleatoria) {
+        this.contrasenaAleatoria = contrasenaAleatoria;
+    }
+
+    /**
+     * @return the pnlBtnAceptar
+     */
+    public boolean isPnlBtnAceptar() {
+        return pnlBtnAceptar;
+    }
+
+    /**
+     * @param pnlBtnAceptar the pnlBtnAceptar to set
+     */
+    public void setPnlBtnAceptar(boolean pnlBtnAceptar) {
+        this.pnlBtnAceptar = pnlBtnAceptar;
+    }
+
+    /**
+     * @return the idRecurso
+     */
+    public int getIdRecurso() {
+        return idRecurso;
+    }
+
+    /**
+     * @param idRecurso the idRecurso to set
+     */
+    public void setIdRecurso(int idRecurso) {
+        this.idRecurso = idRecurso;
     }
 
 }

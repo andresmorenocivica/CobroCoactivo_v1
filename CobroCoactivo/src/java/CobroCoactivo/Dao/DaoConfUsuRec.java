@@ -28,13 +28,11 @@ public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer>
         return Integer.parseInt(session.save(civConfUsuRec).toString());
     }
 
-   
-
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void update(Session session, CivConfUsuRec civConfUsuRec){
+    public void update(Session session, CivConfUsuRec civConfUsuRec) {
         session.update(civConfUsuRec);
-       
+
     }
 
     @Override
@@ -72,7 +70,7 @@ public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer>
     @Override
     public List<CivConfUsuRec> getConfUsuRec(int idRecurso, int idUsuario) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_RECURSO_FK =:idRecurso AND CONFUSUREC_USUARIOS_FK =:idUsuario";
+        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_RECURSO_FK =:idRecurso AND CONFUSUREC_USUARIOS_FK =:idUsuario  AND CONFUSUREC_ESTADO_FK =  1";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivConfUsuRec.class);
         query.setBigDecimal("idRecurso", new BigDecimal(idRecurso));

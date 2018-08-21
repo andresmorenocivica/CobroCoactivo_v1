@@ -179,6 +179,9 @@
                                                 <div class="pull-right">
                                                     <h:link outcome="/CerrarSesion.jsp" class="btn btn-default btn-flat">Cerrar Sesión</h:link>
                                                 </div>
+                                                <div class="pull-right">
+                                                    <h:link outcome="/restablecer.xhtml" class="btn btn-link btn-flat">Actualizar Contraseña</h:link>
+                                                </div>
                                             </li>
                                         </ul>
                                     </li>
@@ -767,21 +770,21 @@
                     </ui:insert>
                 </div><!--container-->
             </div><!--left and Container--> 
+            <!-- Comienza Modal y Form Agregar Persona -->
             <h:form id="frmModalAgregarPersona">
-                <!-- Comienza Modal Agregar Persona -->
                 <div class="modal fade" id="modalAgregarPersona" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog " style="width:60%">
+                    <div class="modal-dialog " style="width:70%">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title" id="myModalLabel">Guardar Persona</h4>
                             </div>
                             <div class="modal-body" jsf:id="modalBodyAgregar">
-                                <p:messages autoUpdate="true" id="mensajeModalAgregarPersona" showIcon="false" closable="true" severity="error"></p:messages>
+                               <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Primer Nombre:</label> 
+                                            <label>Primer Nombre(*):</label> 
                                             <h:inputText a:placeholder="Digite el primer nombre" class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
                                         </div>
                                     </div>
@@ -830,7 +833,7 @@
                                         <div class="form-group">
                                             <label>Fecha:</label>
                                             <div class="input-group date">
-                                                <p:calendar placeholder="Digite fecha" id="datepicker" class="form-control pull-right" value="#{gestionPersonaBean.detallePersona.fechaproceso}" pattern="dd-MMM-yyyy" />
+                                                <p:calendar placeholder="Digite fecha" id="datepicker" class="form-control pull-right" value="" pattern="dd-MMM-yyyy" />
                                             </div>
                                         </div>
                                     </div> -->
@@ -867,40 +870,30 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <h:panelGrid id="pnlGuardar">
-                                            <h:panelGroup >
-                                                <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:modalBodyAgregar" />
-                                                </h:commandLink>
-                                            </h:panelGroup>
-                                        </h:panelGrid>
-                                    </div>
-                                </div>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
+                                    <f:ajax event="click" listener="#{gestionPersonaBean.savePersona()}" execute="frmModalAgregarPersona:modalBodyAgregar" />
+                                </h:commandLink>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Final Modal Agregar Persona -->
             </h:form>
+            <!-- Final  Modal y From Agregar Persona -->
             <h:form id="frmModalRegistrarUser">
                 <div class="modal fade" id="modalRegistrarUser" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title" id="myModalLabel">Registrar usuario</h4>
                             </div>
                             <div class="modal-body" jsf:id="modalBodyUser">
-                                <p:messages autoUpdate="true" id="mensajeModalCrearUsuarios" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
+                                <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
+                                
                                 <h4><center> Consultar Persona</center></h4>
                                 <div class="row">
-                                    <div class="col-md-3"></div>
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="input-group margin-2">
                                             <h:selectOneMenu  id="sltDocumentos" class="form-control" value="#{gestionUsuariosBean.tipoDocumentoPersona}">
@@ -941,8 +934,9 @@
                                                                 #{persona.estadoPersonas.descripcion}
                                                             </span>
                                                         </td>
-
-                                                        <td>#{gestionUsuariosBean.nombreUsuarioNuevo}</td>
+                                                        <td>
+                                                            <h:inputText a:placeholder="Ingrese el documento" class="form-control text-uppercase" id="userAsig" value="#{gestionUsuariosBean.nombreUsuarioNuevo}" disabled="true"></h:inputText>
+                                                        </td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
@@ -951,17 +945,10 @@
                                 </h:panelGroup>
                             </div>
                             <div class="modal-footer">
-                                <div class="row"> 
-                                    <div class="col-lg-8"></div>
-                                    <div class="col-lg-2">        
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                    </div> 
-                                    <div class="col-lg-2">
-                                        <h:commandLink value="Guardar" id="btnGuardarUsuario" class="btn btn-success">
-                                            <f:ajax event="click" listener="#{gestionUsuariosBean.registrarUser()}" />
-                                        </h:commandLink>
-                                    </div>
-                                </div>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <h:commandLink value="Guardar" id="btnGuardarUsuario" class="btn btn-success">
+                                    <f:ajax event="click" listener="#{gestionUsuariosBean.registrarUser()}" />
+                                </h:commandLink>
                             </div>
                         </div>
                     </div>
@@ -971,6 +958,7 @@
                 <div class="modal-dialog modal-lg ">
                     <div class="modal-content">
                         <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title" id="myModalLabel">Detalle persona</h4>
                         </div>
                         <div class="row">

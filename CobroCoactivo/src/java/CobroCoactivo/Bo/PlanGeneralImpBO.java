@@ -30,6 +30,7 @@ import CobroCoactivo.Dao.ITFasesTrabajo;
 import CobroCoactivo.Dao.ITMovimientos;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITReporteTrabajos;
+import CobroCoactivo.Exception.PlanGeneralExcepcion;
 import CobroCoactivo.Modelo.EstadoEtapasGenerales;
 import CobroCoactivo.Modelo.EstadoFasesGenerales;
 import CobroCoactivo.Modelo.EstadoPlanGenerales;
@@ -119,20 +120,14 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 civFasesGenerales.setFasgenObligatorio(bean.getFasesGenerales().getObligatorio());
                 List<CivMovimientos> listCivMovimientos = getMovimientosDao().listMovimiento(session, civFasesGenerales.getFasgenId().intValue());
                 if (listCivMovimientos != null) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "No se puede desactivar la fase tiene movimientos", null));
-                    return;
-
+                    throw new PlanGeneralExcepcion("No se puede desactivar la fase tiene movimientos", 3);
                 }
                 if (bean.getFile() == null) {
                     civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
                 } else {
                     if (!Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Solo se puede cargar archivo pdf", null));
-                        return;
+                        throw new PlanGeneralExcepcion("Solo se puede cargar archivo pdf", 2);
                     } else {
-
                         CivEstadoDocumengenerales civEstadoDocumengenerales = new CivEstadoDocumengenerales();
                         civDocumenGenerales.setDocgenId(new BigDecimal(bean.getFasesGenerales().getDocumenGenerales().getId()));
                         civEstadoDocumengenerales.setEstdocgenId(BigDecimal.valueOf(1));
@@ -181,8 +176,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#faseGeneral').modal('hide')");
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Dia minimo debe ser menor que dia maximo", null));
+                throw new PlanGeneralExcepcion("Dia minimo debe ser menor que dia maximo", 2);
             }
 
         } finally {
@@ -219,20 +213,17 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                             validador = true;
                         }
                     }
-
                     if (validador) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se puede desactivar la etapa por que tiene fases activas", null));
+                        throw new PlanGeneralExcepcion("No se puede desactivar la etapa por que tiene fases activas.", 2);
                     } else {
                         getItEstapaGeneral().update(session, civEtapasGenerales);
                         transaction.commit();
                         bean.init();
                         bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                "Etapa desactivada correctamente", null));
                         RequestContext requestContext = RequestContext.getCurrentInstance();
                         requestContext.execute("$('#etapaGeneral').modal('hide')");
+                        throw new PlanGeneralExcepcion("Etapa desactivada correctamente", 1);
                     }
-
                 } else {
                     CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(session, civEtapasGenerales.getEtagenId().intValue());
                     if (civEtapasTrabajos != null) {
@@ -245,12 +236,10 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     transaction.commit();
                     bean.init();
                     bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Etapa desahabilitada correctamente", null));
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#etapaGeneral').modal('hide')");
+                    throw new PlanGeneralExcepcion("Etapa deshabilitada correctamente", 1);
                 }
-
             } else {
                 CivEtapasTrabajos civEtapasTrabajos = getEtapaTrabajoDao().find(session, civEtapasGenerales.getEtagenId().intValue());
                 if (civEtapasTrabajos != null) {
@@ -258,18 +247,15 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     civEtapasTrabajos.setEtatraDescricion(civEtapasGenerales.getEtagenDescripcion());
                     civEtapasTrabajos.setEtatraPrioridad(civEtapasGenerales.getEtagenPrioridad());
                     getEtapaTrabajoDao().update(session, civEtapasTrabajos);
-
                 }
                 getItEstapaGeneral().update(session, civEtapasGenerales);
                 transaction.commit();
                 bean.init();
                 bean.ListarEtapaGeneralesPorIdPlanGeneral(bean.getPlanGenerales());
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "etapa Actualizado Correctamente", null));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#etapaGeneral').modal('hide')");
+                throw new PlanGeneralExcepcion("Etapa actualizado correctamente", 1);
             }
-
         } finally {
             session.flush();
             session.close();
@@ -302,29 +288,24 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                         }
                     }
                     if (flag) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                "Debe desactivar las etapas generales", null));
                         RequestContext requestContext = RequestContext.getCurrentInstance();
                         requestContext.execute("$('#planGeneral').modal('hide')");
-
+                        throw new PlanGeneralExcepcion("Debe desactivar las etapas generales.", 2);
                     } else {
                         getiTPlanGeneral().update(session, civPlanGenerales);
                         trasantion.commit();
                         bean.init();
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                "Plan actualizado correctamente", null));
                         RequestContext requestContext = RequestContext.getCurrentInstance();
                         requestContext.execute("$('#planGeneral').modal('hide')");
-
+                        throw new PlanGeneralExcepcion("Plan actualizado correctamente.", 1);
                     }
                 } else {
                     getiTPlanGeneral().update(session, civPlanGenerales);
                     trasantion.commit();
                     bean.init();
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Plan actualizado correctamente", null));
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#planGeneral').modal('hide')");
+                    throw new PlanGeneralExcepcion("Plan actualizado correctamente.", 1);
                 }
             } else {
                 CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().getPlanTrabajo(session, civPlanGenerales.getPlagenId().intValue());
@@ -338,19 +319,14 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     getiTPlanGeneral().update(session, civPlanGenerales);
                     trasantion.commit();
                     bean.init();
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Plan actualizado correctamente", null));
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#planGeneral').modal('hide')");
+                    throw new PlanGeneralExcepcion("Plan actualizado correctamente.", 1);
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "El color ya existe en el sistema", null));
+                    throw new PlanGeneralExcepcion("El color ya existe en el sistema.", 2);
                 }
-
             }
-
         } finally {
-
             session.flush();
             session.close();
         }
@@ -459,19 +435,17 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                     Files.copy(stream, new File("D:\\Archivo\\" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     RequestContext requestContext = RequestContext.getCurrentInstance();
                     requestContext.execute("$('#faseGeneral').modal('hide')");
-
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fase agregada correctamente", null));
                     listarFasesGeneralesPorEtapa(bean);
+                    transaction.commit();
+                    throw new PlanGeneralExcepcion("Fase agregada correctamente", 1);
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Solo se puede cargar archivo pdf", null));
+                    throw new PlanGeneralExcepcion("Solo se puede cargar archivo pdf", 2);
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Dia minimo debe ser menor que dia maximo", null));
+                throw new PlanGeneralExcepcion("Dia minimo debe ser menor que dia maximo", 2);
             }
         } finally {
-            session.flush();;
+            session.flush();
             session.close();
         }
     }
@@ -486,14 +460,11 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             CivPlanGenerales civPlanGeneralesDescripcion = getiTPlanGeneral().getCivPlanGeneralByDescripcion(session, bean.getPlanGenerales().getDescripcion().toUpperCase());
             if (civPlanGeneralesColor != null || civPlanGeneralesDescripcion != null) {
                 if (civPlanGeneralesColor != null) {
-                    FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "El color ya existe en el sistema", "Plan General Creado exitosamente"));
+                    throw new PlanGeneralExcepcion("El color ya existe en el sistema", 2);
                 }
                 if (civPlanGeneralesDescripcion != null) {
-                    FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "La descripcion ya existe en el sistema", "Plan General Creado exitosamente"));
+                    throw new PlanGeneralExcepcion("La descripcion ya existe en el sistema", 2);
                 }
-
             } else {
                 CivEstadoPlanGenerales civEstadoPlanGenerales = new CivEstadoPlanGenerales();
                 civEstadoPlanGenerales.setEstplagenId(new BigDecimal(1));
@@ -532,13 +503,10 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 }
                 transaction.commit();
                 bean.init();
-                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Plan general creado exitosamente", "Plan General Creado exitosamente"));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#planGeneral').modal('hide')");
-
+                throw new PlanGeneralExcepcion("Plan general creado exitosamente", 1);
             }
-
         } finally {
             session.flush();
             session.close();
@@ -547,7 +515,6 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
     @Override
     public void listarEtapaGeneralesPorIdPlanGeneral(BeanPlanGeneral bean) throws Exception {
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             List<CivEtapasGenerales> listCivEtapasGenerales = getItEstapaGeneral().findAllEtapaByIdPlanGeneral(session, bean.getPlanGenerales().getId());
@@ -560,11 +527,9 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                         bean.getListadoEtapasGeneraleses().add(etapasGenerales);
                     }
                 }
-
             } else {
                 bean.setListadoEtapasGeneraleses(new ArrayList<>());
             }
-
         } finally {
             session.flush();
             session.close();
@@ -638,10 +603,8 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 }
                 bean.getListFasesGenerales().add(fasesGenerales);
             }
-
             if (!faseObligatoria) {
-                FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        "La etapa " + bean.getEtapasGenerales().getDescripcion() + " debe contener por lo menos una fases obligatoria", "Plan General Creado exitosamente"));
+                throw new PlanGeneralExcepcion("La etapa " + bean.getEtapasGenerales().getDescripcion() + " debe contener por lo menos una fases obligatoria", 2);
             }
         } finally {
             session.flush();

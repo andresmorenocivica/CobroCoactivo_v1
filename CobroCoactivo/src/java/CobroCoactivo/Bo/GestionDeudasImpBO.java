@@ -30,8 +30,8 @@ import CobroCoactivo.Dao.ITTipoDetalleCobro;
 import CobroCoactivo.Dao.ITTipoDeudas;
 import CobroCoactivo.Dao.ITTipoDocumento;
 import CobroCoactivo.Dao.ITValorTipoDetalleCobro;
+import CobroCoactivo.Exception.DeudasException;
 import CobroCoactivo.Modelo.CobroDeudas;
-import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDeudas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Expedientes;
@@ -185,7 +185,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     break;
             }
             if (listCivDeudas == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro niguna informaciòn.", null));
+                throw new DeudasException("No se encontro niguna informaciòn.", 2);
             }
             if (listCivDeudas != null) {
                 if (listCivDeudas.size() > 0) {
@@ -233,6 +233,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     public void actualizarDeudaCargada(BeanGestionDeudas bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
+            Transaction transaction = session.beginTransaction();
             CivDeudas civDeudas = getDeudasDAO().find(session, new BigDecimal(bean.getDeudaSeleccionada().getId()));
             CivCobroDeudas civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session, bean.getCobroDeudasSeleccionado().getId());
             CivTipoDeudas civTipoDeudas = getTipoDeudasDAO().find(session, new BigDecimal(bean.getDeudaSeleccionada().getTipoDeudas().getId()));
@@ -258,7 +259,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     bean.getDeudaSeleccionada().getCobroDeudas().setColorDificultad("label label-danger");
                     break;
             }
-
+            transaction.commit();
         } finally {
             session.flush();
             session.close();
@@ -316,10 +317,10 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     civDetalleExpedientes.setCivExpedientes(civExpedientes);
                     civDetalleExpedientes.setDetexpUbicacion(folderExpedienteDeuda);
                     getDetalleExpedientesDAO().create(session, civDetalleExpedientes);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha creado el expediente a la deuda.", null));
+                    throw new DeudasException("Se ha creado el expediente a la deuda.", 1);
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La persona que esta asociada esta deuda no tiene expediente.", null));
+                throw new DeudasException("La persona que esta asociada esta deuda no tiene expediente.", 3);
             }
             transaction.commit();
         } finally {

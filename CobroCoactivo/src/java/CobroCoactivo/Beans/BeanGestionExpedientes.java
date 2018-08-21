@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionExpedientesBO;
 import CobroCoactivo.Bo.GestionExpedientesImpBO;
+import CobroCoactivo.Exception.ExpedientesException;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.DetalleSolicitudes;
@@ -62,13 +63,13 @@ public class BeanGestionExpedientes {
     private String titleModal = "Agregar Archivo";
     private String nombrePersona;
     private String documentoPersona;
+    private Part file;
     private List<Expedientes> listExpedientes = new ArrayList<>();
     private List<ArchivoDetExpedientes> listArchivoDetExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpedientes = new ArrayList<>();
     private List<DetalleExpedientes> listDetalleExpdientesSelect = new ArrayList<>();
     private List<Solicitudes> listSolicitudes = new ArrayList<>();
     private List<DetalleSolicitudes> listDetalleSolicitudes = new ArrayList<>();
-    private Part file;
     private ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes();
     private DetalleSolicitudes detalleSolicitudes = new DetalleSolicitudes();
     private GestionExpedientesBO gestionExpedientesBO;
@@ -89,7 +90,7 @@ public class BeanGestionExpedientes {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -98,9 +99,11 @@ public class BeanGestionExpedientes {
     public void crearExpedientes() {
         try {
             getGestionExpedientesBO().crearExpediente(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al crear expediente: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -109,9 +112,11 @@ public class BeanGestionExpedientes {
     public void buscarPersona() {
         try {
             getGestionExpedientesBO().buscarPersona(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al buscar persona : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -129,10 +134,12 @@ public class BeanGestionExpedientes {
                 setPnlBtnAddExpediente(false);
                 setPnlBtnAddArchivo(false);
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro el expediente, por favor verifique la referencia.", null));
+                throw new ExpedientesException("No se encontro el expediente, por favor verifique la referencia.", 2);
             }
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al buscar Expedientes: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -147,11 +154,13 @@ public class BeanGestionExpedientes {
                 setPnlSubcarpetas(true);
                 setPnlBtnAddFolder(true);
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se encontro deudas en el expediente de la persona.", null));
                 setPnlBtnAddFolder(true);
+                throw new ExpedientesException("No se encontro deudas en el expediente de la persona.", 2);
             }
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al abrir carpeta : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -166,10 +175,12 @@ public class BeanGestionExpedientes {
                 setPnlSubcarpetas(false);
                 setPnlArchivo(true);
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No hay archivo en esta carpeta, agrege archivo por favor.", null));
+                throw new ExpedientesException("No hay archivo en esta carpeta, agrege archivo por favor.", 2);
             }
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al buscar archivo: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -202,7 +213,7 @@ public class BeanGestionExpedientes {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al mostrar PDF: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -211,8 +222,10 @@ public class BeanGestionExpedientes {
     public void guardarArchivo() {
         try {
             getGestionExpedientesBO().guardarArchivo(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al guardar archivo : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -222,6 +235,7 @@ public class BeanGestionExpedientes {
         try {
             getGestionExpedientesBO().mostrarExpedienteSelect(this);
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al mostrar expediente selecionado: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -230,8 +244,10 @@ public class BeanGestionExpedientes {
     public void enviarSolicitudes() {
         try {
             getGestionExpedientesBO().enviarSolicitud(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al enviar solicitud : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -242,6 +258,7 @@ public class BeanGestionExpedientes {
             setIdSolicitud(idSolicitud);
             getGestionExpedientesBO().buscarDetSolicitudes(this);
         } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al buscar detalle de la solicitudes: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -250,9 +267,11 @@ public class BeanGestionExpedientes {
     public void aceptarSolicitudExpedientes() {
         try {
             getGestionExpedientesBO().aceptarSolicitudExpediente(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al aceptar solicitud : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -267,7 +286,7 @@ public class BeanGestionExpedientes {
             setTitleModal(title);
             setArchivoDetExpedientes(archivoDetExpedientes);
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -277,9 +296,11 @@ public class BeanGestionExpedientes {
     public void updateArchivo() {
         try {
             getGestionExpedientesBO().updateArchivo(this);
+        } catch (ExpedientesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al actualizar el archivo: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -291,7 +312,7 @@ public class BeanGestionExpedientes {
             getGestionExpedientesBO().recibirExp(this);
         } catch (Exception e) {
             e.printStackTrace();
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al recibir expediente: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }

@@ -22,6 +22,7 @@ import CobroCoactivo.Dao.ITMovimientos;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITUsuarios;
+import CobroCoactivo.Exception.MovimientosException;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
@@ -241,9 +242,7 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
             for (Deudas deudasRealizada : listaDeudasRealizadas) {
                 beanGestionMovimientos.getListaDeudasTabla().remove(deudasRealizada);
             }
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    i + " Movimiento realizado exitosamente", null));
-
+            throw new MovimientosException(i + " Movimiento realizado exitosamente", 1);
         } finally {
             session.flush();
             session.close();

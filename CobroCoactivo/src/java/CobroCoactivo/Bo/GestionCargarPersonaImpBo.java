@@ -18,7 +18,6 @@ import CobroCoactivo.Dao.ITExpedientes;
 import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPlanTrabajo;
 import CobroCoactivo.Dao.ITTipoDocumento;
-import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Expedientes;
 import CobroCoactivo.Modelo.Personas;

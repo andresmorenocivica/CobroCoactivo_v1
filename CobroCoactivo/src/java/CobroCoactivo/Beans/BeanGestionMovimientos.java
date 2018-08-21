@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionMovimientosBO;
 import CobroCoactivo.Bo.GestionMovimientosImpBO;
+import CobroCoactivo.Exception.MovimientosException;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EtapasTrabajos;
 import CobroCoactivo.Modelo.FasesTrabajos;
@@ -55,8 +56,8 @@ public class BeanGestionMovimientos implements Serializable {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
-        }finally{
-            
+        } finally {
+
         }
     }
 
@@ -73,8 +74,10 @@ public class BeanGestionMovimientos implements Serializable {
             getGestionMovimientosBO().cargarEtapasPlanTrabajo(this);
             setListaDeudasTabla(new ArrayList<>());
             setListaDeudasTabla(planTrabajos.getListaDeudas());
+        } catch (MovimientosException me) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(me.getNivelFacesMessage(), "", me.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al buscar etapas: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -87,8 +90,10 @@ public class BeanGestionMovimientos implements Serializable {
             getGestionMovimientosBO().cargarFasesTrabajo(this);
             setListaDeudasTabla(new ArrayList<>());
             //setListaDeudasTabla(etapasTrabajos.getListDeudas());
+        } catch (MovimientosException me) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(me.getNivelFacesMessage(), "", me.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al buscar fases : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -100,7 +105,7 @@ public class BeanGestionMovimientos implements Serializable {
             setListaDeudasTabla(fasesTrabajos.getListaDeudas());
             setFaseTrabajoSeleccionada(fasesTrabajos);
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al mostrar deudas : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -115,8 +120,10 @@ public class BeanGestionMovimientos implements Serializable {
             getGestionMovimientosBO().cargarEtapasPlanTrabajo(this);
             getGestionMovimientosBO().cargarFasesTrabajo(this);
 //            setListaDeudasTabla(new ArrayList<>());
+        } catch (MovimientosException me) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(me.getNivelFacesMessage(), "", me.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
+            Log_Handler.registrarEvento("Error al guardar movimientos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }

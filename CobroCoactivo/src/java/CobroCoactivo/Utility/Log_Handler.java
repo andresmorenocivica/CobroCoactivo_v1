@@ -6,6 +6,7 @@ import CobroCoactivo.Persistencia.CivErrores;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Persistencia.LogEventos;
 import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.logging.Logger;
 import org.hibernate.Query;
@@ -14,8 +15,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-
-
 
 /**
  *
@@ -59,7 +58,7 @@ public class Log_Handler {
 //                clean += mensaje;
 //            
 //            mensaje = new String(clean);
-            
+
             Logger logger = Logger.getLogger(clase.getName());
             Throwable result = null;
             if (error != null) {
@@ -106,11 +105,9 @@ public class Log_Handler {
 
             }
             LogEventos logEventos = new LogEventos();
-            LoginUser login_user = SessionSingleton.getInstancia().getUsuarioSesion(id_usuario);
-            if (login_user != null) {
-                String ip = login_user.getIP();
-                logEventos.setEveIp(ip);
-            }
+
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            logEventos.setEveIp(ip);
             if (error != null) {
                 logEventos.setEveCausa((result != null) ? result.toString() : "");
                 StringBuilder sb = new StringBuilder();
@@ -131,7 +128,7 @@ public class Log_Handler {
             logEventos.setEveClaseOrigen(clase.getCanonicalName());
             logEventos.setEveNivel(new BigDecimal(nivel));
 
-            insertarLog(logEventos);
+            insertarLog(logEventos, id_usuario);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,7 +141,7 @@ public class Log_Handler {
      * @param logEvento Pojo con los datos a ingresar
      * @return ID único del registro
      */
-    private static long insertarLog(LogEventos logEvento) {
+    private static long insertarLog(LogEventos logEvento, int idUser) {
         if (SESSIONFACTORY == null) {
             Configuration configuration = new Configuration().configure();
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
@@ -155,8 +152,8 @@ public class Log_Handler {
         long id = 0;
         Transaction tx = null;
         try {
-            CivUsuarios civUsuarios =  new CivUsuarios();
-            civUsuarios.setUsuId(new BigDecimal(1));
+            CivUsuarios civUsuarios = new CivUsuarios();
+            civUsuarios.setUsuId(new BigDecimal(idUser));
             logEvento.setCivUsuarios(civUsuarios);
             tx = session.beginTransaction();
             id = Long.parseLong(session.save(logEvento).toString());

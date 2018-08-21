@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.PlanGeneralBO;
 import CobroCoactivo.Bo.PlanGeneralImpBO;
+import CobroCoactivo.Exception.PlanGeneralExcepcion;
 import CobroCoactivo.Modelo.EstadoEtapasGenerales;
 import CobroCoactivo.Modelo.EstadoPlanGenerales;
 import CobroCoactivo.Modelo.EtapasGenerales;
@@ -77,7 +78,6 @@ public class BeanPlanGeneral {
     public void init() {
         try {
 
-            setLoginBO(new BeanLogin());
             setRenderFaseGeneral(false);
             setRenderEtapaGeneral(false);
             FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
@@ -107,7 +107,9 @@ public class BeanPlanGeneral {
         try {
 
             getPlanGeneralBO().actualizarFase(this);
-             getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
+            getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage("planMensajeGeneral", new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -123,6 +125,8 @@ public class BeanPlanGeneral {
 
         try {
             getPlanGeneralBO().guardarPlanGeneral(this);
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
@@ -133,6 +137,8 @@ public class BeanPlanGeneral {
     public void actualizarPlanGeneral() {
         try {
             getPlanGeneralBO().actualizarPlanGeneral(this);
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -145,11 +151,11 @@ public class BeanPlanGeneral {
     public void guardarEtapaGeneral() {
         try {
             getPlanGeneralBO().guardarEtapaGeneral(this);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Etapa general creada exitosamente", null));
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#etapaGeneral').modal('hide')");
-
+            throw new PlanGeneralExcepcion("Etapa general creada exitosamente", 1);
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -162,7 +168,8 @@ public class BeanPlanGeneral {
     public void actualizarEtapaGeneral() {
         try {
             getPlanGeneralBO().actualizarEtapaGeneral(this);
-
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -182,7 +189,6 @@ public class BeanPlanGeneral {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
-
     }
 
     public void eventoActualizarEtapa(EtapasGenerales etapasGenerales) {
@@ -190,7 +196,6 @@ public class BeanPlanGeneral {
             setNombreModalTitulo("Actualizar");
             setEstadoButton(false);
             setEtapasGenerales(etapasGenerales);
-
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -211,7 +216,6 @@ public class BeanPlanGeneral {
             setFasesGenerales(new FasesGenerales());
             setRenderDivCambiarArchivo(false);
         }
-
     }
 
     public void cambiarArchivo() {
@@ -231,9 +235,7 @@ public class BeanPlanGeneral {
             } else {
                 fasesGenerales.setObligatorio("FALSE");
             }
-
             setFasesGenerales(fasesGenerales);
-
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
         }
@@ -245,7 +247,6 @@ public class BeanPlanGeneral {
             setRenderFaseGeneral(false);
             setPlanGenerales(planGenerales);
             getPlanGeneralBO().listarEtapaGeneralesPorIdPlanGeneral(this);
-
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -260,7 +261,8 @@ public class BeanPlanGeneral {
             setRenderFaseGeneral(true);
             setEtapasGenerales(etapasGenerales);
             getPlanGeneralBO().listarFasesGeneralesPorEtapa(this);
-
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -273,7 +275,8 @@ public class BeanPlanGeneral {
     public void guardarFasesGenerales() {
         try {
             getPlanGeneralBO().guardarFasesGeneral(this);
-
+        } catch (PlanGeneralExcepcion pge) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pge.getNivelFacesMessage(), "", pge.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
@@ -305,7 +308,6 @@ public class BeanPlanGeneral {
                 out.close();
                 ctx.responseComplete();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));

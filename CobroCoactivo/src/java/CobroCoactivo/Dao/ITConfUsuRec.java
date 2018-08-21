@@ -21,7 +21,6 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
      *
      * @param session
      * @param civConfUsuRec
-     * @param perfilrecurso El Objeto Perfil Recursos a insertar.
      * @return ID único del elemento insertado.
      * @throws Exception La Excepción lanzada en caso de error.
      */
@@ -30,9 +29,8 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
     /**
      * Método para actualizar un Perfil Recursos a la base de datos.
      *
-     * @param perfilrecurso El Objeto Perfil Recursos a actualizar.
-     * @return Retorna verdadero si la actualización fue correcta.
-     * @throws Exception La Excepción lanzada en caso de error.
+     * @param session
+     * @param civConfUsuRec
      */
     @Override
     public void update(Session session, CivConfUsuRec civConfUsuRec);
@@ -43,7 +41,6 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
      *
      * @param session
      * @param idusuario
-     * @param perfil Perfil del Recurso.
      * @return Lista con los Perfil Recursos resultantes de la consulta. Retorna
      * NULL en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.

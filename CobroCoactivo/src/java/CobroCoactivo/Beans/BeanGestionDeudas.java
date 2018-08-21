@@ -7,6 +7,7 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Bo.GestionDeudasBO;
 import CobroCoactivo.Bo.GestionDeudasImpBO;
+import CobroCoactivo.Exception.DeudasException;
 import CobroCoactivo.Modelo.CobroDeudas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.Personas;
@@ -72,11 +73,8 @@ public class BeanGestionDeudas {
         try {
             setTipoBusqueda(tipo);
             getGestionDeudasBO().buscarDeudas(this);
-            if (getListDeudas().size() > 0) {
-                setBusquedaVisible(false);
-            } else {
-
-            }
+        } catch (DeudasException de) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(de.getNivelFacesMessage(), "", de.getMessage()));
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));
@@ -100,6 +98,8 @@ public class BeanGestionDeudas {
         try {
             setDeudas(deudas);
             getGestionDeudasBO().crearExpedienteDeuda(this);
+        } catch (DeudasException de) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(de.getNivelFacesMessage(), "", de.getMessage()));
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error fatal", Log_Handler.solucionError(e)));

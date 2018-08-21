@@ -114,7 +114,7 @@ public class BeanLogin implements Serializable {
 
     private String ejecutarDestino() throws IOException {
         if (getUserEstado() == 3) { //Usuario Por reestablecer credenciales
-            return "/reestablecer?faces-redirect=true";
+            return "/restablecer?faces-redirect=true";
         } else {
             return "/inicio?faces-redirect=true"; //Redirect=true obligatorio para validaciones de filtro
         }
@@ -150,10 +150,14 @@ public class BeanLogin implements Serializable {
                 if (DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(password))) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
                 } else {
-                    getLoginBO().actualizarContraseña(this);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
-                    validarAcceso();
-                    return "/inicio?faces-redirect=true";
+                    if (contraseñaConfirmacion.length() < 6) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "La contraseña tiene que tener min 7 caracteres.", null));
+                    } else {
+                        getLoginBO().actualizarContraseña(this);
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
+                        validarAcceso();
+                        return "/inicio?faces-redirect=true";
+                    }
                 }
             }
         } catch (LoginException e) {
@@ -161,6 +165,7 @@ public class BeanLogin implements Serializable {
             return "";
         } catch (Exception e) {
             e.printStackTrace();
+            Log_Handler.registrarEvento("Error al actualizar contraseña: ", e, Log_Handler.ERROR, getClass(), (getID_Usuario() != null) ? Integer.parseInt(getID_Usuario()) : 0);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
             return "";
@@ -178,11 +183,8 @@ public class BeanLogin implements Serializable {
             if (!jSONObject.isNull("numero")) {
                 return jSONObject.getLong("numero");
             }
-
         }
-
         return null;
-
     }
 
     public Long numeroPagos() {
@@ -195,7 +197,6 @@ public class BeanLogin implements Serializable {
                 if (!jSONObject.isNull("numero")) {
                     return jSONObject.getLong("numero");
                 }
-
             }
 
             return null;

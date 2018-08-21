@@ -3,6 +3,7 @@ package CobroCoactivo.Bo;
 import CobroCoactivo.Beans.BeanGestionPersonas;
 import java.io.Serializable;
 import CobroCoactivo.Dao.*;
+import CobroCoactivo.Exception.PersonasException;
 import CobroCoactivo.Modelo.DatosPersonas;
 import CobroCoactivo.Modelo.Deudas;
 import CobroCoactivo.Modelo.EstadoPersonas;
@@ -178,38 +179,18 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
-            CivPersonas civPersonas = new CivPersonas();
-            CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
-            civTipoDocumentos.setTipdocId(new BigDecimal(bean.getDetallePersona().getTipoDocumentos().getId()));
-            civTipoDocumentos.setTipdocDescripcion(civTipoDocumentos.getTipdocDescripcion());
-            civTipoDocumentos.setTipdocNombrecorto(civTipoDocumentos.getTipdocNombrecorto());
-            civTipoDocumentos.setTipdocCodigo(civTipoDocumentos.getTipdocCodigo());
-            civTipoDocumentos.setTipdocFechainicial(civTipoDocumentos.getTipdocFechainicial());
-            civTipoDocumentos.setTipdocFechafinal(civTipoDocumentos.getTipdocFechafinal());
+            CivPersonas civPersonas = getPersonasDAO().find(session, new BigDecimal(bean.getDetallePersona().getId()));
 
-            CivEstadoPersonas civEstadoPersonas = new CivEstadoPersonas();
-            civEstadoPersonas.setEstperId(new BigDecimal(bean.getDetallePersona().getEstadoPersonas().getId()));
-            civEstadoPersonas.setEstperDescripcion(bean.getDetallePersona().getEstadoPersonas().getDescripcion());
-            civEstadoPersonas.setEstperFechainicial(bean.getDetallePersona().getEstadoPersonas().getFechainicial());
-            civEstadoPersonas.setEstperFechafinal(bean.getDetallePersona().getEstadoPersonas().getFechafinal());
-            civEstadoPersonas.setEstperFechaproceso(bean.getDetallePersona().getEstadoPersonas().getFechaproceso());
+            CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().find(session, new BigDecimal(bean.getDetallePersona().getEstadoPersonas().getId()));
 
-            civPersonas.setPerId(new BigDecimal(bean.getDetallePersona().getId()));
-            civPersonas.setPerDocumento(bean.getDetallePersona().getDocumento());
-            civPersonas.setPerSexo(bean.getDetallePersona().getSexo());
-            civPersonas.setCivTipoDocumentos(civTipoDocumentos);
-            civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1());
             civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2());
-            civPersonas.setPerApellido1(bean.getDetallePersona().getApellido1());
             civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2());
             civPersonas.setCivEstadoPersonas(civEstadoPersonas);
-
             getPersonasDAO().update(session, civPersonas);
             if (civPersonas != null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo la persona correctamente", null));
+                transaction.commit();
+                throw new PersonasException("Se actualizo la persona correctamente", 1);
             }
-
-            transaction.commit();
 
         } finally {
             session.flush();
@@ -245,9 +226,9 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                 bean.getListPersonas().add(persona);
             }
             if (civPersonas == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se encontro la persona en el sistema", null));
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#modalAgregarPersona').modal('show')");
+                throw new PersonasException("No se encontro la persona en el sistema", 2);
             }
         } finally {
             session.flush();
@@ -275,14 +256,11 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             getPersonasDAO().create(session, civPersonas);
             Expedientes expedientes = new Expedientes();
             String nombreExpedientePersona = expedientes.crearExpediente(civPersonas, expedienteDAO);
-
             int registro = -1;
             for (int i = 0; i < bean.getListTipoDatosPersonas().size(); i++) {
                 registro++;
                 if (bean.getListTipoDatosPersonas().get(i).isSelecionado() == true) {
-
                     if (registro == i) {
-
                         CivTipoDatosPersonas civTipoDatosPersonas = new CivTipoDatosPersonas();
                         CivEstadoTipoDatosPersonas civEstadoTipoDatosPersonas = new CivEstadoTipoDatosPersonas();
 
@@ -304,15 +282,13 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                         getDatosPersonasDAO().create(session, civDatosPersonas);
                     }
                 }
-
             }
             transaction.commit();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se guardo la persona exitosamente", null));
+            throw new PersonasException("Se guardo la persona exitosamente", 1);
 
         } finally {
             session.flush();
             session.close();
-
         }
     }
 

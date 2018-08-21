@@ -24,6 +24,7 @@ import CobroCoactivo.Dao.ITPersonas;
 import CobroCoactivo.Dao.ITPrestamoExpHistorial;
 import CobroCoactivo.Dao.ITSolicitudes;
 import CobroCoactivo.Dao.ITUsuarios;
+import CobroCoactivo.Exception.ExpedientesException;
 import CobroCoactivo.Modelo.ArchivoDetExpedientes;
 import CobroCoactivo.Modelo.DetalleExpedientes;
 import CobroCoactivo.Modelo.DetalleSolicitudes;
@@ -34,20 +35,17 @@ import CobroCoactivo.Persistencia.CivDetalleExpedientes;
 import CobroCoactivo.Persistencia.CivDetalleSolicitudes;
 import CobroCoactivo.Persistencia.CivEstadoArchDetExp;
 import CobroCoactivo.Persistencia.CivEstadoDetalleSolicitudes;
-import CobroCoactivo.Persistencia.CivEstadoExpedientes;
 import CobroCoactivo.Persistencia.CivEstadoSolicitudes;
 import CobroCoactivo.Persistencia.CivExpedientes;
 import CobroCoactivo.Persistencia.CivPersonas;
 import CobroCoactivo.Persistencia.CivPrestamoExpHistorial;
 import CobroCoactivo.Persistencia.CivSolicitudes;
-import CobroCoactivo.Persistencia.CivTipoExpedientes;
 import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -97,7 +95,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 Expedientes expedientes = new Expedientes();
                 String nombreExpedientePersona = "";
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se creo el expediente correctamente, la referencia del expediente es el N° de cedula.", null));
+                throw new ExpedientesException("Se creo el expediente correctamente, la referencia del expediente es el N° de cedula.", 1);
             }
         } finally {
             session.flush();
@@ -183,9 +181,9 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 transaction.commit();
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#addArchivo').modal('hide')");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se agregado el archivo correctamente.", null));
+                throw new ExpedientesException("Se agregado el archivo correctamente.", 1);
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Solo se puede cargar archivo pdf", null));
+                throw new ExpedientesException("Solo se puede cargar archivo PDF.", 2);
             }
         } finally {
             session.flush();
@@ -200,21 +198,19 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
             if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
                 Transaction transaction = session.beginTransaction();
                 CivArchivoDetExpedientes civArchivoDetExpedientes = getArchivoDetExpedientesDAO().find(session, new BigDecimal(bean.getArchivoDetExpedientes().getId()));
-                CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(session, new BigDecimal(bean.getIdDetExpediente()));
                 civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
                 CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
                 civEstadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
-                civArchivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
                 civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
                 civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                civArchivoDetExpedientes.setArcdetexpUbicacion(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
                 InputStream stream = bean.getFile().getInputStream();
-                Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(stream, new File(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 getArchivoDetExpedientesDAO().update(session, civArchivoDetExpedientes);
                 transaction.commit();
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#addArchivo').modal('hide')");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se actualizo el archivo correctamente.", null));
+                throw new ExpedientesException("Se actualizo el archivo correctamente.", 1);
             }
         } finally {
             session.flush();
@@ -255,7 +251,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
-
             CivSolicitudes civSolicitudes = new CivSolicitudes();
             CivEstadoSolicitudes civEstadoSolicitudes = new CivEstadoSolicitudes();
             civEstadoSolicitudes.setEstsolId(BigDecimal.valueOf(3));
@@ -279,9 +274,9 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
             }
             transaction.commit();
             if (civDetalleSolicitudes != null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha enviado la solicitud.", null));
                 bean.setPnlSubcarpetas(false);
                 bean.setPnlExpSelect(false);
+                throw new ExpedientesException("Se ha enviado la solicitud.", 1);
             }
         } finally {
             session.flush();
@@ -389,11 +384,10 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                     }
                 }
             }
-            bean.init();
             transaction.commit();
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalSolicitudExpediente').modal('hide')");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Su accion se genero correctamente.", null));
+            throw new ExpedientesException("Su accion se genero correctamente.", 1);
         } finally {
             session.flush();
             session.close();

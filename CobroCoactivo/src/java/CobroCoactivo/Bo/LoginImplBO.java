@@ -119,7 +119,7 @@ public class LoginImplBO implements LoginBO {
                 dias++;
                 if (dias > 45) {
                     //Se cambia el estado del usuario a estado 3 (Restablecer credenciales)
-                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().consultarModuloById(session, 3);
+                    CivEstadoUsuarios civEstadousuarios = getEstadosUsuariosDAO().find(session, new BigDecimal(3));
                     login.setCivEstadoUsuarios(civEstadousuarios);
                     getUsuariosDAO().update(session, login);
                     obj.setUserEstado(3);
@@ -156,8 +156,8 @@ public class LoginImplBO implements LoginBO {
     private void registrarIntento(int usuario) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
+            Transaction transaction = session.beginTransaction();
             CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
-
             if (aut == null) {
                 aut = new CivAttempts();
                 CivUsuarios usu = getUsuariosDAO().consultarIdPer(session, usuario);
@@ -190,13 +190,11 @@ public class LoginImplBO implements LoginBO {
                 // aut.setTppUltimoIntento(new Date());
                 // getAttemptsDAO().update(aut);
             }
-
+            transaction.commit();
         } finally {
             session.flush();
             session.close();
-
         }
-
     }
 
     /**
@@ -208,14 +206,20 @@ public class LoginImplBO implements LoginBO {
      */
     public void reestablecerIntentosUsuario(int usuario) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
-        if (aut == null) {
-            throw new Exception("Usuario requerido no registrado en el historial de intentos");
-        } else {
-            aut.setTtpIntentos(new BigDecimal(0 + ""));
-            getAttemptsDAO().update(session, aut);
+        try {
+            Transaction transaction = session.beginTransaction();
+            CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
+            if (aut == null) {
+                throw new Exception("Usuario requerido no registrado en el historial de intentos");
+            } else {
+                aut.setTtpIntentos(new BigDecimal(0 + ""));
+                getAttemptsDAO().update(session, aut);
+            }
+            transaction.commit();
+        } finally {
+            session.flush();
+            session.close();
         }
-        session.close();
     }
 
     @Override
