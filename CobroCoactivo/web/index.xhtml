@@ -54,27 +54,23 @@
                     <small>Aplicación para los procesos misionales del Tránsito</small>
                 </center>
             </div>
-
             <div class="row">
                 &nbsp;
             </div>
-
             <div class="row">
                 <div class="col-md-4">
-
                 </div>
                 <div class="col-md-4">
                     <center><h3>Inicio de Sesión</h3><hr/></center>
-
                     <h:form class="form-signin" id="loginFrm">
                         <div class="form-group">
                             <div class="form-group has-feedback left-inner-addon">
                                 <!-- <p:watermark for="txtuser" value="USUARIO" id="watermark1" />
                                 --> 
                                 <h:inputText  autocomplete="false" class="form-control" id="txtuser_" style="display: none"/>
-                                <h:inputText value="#{loginBean.user}" style="text-transform: uppercase" requiredMessage="Por favor ingrese su nombre de usuario." autocomplete="false" class="form-control" id="txtuser" required="true" maxlength="20">
-
-                                </h:inputText><!--VALUE OK-->
+                                <h:inputText value="#{loginBean.user}" style="text-transform: uppercase" requiredMessage="Por favor ingrese su nombre de usuario." 
+                                             autocomplete="false" class="form-control" id="txtuser" required="true" maxlength="20">
+                                </h:inputText>
                                 <i class="form-control-feedback glyphicon glyphicon-user pull-left"></i>
                             </div>
                         </div>
@@ -83,20 +79,20 @@
                                 <!-- <p:watermark for="txtpass" value="PASSWORD" id="watermark2" />  -->
                                 <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
                                 <h:inputSecret autocomplete="false" id="txtpass_" class="form-control" style="display: none"/>
-                                <h:inputSecret value="#{loginBean.password}" validatorMessage="Formato de contraseña inválida. No se permiten carácteres especiales." requiredMessage="Por favor ingrese su contraseña." autocomplete="false" id="txtpass" class="form-control" required="true" maxlength="20">
-
+                                <h:inputSecret value="#{loginBean.password}" validatorMessage="Formato de contraseña inválida. No se permiten carácteres especiales." 
+                                               requiredMessage="Por favor ingrese su contraseña." autocomplete="false" id="txtpass" class="form-control" required="true" maxlength="20">
                                 </h:inputSecret>
-                                <!--VALUE OK-->
                                 <i class="form-control-feedback glyphicon glyphicon-lock"></i>
                             </div>
                         </div>
                         <div class="form-group">
                             <center>
-                                <h:commandButton action="#{loginBean.autenticarUsuario}" class="btn btn-primary btn-submit right" value="Iniciar Sesión"/>
+                                <h:commandButton action="#{loginBean.autenticarUsuario}" class="btn btn-primary btn-submit right" value="Iniciar Sesión">
+                                    <f:ajax execute="loginFrm:txtuser loginFrm:txtpass"></f:ajax>
+                                </h:commandButton>
                             </center>
                         </div>
                         <div id="respuesta"  name="respuesta"></div>
-
                         <div class="form-group">
                             <center>
                                 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
@@ -104,14 +100,11 @@
                         </div>
                     </h:form><!-- /form -->
                 </div>
-
             </div>
-
         </div>
         <footer class="footer">
             <p align="center" class="text-muted"> &copy; La Civica Impresores SAS</p>
         </footer>
-
         <!-- Bootstrap 3.3.5 -->
         <script src="#{request.contextPath}/recursos/js/bootstrap.min.js"></script>
         <script src="#{request.contextPath}/recursos/js/paste.js"></script>
