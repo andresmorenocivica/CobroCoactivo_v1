@@ -16,5 +16,4 @@ import org.hibernate.Session;
  */
 public interface ITDocumentoGenerales extends ITGeneryHibernateDao<CivDocumenGenerales, Integer>{
     
-    CivDocumenGenerales getCivDocumentoGeneral(Session session , int idDocumentoGeneral) throws Exception ;
 }

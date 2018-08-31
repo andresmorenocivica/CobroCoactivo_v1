@@ -117,6 +117,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoConceptos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivConfUsuRec.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoValorTipoDetcobro.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivEstadoExcepcion.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoFasesGenerales.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoMovimientos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivTipoDetalleExpedientes.hbm.xml"/>
@@ -125,6 +126,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoDetalleSolicitudes.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivDatosPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoDetalleExpedientes.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivExcepciones.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivPlanTrabajos.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoTipoDetalleCobro.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoExpedientes.hbm.xml"/>
@@ -139,6 +141,7 @@ Contributor(s):
     <mapping resource="CobroCoactivo/Persistencia/CivPersonas.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoPerfiles.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEtapasTrabajos.hbm.xml"/>
+    <mapping resource="CobroCoactivo/Persistencia/CivTipoExcepcion.hbm.xml"/>
     <mapping resource="CobroCoactivo/Persistencia/CivEstadoEntidades.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

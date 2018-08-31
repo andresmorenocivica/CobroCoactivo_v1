@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivEstadoMovimientos;
  *
  * @author AMORENO
  */
-public class DaoEstadoMovimientos extends ImpGeneryHibernateDao<CivEstadoMovimientos, Integer> implements ITEstadoMovimientos{
-    
+public class DaoEstadoMovimientos extends ImpGeneryHibernateDao<CivEstadoMovimientos, Integer> implements ITEstadoMovimientos {
+
 }

@@ -24,7 +24,7 @@
     
     <error-page>
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/SesionExpirada.jsp</location>
+        <location>/faces/SesionExpirada.jsp</location>
     </error-page>
     <error-page>
         <exception-type>javax.faces.view.facelets.TagAttributeException</exception-type>

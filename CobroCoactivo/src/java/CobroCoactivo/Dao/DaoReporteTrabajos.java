@@ -7,12 +7,11 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivReporteTrabajos;
-import java.io.Serializable;
 
 /**
  *
  * @author jvergara
  */
-public class DaoReporteTrabajos extends ImpGeneryHibernateDao<CivReporteTrabajos, Integer> implements ITReporteTrabajos{
-    
+public class DaoReporteTrabajos extends ImpGeneryHibernateDao<CivReporteTrabajos, Integer> implements ITReporteTrabajos {
+
 }

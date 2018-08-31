@@ -7,12 +7,11 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivActosAdministractivos;
-import java.io.Serializable;
 
 /**
  *
  * @author jvergara
  */
-public class DaoActosAdministractivo extends ImpGeneryHibernateDao<CivActosAdministractivos, Integer> implements ITActosAdministractivo{
-    
+public class DaoActosAdministractivo extends ImpGeneryHibernateDao<CivActosAdministractivos, Integer> implements ITActosAdministractivo {
+
 }

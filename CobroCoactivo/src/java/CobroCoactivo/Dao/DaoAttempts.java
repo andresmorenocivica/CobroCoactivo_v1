@@ -7,14 +7,9 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivAttempts;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -22,43 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class DaoAttempts extends ImpGeneryHibernateDao<CivAttempts, Integer> implements ITAttempts {
 
-    /**
-     *
-     * @param attp
-     * @return
-     * @throws Exception
-     */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public long insert(Session session, CivAttempts attp) throws Exception {
-        return Integer.parseInt(session.save(attp).toString());
-    }
-
-    /**
-     *
-     * @param session
-     * @param attp
-     * @return
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void update(Session session, CivAttempts attp){
-        session.update(attp);
-        
-    }
-
-    /**
-     *
-     * @param id_usuario
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public CivAttempts consultarIntentos(Session session, int id_usuario) throws Exception {
-        return (CivAttempts) session.createCriteria(CivAttempts.class)
-                .add(Restrictions.eq("civUsuarios.usuId", new BigDecimal(id_usuario)))
-                .uniqueResult();
+    public CivAttempts consultarIntentosByUser(Session session, int idUsuario) throws Exception {
+        String hql = "from CivAttempts where civUsuarios.usuId =:idUsuario";
+        Query query = session.createQuery(hql);
+        query.setParameter("idUsuario", new BigDecimal(idUsuario));
+        if (query.list().size() > 0) {
+            return (CivAttempts) query.list().get(0);
+        }
+        return null;
     }
 
 }

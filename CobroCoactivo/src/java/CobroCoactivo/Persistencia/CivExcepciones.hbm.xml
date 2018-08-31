@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/08/2018 09:56:14 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivExcepciones" table="CIV_EXCEPCIONES" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="excId" type="big_decimal">
+            <column name="EXC_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="civUsuarios" class="CobroCoactivo.Persistencia.CivUsuarios" fetch="select">
+            <column name="EXC_USU_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civTipoExcepcion" class="CobroCoactivo.Persistencia.CivTipoExcepcion" fetch="select">
+            <column name="EXC_TIPEXC_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civMovimientos" class="CobroCoactivo.Persistencia.CivMovimientos" fetch="select">
+            <column name="EXC_MOV_FK" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="civEstadoExcepcion" class="CobroCoactivo.Persistencia.CivEstadoExcepcion" fetch="select">
+            <column name="EXC_ESTEXC_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="civArchivoDetExpedientes" class="CobroCoactivo.Persistencia.CivArchivoDetExpedientes" fetch="select">
+            <column name="EXC_ARCDETEXP_FK" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="excFechaproceso" type="date">
+            <column name="EXC_FECHAPROCESO" length="7" />
+        </property>
+        <property name="excFechaRadicado" type="date">
+            <column name="EXC_FECHA_RADICADO" length="7" not-null="true" />
+        </property>
+        <property name="excNumeroRadicado" type="string">
+            <column name="EXC_NUMERO_RADICADO" length="100" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

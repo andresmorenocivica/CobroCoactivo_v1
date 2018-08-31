@@ -18,8 +18,8 @@ import org.hibernate.Session;
  * @author JefreySistemas
  */
 public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
-    
-    public CivUsuarios getCivUsuario (Session session , int idpersona) throws Exception;
+
+    public CivUsuarios getCivUsuario(Session session, int idpersona) throws Exception;
 
     /**
      * Valida el usuario y la contraseña. Usado para el inicio de sesión
@@ -39,14 +39,7 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivUsuarios consultarUsuarioBy(Session session,int id) throws Exception;
-
-    /**
-     * Retorna el listado de todos los Usuarios de la base de datos.
-     *
-     * @return @throws Exception La Excepción lanzada en caso de error.
-     */
-    public List<CivUsuarios> getAll(Session session) throws Exception;
+    public CivUsuarios consultarUsuarioBy(Session session, int id) throws Exception;
 
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un
@@ -57,27 +50,7 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * en caso de no encontrarse resultados.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public List<CivUsuarios> listarUsuarios(String Usuario) throws Exception;
-
-    /**
-     * Método para insertar un Usuario de la base de datos.
-     *
-     * @param civUsuario El Objeto Usuario a insertar.
-     * @return ID único del elemento insertado.
-     * @throws Exception La Excepción lanzada en caso de error.
-     */
-    public long insert(Session session,CivUsuarios civUsuario) throws Exception;
-
-    /**
-     * Método para actualizar un Usuario de la base de datos.
-     *
-     * @param civUsuario El Objeto Usuario a actualizar.
-     * @return ID único del elemento insertado.
-     * @throws Exception La Excepción lanzada en caso de error.
-     */
-    
-    
-    public void update(Session session,CivUsuarios civUsuario) throws Exception;
+    public List<CivUsuarios> listarUsuarios(Session session, String Usuario) throws Exception;
 
     /**
      * Retorna el listado de los Datos de Vehículos correspondientes a un
@@ -87,7 +60,7 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * @return Retorna verdadero si la actualización fue correcta.
      * @throws Exception La Excepción lanzada en caso de error.
      */
-    public CivUsuarios consultarUsuarioByNombre(Session session,String Nombre) throws Exception;
+    public CivUsuarios consultarUsuarioByNombre(Session session, String Nombre) throws Exception;
 
     /**
      *
@@ -95,15 +68,15 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * @return
      * @throws Exception
      */
-    public ArrayList<String> consultar_HPAS(Session session,int id_usuario) throws Exception;
-    
+    public ArrayList<String> consultar_HPAS(Session session, int id_usuario) throws Exception;
+
     /**
      *
      * @param id_usuario
      * @return
      * @throws Exception
      */
-    public List<CivUspHistoria> consultarEstado_HPAS(Session session,int id_usuario) throws Exception;
+    public List<CivUspHistoria> consultarEstado_HPAS(Session session, int id_usuario) throws Exception;
 
     /**
      *
@@ -111,24 +84,25 @@ public interface ITUsuarios extends ITGeneryHibernateDao<CivUsuarios, Integer> {
      * @return
      * @throws Exception
      */
-    public long insertHisPass(Session session,CivUspHistoria uspHistoria) throws Exception;
-    
+    public long insertHisPass(Session session, CivUspHistoria uspHistoria) throws Exception;
+
     /**
      *
      * @param uspHistoria
      * @return
      * @throws Exception
      */
-    public boolean updateHisPass(Session session,CivUspHistoria uspHistoria) throws Exception;
-    
-    public Date consultarFechaUltimoPassword(Session session,int id_usuario) throws Exception;
-    
+    public boolean updateHisPass(Session session, CivUspHistoria uspHistoria) throws Exception;
+
+    public Date consultarFechaUltimoPassword(Session session, int id_usuario) throws Exception;
+
     /**
      * Esta funcion se utiliza para retornar el id del usuario
+     *
      * @param id
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    public CivUsuarios consultarIdPer(Session session,int id) throws Exception;
-  
+    public CivUsuarios consultarIdPer(Session session, int id) throws Exception;
+
 }

@@ -8,10 +8,8 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import java.math.BigDecimal;
 import java.util.List;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import CobroCoactivo.Persistencia.CivEstadoUsuarios;
-import java.io.Serializable;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -27,10 +25,6 @@ public class DaoEstadoUsuarios extends ImpGeneryHibernateDao<CivEstadoUsuarios, 
         return Integer.parseInt(session.save(estadousuarios).toString());
     }
 
-    @Override
-    public List<CivEstadoUsuarios> listAll(Session session) throws Exception {
-        return session.createCriteria(CivEstadoUsuarios.class).list();
-    }
 
     @Override
     public CivEstadoUsuarios consultarModuloById(Session session, int id) throws Exception {

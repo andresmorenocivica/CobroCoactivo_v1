@@ -7,12 +7,11 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDetallePagos;
-import java.io.Serializable;
 
 /**
  *
  * @author jvergara
  */
-public class DaoDetallesPagos extends ImpGeneryHibernateDao<CivDetallePagos, Integer> implements ITDetallePagos{
-    
+public class DaoDetallesPagos extends ImpGeneryHibernateDao<CivDetallePagos, Integer> implements ITDetallePagos {
+
 }

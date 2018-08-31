@@ -6,9 +6,7 @@
 package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
-import java.util.List;
 import CobroCoactivo.Persistencia.CivEstadoUsuarios;
-import java.io.Serializable;
 import org.hibernate.Session;
 
 /**
@@ -18,8 +16,6 @@ import org.hibernate.Session;
 public interface ITEstadoUsuarios extends ITGeneryHibernateDao<CivEstadoUsuarios, Integer> {
 
     public long insert(Session session, CivEstadoUsuarios estadousuarios) throws Exception;
-
-    public List<CivEstadoUsuarios> listAll(Session session) throws Exception;
 
     public CivEstadoUsuarios consultarModuloById(Session session, int id) throws Exception;
 }

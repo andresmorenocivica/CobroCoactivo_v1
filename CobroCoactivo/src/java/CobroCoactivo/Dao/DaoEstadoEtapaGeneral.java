@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivEstadoEtapasGenerales;
  *
  * @author jvergara
  */
-public class DaoEstadoEtapaGeneral extends ImpGeneryHibernateDao<CivEstadoEtapasGenerales, Integer> implements ITEstadoEtapageneral{
-    
+public class DaoEstadoEtapaGeneral extends ImpGeneryHibernateDao<CivEstadoEtapasGenerales, Integer> implements ITEstadoEtapageneral {
+
 }

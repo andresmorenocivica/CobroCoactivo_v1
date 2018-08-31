@@ -7,18 +7,11 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoPersonas;
-import java.math.BigDecimal;
-import java.util.List;
-import org.hibernate.Session;
 
 /**
  *
  * @author emadrid
  */
-public interface ITEstadoPersonas  extends ITGeneryHibernateDao<CivEstadoPersonas,Integer>{
-
-    public CivEstadoPersonas getEstadoPersona(BigDecimal tipoDocumento) throws Exception;
-
-    public List<CivEstadoPersonas> listAll(Session session) throws Exception;
+public interface ITEstadoPersonas extends ITGeneryHibernateDao<CivEstadoPersonas, Integer> {
 
 }

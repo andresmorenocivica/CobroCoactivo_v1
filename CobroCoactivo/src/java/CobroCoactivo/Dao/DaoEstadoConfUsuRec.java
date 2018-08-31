@@ -7,11 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoConfusurec;
-import CobroCoactivo.Utility.HibernateUtil;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import org.hibernate.Query;
-import org.hibernate.Session;
 
 /**
  *
@@ -19,17 +14,5 @@ import org.hibernate.Session;
  */
 public class DaoEstadoConfUsuRec extends ImpGeneryHibernateDao<CivEstadoConfusurec, Integer> implements ITEstadoConfUsuRec {
 
-    @Override
-    public CivEstadoConfusurec getEstadoConfUsuRec(BigDecimal idEstado) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "from CivEstadoConfusurec where estconfusurecId=:idEstado";
-        Query query = session.createQuery(hql);
-        query.setParameter("idEstado", idEstado);
-        if (query.list().size() > 0) {
-            return (CivEstadoConfusurec) query.list().get(0);
-        }
-        session.close();
-        return null;
-    }
 
 }

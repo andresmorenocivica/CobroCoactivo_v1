@@ -17,25 +17,6 @@ import org.hibernate.Session;
 public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Integer> {
 
     /**
-     * Método para insertar un Perfil Recursos a la base de datos.
-     *
-     * @param session
-     * @param civConfUsuRec
-     * @return ID único del elemento insertado.
-     * @throws Exception La Excepción lanzada en caso de error.
-     */
-    public int insert(Session session, CivConfUsuRec civConfUsuRec) throws Exception;
-
-    /**
-     * Método para actualizar un Perfil Recursos a la base de datos.
-     *
-     * @param session
-     * @param civConfUsuRec
-     */
-    @Override
-    public void update(Session session, CivConfUsuRec civConfUsuRec);
-
-    /**
      * Retorna el listado de los Perfieles de Recursos correspondientes a un
      * formulario de la base de datos.
      *
@@ -49,9 +30,9 @@ public interface ITConfUsuRec extends ITGeneryHibernateDao<CivConfUsuRec, Intege
 
     public List<CivConfUsuRec> listPerfilRecurso(Session session) throws Exception;
 
-    public List<CivConfUsuRec> getConfUsuRec(int id) throws Exception;
+    public List<CivConfUsuRec> getConfUsuRec(Session session, int id) throws Exception;
 
-    public List<CivConfUsuRec> getConfUsuRec(int idRecurso, int idUsuario) throws Exception;
+    public List<CivConfUsuRec> getConfUsuRec(Session session, int idRecurso, int idUsuario) throws Exception;
 
-    public List<CivConfUsuRec> getConfUsuRecByUser(int idUsuario) throws Exception;
+    public List<CivConfUsuRec> getConfUsuRecByUser(Session session, int idUsuario) throws Exception;
 }

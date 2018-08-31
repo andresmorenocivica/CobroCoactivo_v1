@@ -22,7 +22,7 @@
                                     <div class="col-sm-10" id="divArchivo">
                                         <div class="form-group">
                                             <label> Agregar Archivo</label>
-                                            <h:inputFile a:accept=".pdf" value="#{gestionExpedientesBean.file}" id="prueba" />
+                                            <h:inputFile a:accept=".pdf" value="#{gestionExpedientesBean.file}" id="file" />
                                             <p class="help-block">.pdf</p>
                                         </div>  
                                     </div>
@@ -38,14 +38,14 @@
                                             <h:panelGrid id="pnlGuardarArchivo">
                                                 <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnGuardarFile}">
                                                     <h:commandLink value="Guardar" id="btnGuardarArchivo" class="btn btn-success">
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.guardarArchivo()}" execute="frmExpedientes:prueba"/>
+                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.guardarArchivo()}" execute="frmExpedientes:file"/>
                                                     </h:commandLink>
                                                 </h:panelGroup>
                                             </h:panelGrid>
                                             <h:panelGrid id="pnlActualizarArchivo">
                                                 <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnActualizarFile}" >
                                                     <h:commandLink value="Actualizar" id="btnActualizarArchivo" class="btn btn-success">
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.updateArchivo()}" execute="frmExpedientes:prueba" render="frmExpedientes:pnlArchivo"/>
+                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.updateArchivo()}" execute="frmExpedientes:file" render="frmExpedientes:pnlArchivo"/>
                                                     </h:commandLink>
                                                 </h:panelGroup>
                                             </h:panelGrid>

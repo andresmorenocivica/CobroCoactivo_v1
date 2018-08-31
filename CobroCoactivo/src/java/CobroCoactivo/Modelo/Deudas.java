@@ -47,7 +47,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.referenciaUnica = civDeudas.getDeuRefUnica().longValue();
 
     }
@@ -58,7 +58,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
     }
 
@@ -68,7 +68,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
 
@@ -80,7 +80,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
@@ -93,7 +93,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
@@ -106,7 +106,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
         this.personas = new Personas(civPersonas);
@@ -123,7 +123,7 @@ public class Deudas implements java.io.Serializable {
         this.Valor = civDeudas.getDeuValor().intValue();
         this.Saldo = civDeudas.getDeuSaldo().intValue();
         this.Fechaproceso = civDeudas.getDeuFechaproceso();
-        this.Referencia = civDeudas.getDeuRefencia();
+        this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);

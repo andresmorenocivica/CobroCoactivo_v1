@@ -131,4 +131,7 @@ Contributor(s):
     <table-filter match-name="CIV_FINANCIACION"/>
     <table-filter match-name="CIV_ESTADO_FINANCIACION"/>
     <table-filter match-name="CIV_ACTOS_ADMINISTRACTIVOS"/>
+    <table-filter match-name="CIV_EXCEPCIONES"/>
+    <table-filter match-name="CIV_ESTADO_EXCEPCION"/>
+    <table-filter match-name="CIV_TIPO_EXCEPCION"/>
 </hibernate-reverse-engineering>

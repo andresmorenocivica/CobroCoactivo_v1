@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivModulos;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.util.List;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -19,8 +18,7 @@ import org.hibernate.Session;
 public class DaoModulos extends ImpGeneryHibernateDao<CivModulos, Integer> implements ITModulos {
 
     @Override
-    public List<CivModulos> getModulosByUsuario(int idUsuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivModulos> getModulosByUsuario(Session session, int idUsuario) throws Exception {
         String sql = "SELECT DISTINCT M.*\n"
                 + "FROM CIV_CONF_USU_REC CF\n"
                 + "INNER JOIN CIV_RECURSOS R ON R.REC_ID = CF.CONFUSUREC_RECURSO_FK AND R.REC_ESTADO_FK=1\n"
@@ -32,7 +30,6 @@ public class DaoModulos extends ImpGeneryHibernateDao<CivModulos, Integer> imple
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 

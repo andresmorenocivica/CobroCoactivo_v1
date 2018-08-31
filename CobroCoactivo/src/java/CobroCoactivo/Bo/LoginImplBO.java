@@ -68,7 +68,6 @@ public class LoginImplBO implements LoginBO {
 
     /**
      *
-     * @throws Exception
      */
     public LoginImplBO() {
         loginDAO = new DaoLogin();
@@ -157,7 +156,7 @@ public class LoginImplBO implements LoginBO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
-            CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
+            CivAttempts aut = getAttemptsDAO().consultarIntentosByUser(session, usuario);
             if (aut == null) {
                 aut = new CivAttempts();
                 CivUsuarios usu = getUsuariosDAO().consultarIdPer(session, usuario);
@@ -208,7 +207,7 @@ public class LoginImplBO implements LoginBO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Transaction transaction = session.beginTransaction();
-            CivAttempts aut = getAttemptsDAO().consultarIntentos(session, usuario);
+            CivAttempts aut = getAttemptsDAO().consultarIntentosByUser(session, usuario);
             if (aut == null) {
                 throw new Exception("Usuario requerido no registrado en el historial de intentos");
             } else {

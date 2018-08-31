@@ -88,7 +88,7 @@ public class BeanGestionPersonas implements Serializable {
             }
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prueba", Log_Handler.solucionError(e)));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
     }
@@ -119,7 +119,7 @@ public class BeanGestionPersonas implements Serializable {
         } catch (PersonasException pe) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            Log_Handler.registrarEvento("Error al buscar persona: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -148,7 +148,7 @@ public class BeanGestionPersonas implements Serializable {
         } catch (PersonasException pe) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            Log_Handler.registrarEvento("Error al editar datos de la persona: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }
@@ -157,12 +157,10 @@ public class BeanGestionPersonas implements Serializable {
     public void savePersona() {
         try {
             getGestionPersonasBO().guardarPersona(this);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("$('#modalAgregarPersona').modal('hide')");
         } catch (PersonasException pe) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(pe.getNivelFacesMessage(), "", pe.getMessage()));
         } catch (Exception e) {
-            Log_Handler.registrarEvento("Error al guardar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            Log_Handler.registrarEvento("Error al guardar datos de la persona: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
         }

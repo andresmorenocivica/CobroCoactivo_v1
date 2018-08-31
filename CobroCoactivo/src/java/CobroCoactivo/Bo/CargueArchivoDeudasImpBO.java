@@ -129,7 +129,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                     int tipoPlano = nombreArchivo.equals("PlanoDeudasImpuesto") ? 1 : (nombreArchivo.equals("PlanoDeudasComparendo") ? 2 : 0);
                     CivPlanTrabajos civPlanTrabajos = null;
                     if (tipoPlano != 0) {
-                        civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(tipoPlano == 1 ? "DERECHO DE TRANSITO" : (tipoPlano == 2 ? "COMPARENDO" : ""));//plan de trabajo impuesto
+                        civPlanTrabajos = getPlanTranajoDAO().getPlanTrabajo(session, tipoPlano == 1 ? "DERECHO DE TRANSITO" : (tipoPlano == 2 ? "COMPARENDO" : ""));//plan de trabajo impuesto
                     }
                     boolean datosGuardados = false;
                     if (civPlanTrabajos != null) {
@@ -246,14 +246,14 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                     civPersonas.setPerDocumento(personas.getDocumento());
                     civPersonas.setPerSexo(personas.getSexo());
                     civPersonas.setPerFechaproceso(new Date());
-                    civPersonas.setCivEstadoPersonas(getEstadoPersonaDAO().getEstadoPersona(BigDecimal.ONE));
+                    civPersonas.setCivEstadoPersonas(getEstadoPersonaDAO().find(session, BigDecimal.ONE));
                     getPersonaDAO().create(session, civPersonas);
                 }
             }
             Expedientes expedientes = new Expedientes();
             nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedientesDAO());
             CivDeudas civDeudas = new CivDeudas();
-            civDeudas.setDeuRefencia(referencia);
+            civDeudas.setDeuReferencia(referencia);
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat formatterVigencia = new SimpleDateFormat("yyyy");
             civDeudas.setDeuFechadeuda(formatter.parse(fecha));
@@ -278,7 +278,7 @@ public class CargueArchivoDeudasImpBO implements CargueArchivoDeudasBO {
                 CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
                 civDetalleExpedientes.setDetexpFechaproceso(new Date());
                 civDetalleExpedientes.setCivDeudas(civDeudas);
-                civDetalleExpedientes.setDetexpDescripcion(civDeudas.getDeuRefencia());
+                civDetalleExpedientes.setDetexpDescripcion(civDeudas.getDeuReferencia());
                 CivEstadoDetalleExpedientes civEstadoDetalleExpedientes = new CivEstadoDetalleExpedientes();
                 civEstadoDetalleExpedientes.setEstdetexpId(BigDecimal.ONE);
                 civDetalleExpedientes.setCivEstadoDetalleExpedientes(civEstadoDetalleExpedientes);

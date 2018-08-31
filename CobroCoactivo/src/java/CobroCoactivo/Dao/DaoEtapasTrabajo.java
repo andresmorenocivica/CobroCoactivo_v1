@@ -7,11 +7,9 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEtapasTrabajos;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 /**
@@ -22,8 +20,8 @@ public class DaoEtapasTrabajo extends ImpGeneryHibernateDao<CivEtapasTrabajos, I
 
     @Override
     public List<CivEtapasTrabajos> listarEtapasTrabajoByPlantrabajo(Session session, int idPlanTrabajo) throws Exception {
-        String sql = "FROM CivEtapasTrabajos WHERE civPlanTrabajos.platraId =:platraId and civEstadoEtapaTrabajos.estetatraId=1 ORDER BY etatraObligatorio ,etatraPrioridad";
-        Query query = session.createQuery(sql);
+        String hql = "FROM CivEtapasTrabajos WHERE civPlanTrabajos.platraId =:platraId and civEstadoEtapaTrabajos.estetatraId=1 ORDER BY etatraObligatorio ,etatraPrioridad";
+        Query query = session.createQuery(hql);
         query.setParameter("platraId", new BigDecimal(idPlanTrabajo));
         if (query.list().size() > 0) {
             return query.list();

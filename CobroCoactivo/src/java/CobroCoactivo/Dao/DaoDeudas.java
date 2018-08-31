@@ -23,24 +23,20 @@ import org.hibernate.Session;
 public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> implements ITDeudas {
 
     @Override
-    public List<CivDeudas> listarDeudas(int Id_personas) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_PER_FK =:idPersona";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivDeudas.class);
+    public List<CivDeudas> listarDeudas(Session session, int Id_personas) throws Exception {
+        String hql = "from CivDeudas where civPersonas.perId =:idPersona";
+        Query query = session.createQuery(hql);
         query.setBigDecimal("idPersona", new BigDecimal(Id_personas));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
     public List<CivDeudas> listarDeudasByRefenciaUnica(Session session, Long referenciaUnica) throws Exception {
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_REF_UNICA =:referenciaUnica";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivDeudas.class);
+        String hql = "from CivDeudas where deuRefUnica =:referenciaUnica";
+        Query query = session.createQuery(hql);
         query.setParameter("referenciaUnica", new BigDecimal(referenciaUnica));
         if (query.list().size() > 0) {
             return query.list();
@@ -49,10 +45,9 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByRefencia(Session session, String referencia) throws Exception {
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_REFENCIA =:referencia";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivDeudas.class);
+    public List<CivDeudas> listarDeudasByReferencia(Session session, String referencia) throws Exception {
+        String hql = "from CivDeudas where deuReferencia=:referencia";
+        Query query = session.createQuery(hql);
         query.setString("referencia", referencia);
         if (query.list().size() > 0) {
             return query.list();
@@ -62,10 +57,9 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public List<CivDeudas> listarDeudasByTipo(Session session , int tipoDeudas) throws Exception {
-        String sql = "SELECT * FROM CIV_DEUDAS WHERE DEU_TIPDEU_FK=:tipoDeuda";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivDeudas.class);
+    public List<CivDeudas> listarDeudasByTipo(Session session, int tipoDeudas) throws Exception {
+        String hql = "from CivDeudas where civTipoDeudas.tipdeuId =: tipoDeuda";
+        Query query = session.createQuery(hql);
         query.setBigDecimal("tipoDeuda", new BigDecimal(tipoDeudas));
         if (query.list().size() > 0) {
             return query.list();
@@ -88,13 +82,11 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public long countDeudas(long idPlanTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public long countDeudas(Session session, long idPlanTrabajo) throws Exception {
         String hql = "Select count(*) from CivDeudas where civPlanTrabajos.platraId = :idPlanTrabajo and civEstadoDeudas.estdeuId = 1";
         Query query = session.createQuery(hql);
         query.setParameter("idPlanTrabajo", new BigDecimal(idPlanTrabajo));
         long cantidad = (long) query.list().get(0);
-        session.close();
         return cantidad;
     }
 
@@ -110,8 +102,7 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
     }
 
     @Override
-    public long countDeudasEtapa(int idPlanTrabajo, int idEtapaTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public long countDeudasEtapa(Session session, int idPlanTrabajo, int idEtapaTrabajo) throws Exception {
         long cantidad = 0;
         String sql = "SELECT COUNT(M.MOV_DEUDA_FK)\n"
                 + "FROM CIV_MOVIMIENTOS M\n"
@@ -124,13 +115,11 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         if (query.list().size() > 0) {
             cantidad = Long.parseLong(query.list().get(0).toString());
         }
-        session.close();
         return cantidad;
     }
 
     @Override
-    public long countDeudasEtapaFases(int idPlanTrabajo, int idEtapaTrabajo, int idFaseTrabajo) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public long countDeudasEtapaFases(Session session, int idPlanTrabajo, int idEtapaTrabajo, int idFaseTrabajo) throws Exception {
         long cantidad = 0;
         String sql = "SELECT COUNT(M.MOV_DEUDA_FK)\n"
                 + "FROM CIV_MOVIMIENTOS M\n"
@@ -144,7 +133,6 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         if (query.list().size() > 0) {
             cantidad = Long.parseLong(query.list().get(0).toString());
         }
-        session.close();
         return cantidad;
     }
 
@@ -170,9 +158,6 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
         if (query.uniqueResult() != null) {
             return (CivDeudas) query.uniqueResult();
         }
-
         return null;
-
     }
-
 }

@@ -160,7 +160,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
                 verDeuda(beanGestionCargarPersonas);
                 for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
-                    List<CivDeudas> listDeudas = getItDeudas().listarDeudasByRefencia(session, beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                    List<CivDeudas> listDeudas = getItDeudas().listarDeudasByReferencia(session, beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                     if (listDeudas == null) {
                         count++;
                         civDeudas = new CivDeudas();
@@ -175,7 +175,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                         civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getValor()));
                         civDeudas.setDeuSaldo(BigDecimal.ZERO);
                         civDeudas.setDeuFechaproceso(new Date());
-                        civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                        civDeudas.setDeuReferencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                         civDeudas.setDeuRefUnica(BigDecimal.valueOf(beanGestionCargarPersonas.getListDeudas().get(i).getReferenciaUnica()));
                         CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                         civPlanTrabajos.setPlatraId(new BigDecimal(2));
@@ -259,7 +259,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                     civDeudas.setDeuValor(new BigDecimal(beanGestionCargarPersonas.getListDeudas().get(i).getSaldo()));
                     civDeudas.setDeuSaldo(BigDecimal.ZERO);
                     civDeudas.setDeuFechaproceso(new Date());
-                    civDeudas.setDeuRefencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
+                    civDeudas.setDeuReferencia(beanGestionCargarPersonas.getListDeudas().get(i).getReferencia());
                     civDeudas.setDeuRefUnica(BigDecimal.valueOf(beanGestionCargarPersonas.getListDeudas().get(i).getReferenciaUnica()));
                     CivPlanTrabajos civPlanTrabajos = new CivPlanTrabajos();
                     civPlanTrabajos.setPlatraId(new BigDecimal(2));

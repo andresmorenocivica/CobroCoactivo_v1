@@ -29,17 +29,4 @@ public class DaoFasesTrabajo extends ImpGeneryHibernateDao<CivFasesTrabajos, Int
         return null;
     }
 
-    @Override
-    public CivFasesTrabajos getFasesTrabajos(Session session, int idFasesTrabajos) throws Exception {
-        String hql = "from CivFasesTrabajos where fastraId=:idFasesTrabajos";
-        Query query = session.createQuery(hql);
-        query.setInteger("idFasesTrabajos", idFasesTrabajos);
-        if (query.list().size() > 0) {
-            CivFasesTrabajos civFasesTrabajos = (CivFasesTrabajos) query.list().get(0);
-            return civFasesTrabajos;
-        }
-        return null;
-
-    }
-
 }

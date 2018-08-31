@@ -8,18 +8,14 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivTipoDeudas;
 import java.math.BigDecimal;
-import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
  * @author emadrid
  */
-public interface ITTipoDeudas extends ITGeneryHibernateDao<CivTipoDeudas,Integer>{
-    
-    public List<CivTipoDeudas> listAll() throws Exception;
-    
-    
-    public CivTipoDeudas getTipoDeuda(BigDecimal tipdeuId) throws Exception ;
-      
-    
+public interface ITTipoDeudas extends ITGeneryHibernateDao<CivTipoDeudas, Integer> {
+
+    public CivTipoDeudas getTipoDeuda(Session session, BigDecimal tipdeuId) throws Exception;
+
 }

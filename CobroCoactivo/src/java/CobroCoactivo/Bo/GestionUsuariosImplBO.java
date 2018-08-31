@@ -65,8 +65,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Random;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.primefaces.context.RequestContext;
@@ -109,26 +107,32 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void consultarUsuario(BeanGestionUsuarios bean) throws Exception {
-        List<CivUsuarios> listaCivUsuario = new ArrayList<>();
-        switch (bean.getTipoBusqueda()) {
-            case 1:
-                listaCivUsuario = getUsuariosDAO().listarUsuarios(bean.getNombreUsuario().toUpperCase());
-                if (listaCivUsuario == null) {
-                    throw new UsuariosException("No se encontro el usuario.", 3);
-                }
-                break;
-        }
-        if (listaCivUsuario != null && listaCivUsuario.size() > 0) {
-            for (CivUsuarios civUsuarios : listaCivUsuario) {
-                Usuarios usuarios = new Usuarios(civUsuarios, civUsuarios.getCivEstadoUsuarios(), civUsuarios.getCivPersonas());
-                bean.getListadoUsuarios().add(usuarios);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivUsuarios> listaCivUsuario = new ArrayList<>();
+            switch (bean.getTipoBusqueda()) {
+                case 1:
+                    listaCivUsuario = getUsuariosDAO().listarUsuarios(session, bean.getNombreUsuario().toUpperCase());
+                    if (listaCivUsuario == null) {
+                        throw new UsuariosException("No se encontro el usuario.", 3);
+                    }
+                    break;
             }
+            if (listaCivUsuario != null && listaCivUsuario.size() > 0) {
+                for (CivUsuarios civUsuarios : listaCivUsuario) {
+                    Usuarios usuarios = new Usuarios(civUsuarios, civUsuarios.getCivEstadoUsuarios(), civUsuarios.getCivPersonas());
+                    bean.getListadoUsuarios().add(usuarios);
+                }
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void actualizarContraseña(BeanGestionUsuarios bean) throws Exception {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             List list = getUsuariosDAO().consultar_HPAS(session, bean.getDetalleUsuario().getId());
             String passCifrada = DigestHandler.encryptSHA2(bean.getContraseñaConfirmacion());
@@ -188,7 +192,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     public void cargarEstadoUsuario(BeanGestionUsuarios bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            List<CivEstadoUsuarios> listCivEstadoUsuarios = getEstadoUsuariosDAO().listAll(session);
+            List<CivEstadoUsuarios> listCivEstadoUsuarios = getEstadoUsuariosDAO().findAll(session);
             if (listCivEstadoUsuarios != null) {
                 for (CivEstadoUsuarios civEstadoUsuario : listCivEstadoUsuarios) {
                     EstadoUsuarios estadoUsuarios = new EstadoUsuarios(civEstadoUsuario);
@@ -204,53 +208,78 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void cargarModulosByUsuario(BeanGestionUsuarios bean) throws Exception {
-        List<CivModulos> listCivModulos = getModulosDAO().getModulosByUsuario(bean.getDetalleUsuario().getId());
-        if (listCivModulos != null) {
-            for (CivModulos civModulo : listCivModulos) {
-                List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
-                Modulos modulos = new Modulos(civModulo, civModulo.getCivEstadoModulos(), listCivRecursos);
-                bean.getListModulos().add(modulos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivModulos> listCivModulos = getModulosDAO().getModulosByUsuario(session, bean.getDetalleUsuario().getId());
+            if (listCivModulos != null) {
+                for (CivModulos civModulo : listCivModulos) {
+                    List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(session, civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
+                    Modulos modulos = new Modulos(civModulo, civModulo.getCivEstadoModulos(), listCivRecursos);
+                    bean.getListModulos().add(modulos);
+                }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarConfUsuRec(BeanGestionUsuarios bean) throws Exception {
-        bean.setListConfUsuRec(new ArrayList<>());
-        List<CivRecursos> listRecursos = getRecursosDAO().getRecursos(bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
-        if (listRecursos != null) {
-            for (CivRecursos civRecurso : listRecursos) {
-                List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRec(civRecurso.getRecId().intValue(), bean.getDetalleUsuario().getId());
-                for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
-                    ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
-                    bean.getListConfUsuRec().add(confUsuRec);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListConfUsuRec(new ArrayList<>());
+            List<CivRecursos> listRecursos = getRecursosDAO().getRecursos(session, bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
+            if (listRecursos != null) {
+                for (CivRecursos civRecurso : listRecursos) {
+                    List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRec(session, civRecurso.getRecId().intValue(), bean.getDetalleUsuario().getId());
+                    for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
+                        ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
+                        bean.getListConfUsuRec().add(confUsuRec);
+                    }
                 }
+                bean.setPnlBtnAceptar(true);
+            } else {
+                bean.setPnlBtnAceptar(false);
             }
-            bean.setPnlBtnAceptar(true);
-        } else {
-            bean.setPnlBtnAceptar(false);
+        } finally {
+            session.flush();
+            session.close();
         }
+
     }
 
     @Override
     public void cargarHistorialConfUsuRec(BeanGestionUsuarios bean) throws Exception {
-        List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRecByUser(bean.getDetalleUsuario().getId());
-        if (listCivConfUsuRec != null) {
-            for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
-                ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
-                bean.getListConfUsuRecByUser().add(confUsuRec);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivConfUsuRec> listCivConfUsuRec = getConfUsuRecDAO().getConfUsuRecByUser(session, bean.getDetalleUsuario().getId());
+            if (listCivConfUsuRec != null) {
+                for (CivConfUsuRec civConfUsuRec : listCivConfUsuRec) {
+                    ConfUsuRec confUsuRec = new ConfUsuRec(civConfUsuRec, civConfUsuRec.getCivEstadoConfusurec(), civConfUsuRec.getCivUsuarios(), civConfUsuRec.getCivRecursos());
+                    bean.getListConfUsuRecByUser().add(confUsuRec);
+                }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
     @Override
     public void cargarMovimientoByUser(BeanGestionUsuarios bean) throws Exception {
-        List<CivMovimientos> listCivMovimientos = getMovimientosDAO().getMovimientoByUser(bean.getDetalleUsuario().getId());
-        if (listCivMovimientos != null) {
-            for (CivMovimientos civMovimiento : listCivMovimientos) {
-                Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civMovimiento.getCivFasesTrabajos(), civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
-                bean.getListMovimientosByUser().add(movimientos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivMovimientos> listCivMovimientos = getMovimientosDAO().getMovimientoByUser(session, bean.getDetalleUsuario().getId());
+            if (listCivMovimientos != null) {
+                for (CivMovimientos civMovimiento : listCivMovimientos) {
+                    Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civMovimiento.getCivFasesTrabajos(), civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
+                    bean.getListMovimientosByUser().add(movimientos);
+                }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -280,10 +309,10 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
             if (listCivModulos != null) {
                 for (CivModulos civModulo : listCivModulos) {
                     Modulos modulos = new Modulos(civModulo, civModulo.getCivEstadoModulos());
-                    List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
+                    List<CivRecursos> listCivRecursos = getRecursosDAO().getRecursos(session, civModulo.getModId().intValue(), bean.getDetalleUsuario().getId());
                     if (listCivRecursos != null) {
                         for (CivRecursos CivRecurso : listCivRecursos) {
-                            List<CivConfUsuRec> civConfUsuRec = getConfUsuRecDAO().getConfUsuRec(CivRecurso.getRecId().intValue());
+                            List<CivConfUsuRec> civConfUsuRec = getConfUsuRecDAO().getConfUsuRec(session, CivRecurso.getRecId().intValue());
                             Recursos recurso = new Recursos(CivRecurso);
                             recurso.setSelecionado(civConfUsuRec != null ? true : false);
                             modulos.getListRecurso().add(recurso);
@@ -300,16 +329,22 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
 
     @Override
     public void cargarRecursoByModulo(BeanGestionUsuarios bean) throws Exception {
-        bean.setListRecursos(new ArrayList<>());
-        List<CivRecursos> listRecursos = getRecursosDAO().getListCivRecursos(bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
-        if (listRecursos != null) {
-            for (CivRecursos civRecurso : listRecursos) {
-                Recursos recursos = new Recursos(civRecurso);
-                bean.getListRecursos().add(recursos);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            bean.setListRecursos(new ArrayList<>());
+            List<CivRecursos> listRecursos = getRecursosDAO().getListCivRecursos(session, bean.getIdModuloSelecionado(), bean.getDetalleUsuario().getId());
+            if (listRecursos != null) {
+                for (CivRecursos civRecurso : listRecursos) {
+                    Recursos recursos = new Recursos(civRecurso);
+                    bean.getListRecursos().add(recursos);
+                }
+                bean.setPnlBtnAceptar(true);
+            } else {
+                bean.setPnlBtnAceptar(false);
             }
-            bean.setPnlBtnAceptar(true);
-        } else {
-            bean.setPnlBtnAceptar(false);
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -326,7 +361,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                     if (increment == i) {
                         CivConfUsuRec civConfUsuRec = getConfUsuRecDAO().find(session, BigDecimal.valueOf(temporal.getConfusurecId()));
 
-                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(2));
+                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().find(session, BigDecimal.valueOf(2));
 
                         civConfUsuRec.setCivEstadoConfusurec(civEstadoConfusurec);
                         getConfUsuRecDAO().update(session, civConfUsuRec);
@@ -355,8 +390,8 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 if (bean.getListRecursos().get(i).isSelecionado() == true) {
                     if (increment == i) {
                         CivConfUsuRec civConfUsuRec = new CivConfUsuRec();
-                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().getEstadoConfUsuRec(BigDecimal.valueOf(1));
-                        CivRecursos civRecursos = getRecursosDAO().getRecursos(bean.getListRecursos().get(i).getRecId().intValue());
+                        CivEstadoConfusurec civEstadoConfusurec = getEstadoConfUsuRecDAO().find(session, BigDecimal.valueOf(1));
+                        CivRecursos civRecursos = getRecursosDAO().getRecursos(session, bean.getListRecursos().get(i).getRecId().intValue());
                         CivUsuarios civUsuarios = getUsuariosDAO().find(session, BigDecimal.valueOf(bean.getDetalleUsuario().getId()));
 
                         civConfUsuRec.setCivUsuarios(civUsuarios);

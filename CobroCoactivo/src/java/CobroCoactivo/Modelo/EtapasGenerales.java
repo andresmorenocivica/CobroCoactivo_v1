@@ -36,8 +36,8 @@ public class EtapasGenerales implements java.io.Serializable {
         this.obligatorio = civEtapasGenerales.getEtagenObligatorio();
         this.prioridad = civEtapasGenerales.getEtagenPrioridad().intValue();
     }
-    
-     public EtapasGenerales(CivEtapasGenerales civEtapasGenerales,CivEstadoEtapasGenerales civEstadoEtapasGenerales) {
+
+    public EtapasGenerales(CivEtapasGenerales civEtapasGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales) {
         this.Id = civEtapasGenerales.getEtagenId().intValue();
         this.descripcion = civEtapasGenerales.getEtagenDescripcion();
         this.fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
@@ -45,7 +45,8 @@ public class EtapasGenerales implements java.io.Serializable {
         this.prioridad = civEtapasGenerales.getEtagenPrioridad().intValue();
         this.estadoEtapasGenerales = new EstadoEtapasGenerales(civEstadoEtapasGenerales);
     }
-     public EtapasGenerales(CivEtapasGenerales civEtapasGenerales,CivEstadoEtapasGenerales civEstadoEtapasGenerales,CivPlanGenerales civPlanGenerales) {
+
+    public EtapasGenerales(CivEtapasGenerales civEtapasGenerales, CivEstadoEtapasGenerales civEstadoEtapasGenerales, CivPlanGenerales civPlanGenerales) {
         this.Id = civEtapasGenerales.getEtagenId().intValue();
         this.descripcion = civEtapasGenerales.getEtagenDescripcion();
         this.fechaproceso = civEtapasGenerales.getEtagenFechaproceso();
@@ -54,8 +55,7 @@ public class EtapasGenerales implements java.io.Serializable {
         this.estadoEtapasGenerales = new EstadoEtapasGenerales(civEstadoEtapasGenerales);
         this.planGenerales = new PlanGenerales(civPlanGenerales);
     }
-    
-    
+
     /**
      * @return the Id
      */
@@ -168,5 +168,4 @@ public class EtapasGenerales implements java.io.Serializable {
         this.estadoEtapasGenerales = estadoEtapasGenerales;
     }
 
-   
 }

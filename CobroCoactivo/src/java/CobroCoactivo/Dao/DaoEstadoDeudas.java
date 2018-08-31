@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoDeudas;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,9 +19,9 @@ public class DaoEstadoDeudas extends ImpGeneryHibernateDao<CivEstadoDeudas, Inte
 
     @Override
     public CivEstadoDeudas getEstadoDeudas(Session session, BigDecimal estadoDeudas) throws Exception {
-        String hql = "from CivEstadoDeudas where estdeuId=:codigoEstado";
+        String hql = "from CivEstadoDeudas where estdeuId=:idEstado";
         Query query = session.createQuery(hql);
-        query.setBigDecimal("codigoEstado", estadoDeudas);
+        query.setBigDecimal("idEstado", estadoDeudas);
         if (query.list().size() > 0) {
             return (CivEstadoDeudas) query.list().get(0);
         }

@@ -10,10 +10,8 @@ import CobroCoactivo.Persistencia.CivPersonas;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -22,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> implements ITPersonas {
 
     @Override
-    public CivPersonas consultarPersonasById(Session session,int per_id) throws Exception {
+    public CivPersonas consultarPersonasById(Session session, int per_id) throws Exception {
         String hql = "from CivPersonas where perId =:perId";
         Query query = session.createQuery(hql);
         query.setParameter("perId", new BigDecimal(per_id));
@@ -33,9 +31,9 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
     }
 
     @Override
-    
-    public CivPersonas consultarPersonasByDocumento(Session session,int tipo, String nro_documento) throws Exception {
-       
+
+    public CivPersonas consultarPersonasByDocumento(Session session, int tipo, String nro_documento) throws Exception {
+
         String hql = "from CivPersonas where civTipoDocumentos.tipdocCodigo =:tipo and perDocumento=:nro_documento";
         Query query = session.createQuery(hql);
         query.setParameter("tipo", new BigDecimal(tipo));
@@ -43,15 +41,14 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
         if (query.list().size() > 0) {
             return (CivPersonas) query.list().get(0);
         }
-        
+
         return null;
     }
 
     @Override
     public List<CivPersonas> listarPersonas(Session session, String persona) throws Exception {
         String hql = "from CivPersonas where Per_Nombre1 like :persona or Per_Nombre2 like :persona or Per_Apellido1 like :persona or Per_Apellido2 like :persona ORDER BY 1 asc";
-        SQLQuery query = session.createSQLQuery(hql);
-        query.addEntity(CivPersonas.class);
+        Query query = session.createQuery(hql);
         query.setString("persona", persona);
         if (query.list().size() > 0) {
             return query.list();
@@ -60,18 +57,14 @@ public class DaoPersonas extends ImpGeneryHibernateDao<CivPersonas, Integer> imp
     }
 
     @Override
-
     public List<CivPersonas> listarPersonasFecha(Session session, String fecha) throws Exception {
-
         String hql = "from CivPersonas where per_fechainicial = :fecha order by 1 asc";
-        SQLQuery query = session.createSQLQuery(hql);
-        query.addEntity(CivPersonas.class);
+        Query query = session.createQuery(hql);
         query.setString("fecha", fecha);
         if (query.list().size() > 0) {
             return query.list();
         }
         return null;
-
     }
 
     @Override

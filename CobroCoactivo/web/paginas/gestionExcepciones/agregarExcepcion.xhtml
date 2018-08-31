@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <h:form id="frmAddExcepciones" enctype="multipart/form-data">
+                    <div class="content-wrapper">
+                        <section class="content">
+                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" showSummary="false"/>
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">
+                                        <h:panelGrid width="99%" style="height:auto;">
+                                            <h:panelGroup>
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">  Consultar Persona</h3>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <div class="col-md-6">
+                                                            <div >
+                                                                <h:selectOneMenu  id="sltDocumentos" class="form-control" value="#{gestionExcepcionesBean.tipoDocumentoPersona}">
+                                                                    <f:selectItem noSelectionOption="true" itemLabel="SELECCIONAR"></f:selectItem>
+                                                                    <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="tipoDocumento" itemValue="#{tipoDocumento.codigo}" itemLabel="#{tipoDocumento.descripcion}"></f:selectItems>
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group margin-5">
+                                                                <h:inputText a:placeholder="Ingrese el documento" class="form-control text-uppercase" id="txtNumero" value="#{gestionExcepcionesBean.documentoPersona}" required="true" requiredMessage="Digite el numero de documento"></h:inputText>
+                                                                <span class="input-group-btn">
+                                                                    <h:commandLink class="btn btn-danger" >
+                                                                        <i class="fa fa-search"></i>
+                                                                        <f:ajax event="click" execute="frmAddExcepciones:sltDocumentos frmAddExcepciones:txtNumero" listener="#{gestionExcepcionesBean.buscarPersona()}" render="frmAddExcepciones:pnlDeudas frmAddExcepciones:formulario"></f:ajax>
+                                                                    </h:commandLink>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                        <h:panelGrid id="formulario" width="100%"> 
+                                            <h:panelGroup rendered="#{gestionExcepcionesBean.pnlFormulario}">
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border col-lg-6">
+                                                        <h3 class="box-title">Agregar Excepcion</h3>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-5">
+                                                                    <label>Numero Radicado:</label>
+                                                                    <h:inputText id="numRadicado" value="#{gestionExcepcionesBean.numRadicado}" class="form-control" required="true" 
+                                                                                 requiredMessage="Primer nombre requerido"></h:inputText>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label>Fecha Radicado:</label>
+                                                                    <p:calendar value="#{gestionExcepcionesBean.fechaRadicado}" id="fechaRadicado" class="form-control pull-right" pattern="MM/dd/yyyy">
+                                                                    </p:calendar>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label>Seleccionar Movimiento:</label>
+                                                                    <h:selectOneMenu  id="sltMovimientos" class="form-control" value="#{gestionExcepcionesBean.idMovimiento}">
+                                                                        <f:selectItem noSelectionOption="true" itemLabel="SELECCIONAR"></f:selectItem>
+                                                                        <f:selectItems value="#{gestionExcepcionesBean.listaMovimientos}" var="listaMovimientos" itemValue="#{listaMovimientos.id}" itemLabel="#{listaMovimientos.fasesTrabajos.descripcion}"></f:selectItems>
+                                                                    </h:selectOneMenu>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label> Agregar Archivo:</label>
+                                                                    <h:inputFile a:accept=".pdf" value="#{gestionExcepcionesBean.file}" id="file" />
+                                                                    <p class="help-block">.pdf</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div align="right">
+                                                                    <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
+                                                                        <f:ajax event="click" listener="#{gestionExcepcionesBean.guardarExcepcion()}" execute="frmAddExcepciones" />
+                                                                    </h:commandLink>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h:panelGrid id="pnlDeudas" width="99%">
+                                            <h:panelGroup rendered="#{gestionExcepcionesBean.pnlListaDeuda}">
+                                                <div class="box box-danger">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Lista de Deudas</h3>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <table class="table table-hover table-bordered">
+                                                            <div class="row">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="col-lg-3">Seleccionar</th>
+                                                                        <th class="col-lg-3">Referencia</th>
+                                                                        <th class="col-lg-3">Saldo</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody >
+                                                                    <c:forEach items="#{gestionExcepcionesBean.listaDeudas}" var="listaDeudas">
+                                                                        <tr>
+                                                                            <th>
+                                                                                <p:selectBooleanCheckbox value="#{listaDeudas.seleccionado}" required="true" requiredMessage="Debe selecionar algun recurso">
+                                                                                    <f:ajax event="change" listener="#{gestionExcepcionesBean.mostrarPnlFormulario()}" render="frmAddExcepciones:formulario"></f:ajax>
+                                                                                </p:selectBooleanCheckbox>
+                                                                            </th>
+                                                                            <th>#{listaDeudas.referencia}</th>
+                                                                            <th>#{listaDeudas.saldo}</th>
+                                                                        </tr>
+                                                                    </c:forEach>
+                                                                </tbody>
+                                                            </div>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

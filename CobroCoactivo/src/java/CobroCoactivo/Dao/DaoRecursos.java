@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivRecursos;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
@@ -21,8 +20,7 @@ import org.hibernate.Session;
 public class DaoRecursos extends ImpGeneryHibernateDao<CivRecursos, Integer> implements ITRecursos {
 
     @Override
-    public List<CivRecursos> getRecursos(int idModulo, int idUsuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivRecursos> getRecursos(Session session, int idModulo, int idUsuario) throws Exception {
         //String sql = "SELECT * FROM CIV_RECURSOS WHERE REC_MODULOS_FK =:idModulo";
         String sql = "SELECT * \n"
                 + "FROM CIV_RECURSOS \n"
@@ -34,13 +32,11 @@ public class DaoRecursos extends ImpGeneryHibernateDao<CivRecursos, Integer> imp
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public List<CivRecursos> getListCivRecursos(int idModulo, int idUsuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public List<CivRecursos> getListCivRecursos(Session session, int idModulo, int idUsuario) throws Exception {
         String sql = "SELECT r.* \n"
                 + "FROM CIV_RECURSOS r\n"
                 + "WHERE REC_MODULOS_FK= :idModulo\n"
@@ -53,20 +49,17 @@ public class DaoRecursos extends ImpGeneryHibernateDao<CivRecursos, Integer> imp
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public CivRecursos getRecursos(int idRecurso) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    public CivRecursos getRecursos(Session session, int idRecurso) throws Exception {
         String hql = "from CivRecursos where recId=:idRecurso";
         Query query = session.createQuery(hql);
         query.setInteger("idRecurso", idRecurso);
         if (query.list().size() > 0) {
             return (CivRecursos) query.list().get(0);
         }
-        session.close();
         return null;
     }
 

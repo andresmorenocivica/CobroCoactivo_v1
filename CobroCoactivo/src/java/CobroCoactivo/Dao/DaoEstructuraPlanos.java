@@ -24,9 +24,8 @@ public class DaoEstructuraPlanos extends ImpGeneryHibernateDao<CivEstructuraPlan
     @Override
     public CivEstructuraPlanos getEstructuraPlano(int tipo, int indiceCampo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_ESTRUCTURA_PLANOS WHERE ESTPLA_TIPO = :tipo AND ESTPLA_INDICE = :indiceCampo";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivEstructuraPlanos.class);
+        String hql = "CivEstructuraPlanos where estplaTipo= :tipo and estplaIndice= :indiceCampo";
+        Query query = session.createQuery(hql);
         query.setInteger("tipo", tipo);
         query.setInteger("indiceCampo", indiceCampo);
         if (query.list().size() > 0) {

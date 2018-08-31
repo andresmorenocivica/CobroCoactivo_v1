@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDetalleSolicitudes;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;

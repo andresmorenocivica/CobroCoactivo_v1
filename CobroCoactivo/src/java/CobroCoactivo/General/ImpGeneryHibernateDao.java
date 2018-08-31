@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jvergara
  * @param <T>
+ * @param <ID>
  */
 public class ImpGeneryHibernateDao<T, ID extends Serializable> implements ITGeneryHibernateDao<T, ID> {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 10/08/2018 01:54:00 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 30/08/2018 09:56:14 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="CobroCoactivo.Persistencia.CivEstadoFinanciacion" table="CIV_ESTADO_FINANCIACION" schema="COBROCOACTIVO_V1" optimistic-lock="version">
         <id name="estfinId" type="big_decimal">
@@ -14,11 +14,11 @@
         <property name="estfinFechainicial" type="date">
             <column name="ESTFIN_FECHAINICIAL" length="7" />
         </property>
-        <property name="estfinFechafinal" type="java.util.Date">
-            <column name="ESTFIN_FECHAFINAL" length="20" />
+        <property name="estfinFechafinal" type="date">
+            <column name="ESTFIN_FECHAFINAL" length="7" />
         </property>
-        <property name="estfinFechaproceso" type="java.util.Date">
-            <column name="ESTFIN_FECHAPROCESO" length="20" />
+        <property name="estfinFechaproceso" type="date">
+            <column name="ESTFIN_FECHAPROCESO" length="7" />
         </property>
         <set name="civFinanciacions" table="CIV_FINANCIACION" inverse="true" lazy="true" fetch="select">
             <key>

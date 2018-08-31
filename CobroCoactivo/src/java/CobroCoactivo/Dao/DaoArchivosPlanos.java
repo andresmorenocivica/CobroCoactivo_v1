@@ -13,5 +13,5 @@ import CobroCoactivo.Persistencia.CivArchivosPlanos;
  * @author AMORENO
  */
 public class DaoArchivosPlanos extends ImpGeneryHibernateDao<CivArchivosPlanos, Integer> implements ITArchivosPlanos {
-    
+
 }

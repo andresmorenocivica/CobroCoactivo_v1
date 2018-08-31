@@ -8,7 +8,6 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivSolicitudes;
 import java.util.List;
-import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -20,9 +19,9 @@ public class DaoSolicitudes extends ImpGeneryHibernateDao<CivSolicitudes, Intege
 
     @Override
     public List<CivSolicitudes> getCivSolicitudesPendientes(Session session) throws Exception {
-        String hql = "SELECT DISTINCT SOL.* FROM CIV_SOLICITUDES SOL  \n"
+        String sql = "SELECT DISTINCT SOL.* FROM CIV_SOLICITUDES SOL  \n"
                 + "INNER JOIN CIV_DETALLE_SOLICITUDES DETSOL ON DETSOL.DETSOL_SOL_FK = SOL.SOL_ID WHERE SOL.SOL_ESTSOL_FK = 3";
-        SQLQuery query = session.createSQLQuery(hql);
+        SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(CivSolicitudes.class);
         if (query.list().size() > 0) {
             return query.list();

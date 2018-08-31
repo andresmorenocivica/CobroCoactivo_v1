@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivConceptos;
  *
  * @author AMORENO
  */
-public class DaoConceptos  extends ImpGeneryHibernateDao<CivConceptos, Integer> implements ITConceptos{
-    
+public class DaoConceptos extends ImpGeneryHibernateDao<CivConceptos, Integer> implements ITConceptos {
+
 }

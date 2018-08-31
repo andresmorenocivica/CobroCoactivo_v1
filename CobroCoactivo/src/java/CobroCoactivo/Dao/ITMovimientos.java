@@ -7,6 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivMovimientos;
+import java.util.HashMap;
 import java.util.List;
 import org.hibernate.Session;
 
@@ -22,6 +23,8 @@ public interface ITMovimientos extends ITGeneryHibernateDao<CivMovimientos, Inte
 
     List<CivMovimientos> listMovimiento(Session session, int fase) throws Exception;
 
-    public List<CivMovimientos> getMovimientoByUser(int idUsuario) throws Exception;
+    public List<CivMovimientos> getMovimientoByUser(Session session,int idUsuario) throws Exception;
+
+    public List<HashMap> getMovimientosByDeuda(Session session, int idDeuda) throws Exception;
 
 }

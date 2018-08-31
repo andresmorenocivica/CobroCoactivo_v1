@@ -108,7 +108,7 @@
         <p:dialog position="center,center" showHeader="false"  widgetVar="statusDialog" modal="true" closable="false"  draggable="false" resizable="false">
             <p:graphicImage url="/recursos/images/loading.gif" style="width: 25px;"/><p>Espere...</p>
         </p:dialog>    
-        <div class="wrapper">
+        <div class="wrapper"> 
             <div id="top" class="top">
                 <ui:insert name="top">
                     <header class="main-header">
@@ -780,55 +780,59 @@
                                 <h4 class="modal-title" id="myModalLabel">Guardar Persona</h4>
                             </div>
                             <div class="modal-body" jsf:id="modalBodyAgregar">
-                               <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
+                                <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Primer Nombre(*):</label> 
-                                            <h:inputText a:placeholder="Digite el primer nombre" class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Segundo Nombre:</label> 
-                                            <h:inputText a:placeholder="Digite el segundo nombre" class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Primer Apellido:</label> 
-                                            <h:inputText a:placeholder="Digite el primer apellido" class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Primer apellido requerido"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Segundo Apellido:</label> 
-                                            <h:inputText a:placeholder="Digite el segundo apellido" class="form-control text-uppercase" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="input-group ">
-                                            <label>Tipo de documento</label>
-                                            <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">
-                                                <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>N Documento:</label> 
-                                            <input type="text" placeholder="Digite el n° de documento" class="form-control text-uppercase" jsf:id="NumDocumento" jsf:value="#{gestionPersonaBean.detallePersona.documento}" jsf:required="true" jsf:requiredMessage="Numero de documento requerido"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Genero:</label> 
-                                            <h:selectOneMenu id="txtGenero" class="form-control" required="true" value="#{gestionPersonaBean.detallePersona.sexo}">
-                                                <f:selectItem itemValue="MASCULINO" itemLabel="MASCULINO"/>
-                                                <f:selectItem itemValue="FEMENINO" itemLabel="FEMENINO"/>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
+                                    <h:panelGrid>
+                                        <h:panelGroup>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Primer Nombre:*</label> 
+                                                    <h:inputText a:placeholder="Digite el primer nombre" class="form-control text-uppercase" id="txtNombre1" value="#{gestionPersonaBean.detallePersona.nombre1}" required="true" requiredMessage="Primer nombre requerido" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Segundo Nombre:</label> 
+                                                    <h:inputText a:placeholder="Digite el segundo nombre" class="form-control text-uppercase" id="txtNombre2" value="#{gestionPersonaBean.detallePersona.nombre2}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Primer Apellido:</label> 
+                                                    <h:inputText a:placeholder="Digite el primer apellido" class="form-control text-uppercase" id="txtApellido1" value="#{gestionPersonaBean.detallePersona.apellido1}" required="true" requiredMessage="Primer apellido requerido"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Segundo Apellido:</label> 
+                                                    <h:inputText a:placeholder="Digite el segundo apellido" class="form-control text-uppercase" id="txtApellido2" value="#{gestionPersonaBean.detallePersona.apellido2}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group ">
+                                                    <label>Tipo de documento</label>
+                                                    <h:selectOneMenu  id="selectDocumentos" class="form-control" value="#{gestionPersonaBean.tipoDocumentoPersona}" converter="javax.faces.Integer">
+                                                        <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>N Documento:</label> 
+                                                    <h:inputText maxlength="2" a:placeholder="Digite el n° de documento" value="#{gestionPersonaBean.detallePersona.documento}" id="NumDocumento" requiredMessage="Numero de documento requerido" required="true" class="form-control text-uppercase"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Genero:</label> 
+                                                    <h:selectOneMenu id="txtGenero" class="form-control" required="true" value="#{gestionPersonaBean.detallePersona.sexo}">
+                                                        <f:selectItem itemValue="MASCULINO" itemLabel="MASCULINO"/>
+                                                        <f:selectItem itemValue="FEMENINO" itemLabel="FEMENINO"/>
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
                                     <!--<div class="col-md-3">
                                         <div class="form-group">
                                             <label>Fecha:</label>
@@ -847,7 +851,7 @@
                                                 <tr>
                                                     <th class="col-md-4">Seleccionar</th>
                                                     <th class="col-md-4">Nombre</th>
-                                                    <th class="col-md-4">Valor</th>
+                                                    <th class="col-md-4">Descripcion</th>
                                                 </tr>
                                             </thead>
                                             <tbody >
@@ -890,7 +894,7 @@
                             </div>
                             <div class="modal-body" jsf:id="modalBodyUser">
                                 <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
-                                
+
                                 <h4><center> Consultar Persona</center></h4>
                                 <div class="row">
                                     <div class="col-md-2"></div>

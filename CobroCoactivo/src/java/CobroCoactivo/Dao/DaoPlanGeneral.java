@@ -7,8 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivPlanGenerales;
-import CobroCoactivo.Utility.HibernateUtil;
-import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -20,10 +18,10 @@ import org.hibernate.Session;
  */
 public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Integer> implements ITPlanGeneral {
 
+    @Override
     public List<CivPlanGenerales> findCivPlanGeneral(Session session, int id) throws Exception {
-        String sql = "SELECT * FROM CivPlanGenerales WHERE plagenId =:id";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivPlanGenerales.class);
+        String hql = "FROM CivPlanGenerales WHERE plagenId =:id";
+        Query query = session.createQuery(hql);
         query.setInteger("id", id);
         return query.list();
     }
@@ -49,8 +47,8 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
 
     @Override
     public CivPlanGenerales getCivPlanGeneralByColor(Session session, String color) throws Exception {
-        String sql = "from CivPlanGenerales where plagenColor=:color";
-        Query query = session.createQuery(sql);
+        String hql = "from CivPlanGenerales where plagenColor=:color";
+        Query query = session.createQuery(hql);
         query.setString("color", color);
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);
@@ -60,8 +58,8 @@ public class DaoPlanGeneral extends ImpGeneryHibernateDao<CivPlanGenerales, Inte
 
     @Override
     public CivPlanGenerales getCivPlanGeneralByDescripcion(Session session, String descripcion) throws Exception {
-        String sql = "FROM CivPlanGenerales WHERE plagenDescripcion = :descripcion";
-        Query query = session.createQuery(sql);
+        String hql = "FROM CivPlanGenerales WHERE plagenDescripcion = :descripcion";
+        Query query = session.createQuery(hql);
         query.setString("descripcion", descripcion);
         if (query.list().size() > 0) {
             return (CivPlanGenerales) query.list().get(0);

@@ -15,13 +15,11 @@ import org.hibernate.Session;
  * @author AMORENO
  */
 public interface ITPlanTrabajo extends ITGeneryHibernateDao<CivPlanTrabajos, Integer> {
-    
-     public CivPlanTrabajos find(Session session ,int id) throws Exception;
 
-    public CivPlanTrabajos getPlanTrabajo(Session session,int idPlanTrabajo) throws Exception;
-    public CivPlanTrabajos getPlanTrabajo(String nombrePlanTrabajo) throws Exception;
-    
-    public List<CivPlanTrabajos> getAllPlanTrabajo()throws Exception;
-    
-    
+    public CivPlanTrabajos getPlanTrabajo(Session session, int idPlanTrabajo) throws Exception;
+
+    public CivPlanTrabajos getPlanTrabajo(Session session, String nombrePlanTrabajo) throws Exception;
+
+    public List<CivPlanTrabajos> getAllPlanTrabajo(Session session) throws Exception;
+
 }

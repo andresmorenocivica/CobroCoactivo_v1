@@ -7,13 +7,10 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -22,21 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer> implements ITConfUsuRec {
 
     @Override
-
-    @Transactional(rollbackFor = Exception.class)
-    public int insert(Session session, CivConfUsuRec civConfUsuRec) throws Exception {
-        return Integer.parseInt(session.save(civConfUsuRec).toString());
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void update(Session session, CivConfUsuRec civConfUsuRec) {
-        session.update(civConfUsuRec);
-
-    }
-
-    @Override
-
     public List<CivConfUsuRec> listPerfilRecursoByIDUsuario(Session session, long idusuario) throws Exception {
         String hql = "from CivConfUsuRec where civUsuarios.usuId =:id_usuario";
         Query query = session.createQuery(hql);
@@ -48,51 +30,41 @@ public class DaoConfUsuRec extends ImpGeneryHibernateDao<CivConfUsuRec, Integer>
     }
 
     @Override
-
     public List<CivConfUsuRec> listPerfilRecurso(Session session) throws Exception {
         return session.createCriteria(CivConfUsuRec.class).list();
     }
 
     @Override
-    public List<CivConfUsuRec> getConfUsuRec(int id) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_RECURSO_FK = :id AND CONFUSUREC_ESTADO_FK = 1";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivConfUsuRec.class);
+    public List<CivConfUsuRec> getConfUsuRec(Session session, int id) throws Exception {
+        String hql = "from CivConfUsuRec where civRecursos.recId=:id and civEstadoConfusurec.estconfusurecId = 1";
+        Query query = session.createQuery(hql);
         query.setInteger("id", id);
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public List<CivConfUsuRec> getConfUsuRec(int idRecurso, int idUsuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_RECURSO_FK =:idRecurso AND CONFUSUREC_USUARIOS_FK =:idUsuario  AND CONFUSUREC_ESTADO_FK =  1";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivConfUsuRec.class);
+    public List<CivConfUsuRec> getConfUsuRec(Session session, int idRecurso, int idUsuario) throws Exception {
+        String hql = "from CivConfUsuRec where civRecursos.recId=:idRecurso and civUsuarios.usuId =:idUsuario and civEstadoConfusurec.estconfusurecId = 1";
+        Query query = session.createQuery(hql);
         query.setBigDecimal("idRecurso", new BigDecimal(idRecurso));
         query.setBigDecimal("idUsuario", new BigDecimal(idUsuario));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     @Override
-    public List<CivConfUsuRec> getConfUsuRecByUser(int idUsuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_CONF_USU_REC WHERE CONFUSUREC_USUARIOS_FK =:idUsuario";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivConfUsuRec.class);
+    public List<CivConfUsuRec> getConfUsuRecByUser(Session session, int idUsuario) throws Exception {
+        String hql = "from CivConfUsuRec where civUsuarios.usuId =:idUsuario";
+        Query query = session.createQuery(hql);
         query.setBigDecimal("idUsuario", new BigDecimal(idUsuario));
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 }

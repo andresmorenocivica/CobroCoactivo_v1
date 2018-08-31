@@ -7,11 +7,9 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEtapasGenerales;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 /**
@@ -21,7 +19,7 @@ import org.hibernate.Session;
 public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, Integer> implements ITEstapaGeneral {
 
     @Override
-    public List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(Session session ,int id) throws Exception {
+    public List<CivEtapasGenerales> findAllEtapaByIdPlanGeneral(Session session, int id) throws Exception {
         String hql = "from CivEtapasGenerales where civPlanGenerales.plagenId=:id and civEstadoEtapasGenerales.estetagenId=1  order by etagenPrioridad";
         Query query = session.createQuery(hql);
         query.setParameter("id", new BigDecimal(id));
@@ -31,16 +29,15 @@ public class DaoEstapaGeneral extends ImpGeneryHibernateDao<CivEtapasGenerales, 
         return null;
 
     }
-    
+
     @Override
-    public CivEtapasGenerales getCivEtapaGeneral(Session session , int idEtapaGeneral) throws Exception {
-        String sql = "SELECT * FROM CIV_ETAPAS_GENERALES WHERE ETAGEN_ID = :idEtapaGeneral";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivEtapasGenerales.class);
+    public CivEtapasGenerales getCivEtapaGeneral(Session session, int idEtapaGeneral) throws Exception {
+        String hql = "from CivEtapasGenerales where etagenId=:idEtapaGeneral";
+        Query query = session.createQuery(hql);
         query.setInteger("idEtapaGeneral", idEtapaGeneral);
         if (query.list().size() > 0) {
             return (CivEtapasGenerales) query.list().get(0);
-        }   
+        }
         return null;
     }
 

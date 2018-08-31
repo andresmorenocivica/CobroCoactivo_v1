@@ -153,6 +153,8 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                     ArchivoDetExpedientes archivoDetExpedientes = new ArchivoDetExpedientes(civArchivoDetExpediente, civArchivoDetExpediente.getCivEstadoArchDetExp(), civArchivoDetExpediente.getCivDetalleExpedientes());
                     bean.getListArchivoDetExpedientes().add(archivoDetExpedientes);
                 }
+            } else {
+                throw new ExpedientesException("No hay archivo en esta carpeta, agrege archivo por favor.", 2);
             }
         } finally {
             session.flush();
@@ -166,18 +168,18 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         try {
             Transaction transaction = session.beginTransaction();
             if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
-                CivArchivoDetExpedientes archivoDetExpedientes = new CivArchivoDetExpedientes();
-                CivEstadoArchDetExp estadoArchDetExp = new CivEstadoArchDetExp();
-                estadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
+                CivArchivoDetExpedientes civArchivoDetExpedientes = new CivArchivoDetExpedientes();
+                CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
+                civEstadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
                 CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().find(session, new BigDecimal(bean.getIdDetExpediente()));
-                archivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                archivoDetExpedientes.setArcdetexpFechaproceso(new Date());
-                archivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
-                archivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                archivoDetExpedientes.setCivEstadoArchDetExp(estadoArchDetExp);
+                civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
+                civArchivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
+                civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
                 InputStream stream = bean.getFile().getInputStream();
                 Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                getArchivoDetExpedientesDAO().create(session, archivoDetExpedientes);
+                getArchivoDetExpedientesDAO().create(session, civArchivoDetExpedientes);
                 transaction.commit();
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("$('#addArchivo').modal('hide')");
@@ -311,9 +313,11 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         try {
             bean.setListSolicitudes(new ArrayList<>());
             List<CivSolicitudes> listCivSolicitudes = getSolicitudesDAO().getCivSolicitudesPendientes(session);
-            for (CivSolicitudes civSolicitudes : listCivSolicitudes) {
-                Solicitudes solicitudes = new Solicitudes(civSolicitudes, civSolicitudes.getCivEstadoSolicitudes(), civSolicitudes.getCivUsuarios());
-                bean.getListSolicitudes().add(solicitudes);
+            if (listCivSolicitudes != null) {
+                for (CivSolicitudes civSolicitudes : listCivSolicitudes) {
+                    Solicitudes solicitudes = new Solicitudes(civSolicitudes, civSolicitudes.getCivEstadoSolicitudes(), civSolicitudes.getCivUsuarios());
+                    bean.getListSolicitudes().add(solicitudes);
+                }
             }
         } finally {
             session.flush();
@@ -343,9 +347,11 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
         try {
             bean.setListDetalleSolicitudes(new ArrayList<>());
             List<CivDetalleSolicitudes> listCivDetalleSolicitudes = getDetalleSolicitudesDAO().getCivDetalleSolicitudes(session);
-            for (CivDetalleSolicitudes civDetalleSolicitudes : listCivDetalleSolicitudes) {
-                DetalleSolicitudes detalleSolicitudes = new DetalleSolicitudes(civDetalleSolicitudes, civDetalleSolicitudes.getCivEstadoDetalleSolicitudes(), civDetalleSolicitudes.getCivSolicitudes());
-                bean.getListDetalleSolicitudes().add(detalleSolicitudes);
+            if (listCivDetalleSolicitudes != null) {
+                for (CivDetalleSolicitudes civDetalleSolicitudes : listCivDetalleSolicitudes) {
+                    DetalleSolicitudes detalleSolicitudes = new DetalleSolicitudes(civDetalleSolicitudes, civDetalleSolicitudes.getCivEstadoDetalleSolicitudes(), civDetalleSolicitudes.getCivSolicitudes());
+                    bean.getListDetalleSolicitudes().add(detalleSolicitudes);
+                }
             }
         } finally {
             session.flush();

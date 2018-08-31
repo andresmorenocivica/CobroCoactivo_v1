@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivEstadoTipoDatosPersonas;
  *
  * @author emadrid
  */
-public class DaoEstadoTipoDatosPersonas extends ImpGeneryHibernateDao<CivEstadoTipoDatosPersonas, Integer> implements ITEstadoTipoDatosPersonas{
+public class DaoEstadoTipoDatosPersonas extends ImpGeneryHibernateDao<CivEstadoTipoDatosPersonas, Integer> implements ITEstadoTipoDatosPersonas {
 
 }

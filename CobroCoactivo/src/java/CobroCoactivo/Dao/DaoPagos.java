@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivPagos;
  *
  * @author jvergara
  */
-public class DaoPagos extends ImpGeneryHibernateDao<CivPagos, Integer> implements ITPagos{
-    
+public class DaoPagos extends ImpGeneryHibernateDao<CivPagos, Integer> implements ITPagos {
+
 }

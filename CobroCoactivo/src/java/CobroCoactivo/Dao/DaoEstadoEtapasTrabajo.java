@@ -13,5 +13,5 @@ import CobroCoactivo.Persistencia.CivEstadoEtapaTrabajos;
  * @author AMORENO
  */
 public class DaoEstadoEtapasTrabajo extends ImpGeneryHibernateDao<CivEstadoEtapaTrabajos, Integer> implements ITEstadoEtapasTrabajo {
-    
+
 }

@@ -8,12 +8,13 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivDetalleCobroDeudas;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
  * @author emadrid
  */
 public interface ITDetalleCobroDeudas extends ITGeneryHibernateDao<CivDetalleCobroDeudas, Integer> {
-    
-    public List<CivDetalleCobroDeudas> listarDetalleCobroDeudas(int idCobro) throws Exception ;
+
+    public List<CivDetalleCobroDeudas> listarDetalleCobroDeudas(Session session, int idCobro) throws Exception;
 }

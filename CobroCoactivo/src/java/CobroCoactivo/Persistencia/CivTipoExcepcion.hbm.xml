@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/08/2018 09:56:14 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="CobroCoactivo.Persistencia.CivTipoExcepcion" table="CIV_TIPO_EXCEPCION" schema="COBROCOACTIVO_V1" optimistic-lock="version">
+        <id name="tipexcId" type="big_decimal">
+            <column name="TIPEXC_ID" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <property name="tipexcNombre" type="string">
+            <column name="TIPEXC_NOMBRE" length="50" />
+        </property>
+        <property name="tipexcFechaproceso" type="date">
+            <column name="TIPEXC_FECHAPROCESO" length="7" />
+        </property>
+        <property name="tipexcFechainicial" type="date">
+            <column name="TIPEXC_FECHAINICIAL" length="7" />
+        </property>
+        <property name="tipexcFechafinal" type="date">
+            <column name="TIPEXC_FECHAFINAL" length="7" />
+        </property>
+        <set name="civExcepcioneses" table="CIV_EXCEPCIONES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXC_TIPEXC_FK" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="CobroCoactivo.Persistencia.CivExcepciones" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -56,8 +56,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -97,10 +95,16 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
 
     @Override
     public void cargarListaTipoDeudas(BeanGestionDeudas bean) throws Exception {
-        List<CivTipoDeudas> listCivTipoDeudas = getTipoDeudasDAO().listAll();
-        for (CivTipoDeudas CivTipoDeuda : listCivTipoDeudas) {
-            TipoDeudas tipoDeudas = new TipoDeudas(CivTipoDeuda);
-            bean.getListTipoDeudas().add(tipoDeudas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<CivTipoDeudas> listCivTipoDeudas = getTipoDeudasDAO().findAll(session);
+            for (CivTipoDeudas CivTipoDeuda : listCivTipoDeudas) {
+                TipoDeudas tipoDeudas = new TipoDeudas(CivTipoDeuda);
+                bean.getListTipoDeudas().add(tipoDeudas);
+            }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -171,7 +175,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
             bean.setListDeudas(new ArrayList<>());
             switch (bean.getTipoBusqueda()) {
                 case 1:
-                    listCivDeudas = getDeudasDAO().listarDeudasByRefencia(session, bean.getReferenciaDeuda().toUpperCase());
+                    listCivDeudas = getDeudasDAO().listarDeudasByReferencia(session, bean.getReferenciaDeuda().toUpperCase());
                     break;
                 case 2:
                     listCivDeudas = getDeudasDAO().listarDeudasByFechaAdquisicion(session, bean.getFechaCargueInicial(), bean.getFechaCargueFinal());
@@ -191,7 +195,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                 if (listCivDeudas.size() > 0) {
                     int i = 0;
                     for (CivDeudas civDeuda : listCivDeudas) {
-                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, civDeuda.getDeuRefencia());
+                        CivDetalleExpedientes civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, civDeuda.getDeuReferencia());
                         if (civDetalleExpedientes != null) {
                             bean.setBtnCrearExp(false);
                         }
@@ -269,15 +273,14 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
 
     @Override
     public Deudas cargarProcentajeCobro(Deudas deudas) throws Exception {
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
             List<CivCobroDeudas> listaCivCobroDeudas = getCobroDeudasDAO().findAll(session);
             for (CivCobroDeudas civCobroDeudas : listaCivCobroDeudas) {
-                List<CivDetalleCobroDeudas> listCivDetalleCobroDeudas = getDetalleCobroDeudasDAO().listarDetalleCobroDeudas(civCobroDeudas.getCobdeuId().intValue());
+                List<CivDetalleCobroDeudas> listCivDetalleCobroDeudas = getDetalleCobroDeudasDAO().listarDetalleCobroDeudas(session, civCobroDeudas.getCobdeuId().intValue());
                 for (CivDetalleCobroDeudas civDetalleCobroDeudas : listCivDetalleCobroDeudas) {
-                    CivValorTipoDetalleCobro civValorTipoDetalleCobro = getValorTipoDetalleCobroDAO().cargarValorDetalle(civDetalleCobroDeudas.getCivValorTipoDetalleCobro().getValtipdetcobId().intValue());
-                    CivTipoDetalleCobro civTipoDetalleCobro = getTipoDetalleCobroDAO().cargarTipoDetalleCobro(civValorTipoDetalleCobro.getCivTipoDetalleCobro().getTipdetcobId().intValue());
+                    CivValorTipoDetalleCobro civValorTipoDetalleCobro = getValorTipoDetalleCobroDAO().cargarValorDetalle(session, civDetalleCobroDeudas.getCivValorTipoDetalleCobro().getValtipdetcobId().intValue());
+                    CivTipoDetalleCobro civTipoDetalleCobro = getTipoDetalleCobroDAO().cargarTipoDetalleCobro(session, civValorTipoDetalleCobro.getCivTipoDetalleCobro().getTipdetcobId().intValue());
 
                 }
             }

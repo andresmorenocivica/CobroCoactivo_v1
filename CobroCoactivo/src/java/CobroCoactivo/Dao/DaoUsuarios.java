@@ -8,7 +8,6 @@ package CobroCoactivo.Dao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Persistencia.CivUsuarios;
-import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.*;
 import org.hibernate.Query;
@@ -21,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author JefreySistemas
  */
-public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios{
+public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> implements ITUsuarios {
 
 //    @Override
 //    public CivUsuarios consultarUsuario(String usuario, String password) throws Exception {
@@ -34,7 +33,7 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
 //        return null;
 //    }
     @Override
-    public CivUsuarios getCivUsuario(Session session , int idpersona) throws Exception {
+    public CivUsuarios getCivUsuario(Session session, int idpersona) throws Exception {
         String hql = "from CivUsuarios where civPersonas.perId =:perId";
         Query query = session.createQuery(hql);
         query.setParameter("perId", new BigDecimal(idpersona));
@@ -45,13 +44,6 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
     }
 
     @Override
-
-    public List<CivUsuarios> getAll(Session session) throws Exception {
-        return session.createCriteria(CivUsuarios.class).list();
-    }
-
-    @Override
-
     public CivUsuarios consultarUsuarioBy(Session session, int id_usuario) throws Exception {
         return (CivUsuarios) session.createCriteria(CivUsuarios.class)
                 .add(Restrictions.eq("usuId", new BigDecimal(id_usuario)))
@@ -66,7 +58,6 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
     }
 
     @Override
-
     public CivUsuarios consultarUsuarioByNombre(Session session, String nombre_usuario) throws Exception {
         return (CivUsuarios) session.createCriteria(CivUsuarios.class)
                 .add(Restrictions.eq("usuNombre", nombre_usuario))
@@ -74,21 +65,18 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
     }
 
     @Override
-
-    public List<CivUsuarios> listarUsuarios(String nombre_usuario) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "SELECT * FROM CIV_USUARIOS WHERE USU_NOMBRE LIKE '%" + nombre_usuario + "%' ORDER BY 1 asc";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(CivUsuarios.class);
+    public List<CivUsuarios> listarUsuarios(Session session, String nombre_usuario) throws Exception {
+        String hql = "from CivUsuarios where usuNombre like '%" + nombre_usuario + "%' order by 1 asc";
+        Query query = session.createQuery(hql);
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 
     /**
      *
+     * @param session
      * @param id_usuario
      * @return
      * @throws Exception
@@ -98,22 +86,19 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
         String sql = "select P_DATA from CIV_USP_HISTORIA where USU_ID =:usu_id";
         SQLQuery query = session.createSQLQuery(sql);
         query.setInteger("usu_id", id_usuario);
-
         if (query.list().size() > 0) {
             if (query.list() instanceof java.util.ArrayList) {
                 return (ArrayList<String>) query.list();
             }
         }
         return new ArrayList<>();
-
     }
 
     @Override
     public List<CivUspHistoria> consultarEstado_HPAS(Session session, int id_usuario) throws Exception {
-
         String hql = "from CivUspHistoria where civUsuarios.usuId =:id_usuario";
         Query query = session.createQuery(hql);
-        query.setParameter("id_usuario",new BigDecimal(id_usuario));
+        query.setParameter("id_usuario", new BigDecimal(id_usuario));
         if (query.list().size() > 0) {
             return query.list();
         }
@@ -126,7 +111,6 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
         String sql = "select FECHA_PROCESO from CIV_USP_HISTORIA where USU_ID =:usu_id and ESTUSP_ID=1 order by FECHA_PROCESO DESC";
         SQLQuery query = session.createSQLQuery(sql);
         query.setInteger("usu_id", id_usuario);
-
         if (query.list().size() > 0) {
             fecha = (Date) query.list().get(0);
         }
@@ -143,14 +127,9 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
 
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public long insert(Session session, CivUsuarios civUsuario) throws Exception {
-        return Integer.parseInt(session.save(civUsuario).toString());
-    }
-
     /**
      *
+     * @param session
      * @param uspHistoria
      * @return
      * @throws Exception
@@ -167,14 +146,6 @@ public class DaoUsuarios extends ImpGeneryHibernateDao<CivUsuarios, Integer> imp
     public boolean updateHisPass(Session session, CivUspHistoria uspHistoria) throws Exception {
         session.update(uspHistoria);
         return true;
-    }
-
-    
-   
-    @Override
-    public void update(Session session, CivUsuarios civUsuario){
-        session.merge(civUsuario);
-        
     }
 
 }

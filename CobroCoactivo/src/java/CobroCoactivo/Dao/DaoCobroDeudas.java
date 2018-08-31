@@ -7,7 +7,6 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivCobroDeudas;
-import CobroCoactivo.Utility.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -19,9 +18,9 @@ public class DaoCobroDeudas extends ImpGeneryHibernateDao<CivCobroDeudas, Intege
 
     @Override
     public CivCobroDeudas getCobroDeudas(Session session, int idCobroDeuda) throws Exception {
-        String hql = "from CivCobroDeudas where cobdeuId=:cobroDeuda";
+        String hql = "from CivCobroDeudas where cobdeuId=:idCobroDeuda";
         Query query = session.createQuery(hql);
-        query.setInteger("cobroDeuda", idCobroDeuda);
+        query.setInteger("idCobroDeuda", idCobroDeuda);
         if (query.list().size() > 0) {
             return (CivCobroDeudas) query.list().get(0);
         }

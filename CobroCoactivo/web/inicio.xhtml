@@ -10,12 +10,32 @@
                 <div class="content-wrapper">
                     <!-- Content Header (Page header) -->
                     <section class="content-header">
-                        
+
                     </section>
 
                     <!-- Main content -->
                     <section class="content">
-                       
+                        <h:panelGroup rendered="#{loginBean.dias_vencimiento gt 0}">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-2 col-sm-1 col-xs-offset-0">
+                                        &nbsp;
+                                    </div>
+                                    <div class="col-lg-6 col-md-8 col-sm-9 col-xs-11">
+                                        <div class="alert alert-danger alert-dismissable fade in">
+                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <strong>Alerta!</strong> Su contraseña del sistema vence en <span class="alert-link">#{loginBean.dias_vencimiento}</span> días.
+                                            <hr/>
+                                            Click <h:link value="Aqui" outcome="restaurarPassword" class="alert-link"></h:link> para renovar 
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-1">
+                                        &nbsp;
+                                    </div>
+                                </div><!--row-->
+                            </div>
+                        </h:panelGroup>
+
                     </section>
                     <!-- /.content -->
                 </div>

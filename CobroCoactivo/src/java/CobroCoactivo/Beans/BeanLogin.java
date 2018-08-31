@@ -2,7 +2,6 @@ package CobroCoactivo.Beans;
 
 import CobroCoactivo.Modelo.Modulos;
 import CobroCoactivo.Exception.LoginException;
-import CobroCoactivo.Singleton.AuthSingleton;
 import CobroCoactivo.Bo.LoginBO;
 import CobroCoactivo.Bo.LoginImplBO;
 import CobroCoactivo.Crypto.DigestHandler;
@@ -21,12 +20,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 

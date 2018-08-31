@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivDeudasImpuesto;
  *
  * @author AMORENO
  */
-public class DaoDeudasImpuesto extends ImpGeneryHibernateDao<CivDeudasImpuesto, Integer> implements ITDeudasImpuesto{
-    
+public class DaoDeudasImpuesto extends ImpGeneryHibernateDao<CivDeudasImpuesto, Integer> implements ITDeudasImpuesto {
+
 }

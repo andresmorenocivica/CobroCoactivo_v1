@@ -141,7 +141,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
 
                 civFasesGenerales.setCivDocumenGenerales(civDocumenGenerales);
                 getFaseGeneralDAO().update(session, civFasesGenerales);
-                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDao().getFasesTrabajos(session, civFasesGenerales.getFasgenId().intValue());
+                CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDao().find(session, new BigDecimal(civFasesGenerales.getFasgenId().intValue()));
                 if (civFasesTrabajos != null) {
                     civFasesTrabajos.setFastraDescripcion(civFasesGenerales.getFasgenDescripcion());
                     civFasesTrabajos.setFastraDianim(civFasesGenerales.getFasgenDianim());
@@ -349,7 +349,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
             civEtapasGenerales.setEtagenObligatorio(bean.getEtapasGenerales().getObligatorio());
             civEtapasGenerales.setEtagenPrioridad(new BigDecimal(bean.getEtapasGenerales().getPrioridad()));
             getItEstapaGeneral().create(session, civEtapasGenerales);
-            CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().find(session, bean.getPlanGenerales().getId());
+            CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDao().find(session, new BigDecimal(bean.getPlanGenerales().getId()));
             if (civPlanTrabajos != null) {
                 if (civEtapasGenerales.getEtagenObligatorio().equals("TRUE")) {
                     CivEstadoEtapaTrabajos civEstadoEtapaTrabajos = new CivEstadoEtapaTrabajos();
@@ -594,7 +594,7 @@ public class PlanGeneralImpBO implements PlanGeneralBO {
                 }
                 //  faseObligatoria =  civFasesGenerale.getFasgenObligatorio().equals("TRUE") ? true : false;
                 CivEtapasGenerales civEtapasGenerales = getItEstapaGeneral().getCivEtapaGeneral(session, civFasesGenerale.getCivEtapasGenerales().getEtagenId().intValue());
-                CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().getCivDocumentoGeneral(session, civFasesGenerale.getCivDocumenGenerales().getDocgenId().intValue());
+                CivDocumenGenerales civDocumenGenerales = getiTDocumentoGenerales().find(session, civFasesGenerale.getCivDocumenGenerales().getDocgenId());
                 FasesGenerales fasesGenerales = new FasesGenerales(civFasesGenerale, civFasesGenerale.getCivEstadoFasesGenerales(), civEtapasGenerales, civDocumenGenerales);
                 if (fasesGenerales.getObligatorio().equals("TRUE")) {
                     fasesGenerales.setObligatorio("Si");

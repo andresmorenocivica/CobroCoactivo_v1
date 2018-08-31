@@ -18,5 +18,4 @@ public interface ITFasesTrabajo extends ITGeneryHibernateDao<CivFasesTrabajos, I
 
     public List<CivFasesTrabajos> listarFasesTrabajo(Session session , int idEtapaTrabajo) throws Exception;
     
-    public CivFasesTrabajos getFasesTrabajos (Session session , int idFasesTrabajos) throws Exception;
 }

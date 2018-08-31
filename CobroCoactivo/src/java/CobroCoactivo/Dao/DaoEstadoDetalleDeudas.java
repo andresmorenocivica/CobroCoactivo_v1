@@ -5,7 +5,6 @@
  */
 package CobroCoactivo.Dao;
 
-import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivEstadoDetalleDeudas;
 
@@ -13,6 +12,6 @@ import CobroCoactivo.Persistencia.CivEstadoDetalleDeudas;
  *
  * @author AMORENO
  */
-public class DaoEstadoDetalleDeudas extends ImpGeneryHibernateDao<CivEstadoDetalleDeudas, Integer> implements ITEstadoDetalleDeudas{
-    
+public class DaoEstadoDetalleDeudas extends ImpGeneryHibernateDao<CivEstadoDetalleDeudas, Integer> implements ITEstadoDetalleDeudas {
+
 }

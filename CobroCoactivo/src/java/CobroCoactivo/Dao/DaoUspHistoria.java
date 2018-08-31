@@ -12,6 +12,6 @@ import CobroCoactivo.Persistencia.CivUspHistoria;
  *
  * @author emadrid
  */
-public class DaoUspHistoria extends ImpGeneryHibernateDao<CivUspHistoria, Integer> implements ITUspHistoria{
-    
+public class DaoUspHistoria extends ImpGeneryHibernateDao<CivUspHistoria, Integer> implements ITUspHistoria {
+
 }

@@ -7,8 +7,7 @@ package CobroCoactivo.Dao;
 
 import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivTipoDetalleCobro;
-import CobroCoactivo.Utility.HibernateUtil;
-import org.hibernate.SQLQuery;
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 /**
@@ -18,17 +17,13 @@ import org.hibernate.Session;
 public class DaoTipoDetalleCobro extends ImpGeneryHibernateDao<CivTipoDetalleCobro, Integer> implements ITTipoDetalleCobro {
 
     @Override
-    public CivTipoDetalleCobro cargarTipoDetalleCobro(int tipoDetalle) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "SELECT * FROM CIV_TIPO_DETALLE_COBRO WHERE TIPDETCOB_ID =:tipoDetalle";
-        SQLQuery query = session.createSQLQuery(hql);
-        query.addEntity(CivTipoDetalleCobro.class);
+    public CivTipoDetalleCobro cargarTipoDetalleCobro(Session session, int tipoDetalle) throws Exception {
+        String hql="from CivTipoDetalleCobro where tipdetcobId=:tipoDetalle";
+        Query query = session.createQuery(hql);
         query.setInteger("tipoDetalle", tipoDetalle);
         if (query.list().size() > 0) {
-            session.close();
             return (CivTipoDetalleCobro) query.list().get(0);
         }
-        session.close();
         return null;
     }
 

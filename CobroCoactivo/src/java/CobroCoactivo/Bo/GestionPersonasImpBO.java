@@ -88,7 +88,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
     public void cargarEstadoPersonas(BeanGestionPersonas bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            List<CivEstadoPersonas> listCivEstadoPersonas = getEstadoPersonasDAO().listAll(session);
+            List<CivEstadoPersonas> listCivEstadoPersonas = getEstadoPersonasDAO().findAll(session);
             for (CivEstadoPersonas civEstadoPersona : listCivEstadoPersonas) {
                 EstadoPersonas estadoPersonas = new EstadoPersonas(civEstadoPersona);
                 bean.getListEstadoPersonas().add(estadoPersonas);
@@ -139,7 +139,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             }
             if (listCivMovimientos != null) {
                 for (CivMovimientos civMovimiento : listCivMovimientos) {
-                    CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().getFasesTrabajos(session, civMovimiento.getCivFasesTrabajos().getFastraId().intValue());
+                    CivFasesTrabajos civFasesTrabajos = getFasesTrabajoDAO().find(session, new BigDecimal(civMovimiento.getCivFasesTrabajos().getFastraId().intValue()));
                     Movimientos movimientos = new Movimientos(civMovimiento, civMovimiento.getCivEstadoMovimientos(), civMovimiento.getCivDeudas(), civFasesTrabajos, civMovimiento.getCivPersonas(), civMovimiento.getCivUsuarios());
                     bean.getDeudaSelecionada().getListMovimientos().add(movimientos);
                 }
@@ -187,9 +187,15 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             civPersonas.setPerApellido2(bean.getDetallePersona().getApellido2());
             civPersonas.setCivEstadoPersonas(civEstadoPersonas);
             getPersonasDAO().update(session, civPersonas);
+            for (int i = 0; i < bean.getDetallePersona().getListDatosPersonas().size(); i++) {
+                int idDatosPersona = bean.getDetallePersona().getListDatosPersonas().get(i).getId();
+                CivDatosPersonas civDatosPersonas = getDatosPersonasDAO().find(session, new BigDecimal(idDatosPersona));
+                civDatosPersonas.setDatperDescripcion(bean.getDetallePersona().getListDatosPersonas().get(i).getDescripcion());
+                getDatosPersonasDAO().update(session, civDatosPersonas);
+            }
             if (civPersonas != null) {
                 transaction.commit();
-                throw new PersonasException("Se actualizo la persona correctamente", 1);
+                throw new PersonasException("Se actualizo la persona correctamente.", 1);
             }
 
         } finally {
@@ -200,18 +206,24 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
 
     @Override
     public void cargarDeudas(BeanGestionPersonas bean) throws Exception {
-        if (bean != null) {
-            if (bean.getDetallePersona() != null) {
-                if (bean.getDetallePersona().getId() != 0) {
-                    List<CivDeudas> listCivDeudas = getDeudasDAO().listarDeudas(bean.getDetallePersona().getId());
-                    if (listCivDeudas != null) {
-                        for (CivDeudas civDeudas : listCivDeudas) {
-                            Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
-                            bean.getDetallePersona().getListdeuda().add(deudas);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            if (bean != null) {
+                if (bean.getDetallePersona() != null) {
+                    if (bean.getDetallePersona().getId() != 0) {
+                        List<CivDeudas> listCivDeudas = getDeudasDAO().listarDeudas(session, bean.getDetallePersona().getId());
+                        if (listCivDeudas != null) {
+                            for (CivDeudas civDeudas : listCivDeudas) {
+                                Deudas deudas = new Deudas(civDeudas, civDeudas.getCivEstadoDeudas(), civDeudas.getCivPlanTrabajos(), civDeudas.getCivTipoDeudas(), civDeudas.getCivPersonas());
+                                bean.getDetallePersona().getListdeuda().add(deudas);
+                            }
                         }
                     }
                 }
             }
+        } finally {
+            session.flush();
+            session.close();
         }
     }
 
@@ -243,7 +255,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
             Transaction transaction = session.beginTransaction();
             CivPersonas civPersonas = new CivPersonas();
             CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, BigDecimal.valueOf(bean.getTipoDocumentoPersona()));
-            CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().getEstadoPersona(BigDecimal.valueOf(1));
+            CivEstadoPersonas civEstadoPersonas = getEstadoPersonasDAO().find(session, BigDecimal.valueOf(1));
             civPersonas.setPerNombre1(bean.getDetallePersona().getNombre1().toUpperCase());
             civPersonas.setPerNombre2(bean.getDetallePersona().getNombre2().toUpperCase());
             civPersonas.setPerSexo(bean.getDetallePersona().getSexo().toUpperCase());
@@ -273,7 +285,7 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                         civTipoDatosPersonas.setTipdatperFechafinal(bean.getListTipoDatosPersonas().get(i).getFechafinal());
                         civTipoDatosPersonas.setCivEstadoTipoDatosPersonas(civEstadoTipoDatosPersonas);
                         CivDatosPersonas civDatosPersonas = new CivDatosPersonas();
-                        CivEstadoDatosPersonas civEstadoDatosPersonas = getEstadoDatosPersonasDAO().getEstadoDatosPersonas(BigDecimal.valueOf(1));
+                        CivEstadoDatosPersonas civEstadoDatosPersonas = getEstadoDatosPersonasDAO().find(session, BigDecimal.valueOf(1));
                         civDatosPersonas.setDatperDescripcion(bean.getListTipoDatosPersonas().get(i).getDescripcionDatosPersonas());
                         civDatosPersonas.setDatperFechaproceso(new Date());
                         civDatosPersonas.setCivPersonas(civPersonas);
@@ -284,6 +296,8 @@ public class GestionPersonasImpBO implements GestionPersonasBO, Serializable {
                 }
             }
             transaction.commit();
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+            requestContext.execute("$('#modalAgregarPersona').modal('hide')");
             throw new PersonasException("Se guardo la persona exitosamente", 1);
 
         } finally {
