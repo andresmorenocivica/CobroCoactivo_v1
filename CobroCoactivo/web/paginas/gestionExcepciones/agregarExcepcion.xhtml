@@ -6,10 +6,17 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'agregarExcepcion'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
                 <h:form id="frmAddExcepciones" enctype="multipart/form-data">
                     <div class="content-wrapper">
                         <section class="content">
@@ -59,11 +66,11 @@
                                                                 <div class="col-md-5">
                                                                     <label>Numero Radicado:</label>
                                                                     <h:inputText id="numRadicado" value="#{gestionExcepcionesBean.numRadicado}" class="form-control" required="true" 
-                                                                                 requiredMessage="Primer nombre requerido"></h:inputText>
+                                                                                 requiredMessage="Numero del radicado requerido"></h:inputText>
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <label>Fecha Radicado:</label>
-                                                                    <p:calendar value="#{gestionExcepcionesBean.fechaRadicado}" id="fechaRadicado" class="form-control pull-right" pattern="MM/dd/yyyy">
+                                                                    <p:calendar required="true" requiredMessage="Digite la fecha." value="#{gestionExcepcionesBean.fechaRadicado}" id="fechaRadicado" class="form-control pull-right" pattern="MM/dd/yyyy">
                                                                     </p:calendar>
                                                                 </div>
                                                                 <div class="col-md-5">
@@ -75,15 +82,14 @@
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <label> Agregar Archivo:</label>
-                                                                    <h:inputFile a:accept=".pdf" value="#{gestionExcepcionesBean.file}" id="file" />
+                                                                    <input type="file" accept=".pdf" jsf:value="#{gestionExcepcionesBean.file}" jsf:id="file" jsf:required="true" jsf:requiredMessage="Agrege un archivo .pdf"/>
                                                                     <p class="help-block">.pdf</p>
-                                                                </div>
+                                                                </div> 
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div align="right">
-                                                                    <h:commandLink value="Guardar" id="btnGuardarPersona" class="btn btn-success">
-                                                                        <f:ajax event="click" listener="#{gestionExcepcionesBean.guardarExcepcion()}" execute="frmAddExcepciones" />
-                                                                    </h:commandLink>
+                                                                    <h:commandButton value="Guardar" id="btnGuardarPersona" class="btn btn-success" action="#{gestionExcepcionesBean.guardarExcepcion()}">
+                                                                    </h:commandButton>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -137,6 +143,11 @@
                         </section>
                     </div>
                 </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

@@ -119,7 +119,7 @@ public class GestionAcuerdosPagosImpBO implements GestionAcuerdosPagosBO {
     @Override
     public void getListAcuerdosPagos(BeanAcuerdosPagos beanAcuerdosPagos) throws Exception {
         beanAcuerdosPagos.setListFinanciacion(new ArrayList<>());
-        WebTarget basetarTarget = beanAcuerdosPagos.getClient().target("http://10.10.2.204:8080/WebServiceContraversiones/api/acuerdosPagos");
+        WebTarget basetarTarget = beanAcuerdosPagos.getClient().target("http://localhost:8080/WebServiceContraversiones/api/acuerdosPagos");
         if (basetarTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = basetarTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);
@@ -146,7 +146,7 @@ public class GestionAcuerdosPagosImpBO implements GestionAcuerdosPagosBO {
         try {
             beanAcuerdosPagos.setListDeudas(new ArrayList<>());
             Client client = beanAcuerdosPagos.getClient();
-            WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/acuerdosPagos/carteras?nofinanciacion=" + beanAcuerdosPagos.getFinanciacion().getNumero());
+            WebTarget baseTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/acuerdosPagos/carteras?nofinanciacion=" + beanAcuerdosPagos.getFinanciacion().getNumero());
             if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
                 String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
                 JSONArray jSONArray = new JSONArray(data);

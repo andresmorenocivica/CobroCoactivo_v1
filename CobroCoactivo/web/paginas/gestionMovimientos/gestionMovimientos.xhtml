@@ -11,7 +11,12 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
-
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'gestionMovimientos'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
                 <h:form id="frmGestionMovimientos">
                     <div class="content-wrapper">
                         <section class="content-header">
@@ -26,7 +31,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
+                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" showSummary="true"/>
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="box box-danger">
@@ -189,6 +194,11 @@
                         </section>
                     </div>
                 </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

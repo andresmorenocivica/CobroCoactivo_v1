@@ -11,6 +11,12 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'solicitudesExpedientes'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
                 <h:form id="frmSolicitudesExpedientes">
                     <div  class="content-wrapper">
                         <section class="content-header">
@@ -25,7 +31,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                            <div align="right">
+                            <div align="right" style="margin: 8px">
                                 <h:commandLink class="btn btn-success" value="Recibir Expedientes" action="recibirExpedientes.xhtml">
                                 </h:commandLink>
                             </div>
@@ -107,6 +113,11 @@
                         </section>
                     </div>
                 </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

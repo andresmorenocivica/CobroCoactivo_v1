@@ -910,7 +910,7 @@
                                             <h:inputText a:placeholder="Ingrese el documento" class="form-control text-uppercase" maxlength="10" id="txtNumero" value="#{gestionUsuariosBean.documentoPersona}" required="true" requiredMessage="Digite el numero de documento"></h:inputText>
                                             <span class="input-group-btn">
                                                 <h:commandLink class="btn btn-info btn-danger" value="Buscar" >
-                                                    <f:ajax event="click" execute="frmModalRegistrarUser:sltDocumentos frmModalRegistrarUser:txtNumero" listener="#{gestionUsuariosBean.buscarPersona(1)}" render="frmModalRegistrarUser:tblPersona" ></f:ajax>
+                                                    <f:ajax event="click" execute="frmModalRegistrarUser:sltDocumentos frmModalRegistrarUser:txtNumero" listener="#{gestionUsuariosBean.buscarPersona()}" render="frmModalRegistrarUser:tblPersona" ></f:ajax>
                                                 </h:commandLink>
                                             </span>
                                         </div>
@@ -998,8 +998,8 @@
                                 <div class="col-lg-3">
                                     <div class="input-group ">
                                         <label>Tipo de documento</label>
-                                        <h:selectOneMenu  id="DetPerSelectDocumentos" class="form-control" value="#{detallePersonasBean}" disabled="true" converter="javax.faces.Integer">
-                                            <f:selectItems value="#{gestionPersonaBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
+                                        <h:selectOneMenu  id="DetPerSelectDocumentos" class="form-control" value="#{detallePersonasBean.detallePersonasModal.tipoDocumentos.id}" disabled="true" converter="javax.faces.Integer">
+                                            <f:selectItems value="#{detallePersonasBean.listTipoDocumento}" var="listDocumento" itemValue="#{listDocumento.codigo}" itemLabel="#{listDocumento.descripcion}"></f:selectItems>
                                         </h:selectOneMenu>
                                     </div>
                                 </div>
@@ -1048,6 +1048,42 @@
                     </div>
                 </div>
             </div>
+            <h:form id="frmUpdateArchivo" enctype="multipart/form-data" >
+                <div class="modal fade" id="addArchivo" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog ">
+                        <div class="modal-content" jsf:id="modalContent">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">#{gestionExpedientesBean.titleModal}</h4>
+                            </div>
+                            <div class="modal-body" jsf:id="modalBody">
+                                <p:messages autoUpdate="true" id="mensajeModalUpdate" closable="true" showDetail="true" showSummary="false"></p:messages>
+                                <div class="col-sm-10" id="divArchivo">
+                                    <div class="form-group">
+                                        <label> Agregar Archivo</label>
+                                        <input type="file" accept=".pdf" class="form-control-file" jsf:id="file" jsf:value="#{gestionExpedientesBean.file}" jsf:required="true" jsf:requiredMessage="Selecione un archivo pdf."/>
+                                        <p class="help-block">.pdf</p>
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <h:commandLink action="#{gestionExpedientesBean.guardarArchivo()}" value="Guardar" id="btnGuardarArchivo" class="btn btn-success" rendered="#{gestionExpedientesBean.pnlBtnGuardarFile}">
+                                        </h:commandLink>
+                                        <h:commandButton actionListener="#{gestionExpedientesBean.updateArchivo()}" value="Actualizar" id="btnActualizarArchivo" class="btn btn-success" rendered="#{gestionExpedientesBean.pnlBtnActualizarFile}">
+                                        </h:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
         </div>
         <!-- jQuery 2.1.4 -->        
         <h:outputScript library="primefaces" name="jquery/jquery.js" />

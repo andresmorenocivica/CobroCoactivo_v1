@@ -26,7 +26,6 @@ public class DaoArchivoDetExpedientes extends ImpGeneryHibernateDao<CivArchivoDe
         if (query.list().size() > 0) {
             return query.list();
         }
-        session.close();
         return null;
     }
 

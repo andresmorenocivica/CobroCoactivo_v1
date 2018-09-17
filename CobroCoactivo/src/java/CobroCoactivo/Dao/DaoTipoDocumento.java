@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ImpGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Utility.HibernateUtil;
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Roymer Camacho
  */
-public class DaoTipoDocumento implements ITTipoDocumento {
+public class DaoTipoDocumento extends ImpGeneryHibernateDao<CivTipoDocumentos, Integer> implements ITTipoDocumento {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -39,7 +40,7 @@ public class DaoTipoDocumento implements ITTipoDocumento {
 
     @Override
     @Transactional
-    public List<CivTipoDocumentos> listAll(Session session )throws Exception {
+    public List<CivTipoDocumentos> listAll(Session session) throws Exception {
         String hql = "from CivTipoDocumentos";
         Query query = session.createQuery(hql);
         if (query.list().size() > 0) {
@@ -59,12 +60,4 @@ public class DaoTipoDocumento implements ITTipoDocumento {
         return null;
     }
 
-    @Override
-    @Transactional
-    public CivTipoDocumentos find(BigDecimal id) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        CivTipoDocumentos entity =  (CivTipoDocumentos) session.get(CivTipoDocumentos.class, id);
-        session.close();
-        return entity;
-    }
 }

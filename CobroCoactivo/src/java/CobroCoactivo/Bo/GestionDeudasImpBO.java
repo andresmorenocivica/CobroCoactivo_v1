@@ -110,9 +110,8 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
 
     @Override
     public void cargarListaCobroDeudas(BeanGestionDeudas bean) throws Exception {
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
             List<CivCobroDeudas> listCivCobroDeudas = getCobroDeudasDAO().findAll(session);
             for (CivCobroDeudas CivCobroDeuda : listCivCobroDeudas) {
                 CobroDeudas cobroDeudas = new CobroDeudas(CivCobroDeuda);
@@ -141,9 +140,8 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
     public void clasificacionDeudas(BeanGestionDeudas bean) throws Exception {
 
         bean.setListDeudas(new ArrayList<>());
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
             List<CivDeudas> listCivDeudas = getDeudasDAO().findAll(session);
             if (listCivDeudas != null) {
                 if (listCivDeudas.size() > 0) {
@@ -189,7 +187,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                     break;
             }
             if (listCivDeudas == null) {
-                throw new DeudasException("No se encontro niguna informaciòn.", 2);
+                throw new DeudasException("No se encontro ninguna informaciòn.", 2);
             }
             if (listCivDeudas != null) {
                 if (listCivDeudas.size() > 0) {
@@ -200,7 +198,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                             bean.setBtnCrearExp(false);
                         }
                         CivPersonas civPersonas = getPersonasDAO().consultarPersonasById(session, civDeuda.getCivPersonas().getPerId().intValue());
-                        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().getTipoDocumento(session, civPersonas.getCivTipoDocumentos().getTipdocId());
+                        CivTipoDocumentos civTipoDocumentos = getTipoDocumentoDAO().find(session, civPersonas.getCivTipoDocumentos().getTipdocId());
                         civPersonas.setCivTipoDocumentos(civTipoDocumentos);
                         CivPlanTrabajos civPlanTrabajos = getPlanTrabajoDAO().getPlanTrabajo(session, civDeuda.getCivPlanTrabajos().getPlatraId().intValue());
                         CivEstadoDeudas civEstadoDeudas = getEstadoDeudasDAO().getEstadoDeudas(session, civDeuda.getCivEstadoDeudas().getEstdeuId());
@@ -209,7 +207,7 @@ public class GestionDeudasImpBO implements GestionDeudasBO, Serializable {
                             civCobroDeudas = getCobroDeudasDAO().getCobroDeudas(session, civDeuda.getCivCobroDeudas().getCobdeuId().intValue());
                         }
                         Deudas deudas = new Deudas(civDeuda, civEstadoDeudas, civPlanTrabajos, civDeuda.getCivTipoDeudas(), civPersonas, civCobroDeudas);
-                        if (civCobroDeudas != null) {
+                            if (civCobroDeudas != null) {
                             switch (deudas.getCobroDeudas().getDescripcion()) {
                                 case "FACIL":
                                     deudas.getCobroDeudas().setColorDificultad("label label-primary");

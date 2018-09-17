@@ -97,7 +97,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
                         civFasesTrabajos.setFastraDiamax(BigDecimal.valueOf(fasesTrabajos.getDiamax()));
                         getFasesTrabajoDAO().update(session, civFasesTrabajos);
                         fasesTrabajos.setUpdateFase(false);
-                        throw new PlanTrabajoException("Fase de trabajo actualizada correctamente", 1);
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Fase de trabajo actualizada correctamente"));
+                        return;
                     } else {
                         throw new PlanTrabajoException("Fase de trabajo el dia maximo no puede ser mayor a " + civFasesGenerales.getFasgenDiamax(), 1);
                     }
@@ -278,7 +279,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
             beanGestionPlanTrabajo.init();
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#planTrabajo').modal('hide')");
-            throw new PlanTrabajoException("Plan de trabajo creado exitosamente", 1);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Plan de trabajo creado exitosamente"));
+            return;
         } finally {
             session.flush();
             session.close();
@@ -324,7 +326,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
             requestContext.execute("$('#fasesTrabajos').modal('hide')");
             getFases(beanGestionPlanTrabajo);
             getfasesGenerales(beanGestionPlanTrabajo);
-            throw new PlanTrabajoException("Fase de trabajo creada exitosamente", 1);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Fase de trabajo creada exitosamente"));
+            return;
         } finally {
             session.flush();
             session.close();
@@ -353,7 +356,8 @@ public class GestionPlanTrabajoImpBO implements GestionPlanTrabajoBO {
             beanGestionPlanTrabajo.listaEtapaTrabajo(beanGestionPlanTrabajo.getPlanTrabajos());
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#EtapasTrabajo').modal('hide')");
-            throw new PlanTrabajoException("Etapa De trabajo creada exitosamente", 1);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Etapa De trabajo creada exitosamente"));
+            return;
         } finally {
             session.flush();
             session.close();

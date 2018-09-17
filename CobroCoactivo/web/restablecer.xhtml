@@ -41,10 +41,7 @@
         </style>
     </h:head>
     <body>
-        <h:form id="formRestaurar">
-            <center>
-                <p:messages autoUpdate="true" id="restablecer" showSummary="true" showDetail="true" closable="true" severity="error, info, warn"/>
-            </center>
+        <h:form class="form-signin" id="formRestaurar">
             <div class="row" style="margin-top: 50px">
                 <div class="col-xs-12">
                     <div class="page-header">
@@ -103,6 +100,12 @@
                     <center>
                         <h:commandButton  style="width:10%" class="btn btn-success form-control" action="#{loginBean.actualizarContraseña()}" value="Renovar">
                         </h:commandButton>
+                    </center>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <center>
+                        <p:messages id="messages" autoUpdate="true" showDetail="true" closable="true" />
                     </center>
                 </div>
             </div>

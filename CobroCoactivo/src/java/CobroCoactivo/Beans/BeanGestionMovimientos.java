@@ -52,12 +52,12 @@ public class BeanGestionMovimientos implements Serializable {
             setGestionMovimientosBO(new GestionMovimientosImpBO());
             //getGestionMovimientosBO().cargarListadoDeudas(this);
             getGestionMovimientosBO().cargarListadoPlanesTrabajo(this);
+        } catch (MovimientosException me) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(me.getNivelFacesMessage(), "", me.getMessage()));
         } catch (Exception e) {
             Log_Handler.registrarEvento("Error al cargar datos : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getLoginBO().getID_Usuario()));
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
-        } finally {
-
         }
     }
 

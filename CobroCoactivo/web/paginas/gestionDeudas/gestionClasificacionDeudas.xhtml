@@ -10,162 +10,156 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
-                <div class="content-wrapper">
-                    <section class="content-header">
-                        <h1>
-                            Consultas
-                            <small>guia formulario para consultas</small>
-                        </h1>
-                        <ol class="breadcrumb">
-                            <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
-                            <li><a href="#">Example</a></li>
-                            <li class="active">Consultas</li>
-                        </ol>
-                    </section>
-                    <h:form id="frmClasificacionDeudas">
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'gestionClasificacionDeudas'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
+                <h:form id="frmClasificacionDeudas">
+                    <div class="content-wrapper">
+                        <section class="content-header">
+                            <h1>
+                                Clasificacion de la deuda.
+                               <!-- <small>guia formulario para consultas</small> -->
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                                <li><a href="#">Example</a></li>
+                                <li class="active">Consultas</li>
+                            </ol>
+                        </section>
                         <section class="content" >
                             <div jsf:id="contenedor">
-                                <div class="col-md-12">
-                                    <p:messages autoUpdate="true" id="mensajeConsultarDeudasClasificacion" showDetail="true"  closable="true"/>
-                                    <h:panelGrid id="pnlBusquedaDeuda" class="col-lg-12" >
-                                        <h:panelGroup >
-                                            <!-- Default box -->
-                                            <div class="box box-danger">
-                                                <div class="box-header with-border">
-                                                    <h3 class="box-title">Filtro de busquedas de Deudas</h3>
-                                                </div>
-                                                <div class="box-body">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <!-- Custom Tabs -->
-                                                            <div class="nav-tabs-custom" >
-                                                                <ul class="nav nav-tabs" >
-                                                                    <li class="active" ><a href="#referencia" data-toggle="tab">Referencia</a></li>
-                                                                    <li><a href="#tipoDeuda" data-toggle="tab">Tipo Deuda</a></li>
-                                                                </ul>
-                                                                <div class="tab-content">
-                                                                    <div class="tab-pane active" id="referencia">
-                                                                        <br></br>
-                                                                        <div class="row">
-                                                                            <div class="col-md-3"></div>
-                                                                            <div class="col-xs-12 visible-xs visible-sm">
-                                                                                <div class="input-group margin-2">
-                                                                                    <label class="control-label align-left">N° Referencia</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
-                                                                                <div class="input-group margin-2">
-                                                                                    <label class="control-label align-left">N° Referencia</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-                                                                                <div class="input-group margin-5">
-                                                                                    <h:inputText class="form-control text-uppercase" id="txtReferencia" value="#{gestionDeudasBean.referenciaDeuda}"  required="true" requiredMessage="Digite la referencia">
-                                                                                    </h:inputText>
-                                                                                    <span class="input-group-btn">
-                                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                                            <f:ajax event="click" execute="txtReferencia" listener="#{gestionDeudasBean.buscarDeudas(1)}" render="frmClasificacionDeudas:pnlBusquedaDeuda frmClasificacionDeudas:pnlTablaDeudas frmClasificacionDeudas:plnBtnFiltro"></f:ajax>
-                                                                                        </h:commandLink>
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <br></br>
+                                <p:messages autoUpdate="true" id="mensajeConsultarDeudasClasificacion" showDetail="true"  closable="true"/>
+                                <div class="box box-danger">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Filtro de busquedas de Deudas</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="nav-tabs-custom" >
+                                                    <ul class="nav nav-tabs" >
+                                                        <li class="active" ><a href="#referencia" data-toggle="tab">Referencia</a></li>
+                                                        <li><a href="#tipoDeuda" data-toggle="tab">Tipo Deuda</a></li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="referencia">
+                                                            <br></br>
+                                                            <div class="row">
+                                                                <div class="col-md-3"></div>
+                                                                <div class="col-xs-12 visible-xs visible-sm">
+                                                                    <div class="input-group margin-2">
+                                                                        <label class="control-label align-left">N° Referencia</label>
                                                                     </div>
-                                                                    <!-- /.tab-pane -->
-                                                                    <div class="tab-pane" id="tipoDeuda">
-                                                                        <br></br>
-                                                                        <div class="row">
-                                                                            <div class="col-md-3"></div>
-                                                                            <div class="col-xs-12 visible-xs visible-sm">
-                                                                                <div class="input-group margin-2">
-                                                                                    <label class="control-label align-left">Tipo Deuda</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
-                                                                                <div class="input-group margin-2">
-                                                                                    <label class="control-label align-left">Tipo Deuda</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-                                                                                <div class="input-group margin-5">
-                                                                                    <div class="form-group ">
-                                                                                        <h:selectOneMenu  id="selectTipoDeudas" class="form-control" value="#{gestionDeudasBean.tipoDeudas}">
-                                                                                            <f:selectItems value="#{gestionDeudasBean.listTipoDeudas}" var="listTipoDeuda" itemValue="#{listTipoDeuda.id}" itemLabel="#{listTipoDeuda.descripcion}"></f:selectItems>
-                                                                                        </h:selectOneMenu>
-                                                                                    </div>
-                                                                                    <span class="input-group-btn">
-                                                                                        <h:commandLink class="btn btn-info btn-danger" value="Buscar">
-                                                                                            <f:ajax event="click" execute="selectTipoDeudas" listener="#{gestionDeudasBean.buscarDeudas(4)}" render="frmClasificacionDeudas:pnlBusquedaDeuda frmClasificacionDeudas:pnlTablaDeudas frmClasificacionDeudas:plnBtnFiltro"></f:ajax>
-                                                                                        </h:commandLink>
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <br></br> 
-                                                                    </div>
-                                                                    <!-- /.tab-pane -->
                                                                 </div>
-                                                                <!-- /.tab-content -->
+                                                                <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                    <div class="input-group margin-2">
+                                                                        <label class="control-label align-left">N° Referencia</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                    <div class="input-group margin-5">
+                                                                        <h:inputText class="form-control text-uppercase" id="txtReferencia" value="#{gestionDeudasBean.referenciaDeuda}"  required="true" requiredMessage="Digite la referencia">
+                                                                        </h:inputText>
+                                                                        <span class="input-group-btn">
+                                                                            <h:commandLink class="btn btn-info btn-danger" value="Buscar">
+                                                                                <f:ajax onevent="test" event="click" execute="txtReferencia" listener="#{gestionDeudasBean.buscarDeudas(1)}" render="frmClasificacionDeudas:pnlTablaDeudas"></f:ajax>
+                                                                            </h:commandLink>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <!-- nav-tabs-custom -->
+                                                            <br></br>
                                                         </div>
-                                                        <!-- /.col -->
+                                                        <div class="tab-pane" id="tipoDeuda">
+                                                            <br></br>
+                                                            <div class="row">
+                                                                <div class="col-md-3"></div>
+                                                                <div class="col-xs-12 visible-xs visible-sm">
+                                                                    <div class="input-group margin-2">
+                                                                        <label class="control-label align-left">Tipo Deuda</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 visible-lg visible-md" style="width: 13%">
+                                                                    <div class="input-group margin-2">
+                                                                        <label class="control-label align-left">Tipo Deuda</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                                                    <div class="input-group margin-5">
+                                                                        <div class="form-group ">
+                                                                            <h:selectOneMenu  id="selectTipoDeudas" class="form-control" value="#{gestionDeudasBean.tipoDeudas}">
+                                                                                <f:selectItems value="#{gestionDeudasBean.listTipoDeudas}" var="listTipoDeuda" itemValue="#{listTipoDeuda.id}" itemLabel="#{listTipoDeuda.descripcion}"></f:selectItems>
+                                                                            </h:selectOneMenu>
+                                                                        </div>
+                                                                        <span class="input-group-btn">
+                                                                            <h:commandLink class="btn btn-danger" value="Buscar">
+                                                                                <f:ajax onevent="test" event="click" execute="selectTipoDeudas" listener="#{gestionDeudasBean.buscarDeudas(4)}" render="frmClasificacionDeudas:pnlTablaDeudas"></f:ajax>
+                                                                            </h:commandLink>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br></br> 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </h:panelGroup>
-                                    </h:panelGrid>
-                                    <h:panelGrid class="col-lg-12" id="pnlTablaDeudas" >
-                                        <h:panelGroup>
-                                            <div class="box box-danger">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tipo</th>
-                                                            <th>Estado</th>
-                                                            <th>Referencia</th>
-                                                            <th>Persona</th>
-                                                            <th>Fecha Deuda</th>
-                                                            <th>Dificultad del Cobro</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
-                                                            <tr>
-                                                                <td>#{listDeudas.tipoDeudas.descripcion}</td>
-                                                                <td>#{listDeudas.estadoDeudas.descripcion}</td>
-                                                                <td>#{listDeudas.referencia}</td>
-                                                                <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
-                                                                <td>#{listDeudas.fechaDeudas}</td>
-                                                                <td>
-                                                                    <c:if test="#{listDeudas.cobroDeudas == null}">
-                                                                        <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
-                                                                            <h:commandLink onclick="$('#modalEjecutar').modal('show');">
-                                                                                <i class="#{listDificultad.colorDificultad}"> 30%
-                                                                                    <f:ajax event="click" listener="#{gestionDeudasBean.dificultadDeudas(listDificultad, listDeudas)}" render="frmClasificacionDeudas:contenedor"/>
-                                                                                </i> 
-                                                                            </h:commandLink>
-                                                                        </ui:repeat>
-                                                                    </c:if>
-                                                                    <c:if test="#{listDeudas.cobroDeudas != null}">
-                                                                        <span class="#{listDeudas.cobroDeudas.colorDificultad}">
-                                                                            #{listDeudas.cobroDeudas.descripcion}
-                                                                        </span>
-                                                                    </c:if>
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </h:panelGroup>
-                                    </h:panelGrid>
+                                        </div>
+                                    </div>
+                                    <h:panelGroup id="pnlTablaDeudas">
+                                        <table id="table" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Estado</th>
+                                                    <th>Referencia</th>
+                                                    <th>Persona</th>
+                                                    <th>Fecha Deuda</th>
+                                                    <th>Dificultad del Cobro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="#{gestionDeudasBean.listDeudas}" var="listDeudas">
+                                                    <tr>
+                                                        <td>#{listDeudas.tipoDeudas.descripcion}</td>
+                                                        <td>#{listDeudas.estadoDeudas.descripcion}</td>
+                                                        <td>#{listDeudas.referencia}</td>
+                                                        <td>#{listDeudas.personas.nombre1} #{listDeudas.personas.apellido1}</td>
+                                                        <td>#{listDeudas.fechaDeudas}</td>
+                                                        <td>
+                                                            <c:if test="#{listDeudas.cobroDeudas == null}">
+                                                                <ui:repeat value="#{gestionDeudasBean.listCobroDeudas}" var="listDificultad">
+                                                                    <h:commandLink onclick="$('#modalEjecutar').modal('show');">
+                                                                        <i class="#{listDificultad.colorDificultad}"> 30%
+                                                                            <f:ajax onevent="test" event="click" listener="#{gestionDeudasBean.dificultadDeudas(listDificultad, listDeudas)}" render="frmClasificacionDeudas:contenedor"/>
+                                                                        </i> 
+                                                                    </h:commandLink>
+                                                                </ui:repeat>
+                                                            </c:if>
+                                                            <c:if test="#{listDeudas.cobroDeudas != null}">
+                                                                <span class="#{listDeudas.cobroDeudas.colorDificultad}">
+                                                                    #{listDeudas.cobroDeudas.descripcion}
+                                                                </span>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </h:panelGroup>
                                 </div>
                             </div>
                         </section>
-                    </h:form>
-                </div>
+                    </div>
+                </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

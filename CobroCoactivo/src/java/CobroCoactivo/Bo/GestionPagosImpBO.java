@@ -75,7 +75,7 @@ public class GestionPagosImpBO implements GestionPagosBo {
     public void listarPagos(BeanGestionPagos beanGestionPagos) throws Exception {
         beanGestionPagos.setListPagos(new ArrayList<>());
         Client client = beanGestionPagos.getClient();
-        WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/pagos");
+        WebTarget baseTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/pagos");
         if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);

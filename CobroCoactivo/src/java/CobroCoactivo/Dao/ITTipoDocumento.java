@@ -5,6 +5,7 @@
  */
 package CobroCoactivo.Dao;
 
+import CobroCoactivo.General.ITGeneryHibernateDao;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.hibernate.Session;
  *
  * @author Roymer Camacho
  */
-public interface ITTipoDocumento {
+public interface ITTipoDocumento extends ITGeneryHibernateDao<CivTipoDocumentos, Integer> {
 
     /**
      *
@@ -42,8 +43,6 @@ public interface ITTipoDocumento {
      */
     public List<CivTipoDocumentos> listAll(Session session) throws Exception;
 
-    public CivTipoDocumentos getTipoDocumento(Session session,BigDecimal tipoDocumento) throws Exception;
-    
-    
-    CivTipoDocumentos find(BigDecimal id) throws Exception;
+    public CivTipoDocumentos getTipoDocumento(Session session, BigDecimal tipoDocumento) throws Exception;
+
 }

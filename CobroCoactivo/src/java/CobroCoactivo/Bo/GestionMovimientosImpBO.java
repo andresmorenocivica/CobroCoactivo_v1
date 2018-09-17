@@ -76,17 +76,21 @@ public class GestionMovimientosImpBO implements GestionMovimientosBO, Serializab
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             List<CivPlanTrabajos> listaCivPlanTrabajo = getPlanTrabajoDAO().getAllPlanTrabajo(session);
-            for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
-                PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
-                planTrabajos.setCountDeudas((int) getDeudasDAO().countDeudas(session, planTrabajos.getId()));
-                List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(session, planTrabajos.getId());
-                if (listCivEtapasTrabajos != null) {
-                    for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
-                        EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
-                        planTrabajos.getListaEtapasTrabajo().add(etapasTrabajos);
+            if (listaCivPlanTrabajo != null) {
+                for (CivPlanTrabajos civPlanTrabajos : listaCivPlanTrabajo) {
+                    PlanTrabajos planTrabajos = new PlanTrabajos(civPlanTrabajos, civPlanTrabajos.getCivEstadoPlanTrabajos());
+                    planTrabajos.setCountDeudas((int) getDeudasDAO().countDeudas(session, planTrabajos.getId()));
+                    List<CivEtapasTrabajos> listCivEtapasTrabajos = getEtapasTrabajoDAO().listarEtapasTrabajoByPlantrabajo(session, planTrabajos.getId());
+                    if (listCivEtapasTrabajos != null) {
+                        for (CivEtapasTrabajos civEtapasTrabajo : listCivEtapasTrabajos) {
+                            EtapasTrabajos etapasTrabajos = new EtapasTrabajos(civEtapasTrabajo, civEtapasTrabajo.getCivEstadoEtapaTrabajos());
+                            planTrabajos.getListaEtapasTrabajo().add(etapasTrabajos);
+                        }
                     }
+                    beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
                 }
-                beanGestionMovimientos.getListaPlanTrabajo().add(planTrabajos);
+            } else {
+                throw new MovimientosException("Debe añadir algun plan trabajo.", 3);
             }
         } finally {
             session.flush();

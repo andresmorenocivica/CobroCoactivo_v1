@@ -33,8 +33,8 @@ public class Expedientes implements java.io.Serializable {
 
     public String crearExpediente(CivPersonas civPersonas, ITExpedientes expedienteDAO) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Transaction transaction = session.beginTransaction();
             String nombreExpedientePersona = civPersonas.getPerDocumento();
             String folderExpedientePersona = "D:/Archivo/Expedientes/" + nombreExpedientePersona;
             File foldersPersona = new File(folderExpedientePersona);
@@ -56,10 +56,13 @@ public class Expedientes implements java.io.Serializable {
                 return folderExpedientePersona;
             }
             return folderExpedientePersona;
+        } catch (Exception e) {
+            transaction.rollback();
         } finally {
             session.flush();
             session.close();
         }
+        return null;
     }
 
     public Expedientes(CivExpedientes civExpedientes) {

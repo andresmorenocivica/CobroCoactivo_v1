@@ -46,8 +46,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 /**
  *
@@ -129,54 +130,59 @@ public class GestionExcepcionesImpBo implements GestionExcepcionesBO {
     public void guardarExcepcion(BeanGestionExcepciones bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Transaction transaction = session.beginTransaction();
-            if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
-                List<Deudas> list = bean.getListaDeudasSelecionada();
-                CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
-                CivExcepciones civExcepciones = new CivExcepciones();
-                for (int i = 0; i < list.size(); i++) {
-                    civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, list.get(i).getReferencia());
-                    if (civDetalleExpedientes != null) {
-                        CivArchivoDetExpedientes civArchivoDetExpedientes = new CivArchivoDetExpedientes();
-                        CivEstadoArchDetExp estadoArchDetExp = new CivEstadoArchDetExp();
-                        estadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
-                        civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                        civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
-                        civArchivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
-                        civArchivoDetExpedientes.setCivEstadoArchDetExp(estadoArchDetExp);
-                        civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                        File folderDeudaSelecionada = new File(civDetalleExpedientes.getDetexpUbicacion());
-                        if (!folderDeudaSelecionada.exists()) {
-                            folderDeudaSelecionada.mkdirs();
-                        }
-                        InputStream stream = bean.getFile().getInputStream();
-                        Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        getArchivoDetExpedientesDAO().create(session, civArchivoDetExpedientes);
-
-                        CivEstadoExcepcion civEstadoExcepcion = new CivEstadoExcepcion();
-                        civEstadoExcepcion.setEstexcId(BigDecimal.valueOf(3));
-                        CivTipoExcepcion civTipoExcepcion = new CivTipoExcepcion();
-                        civTipoExcepcion.setTipexcId(BigDecimal.ONE);
-                        CivUsuarios civUsuarios = getUsuariosDAO().consultarUsuarioBy(session, new Integer(bean.getIdUser()));
-                        CivMovimientos civMovimientos = getMovimientosDAO().find(session, new BigDecimal(bean.getIdMovimiento()));
-                        civExcepciones.setExcFechaproceso(new Date());
-                        civExcepciones.setExcNumeroRadicado(bean.getNumRadicado());
-                        civExcepciones.setExcFechaRadicado(bean.getFechaRadicado());
-                        civExcepciones.setCivEstadoExcepcion(civEstadoExcepcion);
-                        civExcepciones.setCivTipoExcepcion(civTipoExcepcion);
-                        civExcepciones.setCivUsuarios(civUsuarios);
-                        civExcepciones.setCivMovimientos(civMovimientos);
-                        civExcepciones.setCivArchivoDetExpedientes(civArchivoDetExpedientes);
-                        getExcepcionesDAO().create(session, civExcepciones);
-                        transaction.commit();
-                        bean.init();
-                    }
-                }
-                if (civExcepciones != null) {
-                    throw new ExcepcionesException("Se ha guardado la excepcion en el sistema.", 1);
-                }
+            CivExcepciones ce = getExcepcionesDAO().getExcepciones(session, bean.getNumRadicado());
+            if (ce != null) {
+                throw new ExcepcionesException("Ya existe una excepcion con este numero de radicado.", 2);
             } else {
-                throw new ExcepcionesException("El archivo tiene que ser .PDF", 2);
+                if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                    List<Deudas> list = bean.getListaDeudasSelecionada();
+                    CivDetalleExpedientes civDetalleExpedientes = new CivDetalleExpedientes();
+                    CivExcepciones civExcepciones = new CivExcepciones();
+                    for (int i = 0; i < list.size(); i++) {
+                        civDetalleExpedientes = getDetalleExpedientesDAO().getCivDetalleExpedientes(session, list.get(i).getReferencia());
+                        if (civDetalleExpedientes != null) {
+                            CivArchivoDetExpedientes civArchivoDetExpedientes = new CivArchivoDetExpedientes();
+                            CivEstadoArchDetExp estadoArchDetExp = new CivEstadoArchDetExp();
+                            estadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
+                            civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                            civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
+                            civArchivoDetExpedientes.setCivDetalleExpedientes(civDetalleExpedientes);
+                            civArchivoDetExpedientes.setCivEstadoArchDetExp(estadoArchDetExp);
+                            civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                            File folderDeudaSelecionada = new File(civDetalleExpedientes.getDetexpUbicacion());
+                            if (!folderDeudaSelecionada.exists()) {
+                                folderDeudaSelecionada.mkdirs();
+                            }
+                            InputStream stream = bean.getFile().getInputStream();
+                            Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            getArchivoDetExpedientesDAO().create(session, civArchivoDetExpedientes);
+
+                            CivEstadoExcepcion civEstadoExcepcion = new CivEstadoExcepcion();
+                            civEstadoExcepcion.setEstexcId(BigDecimal.valueOf(3));
+                            CivTipoExcepcion civTipoExcepcion = new CivTipoExcepcion();
+                            civTipoExcepcion.setTipexcId(BigDecimal.ONE);
+                            CivUsuarios civUsuarios = getUsuariosDAO().consultarUsuarioBy(session, new Integer(bean.getIdUser()));
+                            CivMovimientos civMovimientos = getMovimientosDAO().find(session, new BigDecimal(bean.getIdMovimiento()));
+                            civExcepciones.setExcFechaproceso(new Date());
+                            civExcepciones.setExcNumeroRadicado(bean.getNumRadicado());
+                            civExcepciones.setExcFechaRadicado(bean.getFechaRadicado());
+                            civExcepciones.setCivEstadoExcepcion(civEstadoExcepcion);
+                            civExcepciones.setCivTipoExcepcion(civTipoExcepcion);
+                            civExcepciones.setCivUsuarios(civUsuarios);
+                            civExcepciones.setCivMovimientos(civMovimientos);
+                            civExcepciones.setCivArchivoDetExpedientes(civArchivoDetExpedientes);
+                            getExcepcionesDAO().create(session, civExcepciones);
+                            bean.setPnlFormulario(false);
+                            bean.setPnlListaDeuda(false);
+                        }
+                    }
+                    if (civExcepciones != null) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Se ha guardado la excepcion en el sistema."));
+                        return;
+                    }
+                } else {
+                    throw new ExcepcionesException("El archivo tiene que ser .PDF", 2);
+                }
             }
         } finally {
             session.flush();
@@ -208,6 +214,8 @@ public class GestionExcepcionesImpBo implements GestionExcepcionesBO {
                             movimientos.setFasesTrabajos(fasesTrabajos);
                             bean.getListaMovimientos().add(movimientos);
                         }
+                    } else {
+                        throw new ExcepcionesException("La deuda seleccionada no tiene movimientos realizados.", 2);
                     }
                 }
             }

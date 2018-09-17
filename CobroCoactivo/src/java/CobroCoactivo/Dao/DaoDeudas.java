@@ -58,9 +58,9 @@ public class DaoDeudas extends ImpGeneryHibernateDao<CivDeudas, Integer> impleme
 
     @Override
     public List<CivDeudas> listarDeudasByTipo(Session session, int tipoDeudas) throws Exception {
-        String hql = "from CivDeudas where civTipoDeudas.tipdeuId =: tipoDeuda";
+        String hql = "from CivDeudas where civTipoDeudas.tipdeuId =:tipoDeuda";
         Query query = session.createQuery(hql);
-        query.setBigDecimal("tipoDeuda", new BigDecimal(tipoDeudas));
+        query.setParameter("tipoDeuda", new BigDecimal(tipoDeudas));
         if (query.list().size() > 0) {
             return query.list();
         }

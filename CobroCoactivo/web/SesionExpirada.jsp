@@ -1,8 +1,8 @@
-<%@page import="com.contravenciones.model.LoginUser"%>
-<%@page import="com.contravenciones.singleton.AuthSingleton"%>
-<%@page import="com.contravenciones.utility.Log_Handler"%>
-<%@page import="com.contravenciones.singleton.SessionSingleton"%>
-<%@page import="com.contravenciones.jsf.bean.BeanLogin"%>
+<%@page import="CobroCoactivo.ModeloSistema.LoginUser"%>
+<%@page import="CobroCoactivo.Singleton.AuthSingleton"%>
+<%@page import="CobroCoactivo.Utility.Log_Handler"%>
+<%@page import="CobroCoactivo.Singleton.SessionSingleton"%>
+<%@page import="CobroCoactivo.Beans.BeanLogin"%>
 <!DOCTYPE html>
 <!--
 Civitrans
@@ -39,7 +39,7 @@ Copyright 2016.
 
     }
 %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true"%>
 <html>
     <head>
         <title>Sesión Expirada o Inválida</title>
@@ -55,7 +55,7 @@ Copyright 2016.
                 <tr>
                     <td valign="middle">
                 <center>
-                    <img align="middle" onclick="redirect()" style="margin: 0 auto;width: 80px;opacity: 0.5" src="/Civitrans/resources/images/loading.gif"/>
+                    <img align="middle" onclick="redirect()" style="margin: 0 auto;width: 80px;opacity: 0.5" src="/CobroCoactivo/recursos/images/loading.gif"/>
                 </center>
                 </td>
                 </tr>
@@ -76,7 +76,7 @@ Copyright 2016.
         <script>
             /*setTimeout(redirect, 4*1000);*/
             function redirect() {
-                window.location.href = "/Civitrans/index.civ";
+                window.location.href = "http://localhost:8080/CobroCoactivo/";
                 return;
             }
             var x = document.getElementById("contador");

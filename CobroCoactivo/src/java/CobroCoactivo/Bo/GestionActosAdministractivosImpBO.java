@@ -60,7 +60,7 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
     public void getTodosActosAdministractivos(BeanActosAdministractivo beanActosAdministractivo) throws Exception {
         beanActosAdministractivo.setListActosAdministractivo(new ArrayList<>());
         Client client = beanActosAdministractivo.getClient();
-        WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/actosAdministractivos");
+        WebTarget baseTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/actosAdministractivos");
         if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);
@@ -83,7 +83,7 @@ public class GestionActosAdministractivosImpBO implements GestionActosAdministra
     public void getCarteras(BeanActosAdministractivo beanActosAdministractivo) throws Exception {
         beanActosAdministractivo.setListDeudas(new ArrayList<>());
         Client client = beanActosAdministractivo.getClient();
-        WebTarget baseTarget = client.target("http://10.10.2.204:8080/WebServiceContraversiones/api/actosAdministractivos/carteras?noresolucion=" + beanActosAdministractivo.getActosAdministractivos().getActNumero());
+        WebTarget baseTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/actosAdministractivos/carteras?noresolucion=" + beanActosAdministractivo.getActosAdministractivos().getActNumero());
         if (baseTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baseTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONArray jSONArray = new JSONArray(data);

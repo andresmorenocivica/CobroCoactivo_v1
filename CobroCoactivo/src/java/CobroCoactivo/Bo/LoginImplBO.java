@@ -44,12 +44,11 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import CobroCoactivo.Dao.ITConfUsuRec;
 import CobroCoactivo.Dao.ITEstadoUspHistoria;
 import CobroCoactivo.Dao.ITUspHistoria;
+import CobroCoactivo.Exception.PasswordException;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Persistencia.CivEstadouspHistoria;
 import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Utility.HibernateUtil;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -99,10 +98,10 @@ public class LoginImplBO implements LoginBO {
             obj.setPassword("");
             if (login != null) {
                 if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 2) { //En caso de que el usuario no se encuentre activo 
-                    throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.");
+                    throw new LoginException("Este usuario ha sido deshabilitado. Por favor contáctese con el administrador del sistema.", 3);
                 }
                 if (login.getCivEstadoUsuarios().getEstusuId().intValue() == 4) { //(Revalidación)En caso de que el usuario no se encuentre activo por bloqueo de intentos
-                    throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.");
+                    throw new LoginException("Este usuario ha sido bloqueado por superar el número máximo de intentos de usuario. Por favor contáctese con el administrador del sistema.", 3);
                 }
                 reestablecerIntentosUsuario(login.getUsuId().intValue());
                 Date fecha_pass = getUsuariosDAO().consultarFechaUltimoPassword(session, login.getUsuId().intValue());
@@ -135,9 +134,13 @@ public class LoginImplBO implements LoginBO {
                 obj.setUserEstado(login.getCivEstadoUsuarios().getEstusuId().intValue());
                 obj.setIdPersonaUsuario(login.getCivPersonas().getPerId().intValue());
             } else {
-                throw new LoginException("Usuario y/o contraseña inválidos");
+                CivAttempts attempts = getAttemptsDAO().consultarIntentosByUser(session, usu.getUsuId().intValue());
+                int intento = (int) (6 - attempts.getTtpIntentos().intValue());
+                if (intento <= 1) {
+                    throw new LoginException("Usuario y/o contraseña inválidos \n intentos Restantes: " + intento, 3);
+                }
+                throw new LoginException("Usuario y/o contraseña inválidos \n intentos restantes: " + intento, 2);
             }
-
         } finally {
             session.flush();
             session.close();
@@ -183,11 +186,12 @@ public class LoginImplBO implements LoginBO {
                     aut.setTppUltimoIntento(new Date());
                     getAttemptsDAO().update(session, aut);
                     Log_Handler.registrarEvento("El usuario ID:" + usuario + " ha sido bloqueado por superar el número de intentos de inicio de sesión.", null, Log_Handler.WARN, getClass(), usuario);
-                    throw new LoginException("Ha superado el máximo número de intentos de inicio de sesión. Contáctese con el administrador del sistema.");
+                    transaction.commit();
+                    throw new LoginException("Ha superado el máximo número de intentos de inicio de sesión. Contáctese con el administrador del sistema.", 3);
                 }
-                //aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
-                // aut.setTppUltimoIntento(new Date());
-                // getAttemptsDAO().update(aut);
+                aut.setTtpIntentos(new BigDecimal(aut.getTtpIntentos().intValue() + 1));
+                aut.setTppUltimoIntento(new Date());
+                getAttemptsDAO().update(session, aut);
             }
             transaction.commit();
         } finally {
@@ -229,7 +233,7 @@ public class LoginImplBO implements LoginBO {
         Modulos mod;
 
         if (listR == null) {
-            throw new LoginException("El usuario no tiene ningún modulo asignado. Por favor contáctese con el administrador del sistema.");
+            throw new LoginException("El usuario no tiene ningún modulo asignado. Por favor contáctese con el administrador del sistema.", 2);
         }
 
         for (int x = 0; x < listR.size(); x++) {
@@ -300,7 +304,7 @@ public class LoginImplBO implements LoginBO {
         Modulos mod;
 
         if (listR == null) {
-            throw new LoginException("El usuario no tiene ningún perfil asignado. Por favor contáctese con el administrador del sistema.");
+            throw new LoginException("El usuario no tiene ningún perfil asignado. Por favor contáctese con el administrador del sistema.", 2);
         }
 
         for (int x = 0; x < listR.size(); x++) {
@@ -394,7 +398,7 @@ public class LoginImplBO implements LoginBO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         CivPersonas persona = getPersonasDAO().consultarPersonasById(session, obj.getIdPersonaUsuario());
         if (persona == null) {
-            throw new LoginException("No se encontró la persona correspondiente al usuario");
+            throw new LoginException("No se encontró la persona correspondiente al usuario", 2);
         }
         obj.setNombrePersonaUsuario(persona.getPerNombre1() + " " + persona.getPerApellido1());
         obj.setNombrePersonaUsuario(new ValidacionDatos().letraMayuscula(obj.getNombrePersonaUsuario()));
@@ -411,7 +415,7 @@ public class LoginImplBO implements LoginBO {
             List list = getUsuariosDAO().consultar_HPAS(session, obj.getUsuarios().getId());
             String passCifrada = DigestHandler.encryptSHA2(obj.getContraseñaConfirmacion());
             if (list.contains(passCifrada)) {
-                throw new LoginException("Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.");
+                throw new PasswordException("Por seguridad debe usar una contraseña no registrada con anteriodad en el sistemas.", 2);
             }
             CivEstadoUsuarios civEstadoUsuarios = getEstadosUsuariosDAO().consultarModuloById(session, 1);
             CivUsuarios civUsuarios = getUsuariosDAO().find(session, new BigDecimal(obj.getUsuarios().getId()));

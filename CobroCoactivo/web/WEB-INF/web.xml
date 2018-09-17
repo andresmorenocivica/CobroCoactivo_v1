@@ -13,9 +13,23 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+    
+    <filter-mapping>
+        <filter-name>FiltroSesion</filter-name>
+        <url-pattern>/faces/paginas/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <description>Filtro de manejo de sesiones. Validación de compartición de cuentas de usuarios.</description>
+        <filter-name>FiltroSesion</filter-name>
+        <filter-class>CobroCoactivo.filtros.FiltroSesion</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
     <session-config>
         <session-timeout>
-            30
+            50000
         </session-timeout>
     </session-config>
     <welcome-file-list>
@@ -24,7 +38,7 @@
     
     <error-page>
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/faces/SesionExpirada.jsp</location>
+        <location>/SesionExpirada.jsp</location>
     </error-page>
     <error-page>
         <exception-type>javax.faces.view.facelets.TagAttributeException</exception-type>

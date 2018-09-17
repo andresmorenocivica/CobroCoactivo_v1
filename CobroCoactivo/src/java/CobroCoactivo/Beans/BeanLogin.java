@@ -5,6 +5,7 @@ import CobroCoactivo.Exception.LoginException;
 import CobroCoactivo.Bo.LoginBO;
 import CobroCoactivo.Bo.LoginImplBO;
 import CobroCoactivo.Crypto.DigestHandler;
+import CobroCoactivo.Exception.PasswordException;
 import CobroCoactivo.Modelo.Usuarios;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Utility.Log_Handler;
@@ -138,17 +139,17 @@ public class BeanLogin implements Serializable {
     public String actualizarContraseña() {
         try {
             if (!getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password))) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual no es correcta", null));
+                throw new PasswordException("La contraseña actual no es correcta", 3);
             }
             if (getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password)) && !DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(contraseñaConfirmacion))) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no coincide", null));
+                throw new PasswordException("La contraseña nueva no coincide.", 3);
             }
             if (getUsuarios().getPass().equals(DigestHandler.encryptSHA2(password)) && DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(getContraseñaConfirmacion()))) {
                 if (DigestHandler.encryptSHA2(getContraseñaNueva()).equals(DigestHandler.encryptSHA2(password))) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña nueva no puede ser igual a la actual", null));
+                    throw new PasswordException("La contraseña nueva no puede ser igual a la actual.", 3);
                 } else {
                     if (contraseñaConfirmacion.length() < 6) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "La contraseña tiene que tener min 7 caracteres.", null));
+                        throw new PasswordException("La contraseña tiene que tener min 7 caracteres.", 3);
                     } else {
                         getLoginBO().actualizarContraseña(this);
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actualizada correctamente", null));
@@ -157,15 +158,14 @@ public class BeanLogin implements Serializable {
                     }
                 }
             }
-        } catch (LoginException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", e.getMessage()));
+        } catch (PasswordException pe) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", pe.getMessage()));
             return "";
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al actualizar contraseña: ", e, Log_Handler.ERROR, getClass(), (getID_Usuario() != null) ? Integer.parseInt(getID_Usuario()) : 0);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("gestionParametros" + "messageGeneral");
-            return "";
         }
         return "";
     }

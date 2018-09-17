@@ -154,6 +154,7 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                     bean.getListArchivoDetExpedientes().add(archivoDetExpedientes);
                 }
             } else {
+                bean.setPnlBtnAddArchivo(true);
                 throw new ExpedientesException("No hay archivo en esta carpeta, agrege archivo por favor.", 2);
             }
         } finally {
@@ -166,7 +167,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     public void guardarArchivo(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Transaction transaction = session.beginTransaction();
             if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
                 CivArchivoDetExpedientes civArchivoDetExpedientes = new CivArchivoDetExpedientes();
                 CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
@@ -178,14 +178,17 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 civArchivoDetExpedientes.setArcdetexpUbicacion(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
                 civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
                 InputStream stream = bean.getFile().getInputStream();
+                File ubicacionDetExpediente = new File(civDetalleExpedientes.getDetexpUbicacion());
+                if (!ubicacionDetExpediente.exists()) {
+                    ubicacionDetExpediente.mkdirs();
+                }
                 Files.copy(stream, new File(civDetalleExpedientes.getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 getArchivoDetExpedientesDAO().create(session, civArchivoDetExpedientes);
-                transaction.commit();
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#addArchivo').modal('hide')");
+                RequestContext.getCurrentInstance().execute("$('#addArchivo').modal('hide')");
+                bean.buscarArchivo(bean.getIdDetExpediente());
                 throw new ExpedientesException("Se agregado el archivo correctamente.", 1);
             } else {
-                throw new ExpedientesException("Solo se puede cargar archivo PDF.", 2);
+                throw new ExpedientesException("Solo se puede cargar archivo PDF.", 3);
             }
         } finally {
             session.flush();
@@ -197,22 +200,26 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     public void updateArchivo(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
-                Transaction transaction = session.beginTransaction();
-                CivArchivoDetExpedientes civArchivoDetExpedientes = getArchivoDetExpedientesDAO().find(session, new BigDecimal(bean.getArchivoDetExpedientes().getId()));
-                civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
-                CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
-                civEstadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
-                civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
-                civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                civArchivoDetExpedientes.setArcdetexpUbicacion(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
-                InputStream stream = bean.getFile().getInputStream();
-                Files.copy(stream, new File(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                getArchivoDetExpedientesDAO().update(session, civArchivoDetExpedientes);
-                transaction.commit();
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#addArchivo').modal('hide')");
-                throw new ExpedientesException("Se actualizo el archivo correctamente.", 1);
+            if (bean.getFile() == null) {
+                throw new ExpedientesException("No selecciono un archivo", 2);
+            } else {
+                if (Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString().endsWith(".pdf")) {
+                    CivArchivoDetExpedientes civArchivoDetExpedientes = getArchivoDetExpedientesDAO().find(session, new BigDecimal(bean.getArchivoDetExpedientes().getId()));
+                    civArchivoDetExpedientes.setArcdetexpFechaproceso(new Date());
+                    CivEstadoArchDetExp civEstadoArchDetExp = new CivEstadoArchDetExp();
+                    civEstadoArchDetExp.setEstarcdetexpId(BigDecimal.ONE);
+                    civArchivoDetExpedientes.setCivEstadoArchDetExp(civEstadoArchDetExp);
+                    civArchivoDetExpedientes.setArcdetexpNombre(Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                    civArchivoDetExpedientes.setArcdetexpUbicacion(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString());
+                    InputStream stream = bean.getFile().getInputStream();
+                    Files.copy(stream, new File(civArchivoDetExpedientes.getCivDetalleExpedientes().getDetexpUbicacion() + "/" + Paths.get(bean.getFile().getSubmittedFileName()).getFileName().toString()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    getArchivoDetExpedientesDAO().update(session, civArchivoDetExpedientes);
+                    bean.buscarArchivo(bean.getIdDetExpediente());
+                    RequestContext.getCurrentInstance().execute("$('#addArchivo').modal('hide')");
+                    throw new ExpedientesException("Se actualizo el archivo correctamente.", 1);
+                } else {
+                    throw new ExpedientesException("Solo se acepta archivos .pdf", 2);
+                }
             }
         } finally {
             session.flush();
@@ -252,7 +259,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     public void enviarSolicitud(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Transaction transaction = session.beginTransaction();
             CivSolicitudes civSolicitudes = new CivSolicitudes();
             CivEstadoSolicitudes civEstadoSolicitudes = new CivEstadoSolicitudes();
             civEstadoSolicitudes.setEstsolId(BigDecimal.valueOf(3));
@@ -274,11 +280,11 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                 civDetalleSolicitudes.setDetsolDescripcion(bean.getListDetalleExpdientesSelect().get(i).getDetexpDescripcion());
                 getDetalleSolicitudesDAO().create(session, civDetalleSolicitudes);
             }
-            transaction.commit();
             if (civDetalleSolicitudes != null) {
                 bean.setPnlSubcarpetas(false);
                 bean.setPnlExpSelect(false);
-                throw new ExpedientesException("Se ha enviado la solicitud.", 1);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Se ha enviado la solicitud."));
+                return;
             }
         } finally {
             session.flush();
@@ -363,7 +369,6 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     public void aceptarSolicitudExpediente(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Transaction transaction = session.beginTransaction();
             int increment = -1;
             for (int i = 0; i < bean.getListDetalleSolicitudes().size(); i++) {
                 increment++;
@@ -390,10 +395,11 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
                     }
                 }
             }
-            transaction.commit();
+            cargarSolicitudes(bean);
             RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("$('#modalSolicitudExpediente').modal('hide')");
-            throw new ExpedientesException("Su accion se genero correctamente.", 1);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Su accion se genero correctamente."));
+            return;
         } finally {
             session.flush();
             session.close();
@@ -407,7 +413,14 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
             CivPersonas civPersonas = getPersonasDAO().consultarPersonasByDocumento(session, bean.getTipoDocumentoPersona(), bean.getDocumentoPersona());
             if (civPersonas != null) {
                 bean.setNombrePersona(civPersonas.getPerNombre1() + " " + civPersonas.getPerApellido1());
+                CivExpedientes civExpedientes = getExpedientesDAO().getCivExpedientes(session, civPersonas.getPerDocumento());
+                if (civExpedientes != null) {
+                    throw new ExpedientesException("La persona ya tiene un expediente creado.", 1);
+                }
                 bean.setPnlPersonaEncontrada(true);
+            } else {
+                bean.setPnlPersonaEncontrada(false);
+                throw new ExpedientesException("La persona no existe.", 3);
             }
         } finally {
             session.flush();
@@ -418,14 +431,16 @@ public class GestionExpedientesImpBO implements GestionExpedientesBO, Serializab
     @Override
     public void recibirExp(BeanGestionExpedientes bean) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Transaction transaction = session.beginTransaction();
             CivDetalleSolicitudes civDetalleSolicitudes = getDetalleSolicitudesDAO().find(session, new BigDecimal(bean.getDetalleSolicitudes().getId()));
             CivEstadoDetalleSolicitudes civEstadoDetalleSolicitudes = getEstadoDetalleSolicitudesDAO().find(session, BigDecimal.ONE);
             civDetalleSolicitudes.setCivEstadoDetalleSolicitudes(civEstadoDetalleSolicitudes);
             getDetalleSolicitudesDAO().update(session, civDetalleSolicitudes);
             transaction.commit();
             cargarDetSolicitudes(bean);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Su accion se genero correctamente."));
+            return;
         } finally {
             session.flush();
             session.close();

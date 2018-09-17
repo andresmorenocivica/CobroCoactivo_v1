@@ -16,7 +16,6 @@ import CobroCoactivo.Modelo.Solicitudes;
 import CobroCoactivo.Utility.Log_Handler;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class BeanGestionExpedientes {
         try {
             getGestionExpedientesBO().crearExpediente(this);
         } catch (ExpedientesException ee) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
+            FacesContext.getCurrentInstance().addMessage("frmExpedientes:mensajeModalCrear", new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al crear expediente: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
@@ -113,7 +112,7 @@ public class BeanGestionExpedientes {
         try {
             getGestionExpedientesBO().buscarPersona(this);
         } catch (ExpedientesException ee) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
+            FacesContext.getCurrentInstance().addMessage("frmExpedientes:mensajeModalCrear", new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al buscar persona : ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
@@ -297,7 +296,7 @@ public class BeanGestionExpedientes {
         try {
             getGestionExpedientesBO().updateArchivo(this);
         } catch (ExpedientesException ee) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
+            FacesContext.getCurrentInstance().addMessage("frmExpedientes:mensajeModalUpdate", new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             Log_Handler.registrarEvento("Error al actualizar el archivo: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));

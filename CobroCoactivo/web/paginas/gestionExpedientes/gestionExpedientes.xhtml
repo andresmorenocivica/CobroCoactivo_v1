@@ -11,50 +11,13 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
-                <h:form id="frmExpedientes" enctype="multipart/form-data">
-                    <div class="modal fade" id="addArchivo" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog ">
-                            <div class="modal-content" jsf:id="modalContent">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">#{gestionExpedientesBean.titleModal}</h4>
-                                </div>
-                                <div class="modal-body" jsf:id="modalBody">
-                                    <div class="col-sm-10" id="divArchivo">
-                                        <div class="form-group">
-                                            <label> Agregar Archivo</label>
-                                            <h:inputFile a:accept=".pdf" value="#{gestionExpedientesBean.file}" id="file" />
-                                            <p class="help-block">.pdf</p>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="row">
-                                        <div class="col-lg-8">
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <h:panelGrid id="pnlGuardarArchivo">
-                                                <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnGuardarFile}">
-                                                    <h:commandLink value="Guardar" id="btnGuardarArchivo" class="btn btn-success">
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.guardarArchivo()}" execute="frmExpedientes:file"/>
-                                                    </h:commandLink>
-                                                </h:panelGroup>
-                                            </h:panelGrid>
-                                            <h:panelGrid id="pnlActualizarArchivo">
-                                                <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnActualizarFile}" >
-                                                    <h:commandLink value="Actualizar" id="btnActualizarArchivo" class="btn btn-success">
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.updateArchivo()}" execute="frmExpedientes:file" render="frmExpedientes:pnlArchivo"/>
-                                                    </h:commandLink>
-                                                </h:panelGroup>
-                                            </h:panelGrid>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'gestionExpedientes'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
+                <h:form id="frmExpedientes">
                     <div  class="content-wrapper">
                         <section class="content-header">
                             <h1>
@@ -68,7 +31,7 @@
                             </ol>
                         </section>
                         <section class="content">
-                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" />
+                            <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" showSummary="false"/>
                             <div class="box box-danger">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Busquedas</h3>
@@ -112,97 +75,96 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <h:panelGrid id="pnlCarpeta">
-                                    <h:panelGroup  rendered="#{gestionExpedientesBean.pnlCarpeta}">
-                                        <c:forEach items="#{gestionExpedientesBean.listExpedientes}" var="listaExpedientes">
-                                            <h:commandLink>
-                                                <p:graphicImage url="/recursos/images/folder(1).png"/>
-                                                #{listaExpedientes.referencia}
-                                                <f:ajax event="click" listener="#{gestionExpedientesBean.abrirCarpeta(listaExpedientes.id)}" render="frmExpedientes:pnlCarpeta frmExpedientes:pnlSubCarpetas frmExpedientes:pnlBtnAddFolder"/>
-                                            </h:commandLink>
-                                        </c:forEach>
-                                    </h:panelGroup>
-                                    <a href="#{listaExpedientes.id}"> #{listaExpedientes.referencia}</a>
-                                </h:panelGrid>
-                                <h:panelGrid id="pnlSubCarpetas" class="col-lg-12">
-                                    <h:panelGroup rendered="#{gestionExpedientesBean.pnlSubcarpetas}" >
-                                        <table class="table table-hover">
-                                            <div class="row">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-lg-3">Expediente</th>
-                                                        <th class="col-lg-3">Nombre carpeta</th>
-                                                        <th class="col-lg-3">Estado</th>
-                                                        <th class="col-lg-3">Ver</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach items="#{gestionExpedientesBean.listDetalleExpedientes}" var="listaDetalleExpediente">
+                                    <h:panelGrid id="pnlCarpeta">
+                                        <h:panelGroup  rendered="#{gestionExpedientesBean.pnlCarpeta}">
+                                            <c:forEach items="#{gestionExpedientesBean.listExpedientes}" var="listaExpedientes">
+                                                <h:commandLink>
+                                                    <p:graphicImage url="/recursos/images/folder(1).png"/>
+                                                    #{listaExpedientes.referencia}
+                                                    <f:ajax event="click" listener="#{gestionExpedientesBean.abrirCarpeta(listaExpedientes.id)}" render="frmExpedientes:pnlCarpeta frmExpedientes:pnlSubCarpetas frmExpedientes:pnlBtnAddFolder"/>
+                                                </h:commandLink>
+                                            </c:forEach>
+                                        </h:panelGroup>
+                                        <a href="#{listaExpedientes.id}"> #{listaExpedientes.referencia}</a>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlSubCarpetas" class="col-lg-12">
+                                        <h:panelGroup rendered="#{gestionExpedientesBean.pnlSubcarpetas}" >
+                                            <table class="table table-hover">
+                                                <div class="row">
+                                                    <thead>
                                                         <tr>
-                                                            <td>#{listaDetalleExpediente.expedientes.referencia}</td>
-                                                            <td>#{listaDetalleExpediente.detexpDescripcion}</td>
-                                                            <td>
-                                                                <span class="#{listaDetalleExpediente.estadoDetalleExpedientes.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
-                                                                    #{listaDetalleExpediente.estadoDetalleExpedientes.descripcion}
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <h:commandLink class="fa fa-eye col-sm-2">
-                                                                    <f:ajax event="click" listener="#{gestionExpedientesBean.buscarArchivo(listaDetalleExpediente.detexpId)}" render="frmExpedientes:pnlSubCarpetas frmExpedientes:pnlArchivo frmExpedientes:pnlBtnAddArchivo"/>
-                                                                </h:commandLink>
+                                                            <th class="col-lg-3">Expediente</th>
+                                                            <th class="col-lg-3">Nombre carpeta</th>
+                                                            <th class="col-lg-3">Estado</th>
+                                                            <th class="col-lg-3">Ver</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="#{gestionExpedientesBean.listDetalleExpedientes}" var="listaDetalleExpediente">
+                                                            <tr>
+                                                                <td>#{listaDetalleExpediente.expedientes.referencia}</td>
+                                                                <td>#{listaDetalleExpediente.detexpDescripcion}</td>
+                                                                <td>
+                                                                    <span class="#{listaDetalleExpediente.estadoDetalleExpedientes.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                        #{listaDetalleExpediente.estadoDetalleExpedientes.descripcion}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <h:commandLink class="fa fa-eye col-sm-2">
+                                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.buscarArchivo(listaDetalleExpediente.detexpId)}" render="frmExpedientes:pnlSubCarpetas frmExpedientes:pnlArchivo frmExpedientes:pnlBtnAddArchivo"/>
+                                                                    </h:commandLink>
 
-                                                            </td>
-                                                        </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </div>
-                                        </table>
-                                    </h:panelGroup>
-                                </h:panelGrid>
-                                <h:panelGrid id="pnlArchivo" class="col-lg-12">
-                                    <h:panelGroup rendered="#{gestionExpedientesBean.pnlArchivo}">
-                                        <table class="table table-hover">
-                                            <div class="row">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-lg-2">Expediente</th>
-                                                        <th class="col-lg-2">Nombre carpeta</th>
-                                                        <th class="col-lg-2">Nombre archivo</th>
-                                                        <th class="col-lg-2">Estado</th>
-                                                        <th class="col-lg-2">Ver</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach items="#{gestionExpedientesBean.listArchivoDetExpedientes}" var="listaArchivoDetExpedientes">
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </div>
+                                            </table>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlArchivo" class="col-lg-12">
+                                        <h:panelGroup rendered="#{gestionExpedientesBean.pnlArchivo}">
+                                            <table class="table table-hover">
+                                                <div class="row">
+                                                    <thead>
                                                         <tr>
-                                                            <td>#{listaArchivoDetExpedientes.detalleExpedientes.expedientes.referencia}</td>
-                                                            <td>#{listaArchivoDetExpedientes.detalleExpedientes.detexpDescripcion}</td>
-                                                            <td>#{listaArchivoDetExpedientes.nombre}</td>
-                                                            <td>
-                                                                <span class="#{listaArchivoDetExpedientes.estadoArchDetExp.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
-                                                                    #{listaArchivoDetExpedientes.estadoArchDetExp.descripcion}
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <a jsf:id="pdf" jsf:actionListener="#{visorPdfBean.ruta(listaArchivoDetExpedientes.ubicacion)}"  href="#{request.contextPath}/faces/paginas/gestionExpedientes/" target="blank"> 
-                                                                </a>
-                                                                <h:commandLink class="fa fa-eye col-sm-2" actionListener="#{gestionExpedientesBean.mostrarPdf(listaArchivoDetExpedientes.ubicacion)}" immediate="true">
-                                                                </h:commandLink>
-                                                                <h:commandLink title="Editar archivo" class="fa fa-edit col-sm-2" onclick="$('#addArchivo').modal('show');">
-                                                                    <f:ajax event="click" render="frmExpedientes:modalContent" listener="#{gestionExpedientesBean.modalActualizarArchivo(listaArchivoDetExpedientes)}"></f:ajax>
-                                                                </h:commandLink>
-                                                                <!--  <h:outputLink value="pdf.xhtml" target="_blank" class="fa fa-eye col-sm-2">
-                                                                      <f:param name="para1" value="#//{listaArchivoDetExpedientes.ubicacion}"></f:param> 
-                                                                  </h:outputLink>  -->
-                                                            </td>
+                                                            <th class="col-lg-2">Expediente</th>
+                                                            <th class="col-lg-2">Nombre carpeta</th>
+                                                            <th class="col-lg-2">Nombre archivo</th>
+                                                            <th class="col-lg-2">Estado</th>
+                                                            <th class="col-lg-2">Ver</th>
                                                         </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </div>
-                                        </table>
-                                    </h:panelGroup>
-                                </h:panelGrid>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="#{gestionExpedientesBean.listArchivoDetExpedientes}" var="listaArchivoDetExpedientes">
+                                                            <tr>
+                                                                <td>#{listaArchivoDetExpedientes.detalleExpedientes.expedientes.referencia}</td>
+                                                                <td>#{listaArchivoDetExpedientes.detalleExpedientes.detexpDescripcion}</td>
+                                                                <td>#{listaArchivoDetExpedientes.nombre}</td>
+                                                                <td>
+                                                                    <span class="#{listaArchivoDetExpedientes.estadoArchDetExp.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
+                                                                        #{listaArchivoDetExpedientes.estadoArchDetExp.descripcion}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <a jsf:id="pdf" jsf:actionListener="#{visorPdfBean.ruta(listaArchivoDetExpedientes.ubicacion)}"  href="#{request.contextPath}/faces/paginas/gestionExpedientes/" target="blank"></a>
+                                                                    <h:commandLink title="Ver archivo." class="fa fa-eye col-sm-2" actionListener="#{gestionExpedientesBean.mostrarPdf(listaArchivoDetExpedientes.ubicacion)}" immediate="true">
+                                                                    </h:commandLink>
+                                                                    <h:commandLink title="Editar archivo." class="fa fa-edit col-sm-2" onclick="$('#addArchivo').modal('show');">
+                                                                        <f:ajax event="click" render="frmUpdateArchivo:modalContent" listener="#{gestionExpedientesBean.modalActualizarArchivo(listaArchivoDetExpedientes)}"></f:ajax>
+                                                                    </h:commandLink>
+                                                                    <!--  <h:outputLink value="pdf.xhtml" target="_blank" class="fa fa-eye col-sm-2">
+                                                                          <f:param name="para1" value="#//{listaArchivoDetExpedientes.ubicacion}"></f:param> 
+                                                                      </h:outputLink>  -->
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </div>
+                                            </table>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                </div>
                             </div>
                             <h:panelGrid id="pnlBtnAddArchivo">
                                 <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnAddArchivo}">
@@ -220,28 +182,28 @@
                                     </h:commandLink>
                                 </h:panelGroup>
                             </h:panelGrid>
-                            <h:panelGrid id="pnlBtnAddFolder">
-                                <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnAddFolder}">
-                                    <h:commandLink title="Agregar Expedientes" class="float" onclick="$('#modalAddExp').modal('show');">
-                                        <i class="fa fa-folder my-float"></i>
-                                        <f:ajax event="click"></f:ajax>
-                                    </h:commandLink>
-                                </h:panelGroup>
-                            </h:panelGrid>
+                            <!-- <h:panelGrid id="pnlBtnAddFolder">
+                                 <h:panelGroup rendered="#{gestionExpedientesBean.pnlBtnAddFolder}">
+                                     <h:commandLink title="Agregar Expedientes" class="float" onclick="$('#modalAddExp').modal('show');">
+                                         <i class="fa fa-folder my-float"></i>
+                                         <f:ajax event="click"></f:ajax>
+                                     </h:commandLink>
+                                 </h:panelGroup>
+                             </h:panelGrid> -->
                         </section>
                     </div>
                     <div class="modal fade" id="modalAddExp" style="overflow-y: scroll;" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" style="width:60%">
+                        <div class="modal-dialog" style="width:50%">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title" id="myModalLabel">Crear Expediente</h4>
                                 </div>
                                 <div class="modal-body" jsf:id="modalBodyExp">
-                                    <p:messages autoUpdate="true" id="mensajeModalCrearUsuarios" showIcon="false" closable="true" severity="error,warn,info"></p:messages>
+                                    <p:messages autoUpdate="true" id="mensajeModalCrear" closable="true" showDetail="true" showSummary="false"></p:messages>
                                     <h4><center> Consultar Persona</center></h4>
                                     <div class="row">
-                                        <div class="col-md-3"></div>
+                                        <div class="col-md-2"></div>
                                         <div class="col-md-4">
                                             <div class="input-group margin-2">
                                                 <h:selectOneMenu  id="sltDocumentos" class="form-control" value="#{gestionExpedientesBean.tipoDocumentoPersona}">
@@ -262,29 +224,36 @@
                                         </div>
                                     </div>
                                     <hr style="border-color:red; width:80%;"/>
-                                    <h:panelGrid id="pnlPersonaEncontrada" class="col-lg-4">
-                                        <h:panelGroup rendered="#{gestionExpedientesBean.pnlPersonaEncontrada}" >
-                                            <h:outputLabel>Nombre Persona</h:outputLabel>
-                                            <div class="input-group margin-5 ">
-                                                <h:inputText a:placeholder="Nombre persona" id="nombrePersona" class="form-control text-uppercase" value="#{gestionExpedientesBean.nombrePersona}" disabled="true"></h:inputText>
-                                                <span class="input-group-btn">
-                                                    <h:commandLink class="btn btn-danger" value="Crear" >
-                                                        <f:ajax event="click" listener="#{gestionExpedientesBean.crearExpedientes()}"></f:ajax>
-                                                    </h:commandLink>
-                                                </span>
-                                            </div>
-                                        </h:panelGroup>
-                                    </h:panelGrid>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <h:panelGrid id="pnlPersonaEncontrada">
+                                                <h:panelGroup rendered="#{gestionExpedientesBean.pnlPersonaEncontrada}" >
+                                                    <h:outputLabel>Nombre Persona</h:outputLabel>
+                                                    <div class="input-group margin-5 ">
+                                                        <h:inputText a:placeholder="Nombre persona" id="nombrePersona" class="form-control text-uppercase" value="#{gestionExpedientesBean.nombrePersona}" disabled="true"></h:inputText>
+                                                        <span class="input-group-btn">
+                                                            <h:commandLink class="btn btn-danger" value="Crear" >
+                                                                <f:ajax event="click" listener="#{gestionExpedientesBean.crearExpedientes()}"></f:ajax>
+                                                            </h:commandLink>
+                                                        </span>
+                                                    </div>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <div class="row">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    </div>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

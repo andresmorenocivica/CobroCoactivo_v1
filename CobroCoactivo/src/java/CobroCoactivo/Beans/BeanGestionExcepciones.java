@@ -89,13 +89,21 @@ public class BeanGestionExcepciones {
         }
     }
 
-    public void mostrarPnlFormulario() throws Exception {
-        getGestionExcepcionesBO().llenarListaDeudaSeleccionada(this);
-        if (listaDeudasSelecionada.size() > 0) {
-            setPnlFormulario(true);
-        } else {
-            setPnlFormulario(false);
+    public void mostrarPnlFormulario(){
+        try {
+            getGestionExcepcionesBO().llenarListaDeudaSeleccionada(this);
+            if (listaDeudasSelecionada.size() > 0) {
+                setPnlFormulario(true);
+            } else {
+                setPnlFormulario(false);
+            }
+        } catch (ExcepcionesException ee) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ee.getNivelFacesMessage(), "", ee.getMessage()));
+        } catch (Exception e) {
+            Log_Handler.registrarEvento("Error al buscar persona: ", e, Log_Handler.ERROR, getClass(), Integer.parseInt(getIdUser()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", Log_Handler.solucionError(e)));
         }
+
     }
 
     public void guardarExcepcion() {

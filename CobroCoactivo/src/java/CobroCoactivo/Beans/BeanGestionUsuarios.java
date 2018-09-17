@@ -191,17 +191,9 @@ public class BeanGestionUsuarios {
         }
     }
 
-    public void buscarPersona(int tipo) {
+    public void buscarPersona() {
         try {
-            // casos para los tipos de busqueda
-            switch (tipo) {
-                // busqueda por tipo documento y documento
-                case 1:
-                    getGestionUsuariosBO().consultarPersona(this);
-                    break;
-                case 2:
-                    break;
-            }
+            getGestionUsuariosBO().consultarPersona(this);
         } catch (UsuariosException ue) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(ue.getNivelFacesMessage(), "", ue.getMessage()));
         } catch (Exception e) {

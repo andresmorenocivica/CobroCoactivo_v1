@@ -109,7 +109,7 @@ public class Deudas implements java.io.Serializable {
         this.Referencia = civDeudas.getDeuReferencia();
         this.estadoDeudas = new EstadoDeudas(civEstadoDeudas);
         this.tipoDeudas = new TipoDeudas(civTipoDeudas);
-        this.personas = new Personas(civPersonas);
+        this.personas = new Personas(civPersonas, civPersonas.getCivTipoDocumentos());
         this.planTrabajoDeuda = new PlanTrabajos(civPlanTrabajos);
         if (civCobroDeudas != null) {
             this.cobroDeudas = new CobroDeudas(civCobroDeudas);

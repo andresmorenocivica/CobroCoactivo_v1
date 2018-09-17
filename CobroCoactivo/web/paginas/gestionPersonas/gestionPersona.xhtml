@@ -11,6 +11,12 @@
     <body>
         <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
             <ui:define name="content">
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'gestionPersona'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
                 <h:form id="frmPersonas">
                     <div class="content-wrapper">
                         <section class="content-header">
@@ -146,7 +152,7 @@
                                             <tbody>
                                                 <c:forEach items="#{gestionPersonaBean.listPersonas}" var="persona">
                                                     <tr>
-                                                        <td>#{persona.tipoDocumentos.nombrecorto}- #{persona.nombre1} #{persona.nombre2} #{persona.apellido1} #{persona.apellido2}</td>
+                                                        <td>#{persona.nombre1} #{persona.nombre2} #{persona.apellido1} #{persona.apellido2}</td>
                                                         <td>#{persona.sexo}</td>
                                                         <td>
                                                             <span class="#{persona.estadoPersonas.descripcion.equals('ACTIVO')?'label label-primary':'label label-danger'}">
@@ -174,6 +180,11 @@
                         </section>
                     </div>
                 </h:form>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
             </ui:define>
         </ui:composition>
     </body>

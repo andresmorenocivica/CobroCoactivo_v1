@@ -228,7 +228,7 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 civEstadoPersonas.setEstperId(new BigDecimal(1));
                 civPersonas.setCivEstadoPersonas(civEstadoPersonas);
 
-                CivTipoDocumentos civTipoDocumentos = getItTipoDocumento().find(new BigDecimal(tipo));
+                CivTipoDocumentos civTipoDocumentos = getItTipoDocumento().find(session, new BigDecimal(tipo));
                 if (civTipoDocumentos != null) {
                     civPersonas.setCivTipoDocumentos(civTipoDocumentos);
 
@@ -243,9 +243,9 @@ public class GestionCargarPersonaImpBo implements GestionCargarPersonaBO {
                 Expedientes expedientes = new Expedientes();
                 String nombreExpedientePersona = "";
                 nombreExpedientePersona = expedientes.crearExpediente(civPersonas, getExpedienteDAO());
-                
+
                 verDeuda(beanGestionCargarPersonas);
-                
+
                 for (int i = 0; i < beanGestionCargarPersonas.getListDeudas().size(); i++) {
                     civDeudas = new CivDeudas();
                     CivTipoDeudas civTipoDeudas = new CivTipoDeudas();

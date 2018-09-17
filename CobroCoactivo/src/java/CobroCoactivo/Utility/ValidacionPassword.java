@@ -71,7 +71,7 @@ public class ValidacionPassword {
         passwordData.setUsername(nombre_usuario);
         RuleResult result = validator.validate(passwordData);
         if (!result.isValid()) {
-            throw new PasswordException(getErroValidacion(validator.validate(passwordData).getDetails()));
+            throw new PasswordException(getErroValidacion(validator.validate(passwordData).getDetails()),3);
         }
         return true;
     }

@@ -33,7 +33,7 @@ public class DaoPlanTrabajo extends ImpGeneryHibernateDao<CivPlanTrabajos, Integ
 
     @Override
     public List<CivPlanTrabajos> getAllPlanTrabajo(Session session) throws Exception {
-        String hql = "from CivPlanTrabajos where civEstadoPlanTrabajos.estplatraId=:1";
+        String hql = "from CivPlanTrabajos where civEstadoPlanTrabajos.estplatraId=1";
         Query query = session.createQuery(hql);
         if (query.list().size() > 0) {
             return query.list();

@@ -7,6 +7,7 @@ package CobroCoactivo.Bo;
 
 import CobroCoactivo.Beans.BeanGestionUsuarios;
 import CobroCoactivo.Crypto.DigestHandler;
+import CobroCoactivo.Dao.DaoAttempts;
 import CobroCoactivo.Dao.DaoConfUsuRec;
 import CobroCoactivo.Dao.DaoDatosPersonas;
 import CobroCoactivo.Dao.DaoEstadoConfUsuRec;
@@ -20,6 +21,7 @@ import CobroCoactivo.Dao.DaoRecursos;
 import CobroCoactivo.Dao.DaoTipoDocumento;
 import CobroCoactivo.Dao.DaoUspHistoria;
 import CobroCoactivo.Dao.DaoUsuarios;
+import CobroCoactivo.Dao.ITAttempts;
 import CobroCoactivo.Dao.ITConfUsuRec;
 import CobroCoactivo.Dao.ITDatosPersonas;
 import CobroCoactivo.Dao.ITEstadoConfUsuRec;
@@ -47,6 +49,7 @@ import CobroCoactivo.Persistencia.CivUsuarios;
 import java.util.ArrayList;
 import java.util.List;
 import CobroCoactivo.Modelo.Usuarios;
+import CobroCoactivo.Persistencia.CivAttempts;
 import CobroCoactivo.Persistencia.CivConfUsuRec;
 import CobroCoactivo.Persistencia.CivDatosPersonas;
 import CobroCoactivo.Persistencia.CivEstadoConfusurec;
@@ -60,7 +63,6 @@ import CobroCoactivo.Persistencia.CivRecursos;
 import CobroCoactivo.Persistencia.CivTipoDocumentos;
 import CobroCoactivo.Persistencia.CivUspHistoria;
 import CobroCoactivo.Utility.HibernateUtil;
-import static CobroCoactivo.Utility.HibernateUtil.getSessionFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -88,6 +90,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
     private ITUspHistoria uspHistoriaDAO;
     private ITMovimientos movimientosDAO;
     private ITPrestamoExpHistorial prestamoExpHistorialDAO;
+    private ITAttempts attemptsDAO;
 
     public GestionUsuariosImplBO() {
         usuariosDAO = new DaoUsuarios();
@@ -103,6 +106,7 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
         uspHistoriaDAO = new DaoUspHistoria();
         movimientosDAO = new DaoMovimientos();
         prestamoExpHistorialDAO = new DaoPrestamoExpHistorial();
+        attemptsDAO = new DaoAttempts();
     }
 
     @Override
@@ -441,11 +445,10 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
                 bean.setNombreUsuarioNuevo(generarNombreUsuario(civPersonas.getPerNombre1(), civPersonas.getPerApellido1()));
             }
             if (civPersonas == null) {
-                RequestContext requestContext = RequestContext.getCurrentInstance();
-                requestContext.execute("$('#modalAgregarPersona').modal('show')");
+                RequestContext.getCurrentInstance().execute("$('#modalAgregarPersona').modal('show')");
                 RequestContext requestContexts = RequestContext.getCurrentInstance();
                 requestContexts.execute("$('#modalRegistrarUser').modal('hide')");
-                throw new UsuariosException("No se encontro la persona en el sistema.", 2);
+                throw new UsuariosException("No se encontro la persona en el sistema, por favor adicionela.", 2);
             }
         } finally {
             session.flush();
@@ -526,6 +529,11 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
             civEstadoUsuarios.setEstusuId(BigDecimal.valueOf(3));
             civUsuarios.setUsuPass(DigestHandler.encryptSHA2(contrasenia));
             civUsuarios.setCivEstadoUsuarios(civEstadoUsuarios);
+            CivAttempts att = getAttemptsDAO().consultarIntentosByUser(session, civUsuarios.getUsuId().intValue());
+            if (att != null) {
+                att.setTtpIntentos(new BigDecimal(0L));
+                getAttemptsDAO().update(session, att);
+            }
             getUsuariosDAO().update(session, civUsuarios);
             CivEstadouspHistoria civEstadouspHistoria = getEstadoUspHistoriaDAO().find(session, BigDecimal.ONE);
             CivUspHistoria civUspHistoria = new CivUspHistoria(null, civUsuarios, civEstadouspHistoria, DigestHandler.encryptSHA2(contrasenia), new Date());
@@ -732,6 +740,20 @@ public class GestionUsuariosImplBO implements GestionUsuariosBO, Serializable {
      */
     public void setPrestamoExpHistorialDAO(ITPrestamoExpHistorial prestamoExpHistorialDAO) {
         this.prestamoExpHistorialDAO = prestamoExpHistorialDAO;
+    }
+
+    /**
+     * @return the attemptsDAO
+     */
+    public ITAttempts getAttemptsDAO() {
+        return attemptsDAO;
+    }
+
+    /**
+     * @param attemptsDAO the attemptsDAO to set
+     */
+    public void setAttemptsDAO(ITAttempts attemptsDAO) {
+        this.attemptsDAO = attemptsDAO;
     }
 
 }
