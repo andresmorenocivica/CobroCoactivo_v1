@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./../../plantillas/PlantillaGeneral.xhtml">
+            <ui:define name="content">
+                <c:set var="val" value="false"/>
+                <c:forEach items="${loginBean.listRecursos}" var="rec">
+                    <c:if  test="#{rec eq 'cargueExcelCartera'}" var="bool">
+                        <c:set var="val" value="true"/>
+                    </c:if>
+                </c:forEach>
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <h1>Cargue Cartera</h1>
+                    </section>
+                    <section class="content">
+                        <p:messages closable="true" autoUpdate="true" id="messageGeneral" showDetail="true" showSummary="false"/>
+                        <h:form id="frmCargueExcelCartera" enctype="multipart/form-data">
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Subir Archivo Cartera</h3>
+                                </div>
+                                <div class="box-body">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#home">Excel Cartera</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="home">
+                                            <div class="row">
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label> Agregar Archivo:</label>
+                                                        <input type="file" accept=".xls" class="form-control-file" jsf:id="excelCartera" jsf:value="#{cargueExcelCarteraBean.archivo}" jsf:required="true" 
+                                                               jsf:requiredMessage="Debe seleccionar un archivo"/>
+                                                        <p class="help-block">.xls</p>
+                                                    </div>
+                                                    <h:commandButton class="btn btn-success col-md-6" value="Aceptar">
+                                                        <f:ajax event="click" execute="frmCargueExcelCartera:excelCartera" listener="#{cargueExcelCarteraBean.procesarExcel()}"/>
+                                                    </h:commandButton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </section>
+                </div>
+                <c:if  test="#{val eq false}">
+                    <script>
+                        document.location.href = 'index2.html';
+                    </script>
+                </c:if>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
