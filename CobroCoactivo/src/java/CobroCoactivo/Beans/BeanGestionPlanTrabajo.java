@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSession;
 @ManagedBean(name = "gestionPlanTrabajoBean")
 @ViewScoped
 public class BeanGestionPlanTrabajo {
-
+    
     private String idUser;
     private List<PlanGenerales> listPlanGenerales = new ArrayList<>();
     private List<PlanTrabajos> listPlanTrabajos = new ArrayList<>();

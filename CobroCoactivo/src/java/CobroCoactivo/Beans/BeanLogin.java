@@ -173,7 +173,7 @@ public class BeanLogin implements Serializable {
     public Long numeroDeudas() throws JSONException {
         client = ClientBuilder.newClient();
 
-        WebTarget baTarget = client.target("http://localhost:8080/WebServiceContraversiones/api/cartera/numero");
+        WebTarget baTarget = client.target("http://localhost:32674/WebServiceContraversiones/api/cartera/numero");
         if (baTarget.request(MediaType.APPLICATION_JSON).get().getStatus() == 200) {
             String data = baTarget.request(MediaType.APPLICATION_JSON).get(String.class);
             JSONObject jSONObject = new JSONObject(data);
